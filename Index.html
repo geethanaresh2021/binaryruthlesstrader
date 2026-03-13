@@ -6,39 +6,54 @@
     <title>Binary Ruthless Trader | Welcome</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); }
+        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); --chrome: linear-gradient(180deg, #fff 0%, #b3b3b3 50%, #808080 100%); }
         
-        /* Fixed Layout: జూమ్ అవ్వకుండా మరియు స్క్రీన్ కదలకుండా లాక్ */
-        html, body { 
+        * { box-sizing: border-box; }
+        body { 
             background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; 
-            align-items: center; width: 100%; height: 100%; 
-            position: fixed; overflow: hidden; touch-action: none;
+            align-items: center; min-height: 100vh; overflow-x: hidden;
+            /* జూమ్ డిసేబుల్ చేయడం కోసం */
+            touch-action: pan-x pan-y;
         }
 
         /* 1. Top Header Container */
         .header-container {
-            width: 100%; max-width: 1200px; padding: 15px 30px;
-            display: flex; align-items: center; border-bottom: 2px solid var(--red);
-            background: #000;
+            width: 100%; max-width: 1200px; padding: 25px 50px;
+            display: flex; flex-direction: column; align-items: center; 
+            border-bottom: 2px solid var(--red); background: #000;
         }
-        .logo-img { width: 180px; height: auto; margin-right: 20px; } /* మీ logo.png కోసం */
-        .brand-info h1 { margin: 0; font-size: 26px; color: #fff; text-shadow: var(--neon); }
-        .social-links { margin-top: 5px; }
-        .social-links a { color: #888; text-decoration: none; font-size: 11px; margin-right: 15px; font-family: 'Roboto Mono'; transition: 0.3s; }
+        
+        /* Brand Name & Logo Section */
+        .brand-section {
+            display: flex; align-items: center; justify-content: center; width: 100%;
+        }
+        .logo-img { width: 150px; height: auto; margin-right: 25px; } /* మీ logo.png కోసం */
+        .brand-name { font-size: 36px; font-weight: 900; background: var(--chrome); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(255,255,255,0.5); text-transform: uppercase; }
+        .ruthless-text { font-size: 16px; color: var(--red); text-shadow: var(--neon); text-transform: uppercase; margin-top: -10px; }
+
+        .social-links { margin-top: 15px; }
+        .social-links a { color: #888; text-decoration: none; font-size: 11px; margin: 0 15px; font-family: 'Roboto Mono'; transition: 0.3s; }
         .social-links a:hover { color: var(--red); }
 
         /* 2. Main Screen 3 Small Containers */
         .main-content {
             flex: 1; display: flex; justify-content: center; align-items: center;
-            gap: 25px; width: 100%; padding: 20px;
+            gap: 25px; width: 100%; padding: 40px 20px;
         }
         .small-container {
             width: 340px; height: 480px; background: #0a0a0a; border: 1px solid var(--red);
             padding: 25px; border-radius: 15px; box-shadow: var(--neon);
             display: flex; flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effect కోసం transition */
         }
         .small-container h3 { text-align: center; color: var(--red); margin-bottom: 20px; font-size: 16px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+
+        /* Hover effect for containers */
+        .small-container:hover {
+            transform: translateY(-5px); /* కొద్దిగా పైకి లేస్తుంది */
+            box-shadow: 0 0 25px var(--red); /* నియాన్ ఎఫెక్ట్ పెరుగుతుంది */
+        }
 
         input, select {
             width: 100%; padding: 12px; margin: 10px 0; background: #151515; 
@@ -49,9 +64,14 @@
         .action-btn {
             background: var(--red); color: #fff; border: none; padding: 14px; 
             width: 100%; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; 
-            font-weight: 900; margin-top: auto; transition: 0.3s; text-transform: uppercase;
+            font-weight: 900; margin-top: auto; transition: 0.3s ease; text-transform: uppercase;
         }
-        .action-btn:hover { background: #fff; color: #000; }
+        
+        /* Hover effect for buttons */
+        .action-btn:hover { 
+            background: #fff; color: #000;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
 
         /* Signup Multi-step logic */
         #signupRules { display: none; font-size: 11px; font-family: 'Roboto Mono'; color: #ccc; line-height: 1.5; }
@@ -67,13 +87,17 @@
 <body>
 
     <header class="header-container">
-        <img src="logo.png" alt="Binary Ruthless Trader" class="logo-img">
-        <div class="brand-info">
-            <div class="social-links">
-                <a href="#">TELEGRAM</a>
-                <a href="#">YOUTUBE</a>
-                <a href="#">INSTAGRAM</a>
+        <div class="brand-section">
+            <img src="logo.png" alt="Binary Ruthless Trader" class="logo-img">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="brand-name">BINARY</div>
+                <div class="ruthless-text">RUTHLESS TRADER</div>
             </div>
+        </div>
+        <div class="social-links">
+            <a href="#">TELEGRAM</a>
+            <a href="#">YOUTUBE</a>
+            <a href="#">INSTAGRAM</a>
         </div>
     </header>
 
@@ -119,7 +143,7 @@
     </footer>
 
     <script>
-        // Zoom ని కీబోర్డ్ షార్ట్‌కట్‌ల ద్వారా కూడా ఆపడానికి
+        // Zoom ని షార్ట్‌కట్‌ల ద్వారా కూడా ఆపడానికి
         document.addEventListener('wheel', (e) => e.ctrlKey && e.preventDefault(), { passive: false });
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && [61, 107, 173, 109, 187, 189].includes(e.keyCode)) e.preventDefault();
