@@ -6,75 +6,205 @@
     <title>Binary Ruthless Trader | Welcome</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); --chrome: linear-gradient(180deg, #fff 0%, #b3b3b3 50%, #808080 100%); }
+        :root { 
+            --red: #ff0000; 
+            --green: #00ffcc; 
+            --bg: #050505; 
+            --neon: 0 0 15px var(--red); 
+            --chrome: linear-gradient(180deg, #fff 0%, #b3b3b3 50%, #808080 100%); 
+        }
         
         * { box-sizing: border-box; }
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
-            margin: 0; padding: 0; display: flex; flex-direction: column; 
-            min-height: 100vh; overflow-x: hidden;
-            /* Zoom disable */
-            touch-action: pan-y; 
+        
+        html, body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Orbitron', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            touch-action: pan-y; /* Zoom disable but allow vertical scroll */
         }
 
-        /* 1. Header Container */
+        /* 1. Top Header Container */
         .header-container {
-            width: 100%; padding: 20px;
-            display: grid; grid-template-columns: 1fr 2fr 1fr;
-            align-items: center; border-bottom: 2px solid var(--red);
-            background: #000; position: sticky; top: 0; z-index: 1000;
+            width: 100%; 
+            padding: 30px 50px;
+            display: grid; 
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center; 
+            border-bottom: 2px solid var(--red);
+            background: #000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .logo-img { width: 100px; height: auto; }
-        .header-center { text-align: center; }
-        .brand-name { font-size: clamp(24px, 5vw, 42px); font-weight: 900; background: var(--chrome); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .ruthless-text { font-size: clamp(10px, 2vw, 18px); color: var(--red); text-shadow: var(--neon); letter-spacing: 3px; }
-        .header-right { display: flex; justify-content: flex-end; gap: 10px; }
-        .social-links a { color: #fff; text-decoration: none; font-size: 10px; border: 1px solid #333; padding: 4px 8px; border-radius: 4px; font-family: 'Roboto Mono'; }
 
-        /* 2. Main Content Container (Scrolling Friendly) */
+        .header-left { display: flex; justify-content: flex-start; }
+        .logo-img { width: 150px; height: auto; transition: 0.3s; }
+        .logo-img:hover { transform: scale(1.05); filter: drop-shadow(0 0 10px var(--red)); }
+
+        .header-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .brand-name { 
+            font-size: 60px; /* Big Size */
+            font-weight: 900; 
+            background: var(--chrome); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            text-shadow: 0 0 20px rgba(255,255,255,0.3); 
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+        .ruthless-text { 
+            font-size: 24px; 
+            color: var(--red); 
+            text-shadow: var(--neon); 
+            letter-spacing: 8px; 
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        .header-right { display: flex; justify-content: flex-end; }
+        .social-links { display: flex; gap: 15px; }
+        .social-links a { 
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 12px; 
+            font-family: 'Roboto Mono'; 
+            border: 1px solid #333; 
+            padding: 8px 15px; 
+            border-radius: 5px; 
+            transition: 0.3s;
+            background: rgba(255,0,0,0.05);
+        }
+        .social-links a:hover { 
+            border-color: var(--red); 
+            color: var(--red); 
+            box-shadow: var(--neon); 
+            transform: translateY(-3px);
+        }
+
+        /* 2. Main Content - 3 Containers */
         .main-content {
-            flex: 1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-            gap: 30px; padding: 50px 20px; width: 100%; max-width: 1300px; margin: auto;
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: center;
+            gap: 30px; 
+            padding: 60px 20px; 
+            width: 100%;
         }
 
-        /* Small Containers */
         .small-container {
-            width: 340px; min-height: 480px; background: #0a0a0a; border: 1px solid var(--red);
-            padding: 25px; border-radius: 15px; box-shadow: var(--neon);
-            display: flex; flex-direction: column; transition: 0.3s ease;
+            width: 350px; 
+            min-height: 500px; 
+            background: #0a0a0a; 
+            border: 1px solid var(--red);
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: var(--neon);
+            display: flex; 
+            flex-direction: column; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .small-container:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--red); }
-        .small-container h3 { text-align: center; color: var(--red); margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .small-container:hover { 
+            transform: translateY(-15px); 
+            box-shadow: 0 0 40px var(--red); 
+            border-color: #fff;
+        }
+
+        .small-container h3 { 
+            text-align: center; 
+            color: var(--red); 
+            margin-bottom: 25px; 
+            font-size: 18px; 
+            border-bottom: 1px solid #222; 
+            padding-bottom: 15px; 
+            letter-spacing: 2px;
+        }
 
         input, select {
-            width: 100%; padding: 14px; margin: 10px 0; background: #151515; 
-            border: 1px solid #333; color: var(--green); border-radius: 6px; 
-            font-family: 'Roboto Mono'; font-weight: bold;
+            width: 100%; 
+            padding: 15px; 
+            margin: 12px 0; 
+            background: #111; 
+            border: 1px solid #333; 
+            color: var(--green); 
+            border-radius: 8px; 
+            font-family: 'Roboto Mono'; 
+            font-weight: bold;
+            outline: none;
+            transition: 0.3s;
         }
+        input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 10px var(--green); }
 
         .action-btn {
-            background: var(--red); color: #fff; border: none; padding: 16px; 
-            width: 100%; border-radius: 6px; cursor: pointer; font-family: 'Orbitron'; 
-            font-weight: 900; margin-top: auto; transition: 0.3s;
+            background: var(--red); 
+            color: #fff; 
+            border: none; 
+            padding: 18px; 
+            width: 100%; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-family: 'Orbitron'; 
+            font-weight: 900; 
+            margin-top: auto; 
+            transition: 0.3s;
+            letter-spacing: 1px;
         }
-        .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
+        .action-btn:hover { 
+            background: #fff; 
+            color: #000; 
+            box-shadow: 0 0 20px #fff;
+        }
 
-        /* 3. Bottom Footer Container (Horizontal) */
+        /* 3. Bottom Footer Container */
         .footer-container {
-            width: 100%; padding: 25px 40px; background: #000; border-top: 2px solid var(--red);
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-            gap: 20px; text-align: center;
+            width: 100%; 
+            padding: 30px 50px; 
+            background: #000; 
+            border-top: 2px solid var(--red);
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 20px;
         }
-        .footer-item { font-family: 'Roboto Mono'; font-size: 11px; color: #888; flex: 1; min-width: 250px; }
+        .footer-item { 
+            font-family: 'Roboto Mono'; 
+            font-size: 12px; 
+            color: #777; 
+            flex: 1; 
+            min-width: 300px;
+            line-height: 1.6;
+        }
         .footer-item b { color: var(--red); }
 
-        /* Mobile Responsive Adjustments */
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .header-container { grid-template-columns: 1fr 1fr; }
+            .header-right { display: none; }
+            .brand-name { font-size: 45px; }
+        }
+
         @media (max-width: 768px) {
-            .header-container { grid-template-columns: 1fr 1fr; padding: 15px; }
-            .header-right { display: none; } /* Mobile lo social links header lo vaddu */
-            .header-center { text-align: left; }
-            .main-content { padding: 30px 10px; }
-            .footer-container { flex-direction: column; }
+            .header-container {
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+            .header-left, .header-center, .header-right {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+            .brand-name { font-size: 38px; }
+            .ruthless-text { font-size: 16px; letter-spacing: 4px; }
+            .header-right { display: flex; order: 3; } /* Mobile lo social links brand kinda vasthayi */
+            .footer-container { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -82,16 +212,19 @@
 
     <header class="header-container">
         <div class="header-left">
-            <img src="logo.png" alt="Logo" class="logo-img">
+            <img src="logo.png" alt="Binary Ruthless" class="logo-img">
         </div>
+
         <div class="header-center">
             <div class="brand-name">BINARY</div>
             <div class="ruthless-text">RUTHLESS TRADER</div>
         </div>
+
         <div class="header-right">
             <div class="social-links">
                 <a href="#">TELEGRAM</a>
                 <a href="#">YOUTUBE</a>
+                <a href="#">INSTAGRAM</a>
             </div>
         </div>
     </header>
@@ -99,44 +232,47 @@
     <main class="main-content">
         <div class="small-container">
             <h3>LOGIN</h3>
-            <input type="email" placeholder="EMAIL">
-            <input type="text" placeholder="USER ID">
-            <button class="action-btn">ENTER SYSTEM</button>
+            <input type="email" placeholder="EMAIL ADDRESS">
+            <input type="text" placeholder="ACCOUNT ID">
+            <button class="action-btn">LOGIN TO SYSTEM</button>
         </div>
 
         <div class="small-container">
             <h3>SIGNUP</h3>
-            <input type="email" placeholder="ENTER NEW EMAIL">
-            <select>
+            <input type="email" placeholder="NEW EMAIL">
+            <select id="brokerSelect">
                 <option value="">SELECT BROKER</option>
                 <option>QUOTEX</option>
                 <option>POCKET OPTION</option>
+                <option>TOXA</option>
             </select>
-            <button class="action-btn">CONTINUE</button>
+            <button class="action-btn">GET SIGNUP LINK</button>
         </div>
 
         <div class="small-container">
             <h3>VERIFY YOUR ID</h3>
             <input type="email" placeholder="REGISTERED EMAIL">
-            <input type="text" placeholder="BROKER ACCOUNT ID">
-            <button class="action-btn">VERIFY NOW</button>
+            <input type="text" placeholder="BROKER ID (Traders ID)">
+            <button class="action-btn">START VERIFICATION</button>
         </div>
     </main>
 
     <footer class="footer-container">
         <div class="footer-item">
-            <b>NOTE:</b> Trading involves high financial risk. We are not responsible for your losses. Use our signals wisely.
+            <b>DISCLAIMER:</b> Trading contains risk. Binary Ruthless Trader is not responsible for any financial losses. High volatility can affect results.
         </div>
-        <div class="footer-item">
-            <b>CONTACT US:</b> Telegram @BinaryRuthlessAdmin | Email: support@binaryruthlesstrader.com
+        <div class="footer-item" style="text-align: center;">
+            <b>SUPPORT:</b> Contact us on Telegram @BinaryRuthlessAdmin<br>
+            Official Website: binaryruthlesstrader.com
         </div>
-        <div class="footer-item">
-            <b>TRADE MARK:</b> © 2026 BINARY RUTHLESS TRADER™ - ALL RIGHTS RESERVED.
+        <div class="footer-item" style="text-align: right;">
+            <b>TRADE MARK:</b> © 2026 BINARY RUTHLESS TRADER™<br>
+            All Rights Reserved.
         </div>
     </footer>
 
     <script>
-        // Zoom prevention
+        // Zoom Prevention
         document.addEventListener('wheel', e => e.ctrlKey && e.preventDefault(), { passive: false });
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && [61, 107, 173, 109, 187, 189].includes(e.keyCode)) e.preventDefault();
