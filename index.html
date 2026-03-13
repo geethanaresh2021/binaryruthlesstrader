@@ -14,168 +14,146 @@
             --red: #ff0000; 
             --green: #00ffcc; 
             --bg: #050505; 
-            --neon: 0 0 15px var(--red); 
+            --neon-red: 0 0 15px var(--red); 
+            --neon-green: 0 0 15px var(--green);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         html, body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
-            overflow-x: hidden; touch-action: pan-y;
+            background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
+            margin: 0; padding: 0; width: 100%; min-height: 100vh; overflow-x: hidden;
+            touch-action: pan-y;
         }
 
-        /* Header Section */
-        .header-container {
-            width: 100%; 
-            padding: 15px 50px;
-            display: grid; 
-            grid-template-columns: 180px 1fr 250px; 
-            align-items: center; 
-            border-bottom: 2px solid var(--red);
-            background: #000;
-            position: sticky; top: 0; z-index: 1000;
+        /* --- SECTION CONTROLLERS --- */
+        .page-section { display: none; min-height: 100vh; width: 100%; animation: fadeIn 0.5s; }
+        .active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- HEADER --- */
+        header {
+            width: 100%; padding: 15px 50px; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 2px solid var(--red); background: #000;
+        }
+        .logo-text { color: var(--red); font-weight: 900; font-size: 20px; text-shadow: var(--neon-red); }
+
+        /* --- WELCOME PAGE --- */
+        .welcome-content {
+            display: flex; flex-direction: row; justify-content: center; align-items: stretch;
+            gap: 30px; padding: 60px 20px; max-width: 1400px; margin: 0 auto;
         }
 
-        .logo-img { width: 110px; height: auto; }
-
-        .header-center { display: flex; justify-content: center; }
-        .brand-name-img { 
-            width: 550px; 
-            height: auto; 
-            max-width: 95%; 
-            filter: drop-shadow(0 0 12px var(--red)); 
+        .ruthless-card {
+            flex: 1; max-width: 380px; background: #0a0a0a; border: 1px solid var(--red);
+            padding: 35px; border-radius: 15px; box-shadow: var(--neon-red);
+            display: flex; flex-direction: column; transition: 0.4s;
         }
-
-        .social-links { display: flex; gap: 15px; justify-content: flex-end; }
-        .social-links a { 
-            color: #fff; text-decoration: none; font-size: 11px; 
-            font-family: 'Roboto Mono'; border: 1px solid #333; 
-            padding: 8px 15px; border-radius: 5px; transition: 0.3s;
-        }
-        .social-links a:hover { border-color: var(--red); box-shadow: var(--neon); color: var(--red); }
-
-        /* Main Content Layout */
-        .main-content {
-            display: flex; 
-            flex-direction: row; 
-            justify-content: center; 
-            align-items: center;
-            gap: 30px; 
-            padding: 60px 20px; 
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .small-container {
-            flex: 1;
-            max-width: 380px;
-            min-height: 520px; 
-            background: #0a0a0a; 
-            border: 1px solid var(--red);
-            padding: 35px; 
-            border-radius: 20px; 
-            box-shadow: var(--neon);
-            display: flex; 
-            flex-direction: column; 
-            transition: 0.4s;
-        }
-        
-        .small-container:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--red); }
-
-        .small-container h3 { 
-            text-align: center; color: var(--red); margin-bottom: 25px; 
-            font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 15px; 
-        }
+        .ruthless-card h3 { text-align: center; color: var(--red); margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
         input, select {
-            width: 100%; padding: 16px; margin: 12px 0; background: #111; 
-            border: 1px solid #333; color: var(--green); border-radius: 8px; 
-            font-family: 'Roboto Mono'; font-weight: bold; font-size: 15px;
-            outline: none;
+            width: 100%; padding: 16px; margin: 12px 0; background: #111; border: 1px solid #333;
+            color: var(--green); border-radius: 8px; font-family: 'Roboto Mono'; font-weight: bold;
+            font-size: 15px; outline: none;
         }
 
         .action-btn {
-            background: var(--red); color: #fff; border: none; padding: 20px; 
+            background: var(--red); color: #fff; border: none; padding: 18px; 
             width: 100%; border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; 
-            font-weight: 900; margin-top: auto; transition: 0.3s;
-            text-transform: uppercase;
+            font-weight: 900; margin-top: auto; text-transform: uppercase; transition: 0.3s;
         }
         .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
 
-        /* Footer */
-        .footer-container {
-            width: 100%; padding: 40px 60px; background: #000; border-top: 2px solid var(--red);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .footer-item { font-family: 'Roboto Mono'; font-size: 11px; color: #666; flex: 1; }
+        /* --- DASHBOARD --- */
+        .dashboard-container { padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-box { background: #0a0a0a; border: 1px solid var(--red); padding: 20px; text-align: center; border-radius: 10px; }
+        .stat-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 32px; color: var(--green); text-shadow: var(--neon-green); margin-top: 10px; }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-content { flex-wrap: wrap; }
-            .header-container { grid-template-columns: 1fr 1fr; }
-            .header-right { display: none; } 
+        .signal-display {
+            height: 350px; background: #000; border: 2px solid var(--red); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 20px; box-shadow: var(--neon-red);
         }
+        .signal-text { font-size: 90px; font-weight: 900; transition: 0.3s; }
+
+        /* --- ADMIN PANEL --- */
+        .admin-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+        .admin-btn { padding: 50px; border-radius: 15px; font-size: 32px; font-weight: 900; cursor: pointer; border: none; font-family: 'Orbitron'; }
+        .call-btn { background: var(--green); color: #000; box-shadow: var(--neon-green); }
+        .put-btn { background: var(--red); color: #fff; box-shadow: var(--neon-red); }
+
+        footer { padding: 30px; border-top: 2px solid var(--red); background: #000; text-align: center; color: #666; font-family: 'Roboto Mono'; font-size: 12px; }
 
         @media (max-width: 768px) {
-            .header-container { display: flex; flex-direction: column; padding: 20px; }
-            .brand-name-img { width: 350px; }
-            .main-content { flex-direction: column; } 
-            .footer-container { flex-direction: column; text-align: center; gap: 15px; }
+            .welcome-content { flex-direction: column; align-items: center; }
+            .stats-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <header class="header-container">
-        <div class="header-left"><img src="logo.png" alt="Logo" class="logo-img"></div>
-        <div class="header-center"><img src="brand-name.png" alt="Binary Ruthless Trader" class="brand-name-img"></div>
-        <div class="header-right">
-            <div class="social-links">
-                <a href="#">TELEGRAM</a>
-                <a href="#">YOUTUBE</a>
+    <section id="welcomePage" class="page-section active">
+        <header>
+            <div class="logo-text">RUTHLESS OFFICIAL</div>
+            <div style="font-family: 'Roboto Mono'; font-size: 11px; color: var(--green);">SYSTEM ACTIVE</div>
+        </header>
+        <div class="welcome-content">
+            <div class="ruthless-card">
+                <h3>SYSTEM LOGIN</h3>
+                <input type="email" id="loginEmail" placeholder="ENTER EMAIL">
+                <input type="text" id="loginId" placeholder="ENTER USER ID">
+                <button class="action-btn" onclick="handleAuth()">ACCESS DASHBOARD</button>
+            </div>
+            <div class="ruthless-card">
+                <h3>ID VERIFICATION</h3>
+                <input type="email" id="vEmail" placeholder="EMAIL">
+                <input type="text" id="vId" placeholder="BROKER ID">
+                <button class="action-btn" onclick="sendToFirebase('Verify')">SUBMIT FOR REVIEW</button>
             </div>
         </div>
-    </header>
+    </section>
 
-    <main class="main-content">
-        <div class="small-container">
-            <h3>LOGIN</h3>
-            <input type="email" id="loginEmail" placeholder="ENTER EMAIL">
-            <input type="text" id="loginId" placeholder="ENTER USER ID">
-            <button class="action-btn" onclick="sendToFirebase('Login')">ACCESS SYSTEM</button>
+    <section id="dashboardPage" class="page-section">
+        <header>
+            <div class="logo-text">LIVE DASHBOARD</div>
+            <button onclick="location.reload()" style="background:none; border:1px solid #444; color:#fff; cursor:pointer; padding:5px 15px; font-family:'Roboto Mono';">LOGOUT</button>
+        </header>
+        <div class="dashboard-container">
+            <div class="stats-row">
+                <div class="stat-box"><div>LIVE PROFIT</div><div class="stat-val">+$1,240.00</div></div>
+                <div class="stat-box"><div>WIN RATIO</div><div class="stat-val">89%</div></div>
+                <div class="stat-box"><div>ACCOUNT</div><div class="stat-val" style="font-size:18px;">PREMIUM</div></div>
+            </div>
+            <div class="signal-display">
+                <div style="color: #555; margin-bottom: 20px; letter-spacing: 5px;">CURRENT SIGNAL</div>
+                <div id="liveSignal" class="signal-text" style="color: #222;">WAITING</div>
+            </div>
         </div>
+    </section>
 
-        <div class="small-container">
-            <h3>SIGNUP</h3>
-            <input type="email" id="signupEmail" placeholder="ENTER NEW EMAIL">
-            <select id="signupBroker">
-                <option value="">SELECT BROKER</option>
-                <option value="QUOTEX">QUOTEX</option>
-                <option value="POCKET_OPTION">POCKET OPTION</option>
-            </select>
-            <button class="action-btn" onclick="sendToFirebase('Signup')">GET LINK</button>
+    <section id="adminPage" class="page-section">
+        <header>
+            <div class="logo-text">RUTHLESS ADMIN</div>
+            <button onclick="location.reload()">EXIT ADMIN</button>
+        </header>
+        <div class="dashboard-container">
+            <h2 style="text-align: center; color: var(--red); letter-spacing: 3px;">SIGNAL BROADCASTER</h2>
+            <div class="admin-controls">
+                <button class="admin-btn call-btn" onclick="sendSignal('CALL')">CALL (UP)</button>
+                <button class="admin-btn put-btn" onclick="sendSignal('PUT')">PUT (DOWN)</button>
+            </div>
+            <button class="action-btn" style="margin-top: 30px; background: #222;" onclick="sendSignal('WAIT')">RESET SIGNAL</button>
         </div>
+    </section>
 
-        <div class="small-container">
-            <h3>VERIFY ID</h3>
-            <input type="email" id="verifyEmail" placeholder="REGISTERED EMAIL">
-            <input type="text" id="verifyId" placeholder="BROKER ID">
-            <button class="action-btn" onclick="sendToFirebase('Verify')">VERIFY NOW</button>
-        </div>
-    </main>
-
-    <footer class="footer-container">
-        <div class="footer-item"><b>WARNING:</b> High risk investment.</div>
-        <div class="footer-item" style="text-align: center;">@BinaryRuthlessAdmin</div>
-        <div class="footer-item" style="text-align: right;">© 2026 BINARY RUTHLESS TRADER™</div>
+    <footer>
+        BINARY RUTHLESS TRADER™ © 2026 | ALL RIGHTS RESERVED
     </footer>
 
     <script>
-        // Firebase Configuration
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
             authDomain: "binary-ruthless-trader.firebaseapp.com",
@@ -185,46 +163,70 @@
             messagingSenderId: "363803749428",
             appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
         };
-
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function sendToFirebase(type) {
-            let email, id, extra = "";
-            
-            if(type === 'Login') {
-                email = document.getElementById('loginEmail').value;
-                id = document.getElementById('loginId').value;
-            } else if(type === 'Signup') {
-                email = document.getElementById('signupEmail').value;
-                id = "PENDING_ID";
-                extra = document.getElementById('signupBroker').value;
-            } else if(type === 'Verify') {
-                email = document.getElementById('verifyEmail').value;
-                id = document.getElementById('verifyId').value;
-            }
+        // 1. Authentication Logic
+        function handleAuth() {
+            const email = document.getElementById('loginEmail').value;
+            const id = document.getElementById('loginId').value;
 
-            if(!email || !id) {
-                alert("Please fill all details!");
-                return;
+            if(email === "admin@ruthless.com" && id === "ADMIN777") {
+                showSection('adminPage');
+            } else if(email && id) {
+                showSection('dashboardPage');
+                startSignalListener();
+            } else {
+                alert("Please enter valid credentials!");
             }
+        }
 
-            // Pushing data to Firebase
-            const requestRef = database.ref('requests/' + Date.now());
-            requestRef.set({
-                requestType: type,
-                userEmail: email,
-                traderId: id,
-                brokerName: extra,
-                status: 'pending',
-                timestamp: new Date().toLocaleString()
-            }).then(() => {
-                alert(type + " Request Submitted! Check Database.");
-                document.querySelectorAll('input').forEach(input => input.value = '');
-            }).catch((error) => {
-                alert("Error: " + error.message);
+        function showSection(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // 2. Admin Logic: Sending Signals
+        function sendSignal(type) {
+            database.ref('liveSignal').set({
+                type: type,
+                timestamp: Date.now()
             });
+        }
+
+        // 3. User Logic: Receiving Signals (Real-time)
+        function startSignalListener() {
+            const signalElement = document.getElementById('liveSignal');
+            database.ref('liveSignal').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    signalElement.innerText = data.type;
+                    if(data.type === 'CALL') {
+                        signalElement.style.color = "var(--green)";
+                        signalElement.style.textShadow = "var(--neon-green)";
+                    } else if(data.type === 'PUT') {
+                        signalElement.style.color = "var(--red)";
+                        signalElement.style.textShadow = "var(--neon-red)";
+                    } else {
+                        signalElement.style.color = "#222";
+                        signalElement.style.textShadow = "none";
+                    }
+                }
+            });
+        }
+
+        // 4. Signup/Verify Tracking
+        function sendToFirebase(type) {
+            const email = document.getElementById('vEmail').value;
+            const id = document.getElementById('vId').value;
+            if(!email || !id) return alert("Fill all fields");
+
+            database.ref('requests/' + Date.now()).set({
+                type: type,
+                email: email,
+                traderId: id,
+                status: 'pending'
+            }).then(() => alert("Request sent successfully!"));
         }
     </script>
 </body>
