@@ -12,84 +12,69 @@
         body { 
             background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
             margin: 0; padding: 0; display: flex; flex-direction: column; 
-            align-items: center; min-height: 100vh; overflow-x: hidden;
-            touch-action: none; /* Zoom prevention */
+            min-height: 100vh; overflow-x: hidden;
+            /* Zoom disable */
+            touch-action: pan-y; 
         }
 
-        /* 1. Top Header Container - Full Width & Balanced */
+        /* 1. Header Container */
         .header-container {
-            width: 100%; padding: 20px 40px;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr; /* Left, Center, Right segments */
-            align-items: center;
-            border-bottom: 2px solid var(--red);
-            background: #000;
+            width: 100%; padding: 20px;
+            display: grid; grid-template-columns: 1fr 2fr 1fr;
+            align-items: center; border-bottom: 2px solid var(--red);
+            background: #000; position: sticky; top: 0; z-index: 1000;
         }
+        .logo-img { width: 100px; height: auto; }
+        .header-center { text-align: center; }
+        .brand-name { font-size: clamp(24px, 5vw, 42px); font-weight: 900; background: var(--chrome); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .ruthless-text { font-size: clamp(10px, 2vw, 18px); color: var(--red); text-shadow: var(--neon); letter-spacing: 3px; }
+        .header-right { display: flex; justify-content: flex-end; gap: 10px; }
+        .social-links a { color: #fff; text-decoration: none; font-size: 10px; border: 1px solid #333; padding: 4px 8px; border-radius: 4px; font-family: 'Roboto Mono'; }
 
-        /* Left: Logo */
-        .header-left { display: flex; justify-content: flex-start; }
-        .logo-img { width: 120px; height: auto; transition: transform 0.3s; }
-        .logo-img:hover { transform: scale(1.05); }
-
-        /* Center: Big Brand Name */
-        .header-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .brand-name { 
-            font-size: 42px; /* Pedda size */
-            font-weight: 900; 
-            background: var(--chrome); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            text-shadow: 0 0 20px rgba(255,255,255,0.3); 
-            letter-spacing: 2px;
-        }
-        .ruthless-text { 
-            font-size: 18px; 
-            color: var(--red); 
-            text-shadow: var(--neon); 
-            margin-top: -5px; 
-            letter-spacing: 5px;
-        }
-
-        /* Right: Social Links */
-        .header-right { display: flex; justify-content: flex-end; gap: 15px; }
-        .social-links a { 
-            color: #fff; text-decoration: none; font-size: 10px; 
-            font-family: 'Roboto Mono'; border: 1px solid #333; 
-            padding: 5px 10px; border-radius: 4px; transition: 0.3s;
-        }
-        .social-links a:hover { border-color: var(--red); color: var(--red); box-shadow: var(--neon); }
-
-        /* 2. Main Content 3 Containers */
+        /* 2. Main Content Container (Scrolling Friendly) */
         .main-content {
-            flex: 1; display: flex; justify-content: center; align-items: center;
-            gap: 25px; width: 100%; padding: 40px 20px;
+            flex: 1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+            gap: 30px; padding: 50px 20px; width: 100%; max-width: 1300px; margin: auto;
         }
+
+        /* Small Containers */
         .small-container {
-            width: 340px; height: 480px; background: #0a0a0a; border: 1px solid var(--red);
+            width: 340px; min-height: 480px; background: #0a0a0a; border: 1px solid var(--red);
             padding: 25px; border-radius: 15px; box-shadow: var(--neon);
-            display: flex; flex-direction: column; transition: 0.3s;
+            display: flex; flex-direction: column; transition: 0.3s ease;
         }
         .small-container:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--red); }
-        .small-container h3 { text-align: center; color: var(--red); margin-bottom: 20px; font-size: 16px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .small-container h3 { text-align: center; color: var(--red); margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
         input, select {
-            width: 100%; padding: 12px; margin: 10px 0; background: #151515; 
-            border: 1px solid #333; color: var(--green); border-radius: 5px; 
+            width: 100%; padding: 14px; margin: 10px 0; background: #151515; 
+            border: 1px solid #333; color: var(--green); border-radius: 6px; 
             font-family: 'Roboto Mono'; font-weight: bold;
         }
 
         .action-btn {
-            background: var(--red); color: #fff; border: none; padding: 14px; 
-            width: 100%; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; 
+            background: var(--red); color: #fff; border: none; padding: 16px; 
+            width: 100%; border-radius: 6px; cursor: pointer; font-family: 'Orbitron'; 
             font-weight: 900; margin-top: auto; transition: 0.3s;
         }
-        .action-btn:hover { background: #fff; color: #000; transform: scale(1.02); }
+        .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
 
-        /* 3. Footer Container */
+        /* 3. Bottom Footer Container (Horizontal) */
         .footer-container {
-            width: 100%; padding: 15px 40px; background: #000; border-top: 1px solid #222;
-            display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Roboto Mono'; font-size: 10px; color: #444;
+            width: 100%; padding: 25px 40px; background: #000; border-top: 2px solid var(--red);
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            gap: 20px; text-align: center;
+        }
+        .footer-item { font-family: 'Roboto Mono'; font-size: 11px; color: #888; flex: 1; min-width: 250px; }
+        .footer-item b { color: var(--red); }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-container { grid-template-columns: 1fr 1fr; padding: 15px; }
+            .header-right { display: none; } /* Mobile lo social links header lo vaddu */
+            .header-center { text-align: left; }
+            .main-content { padding: 30px 10px; }
+            .footer-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -99,17 +84,14 @@
         <div class="header-left">
             <img src="logo.png" alt="Logo" class="logo-img">
         </div>
-
         <div class="header-center">
             <div class="brand-name">BINARY</div>
             <div class="ruthless-text">RUTHLESS TRADER</div>
         </div>
-
         <div class="header-right">
             <div class="social-links">
-                <a href="#">TG</a>
-                <a href="#">YT</a>
-                <a href="#">IG</a>
+                <a href="#">TELEGRAM</a>
+                <a href="#">YOUTUBE</a>
             </div>
         </div>
     </header>
@@ -118,15 +100,15 @@
         <div class="small-container">
             <h3>LOGIN</h3>
             <input type="email" placeholder="EMAIL">
-            <input type="password" placeholder="PASSWORD">
-            <button class="action-btn">ACCESS PANEL</button>
+            <input type="text" placeholder="USER ID">
+            <button class="action-btn">ENTER SYSTEM</button>
         </div>
 
         <div class="small-container">
             <h3>SIGNUP</h3>
-            <input type="email" placeholder="EMAIL">
+            <input type="email" placeholder="ENTER NEW EMAIL">
             <select>
-                <option>SELECT BROKER</option>
+                <option value="">SELECT BROKER</option>
                 <option>QUOTEX</option>
                 <option>POCKET OPTION</option>
             </select>
@@ -134,21 +116,27 @@
         </div>
 
         <div class="small-container">
-            <h3>VERIFY ID</h3>
-            <input type="email" placeholder="EMAIL">
-            <input type="text" placeholder="BROKER ID">
+            <h3>VERIFY YOUR ID</h3>
+            <input type="email" placeholder="REGISTERED EMAIL">
+            <input type="text" placeholder="BROKER ACCOUNT ID">
             <button class="action-btn">VERIFY NOW</button>
         </div>
     </main>
 
     <footer class="footer-container">
-        <div>TRADING INVOLVES RISK.</div>
-        <div>CONTACT US</div>
-        <div>© BINARY RUTHLESS TRADER TM</div>
+        <div class="footer-item">
+            <b>NOTE:</b> Trading involves high financial risk. We are not responsible for your losses. Use our signals wisely.
+        </div>
+        <div class="footer-item">
+            <b>CONTACT US:</b> Telegram @BinaryRuthlessAdmin | Email: support@binaryruthlesstrader.com
+        </div>
+        <div class="footer-item">
+            <b>TRADE MARK:</b> © 2026 BINARY RUTHLESS TRADER™ - ALL RIGHTS RESERVED.
+        </div>
     </footer>
 
     <script>
-        // Zoom Prevention Script
+        // Zoom prevention
         document.addEventListener('wheel', e => e.ctrlKey && e.preventDefault(), { passive: false });
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && [61, 107, 173, 109, 187, 189].includes(e.keyCode)) e.preventDefault();
