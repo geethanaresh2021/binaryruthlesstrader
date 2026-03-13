@@ -3,30 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="google-site-verification" content="atI3cRsY1a2HD_hUbJffT01S-fWiYEZyhjdletq_pqM" />
+    
+    <meta name="monetag" content="72bad8c59136ceaf9f536913881df1fe">
+    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
+
+    <meta name="description" content="Binary Ruthless Trader - Professional Binary Options Signals and VIP Strategies.">
+    <meta name="keywords" content="Binary Ruthless Trader, Binary Signals, Quotex, Trading">
+
     <title>Binary Ruthless Trader | Official</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    
     <style>
         :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        
-        .container { width: 90%; max-width: 380px; text-align: center; border: 2px solid var(--red); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); background: rgba(0,0,0,0.9); }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        .container { width: 90%; max-width: 380px; text-align: center; border: 2px solid var(--red); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); background: rgba(0,0,0,0.95); position: relative; }
         h1 { color: var(--red); font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); margin-bottom: 25px; }
-
-        /* SIGNAL BOX */
         .signal-box { background: #111; border: 1px dashed var(--green); padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-        #asset { font-size: 22px; margin-bottom: 10px; }
+        #asset { font-size: 22px; margin-bottom: 10px; color: #fff; }
         #action { font-size: 38px; font-weight: 900; }
         .CALL { color: var(--green); text-shadow: 0 0 15px var(--green); }
         .PUT { color: var(--red); text-shadow: 0 0 15px var(--red); }
         .expiry { font-family: 'Roboto Mono'; font-size: 12px; color: #888; margin-top: 10px; }
-
-        /* ADMIN PANEL HIDDEN BY DEFAULT */
         #adminArea { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px; font-family: 'Roboto Mono'; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px; font-family: 'Roboto Mono'; box-sizing: border-box; }
         .admin-btn { background: var(--red); font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
-        
-        .admin-toggle { font-size: 10px; color: #333; cursor: pointer; text-decoration: none; margin-top: 20px; }
+        .admin-toggle { font-size: 10px; color: #222; cursor: pointer; text-decoration: none; margin-top: 20px; transition: 0.3s; }
+        .admin-toggle:hover { color: #555; }
     </style>
+
+    <script src='https://gizokraijaw.net/vignette.min.js' data-zone='10723459' data-sdk='show'></script>
 </head>
 <body>
 
@@ -34,15 +42,15 @@
     <h1>RUTHLESS SIGNALS</h1>
     
     <div class="signal-box">
-        <div id="asset">LOADING...</div>
+        <div id="asset">WAITING FOR ADMIN...</div>
         <div id="action">--</div>
         <div class="expiry">TIME: <span id="time">--:--</span> | EXP: <span id="exp">--</span></div>
     </div>
 
     <div id="adminArea">
-        <h3 style="color: var(--green); font-size: 14px;">ADMIN CONTROL</h3>
-        <input type="text" id="dbUrlInput" placeholder="Firebase URL (One time)">
-        <input type="text" id="assetInput" placeholder="Asset (e.g. EUR/USD)">
+        <h3 style="color: var(--green); font-size: 14px; margin-bottom: 10px;">ADMIN CONTROL</h3>
+        <input type="text" id="dbUrlInput" placeholder="Paste Firebase Database URL here">
+        <input type="text" id="assetInput" placeholder="Asset (e.g. EUR/USD OTC)">
         <select id="actionInput">
             <option value="CALL">CALL (UP)</option>
             <option value="PUT">PUT (DOWN)</option>
@@ -55,14 +63,15 @@
 </div>
 
 <script>
-    // 1. ఇక్కడ మీ Firebase URL ఇవ్వండి (User సైడ్ డేటా రావడానికి)
-    const dbUrl = "YOUR_FIREBASE_URL_HERE/signals.json";
-    const adminPass = "1234"; // ఇక్కడ మీ ఇష్టం వచ్చిన పాస్‌వర్డ్ పెట్టుకోండి
+    // 1. ఇక్కడ మీ Firebase URL ఖచ్చితంగా ఇవ్వండి (చివర్లో / ఉండకూడదు)
+    // ఉదాహరణ: "https://your-project-default-rtdb.firebaseio.com"
+    const dbUrl = "YOUR_FIREBASE_URL_HERE"; 
+    const adminPass = "1234"; // మీ సీక్రెట్ పాస్‌వర్డ్
 
-    // యూజర్ కి సిగ్నల్స్ చూపించడం
     async function fetchSignal() {
+        if(dbUrl === "YOUR_FIREBASE_URL_HERE") return;
         try {
-            const response = await fetch(dbUrl);
+            const response = await fetch(`${dbUrl}/signals.json`);
             const data = await response.json();
             if(data) {
                 document.getElementById('asset').innerText = data.asset;
@@ -71,22 +80,18 @@
                 document.getElementById('exp').innerText = data.expiry;
                 document.getElementById('time').innerText = data.time;
             }
-        } catch (e) { console.log("Waiting..."); }
+        } catch (e) { console.log("Connecting..."); }
     }
 
-    // అడ్మిన్ ఏరియా చూపించడం
     function checkAdmin() {
         const pass = prompt("Enter Admin Password:");
         if(pass === adminPass) {
             document.getElementById('adminArea').style.display = 'block';
             const savedUrl = localStorage.getItem('fb_url');
             if(savedUrl) document.getElementById('dbUrlInput').value = savedUrl;
-        } else {
-            alert("Wrong Password!");
-        }
+        } else { alert("Access Denied!"); }
     }
 
-    // సిగ్నల్ అప్‌డేట్ చేయడం
     async function pushSignal() {
         const url = document.getElementById('dbUrlInput').value;
         if(!url) return alert("Enter Firebase URL!");
@@ -100,8 +105,9 @@
         };
 
         try {
-            await fetch(`${url}/signals.json`, { method: 'PUT', body: JSON.stringify(data) });
-            alert("Signal Pushed!");
+            const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+            await fetch(`${cleanUrl}/signals.json`, { method: 'PUT', body: JSON.stringify(data) });
+            alert("Signal Live!");
             fetchSignal();
         } catch (e) { alert("Error: " + e); }
     }
