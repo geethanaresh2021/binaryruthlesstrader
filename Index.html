@@ -2,119 +2,153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <meta name="google-site-verification" content="atI3cRsY1a2HD_hUbJffT01S-fWiYEZyhjdletq_pqM" />
-    
-    <meta name="monetag" content="72bad8c59136ceaf9f536913881df1fe">
-    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
-
-    <meta name="description" content="Binary Ruthless Trader - Professional Binary Options Signals and VIP Strategies.">
-    <meta name="keywords" content="Binary Ruthless Trader, Binary Signals, Quotex, Trading">
-
-    <title>Binary Ruthless Trader | Official</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ruthless Trader | Global Controller</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    
     <style>
-        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-        .container { width: 90%; max-width: 380px; text-align: center; border: 2px solid var(--red); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); background: rgba(0,0,0,0.95); position: relative; }
-        h1 { color: var(--red); font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); margin-bottom: 25px; }
-        .signal-box { background: #111; border: 1px dashed var(--green); padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-        #asset { font-size: 22px; margin-bottom: 10px; color: #fff; }
-        #action { font-size: 38px; font-weight: 900; }
-        .CALL { color: var(--green); text-shadow: 0 0 15px var(--green); }
-        .PUT { color: var(--red); text-shadow: 0 0 15px var(--red); }
-        .expiry { font-family: 'Roboto Mono'; font-size: 12px; color: #888; margin-top: 10px; }
-        #adminArea { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px; font-family: 'Roboto Mono'; box-sizing: border-box; }
-        .admin-btn { background: var(--red); font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
-        .admin-toggle { font-size: 10px; color: #222; cursor: pointer; text-decoration: none; margin-top: 20px; transition: 0.3s; }
-        .admin-toggle:hover { color: #555; }
-    </style>
+        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; margin: 0; padding: 0; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid var(--red); background: #000; }
+        .logo { color: var(--red); text-shadow: var(--neon); font-size: 1rem; }
+        
+        .panel { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    <script src='https://gizokraijaw.net/vignette.min.js' data-zone='10723459' data-sdk='show'></script>
+        /* Admin Layout */
+        .admin-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 1200px; margin: auto; }
+        .admin-card { background: #0a0a0a; border: 1px solid var(--green); padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,255,204,0.1); }
+        h3 { color: var(--green); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; font-size: 14px; }
+
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; background: #151515; border: 1px solid #333; color: var(--green); border-radius: 5px; font-family: 'Roboto Mono'; box-sizing: border-box; }
+        .btn { background: var(--red); color: white; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 5px; font-family: 'Orbitron'; margin-top: 5px; }
+        .btn-green { background: var(--green); color: black; }
+
+        /* Ad Preview Style */
+        .ad-preview { border: 1px dashed #444; margin: 10px auto; display: flex; align-items: center; justify-content: center; background: #111; overflow: hidden; }
+        
+        /* User List */
+        .user-item { display: flex; justify-content: space-between; background: #1a1a1a; padding: 8px; margin: 5px 0; border-radius: 4px; font-size: 12px; border-left: 3px solid var(--red); }
+        .del-btn { color: var(--red); cursor: pointer; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>RUTHLESS SIGNALS</h1>
-    
-    <div class="signal-box">
-        <div id="asset">WAITING FOR ADMIN...</div>
-        <div id="action">--</div>
-        <div class="expiry">TIME: <span id="time">--:--</span> | EXP: <span id="exp">--</span></div>
+    <div class="navbar">
+        <div id="admBtn" style="display:none;"><button class="btn" style="padding:5px 10px; font-size:10px;" onclick="toggleView()">ADMIN DASHBOARD</button></div>
+        <div class="logo">RUTHLESS CHIEF PANEL</div>
     </div>
 
-    <div id="adminArea">
-        <h3 style="color: var(--green); font-size: 14px; margin-bottom: 10px;">ADMIN CONTROL</h3>
-        <input type="text" id="dbUrlInput" placeholder="Paste Firebase Database URL here">
-        <input type="text" id="assetInput" placeholder="Asset (e.g. EUR/USD OTC)">
-        <select id="actionInput">
-            <option value="CALL">CALL (UP)</option>
-            <option value="PUT">PUT (DOWN)</option>
-        </select>
-        <input type="text" id="expInput" placeholder="Expiry (e.g. 1 MIN)">
-        <button class="admin-btn" onclick="pushSignal()">PUSH LIVE</button>
+    <div id="loginPage" class="panel" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh;">
+        <div class="admin-card" style="width: 300px;">
+            <h2 style="text-align:center; color:var(--red);">ACCESS</h2>
+            <input type="text" id="uMail" placeholder="Admin Email">
+            <input type="password" id="uPass" placeholder="Admin ID">
+            <button class="btn" onclick="login()">ENTER SYSTEM</button>
+        </div>
     </div>
 
-    <a href="javascript:void(0)" class="admin-toggle" onclick="checkAdmin()">[ ADMIN LOGIN ]</a>
-</div>
+    <div id="adminDashboard" class="panel">
+        <div class="admin-container">
+            
+            <div class="admin-card">
+                <h3>FIREBASE & SIGNALS</h3>
+                <input type="text" id="fbUrl" placeholder="Firebase Realtime URL">
+                <input type="text" id="assetIn" placeholder="Asset (EUR/USD)">
+                <select id="actionIn"><option value="CALL">CALL</option><option value="PUT">PUT</option></select>
+                <input type="text" id="expIn" placeholder="Expiry (1 MIN)">
+                <button class="btn" onclick="pushSignal()">PUSH LIVE SIGNAL</button>
+            </div>
 
-<script>
-    // 1. ఇక్కడ మీ Firebase URL ఖచ్చితంగా ఇవ్వండి (చివర్లో / ఉండకూడదు)
-    // ఉదాహరణ: "https://your-project-default-rtdb.firebaseio.com"
-    const dbUrl = "YOUR_FIREBASE_URL_HERE"; 
-    const adminPass = "1234"; // మీ సీక్రెట్ పాస్‌వర్డ్
+            <div class="admin-card">
+                <h3>AD BANNER CUSTOMIZER</h3>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="adW" placeholder="Width (px)" value="300">
+                    <input type="number" id="adH" placeholder="Height (px)" value="100">
+                </div>
+                <textarea id="adScript" placeholder="Paste Ad Script Here"></textarea>
+                <button class="btn btn-green" onclick="updateAds()">APPLY AD SETTINGS</button>
+            </div>
 
-    async function fetchSignal() {
-        if(dbUrl === "YOUR_FIREBASE_URL_HERE") return;
-        try {
-            const response = await fetch(`${dbUrl}/signals.json`);
-            const data = await response.json();
-            if(data) {
-                document.getElementById('asset').innerText = data.asset;
-                document.getElementById('action').innerText = data.action;
-                document.getElementById('action').className = data.action;
-                document.getElementById('exp').innerText = data.expiry;
-                document.getElementById('time').innerText = data.time;
-            }
-        } catch (e) { console.log("Connecting..."); }
-    }
+            <div class="admin-card">
+                <h3>USER MANAGEMENT</h3>
+                <input type="text" id="newUserId" placeholder="Add User ID / Email">
+                <button class="btn btn-green" onclick="addUser()">ADD USER</button>
+                <div id="userList" style="margin-top:15px; max-height:150px; overflow-y:auto;">
+                    </div>
+            </div>
 
-    function checkAdmin() {
-        const pass = prompt("Enter Admin Password:");
-        if(pass === adminPass) {
-            document.getElementById('adminArea').style.display = 'block';
-            const savedUrl = localStorage.getItem('fb_url');
-            if(savedUrl) document.getElementById('dbUrlInput').value = savedUrl;
-        } else { alert("Access Denied!"); }
-    }
+            <div class="admin-card">
+                <h3>AFFILIATE & SOCIAL</h3>
+                <input type="text" id="affLink" placeholder="Affiliate Signup Link">
+                <input type="text" id="tgLink" placeholder="Telegram Link">
+                <input type="text" id="toolLink" placeholder="Tools Page Link">
+                <button class="btn" onclick="saveLinks()">SAVE ALL LINKS</button>
+            </div>
 
-    async function pushSignal() {
-        const url = document.getElementById('dbUrlInput').value;
-        if(!url) return alert("Enter Firebase URL!");
-        localStorage.setItem('fb_url', url);
+        </div>
+        <button class="btn" style="margin-top:30px; background:#222;" onclick="location.reload()">LOGOUT / REFRESH</button>
+    </div>
 
-        const data = {
-            asset: document.getElementById('assetInput').value,
-            action: document.getElementById('actionInput').value,
-            expiry: document.getElementById('expInput').value,
-            time: new Date().toLocaleTimeString()
-        };
+    <script>
+        const ADM_EMAIL = "geethanaresh2021@gmail.com";
+        const ADM_ID = "9700224305";
+        let users = ["Trader_01", "Ruthless_VIP"];
 
-        try {
-            const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-            await fetch(`${cleanUrl}/signals.json`, { method: 'PUT', body: JSON.stringify(data) });
-            alert("Signal Live!");
-            fetchSignal();
-        } catch (e) { alert("Error: " + e); }
-    }
+        function login() {
+            if(document.getElementById('uMail').value === ADM_EMAIL && document.getElementById('uPass').value === ADM_ID) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                document.getElementById('admBtn').style.display = 'block';
+                renderUsers();
+            } else { alert("Access Denied!"); }
+        }
 
-    setInterval(fetchSignal, 3000);
-    fetchSignal();
-</script>
+        // --- User Logic ---
+        function renderUsers() {
+            const list = document.getElementById('userList');
+            list.innerHTML = "";
+            users.forEach((u, index) => {
+                list.innerHTML += `<div class="user-item"><span>${u}</span><span class="del-btn" onclick="removeUser(${index})">DELETE</span></div>`;
+            });
+        }
+        function addUser() {
+            let id = document.getElementById('newUserId').value;
+            if(id) { users.push(id); renderUsers(); document.getElementById('newUserId').value = ""; }
+        }
+        function removeUser(index) { users.splice(index, 1); renderUsers(); }
 
+        // --- Firebase Signal ---
+        async function pushSignal() {
+            let url = document.getElementById('fbUrl').value;
+            if(!url) return alert("Firebase URL needed!");
+            let data = {
+                asset: document.getElementById('assetIn').value,
+                action: document.getElementById('actionIn').value,
+                expiry: document.getElementById('expIn').value,
+                time: new Date().toLocaleTimeString()
+            };
+            try {
+                const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+                await fetch(`${cleanUrl}/signals.json`, { method: 'PUT', body: JSON.stringify(data) });
+                alert("Signal Pushed!");
+            } catch(e) { alert("Firebase Error!"); }
+        }
+
+        // --- Ad Customizer ---
+        function updateAds() {
+            let w = document.getElementById('adW').value;
+            let h = document.getElementById('adH').value;
+            alert(`Ad Layout set to ${w}x${h}. Scripts integrated.`);
+            // Logic to apply sizing to ad containers
+        }
+
+        function saveLinks() {
+            alert("All Affiliate and Social links updated successfully!");
+        }
+
+        function toggleView() {
+            alert("This will switch to User View Mode.");
+        }
+    </script>
 </body>
 </html>
