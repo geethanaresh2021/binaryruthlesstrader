@@ -22,6 +22,7 @@
             justify-content: center; 
             min-height: 100vh;
             overflow: hidden;
+            touch-action: manipulation;
         }
         .container { 
             text-align: center; 
@@ -32,6 +33,8 @@
             max-width: 350px;
             background: rgba(0, 0, 0, 0.9);
             border-radius: 5px;
+            position: relative;
+            z-index: 1;
         }
         h1 { 
             color: #ff0000; 
@@ -41,34 +44,46 @@
             margin-bottom: 25px; 
             text-shadow: 0 0 10px #ff0000;
         }
-        .ad-box {
+        .status-box {
             margin: 20px auto;
             padding: 15px;
-            border: 1px dashed #333;
-            color: #444;
+            border: 1px dashed #444;
+            color: #00ffcc;
+            font-family: 'Roboto Mono', monospace;
             font-size: 12px;
-        }
-        .status { 
-            margin-top: 20px; 
-            font-size: 10px; 
-            color: #00ffcc; 
-            font-family: 'Roboto Mono', monospace; 
             font-weight: bold;
         }
+        .footer-text { 
+            margin-top: 20px; 
+            font-size: 9px; 
+            color: #555; 
+            letter-spacing: 1px;
+        }
     </style>
+
+    <script src='https://gizokraijaw.net/vignette.min.js' data-zone='10723459' data-sdk='show'></script>
+
 </head>
 <body>
 
     <div class="container">
         <h1>Binary Ruthless Trader</h1>
         
-        <div class="ad-box">
-            AD INITIALIZING...
-            <script>(function(s){s.dataset.zone='10723459',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+        <div class="status-box">
+            [ SYSTEM STATUS: ONLINE ]<br>
+            [ ENCRYPTED DATA: ACTIVE ]<br>
+            [ ADS: INITIALIZING... ]
         </div>
 
-        <div class="status">SYSTEM: ACTIVE | ADS: ENABLED</div>
+        <div class="footer-text">SECURED BY RUTHLESS INFRASTRUCTURE</div>
     </div>
+
+    <script>
+        (function(s){
+            s.dataset.zone='10723459';
+            s.src='https://gizokraijaw.net/vignette.min.js';
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    </script>
 
 </body>
 </html>
