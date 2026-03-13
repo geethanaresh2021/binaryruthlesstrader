@@ -28,7 +28,7 @@
             width: 100%; 
             padding: 10px 50px;
             display: grid; 
-            grid-template-columns: 200px 1fr 250px; /* Logo, Brand(Center), Social(Right) */
+            grid-template-columns: 200px 1fr 250px; 
             align-items: center; 
             border-bottom: 2px solid var(--red);
             background: #000;
@@ -37,12 +37,11 @@
 
         .header-left { display: flex; justify-content: flex-start; }
         .logo-img { width: 120px; height: auto; transition: 0.3s; }
-        .logo-img:hover { filter: drop-shadow(0 0 10px var(--red)); }
 
         .header-center { display: flex; justify-content: center; align-items: center; }
-        /* మీ బ్రాండ్ నేమ్ ఇమేజ్ ఇక్కడ */
+        /* అప్‌డేట్ చేసిన ఇమేజ్ ఫైల్ నేమ్ */
         .brand-name-img { 
-            width: 600px; /* డెస్క్‌టాప్‌లో పెద్దగా రావడానికి */
+            width: 600px; 
             height: auto; 
             max-width: 95%; 
             filter: drop-shadow(0 0 12px rgba(255,0,0,0.4)); 
@@ -85,7 +84,6 @@
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* Hover Effects for Containers */
         .small-container:hover { 
             transform: translateY(-15px); 
             box-shadow: 0 0 40px var(--red); 
@@ -95,7 +93,6 @@
         .small-container h3 { 
             text-align: center; color: var(--red); margin-bottom: 25px; 
             font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 15px; 
-            letter-spacing: 2px;
         }
 
         input, select {
@@ -104,9 +101,7 @@
             font-family: 'Roboto Mono'; font-weight: bold; font-size: 14px;
             outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--green); box-shadow: 0 0 10px var(--green); }
 
-        /* Button Styling & Hover */
         .action-btn {
             background: var(--red); color: #fff; border: none; padding: 18px; 
             width: 100%; border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; 
@@ -128,12 +123,12 @@
         .footer-item { font-family: 'Roboto Mono'; font-size: 12px; color: #666; flex: 1; min-width: 300px; line-height: 1.6; }
         .footer-item b { color: var(--red); }
 
-        /* Responsive Logic (Tablets & Mobile) */
+        /* Responsive Logic */
         @media (max-width: 1200px) {
             .main-content { flex-wrap: wrap; flex-direction: row; }
             .small-container { flex: none; width: 340px; }
             .header-container { grid-template-columns: 1fr 1fr; }
-            .header-right { display: none; } /* Tablet view lo hide right side social */
+            .header-right { display: none; } 
         }
 
         @media (max-width: 768px) {
@@ -142,12 +137,11 @@
                 padding: 20px; gap: 15px; 
             }
             .brand-name-img { width: 350px; }
-            /* Mobile lo order change: Logo -> Brand -> Social */
             .header-right { display: flex; order: 3; width: 100%; justify-content: center; } 
             .header-center { order: 2; }
             .header-left { order: 1; }
             
-            .main-content { flex-direction: column; padding: 40px 15px; } /* Stack vertically */
+            .main-content { flex-direction: column; padding: 40px 15px; } 
             .small-container { width: 100%; max-width: 380px; }
             .footer-container { flex-direction: column; text-align: center; padding: 30px 20px; }
         }
@@ -161,14 +155,13 @@
         </div>
 
         <div class="header-center">
-            <img src="1000014226.png" alt="Binary Ruthless Trader" class="brand-name-img">
+            <img src="brand-name.png" alt="Binary Ruthless Trader" class="brand-name-img">
         </div>
 
         <div class="header-right">
             <div class="social-links">
                 <a href="#">TELEGRAM</a>
                 <a href="#">YOUTUBE</a>
-                <a href="#">INSTAGRAM</a>
             </div>
         </div>
     </header>
@@ -176,7 +169,7 @@
     <main class="main-content">
         <div class="small-container">
             <h3>LOGIN</h3>
-            <input type="email" placeholder="ENTER REGISTERED EMAIL">
+            <input type="email" placeholder="ENTER EMAIL">
             <input type="text" placeholder="ENTER USER ID">
             <button class="action-btn">ACCESS SYSTEM</button>
         </div>
@@ -185,17 +178,16 @@
             <h3>SIGNUP</h3>
             <input type="email" placeholder="ENTER NEW EMAIL">
             <select>
-                <option value="">SELECT YOUR BROKER</option>
+                <option value="">SELECT BROKER</option>
                 <option>QUOTEX</option>
                 <option>POCKET OPTION</option>
-                <option>TOXA</option>
             </select>
             <button class="action-btn">GET LINK</button>
         </div>
 
         <div class="small-container">
             <h3>VERIFY ID</h3>
-            <input type="email" placeholder="EMAIL USED FOR SIGNUP">
+            <input type="email" placeholder="REGISTERED EMAIL">
             <input type="text" placeholder="BROKER TRADERS ID">
             <button class="action-btn">VERIFY NOW</button>
         </div>
@@ -203,33 +195,21 @@
 
     <footer class="footer-container">
         <div class="footer-item">
-            <b>WARNING:</b> High risk investment. Trading binary options can result in loss of capital. We do not provide financial advice.
+            <b>WARNING:</b> High risk investment. Binary options trading involves risk of loss.
         </div>
         <div class="footer-item" style="text-align: center;">
-            <b>SUPPORT:</b> Contact Admin via Telegram @BinaryRuthlessAdmin<br>
+            <b>SUPPORT:</b> @BinaryRuthlessAdmin<br>
             Official Website: binaryruthlesstrader.com
         </div>
         <div class="footer-item" style="text-align: right;">
-            <b>INTELLECTUAL PROPERTY:</b> © 2026 BINARY RUTHLESS TRADER™<br>
-            All Branding and Assets are Reserved.
+            <b>TRADE MARK:</b> © 2026 BINARY RUTHLESS TRADER™
         </div>
     </footer>
 
     <script>
-        // Zoom Prevention - Keyboard and Mouse Scroll
-        document.addEventListener('wheel', e => {
-            if (e.ctrlKey) e.preventDefault();
-        }, { passive: false });
-
+        document.addEventListener('wheel', e => e.ctrlKey && e.preventDefault(), { passive: false });
         document.addEventListener('keydown', e => {
-            if (e.ctrlKey && [61, 107, 173, 109, 187, 189].includes(e.keyCode)) {
-                e.preventDefault();
-            }
-        });
-
-        // Mobile Scroll friendly behavior - optional enhancements
-        window.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
+            if (e.ctrlKey && [61, 107, 173, 109, 187, 189].includes(e.keyCode)) e.preventDefault();
         });
     </script>
 </body>
