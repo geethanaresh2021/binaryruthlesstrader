@@ -2,154 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <meta name="monetag" content="72bad8c59136ceaf9f536913881df1fe">
-    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
-
-    <title>Binary Ruthless Trader | Official</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ruthless Trader</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --neon-red: #ff0000;
-            --neon-green: #00ffcc;
-            --dark-bg: #050505;
-        }
-
-        body { 
-            background-color: var(--dark-bg);
-            background-image: radial-gradient(circle at center, #1a0000 0%, #050505 100%);
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* GLITCH ANIMATION */
-        @keyframes glitch {
-            0% { text-shadow: 2px 0 var(--neon-red), -2px 0 var(--neon-green); }
-            50% { text-shadow: -2px 0 var(--neon-red), 2px 0 var(--neon-green); }
-            100% { text-shadow: 2px 0 var(--neon-red), -2px 0 var(--neon-green); }
-        }
-
-        .main-card { 
-            text-align: center; 
-            border: 1px solid rgba(255, 0, 0, 0.3); 
-            padding: 40px 20px; 
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 0 40px rgba(255, 0, 0, 0.2), inset 0 0 10px rgba(255, 0, 0, 0.1);
-            width: 85%;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .main-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-red), transparent);
-        }
-
-        h1 { 
-            color: var(--neon-red); 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-            font-size: 22px; 
-            font-weight: 900;
-            margin-bottom: 35px; 
-            animation: glitch 1s infinite linear alternate-reverse;
-        }
-
-        /* PREMIUM BUTTON */
-        .ruthless-btn {
-            display: block;
-            background: linear-gradient(45deg, #700000, #ff0000);
-            color: #fff;
-            padding: 18px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
-            transition: all 0.4s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 15px 0;
-        }
-
-        .ruthless-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 0 30px var(--neon-red);
-            filter: brightness(1.2);
-        }
-
-        .secondary-btn {
-            background: transparent;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            box-shadow: none;
-        }
-
-        .secondary-btn:hover {
-            background: var(--neon-green);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-green);
-        }
-
-        .status-panel {
-            margin-top: 30px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 5px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 10px;
-            color: #888;
-            border-left: 3px solid var(--neon-red);
-            text-align: left;
-        }
-
-        .status-line {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
-
-        .dot { color: var(--neon-green); }
+        body { background: #000; color: #fff; font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { width: 320px; text-align: center; border: 2px solid #ff0000; padding: 25px; box-shadow: 0 0 30px #ff0000; border-radius: 10px; background: rgba(0,0,0,0.9); }
+        h1 { font-size: 18px; color: #ff0000; letter-spacing: 2px; }
+        .box { background: #111; border: 1px dashed #00ffcc; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        #asset { font-size: 20px; margin-bottom: 10px; }
+        #action { font-size: 35px; font-weight: 900; }
+        .CALL { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
+        .PUT { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
+        .SURESHOT { color: #ffff00; text-shadow: 0 0 15px #ffff00; }
+        .expiry { font-family: 'Roboto Mono'; font-size: 12px; color: #888; margin-top: 10px; }
     </style>
-
-    <script src='https://gizokraijaw.net/vignette.min.js' data-zone='10723459' data-sdk='show'></script>
 </head>
 <body>
 
-    <div class="main-card">
-        <h1>RUTHLESS TRADER</h1>
-        
-        <a href="YOUR_HILLTOPADS_DIRECT_LINK" class="ruthless-btn">
-            ⚡ JOIN VIP SIGNALS
-        </a>
-
-        <a href="#" class="ruthless-btn secondary-btn">
-            📊 MARKET ANALYSIS
-        </a>
-
-        <div class="status-panel">
-            <div class="status-line"><span>SERVER STATUS:</span> <span class="dot">ONLINE</span></div>
-            <div class="status-line"><span>MONETIZATION:</span> <span>ACTIVE <span class="blink">●</span></span></div>
-            <div class="status-line"><span>ENCRYPTION:</span> <span>AES-256 SECURED</span></div>
-        </div>
+<div class="card">
+    <h1>LIVE RUTHLESS SIGNAL</h1>
+    <div class="box">
+        <div id="asset">WAITING...</div>
+        <div id="action">--</div>
+        <div class="expiry">TIME: <span id="time">--:--</span> | EXP: <span id="exp">--</span></div>
     </div>
+</div>
 
+<script>
+    // ఇక్కడ మీ Firebase Database URL ఇవ్వండి
+    const dbUrl = "YOUR_FIREBASE_DATABASE_URL_HERE/signals.json";
+
+    async function fetchSignal() {
+        try {
+            const response = await fetch(dbUrl);
+            const data = await response.json();
+            if(data) {
+                document.getElementById('asset').innerText = data.asset;
+                document.getElementById('action').innerText = data.action;
+                document.getElementById('action').className = data.action;
+                document.getElementById('exp').innerText = data.expiry;
+                document.getElementById('time').innerText = data.time;
+            }
+        } catch (e) { console.log("Waiting for signal..."); }
+    }
+
+    // ప్రతి 3 సెకన్లకు డేటా అప్‌డేట్ చేస్తుంది
+    setInterval(fetchSignal, 3000);
+    fetchSignal();
+</script>
 </body>
 </html>
