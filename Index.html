@@ -2,37 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binary Ruthless Trader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binary Ruthless Trader | Official</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { width: 320px; text-align: center; border: 2px solid #ff0000; padding: 25px; box-shadow: 0 0 30px #ff0000; border-radius: 10px; background: rgba(0,0,0,0.9); }
-        h1 { font-size: 18px; color: #ff0000; letter-spacing: 2px; }
-        .box { background: #111; border: 1px dashed #00ffcc; padding: 15px; margin: 20px 0; border-radius: 5px; }
-        #asset { font-size: 20px; margin-bottom: 10px; }
-        #action { font-size: 35px; font-weight: 900; }
-        .CALL { color: #00ffcc; text-shadow: 0 0 15px #00ffcc; }
-        .PUT { color: #ff0000; text-shadow: 0 0 15px #ff0000; }
-        .SURESHOT { color: #ffff00; text-shadow: 0 0 15px #ffff00; }
+        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        .container { width: 90%; max-width: 380px; text-align: center; border: 2px solid var(--red); padding: 30px; border-radius: 10px; box-shadow: 0 0 25px var(--red); background: rgba(0,0,0,0.9); }
+        h1 { color: var(--red); font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); margin-bottom: 25px; }
+
+        /* SIGNAL BOX */
+        .signal-box { background: #111; border: 1px dashed var(--green); padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        #asset { font-size: 22px; margin-bottom: 10px; }
+        #action { font-size: 38px; font-weight: 900; }
+        .CALL { color: var(--green); text-shadow: 0 0 15px var(--green); }
+        .PUT { color: var(--red); text-shadow: 0 0 15px var(--red); }
         .expiry { font-family: 'Roboto Mono'; font-size: 12px; color: #888; margin-top: 10px; }
+
+        /* ADMIN PANEL HIDDEN BY DEFAULT */
+        #adminArea { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px; font-family: 'Roboto Mono'; }
+        .admin-btn { background: var(--red); font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
+        
+        .admin-toggle { font-size: 10px; color: #333; cursor: pointer; text-decoration: none; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>LIVE RUTHLESS SIGNAL</h1>
-    <div class="box">
-        <div id="asset">WAITING...</div>
+<div class="container">
+    <h1>RUTHLESS SIGNALS</h1>
+    
+    <div class="signal-box">
+        <div id="asset">LOADING...</div>
         <div id="action">--</div>
         <div class="expiry">TIME: <span id="time">--:--</span> | EXP: <span id="exp">--</span></div>
     </div>
+
+    <div id="adminArea">
+        <h3 style="color: var(--green); font-size: 14px;">ADMIN CONTROL</h3>
+        <input type="text" id="dbUrlInput" placeholder="Firebase URL (One time)">
+        <input type="text" id="assetInput" placeholder="Asset (e.g. EUR/USD)">
+        <select id="actionInput">
+            <option value="CALL">CALL (UP)</option>
+            <option value="PUT">PUT (DOWN)</option>
+        </select>
+        <input type="text" id="expInput" placeholder="Expiry (e.g. 1 MIN)">
+        <button class="admin-btn" onclick="pushSignal()">PUSH LIVE</button>
+    </div>
+
+    <a href="javascript:void(0)" class="admin-toggle" onclick="checkAdmin()">[ ADMIN LOGIN ]</a>
 </div>
 
 <script>
-    // ఇక్కడ మీ Firebase Database URL ఇవ్వండి
-    const dbUrl = "YOUR_FIREBASE_DATABASE_URL_HERE/signals.json";
+    // 1. ఇక్కడ మీ Firebase URL ఇవ్వండి (User సైడ్ డేటా రావడానికి)
+    const dbUrl = "YOUR_FIREBASE_URL_HERE/signals.json";
+    const adminPass = "1234"; // ఇక్కడ మీ ఇష్టం వచ్చిన పాస్‌వర్డ్ పెట్టుకోండి
 
+    // యూజర్ కి సిగ్నల్స్ చూపించడం
     async function fetchSignal() {
         try {
             const response = await fetch(dbUrl);
@@ -44,12 +71,44 @@
                 document.getElementById('exp').innerText = data.expiry;
                 document.getElementById('time').innerText = data.time;
             }
-        } catch (e) { console.log("Waiting for signal..."); }
+        } catch (e) { console.log("Waiting..."); }
     }
 
-    // ప్రతి 3 సెకన్లకు డేటా అప్‌డేట్ చేస్తుంది
+    // అడ్మిన్ ఏరియా చూపించడం
+    function checkAdmin() {
+        const pass = prompt("Enter Admin Password:");
+        if(pass === adminPass) {
+            document.getElementById('adminArea').style.display = 'block';
+            const savedUrl = localStorage.getItem('fb_url');
+            if(savedUrl) document.getElementById('dbUrlInput').value = savedUrl;
+        } else {
+            alert("Wrong Password!");
+        }
+    }
+
+    // సిగ్నల్ అప్‌డేట్ చేయడం
+    async function pushSignal() {
+        const url = document.getElementById('dbUrlInput').value;
+        if(!url) return alert("Enter Firebase URL!");
+        localStorage.setItem('fb_url', url);
+
+        const data = {
+            asset: document.getElementById('assetInput').value,
+            action: document.getElementById('actionInput').value,
+            expiry: document.getElementById('expInput').value,
+            time: new Date().toLocaleTimeString()
+        };
+
+        try {
+            await fetch(`${url}/signals.json`, { method: 'PUT', body: JSON.stringify(data) });
+            alert("Signal Pushed!");
+            fetchSignal();
+        } catch (e) { alert("Error: " + e); }
+    }
+
     setInterval(fetchSignal, 3000);
     fetchSignal();
 </script>
+
 </body>
 </html>
