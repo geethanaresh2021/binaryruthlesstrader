@@ -1,112 +1,907 @@
-// ===============================================================
-// Assumed Data Model
-// ===============================================================
-//
-// Collection: settings
-// Document: config
-// Fields: secretPath (string), affiliateLink (string), cpm (number), etc.
-//
-// Collection: layout
-// Document ID: elementId
-// Fields: id (string), type (string), label (string), desktop (map), mobile (map)
-//
-// Collection: analytics
-// Document ID: date (YYYY-MM-DD)
-// Fields: date (string), uniqueVisitors (number), views (number)
-//
-// Collection: ads
-// Document ID: slotId
-// Fields: id (string), code (string), active (bool)
-//
-// Collection: signals
-// Document ID: signalId
-// Fields: name (string), active (bool)
-//
-// ===============================================================
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { 
+  Users, 
+  Eye, 
+  Activity, 
+  IndianRupee, 
+  Layout, 
+  Link as LinkIcon, 
+  Shield, 
+  Save, 
+  Smartphone, 
+  Monitor,
+  Move,
+  Settings,
+  Plus,
+  Trash2,
+  Lock,
+  Unlock,
+  RefreshCw,
+  Search,
+  ExternalLink,
+  ChevronDown,
+  LogOut,
+  AlertCircle,
+  Send,
+  Instagram
+} from 'lucide-react';
+import { motion, AnimatePresence, Reorder } from 'motion/react';
+import { 
+  collection, 
+  doc, 
+  onSnapshot, 
+  setDoc, 
+  updateDoc, 
+  getDoc, 
+  increment,
+  query,
+  where,
+  getDocs
+} from 'firebase/firestore';
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'firebase/auth';
+import { db, auth, handleFirestoreError, OperationType } from './firebase';
 
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+// --- Types ---
+interface AppConfig {
+  secretPath: string;
+  affiliateLink: string;
+  cpm: number;
+  exchangeRate: number;
+  adRefreshInterval: number;
+  giveawayWinner: string;
+  giveawayPrize: number;
+  otpLoginEnabled: boolean;
+  telegramLink: string;
+  instagramLink: string;
+  logoUrl: string;
+}
 
-    // ===============================================================
-    // Helper Functions
-    // ===============================================================
-    
-    function isAuthenticated() {
-      return request.auth != null;
-    }
+interface LayoutElement {
+  id: string;
+  type: 'logo' | 'button' | 'signals' | 'ad' | 'tool';
+  label: string;
+  desktop: { x: number; y: number; width: number; height: number };
+  mobile: { x: number; y: number; width: number; height: number };
+}
 
-    function isAdmin() {
-      return isAuthenticated() &&
-        ((exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
-          (request.auth.token.email == "geetharithvika2021@gmail.com" && request.auth.token.email_verified == true));
-    }
+interface AdSlot {
+  id: string;
+  code: string;
+  active: boolean;
+}
 
-    function hasOnlyAllowedFields(fields) {
-      return request.resource.data.keys().hasOnly(fields);
-    }
+interface SignalPlatform {
+  id: string;
+  name: string;
+  active: boolean;
+}
 
-    function isValidConfig(data) {
-      return data.secretPath is string && data.secretPath.size() > 0 && data.secretPath.size() < 100 &&
-             data.affiliateLink is string && data.affiliateLink.size() < 500 &&
-             data.cpm is number && data.cpm >= 0 &&
-             data.exchangeRate is number &&
-             data.adRefreshInterval is number &&
-             data.giveawayPrize is number;
-    }
+interface DailyStats {
+  uniqueVisitors: number;
+  views: number;
+}
 
-    function isValidLayout(data) {
-      return data.id is string && data.type in ['logo', 'button', 'signals', 'ad', 'tool'] &&
-             data.desktop is map && data.mobile is map;
-    }
+// --- Components ---
 
-    function isValidAd(data) {
-      return data.id is string && data.code is string && data.active is bool;
-    }
+const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  const [hasError, setHasError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-    // ===============================================================
-    // Rules
-    // ===============================================================
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      setHasError(true);
+      setErrorMsg(event.message);
+    };
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
 
-    // Default deny
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // Settings
-    match /settings/config {
-      allow read: if true; // Publicly readable for the home page
-      allow write: if isAdmin() && isValidConfig(request.resource.data);
-    }
-
-    // Layout
-    match /layout/{elementId} {
-      allow read: if true;
-      allow write: if isAdmin() && isValidLayout(request.resource.data);
-    }
-
-    // Ads
-    match /ads/{slotId} {
-      allow read: if true;
-      allow write: if isAdmin() && isValidAd(request.resource.data);
-    }
-
-    // Signals
-    match /signals/{signalId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Analytics
-    match /analytics/{date} {
-      allow read: if true; // Admin reads, but home page might need to increment
-      allow write: if true; // Home page increments views/visitors
-    }
-
-    // Users (for RBAC)
-    match /users/{userId} {
-      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      allow write: if isAdmin();
-    }
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="bg-red-950/20 border border-red-500 p-8 rounded-xl max-w-md w-full text-center">
+          <AlertCircle className="text-red-500 mx-auto mb-4" size={48} />
+          <h1 className="text-2xl font-bold text-white mb-2">Something went wrong</h1>
+          <p className="text-red-400 text-sm mb-4">{errorMsg}</p>
+          <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold">
+            Reload App
+          </button>
+        </div>
+      </div>
+    );
   }
+  return <>{children}</>;
+};
+
+export default function App() {
+  const [page, setPage] = useState<'home' | 'admin'>('home');
+  const [isAdminEnabled, setIsAdminEnabled] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [config, setConfig] = useState<AppConfig | null>(null);
+  const [layout, setLayout] = useState<LayoutElement[]>([]);
+  const [ads, setAds] = useState<AdSlot[]>([]);
+  const [signals, setSignals] = useState<SignalPlatform[]>([]);
+  const [stats, setStats] = useState<DailyStats>({ uniqueVisitors: 0, views: 0 });
+  const [activeUsers, setActiveUsers] = useState(5); // Simulated live users
+  const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [isSaving, setIsSaving] = useState(false);
+
+  // --- Security: Stealth Redirect ---
+  useEffect(() => {
+    const handleDevTools = (e: KeyboardEvent) => {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+        window.location.href = 'about:blank';
+      }
+    };
+    window.addEventListener('keydown', handleDevTools);
+    
+    // Detect Inspect Element via context menu
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('keydown', handleDevTools);
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
+  // --- Secret Path Detection ---
+  useEffect(() => {
+    const checkPath = () => {
+      const path = window.location.pathname.slice(1);
+      if (config && path === config.secretPath) {
+        setIsAdminEnabled(true);
+      }
+    };
+    checkPath();
+    window.addEventListener('popstate', checkPath);
+    return () => window.removeEventListener('popstate', checkPath);
+  }, [config]);
+
+  // --- Firebase Listeners ---
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setIsAuthReady(true);
+    });
+
+    const unsubscribeConfig = onSnapshot(doc(db, 'settings', 'config'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        setConfig({
+          ...data,
+          logoUrl: data.logoUrl || 'https://picsum.photos/seed/ruthless/100/100',
+          telegramLink: data.telegramLink || 'https://t.me/ruthlesstrader',
+          instagramLink: data.instagramLink || 'https://instagram.com/ruthlesstrader',
+          giveawayWinner: data.giveawayWinner || 'None',
+          giveawayPrize: data.giveawayPrize || 0,
+          otpLoginEnabled: data.otpLoginEnabled || false,
+        } as AppConfig);
+      } else {
+        // Initial setup if doesn't exist
+        const initialConfig: AppConfig = {
+          secretPath: '9700224305',
+          affiliateLink: 'https://quotex.com/register',
+          cpm: 1.50,
+          exchangeRate: 83.50,
+          adRefreshInterval: 15,
+          giveawayWinner: 'None',
+          giveawayPrize: 0,
+          otpLoginEnabled: false,
+          telegramLink: 'https://t.me/ruthlesstrader',
+          instagramLink: 'https://instagram.com/ruthlesstrader',
+          logoUrl: 'https://picsum.photos/seed/ruthless/100/100'
+        };
+        setDoc(doc(db, 'settings', 'config'), initialConfig).catch(e => handleFirestoreError(e, OperationType.WRITE, 'settings/config'));
+      }
+    }, (e) => handleFirestoreError(e, OperationType.GET, 'settings/config'));
+
+    const unsubscribeLayout = onSnapshot(collection(db, 'layout'), (snapshot) => {
+      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as LayoutElement));
+      setLayout(items);
+    }, (e) => handleFirestoreError(e, OperationType.GET, 'layout'));
+
+    const unsubscribeAds = onSnapshot(collection(db, 'ads'), (snapshot) => {
+      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as AdSlot));
+      setAds(items);
+    }, (e) => handleFirestoreError(e, OperationType.GET, 'ads'));
+
+    const unsubscribeSignals = onSnapshot(collection(db, 'signals'), (snapshot) => {
+      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as SignalPlatform));
+      setSignals(items);
+    }, (e) => handleFirestoreError(e, OperationType.GET, 'signals'));
+
+    const today = new Date().toISOString().split('T')[0];
+    const unsubscribeStats = onSnapshot(doc(db, 'analytics', today), (snapshot) => {
+      if (snapshot.exists()) {
+        setStats(snapshot.data() as DailyStats);
+      } else {
+        // Initialize with default values if not exists
+        setDoc(doc(db, 'analytics', today), { uniqueVisitors: 0, views: 0 }, { merge: true }).catch(e => handleFirestoreError(e, OperationType.WRITE, `analytics/${today}`));
+      }
+    }, (e) => handleFirestoreError(e, OperationType.GET, `analytics/${today}`));
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeConfig();
+      unsubscribeLayout();
+      unsubscribeAds();
+      unsubscribeSignals();
+      unsubscribeStats();
+    };
+  }, []);
+
+  // --- One-time Database Initialization (Admin Only) ---
+  useEffect(() => {
+    const initDb = async () => {
+      if (!user || user.email !== "geetharithvika2021@gmail.com") return;
+
+      try {
+        const layoutSnap = await getDocs(collection(db, 'layout'));
+        if (layoutSnap.empty) {
+          const initialLayout: LayoutElement[] = [
+            { id: 'logo', type: 'logo', label: 'RUTHLESS', desktop: { x: 40, y: 40, width: 200, height: 50 }, mobile: { x: 20, y: 20, width: 150, height: 40 } },
+            { id: 'join-btn', type: 'button', label: 'JOIN NOW', desktop: { x: 40, y: 120, width: 200, height: 60 }, mobile: { x: 20, y: 80, width: 180, height: 50 } },
+            { id: 'signals-box', type: 'signals', label: 'Signals', desktop: { x: 40, y: 220, width: 320, height: 200 }, mobile: { x: 20, y: 160, width: 280, height: 180 } },
+            { id: 'tools-box', type: 'tool', label: 'Trading Tools', desktop: { x: 40, y: 440, width: 320, height: 200 }, mobile: { x: 20, y: 360, width: 280, height: 180 } },
+            { id: 'ad-1', type: 'ad', label: 'Ad Slot 1', desktop: { x: 400, y: 40, width: 300, height: 250 }, mobile: { x: 20, y: 560, width: 300, height: 250 } },
+            { id: 'ad-2', type: 'ad', label: 'Ad Slot 2', desktop: { x: 720, y: 40, width: 300, height: 250 }, mobile: { x: 20, y: 820, width: 300, height: 250 } },
+            { id: 'ad-3', type: 'ad', label: 'Ad Slot 3', desktop: { x: 400, y: 310, width: 300, height: 250 }, mobile: { x: 20, y: 1080, width: 300, height: 250 } },
+            { id: 'ad-4', type: 'ad', label: 'Ad Slot 4', desktop: { x: 720, y: 310, width: 300, height: 250 }, mobile: { x: 20, y: 1340, width: 300, height: 250 } },
+          ];
+          for (const el of initialLayout) {
+            await setDoc(doc(db, 'layout', el.id), el);
+          }
+        }
+
+        const adsSnap = await getDocs(collection(db, 'ads'));
+        if (adsSnap.empty) {
+          const initialAds = [
+            { id: 'ad-1', code: '<div style="color:red; font-weight:bold;">AD SLOT 1</div>', active: true },
+            { id: 'ad-2', code: '<div style="color:red; font-weight:bold;">AD SLOT 2</div>', active: true },
+            { id: 'ad-3', code: '<div style="color:red; font-weight:bold;">AD SLOT 3</div>', active: true },
+            { id: 'ad-4', code: '<div style="color:red; font-weight:bold;">AD SLOT 4</div>', active: true },
+          ];
+          for (const ad of initialAds) {
+            await setDoc(doc(db, 'ads', ad.id), ad);
+          }
+        }
+
+        const signalsSnap = await getDocs(collection(db, 'signals'));
+        if (signalsSnap.empty) {
+          const initialSignals = [
+            { id: 'quotex', name: 'Quotex', active: true },
+            { id: 'binomo', name: 'Binomo', active: true },
+            { id: 'iqoption', name: 'IQ Option', active: true },
+            { id: 'toxa', name: 'Toxa', active: true },
+          ];
+          for (const sig of initialSignals) {
+            await setDoc(doc(db, 'signals', sig.id), sig);
+          }
+        }
+      } catch (e) {
+        console.error("Init DB failed:", e);
+      }
+    };
+
+    if (isAuthReady && user) {
+      initDb();
+    }
+  }, [isAuthReady, user]);
+
+  // --- Analytics Tracking ---
+  useEffect(() => {
+    if (page === 'home') {
+      const today = new Date().toISOString().split('T')[0];
+      const hasVisited = localStorage.getItem(`visited_${today}`);
+      
+      const updateStats = async () => {
+        const docRef = doc(db, 'analytics', today);
+        const updates: any = { views: increment(1) };
+        if (!hasVisited) {
+          updates.uniqueVisitors = increment(1);
+          localStorage.setItem(`visited_${today}`, 'true');
+        }
+        // Use setDoc with merge: true to avoid "No document to update" error
+        await setDoc(docRef, updates, { merge: true }).catch(e => handleFirestoreError(e, OperationType.WRITE, `analytics/${today}`));
+      };
+      updateStats();
+    }
+  }, [page]);
+
+  // --- Simulated Live Users ---
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveUsers(prev => Math.max(1, prev + (Math.random() > 0.5 ? 1 : -1)));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleLogout = () => signOut(auth);
+
+  if (!isAuthReady || !config) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <RefreshCw className="text-red-600 animate-spin" size={48} />
+          <p className="text-zinc-500 font-mono text-sm tracking-widest uppercase">Initializing Platform...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <div className="min-h-screen bg-[#0a0a0a] text-zinc-100 selection:bg-red-600/30">
+        {page === 'home' ? (
+          <HomePage 
+            config={config} 
+            layout={layout} 
+            ads={ads} 
+            signals={signals} 
+            isAdminEnabled={isAdminEnabled}
+            onAdminClick={() => setPage('admin')}
+          />
+        ) : (
+          <AdminPage 
+            config={config} 
+            layout={layout} 
+            ads={ads} 
+            signals={signals} 
+            stats={stats}
+            activeUsers={activeUsers}
+            user={user}
+            onLogin={handleLogin}
+            onLogout={handleLogout}
+            onBack={() => setPage('home')}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+          />
+        )}
+      </div>
+    </ErrorBoundary>
+  );
+}
+
+// --- Home Page ---
+function HomePage({ config, layout, ads, signals, isAdminEnabled, onAdminClick }: any) {
+  const [adRefreshKey, setAdRefreshKey] = useState(0);
+  const [selectedSignal, setSelectedSignal] = useState(signals[0]?.id || '');
+
+  // 15s Smart Ad Refresh
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAdRefreshKey(prev => prev + 1);
+    }, config.adRefreshInterval * 1000);
+    return () => clearInterval(interval);
+  }, [config.adRefreshInterval]);
+
+  return (
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Top Header Container */}
+      <header className="bg-[#111] border-b border-red-600/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <img 
+            src={config.logoUrl} 
+            alt="Logo" 
+            className="w-10 h-10 rounded-full border-2 border-red-600 object-cover"
+            referrerPolicy="no-referrer"
+          />
+          <span className="text-xl font-black text-white tracking-tighter italic">
+            RUTHLESS <span className="text-red-600">TRADER</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <a 
+            href={config.telegramLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-zinc-400 hover:text-red-600 transition-colors"
+          >
+            <Send size={20} />
+          </a>
+          <a 
+            href={config.instagramLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-zinc-400 hover:text-red-600 transition-colors"
+          >
+            <Instagram size={20} />
+          </a>
+          {isAdminEnabled && (
+            <button 
+              onClick={onAdminClick}
+              className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg hover:bg-red-700 transition-all flex items-center gap-2"
+            >
+              <Shield size={14} />
+              ADMIN
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* Dynamic Layout Rendering */}
+      <div className="relative w-full h-[calc(100vh-64px)]">
+        {layout.map((el: LayoutElement) => {
+          const pos = window.innerWidth < 768 ? el.mobile : el.desktop;
+          return (
+            <div 
+              key={el.id}
+              className="absolute transition-all duration-500"
+              style={{ 
+                left: `${pos.x}px`, 
+                top: `${pos.y}px`,
+                width: pos.width ? `${pos.width}px` : 'auto',
+                height: pos.height ? `${pos.height}px` : 'auto'
+              }}
+            >
+              {el.type === 'logo' && (
+                <h1 className="text-3xl font-black text-red-600 tracking-tighter italic">
+                  {el.label}
+                </h1>
+              )}
+              {el.type === 'button' && (
+                <a 
+                  href={config.affiliateLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-red-600 text-white px-8 py-4 rounded-lg font-black text-xl shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:scale-105 transition-transform inline-block"
+                >
+                  {el.label}
+                </a>
+              )}
+              {el.type === 'signals' && (
+                <div className="bg-[#1a1a1a] border border-red-600/30 p-4 rounded-xl shadow-2xl w-80">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold text-red-600 uppercase tracking-widest">Live Signals</span>
+                    <select 
+                      value={selectedSignal}
+                      onChange={(e) => setSelectedSignal(e.target.value)}
+                      className="bg-black text-xs p-1 rounded border border-zinc-800 outline-none text-white"
+                    >
+                      {signals.filter((s: any) => s.active).map((s: any) => (
+                        <option key={s.id} value={s.id}>{s.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="flex items-center justify-between p-2 bg-black/50 rounded border border-zinc-800/50">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] text-zinc-500 uppercase font-bold">{selectedSignal}</span>
+                          <span className="text-xs font-mono text-zinc-400">EUR/USD</span>
+                        </div>
+                        <span className="text-xs font-bold text-emerald-500 uppercase">Strong Buy</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {el.type === 'tool' && (
+                <div className="bg-[#1a1a1a] border border-red-600/30 p-4 rounded-xl shadow-2xl w-80">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-bold text-red-600 uppercase tracking-widest">Trading Tools</span>
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { name: 'Money Management', icon: <IndianRupee size={14} /> },
+                      { name: 'Compounding Calculator', icon: <Activity size={14} /> },
+                      { name: 'Risk/Reward Tool', icon: <Shield size={14} /> }
+                    ].map((tool, i) => (
+                      <button key={i} className="w-full flex items-center justify-between p-3 bg-black/50 rounded border border-zinc-800/50 hover:border-red-600/50 transition-colors group">
+                        <div className="flex items-center gap-3">
+                          <span className="text-red-600 group-hover:scale-110 transition-transform">{tool.icon}</span>
+                          <span className="text-xs font-bold text-zinc-300">{tool.name}</span>
+                        </div>
+                        <ExternalLink size={12} className="text-zinc-600" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {el.type === 'ad' && (
+                <div key={adRefreshKey} className="bg-zinc-900/50 border border-zinc-800 rounded p-2 overflow-hidden">
+                  <div dangerouslySetInnerHTML={{ __html: ads.find((a: any) => a.id === el.id)?.code || '' }} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Giveaway Banner */}
+      <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white py-2 overflow-hidden">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[1, 2, 3, 4].map(i => (
+            <span key={i} className="mx-8 font-bold text-sm uppercase tracking-widest">
+              🎉 Latest Giveaway Winner: {config.giveawayWinner} — Prize: ₹{config.giveawayPrize.toLocaleString()}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Admin Page ---
+function AdminPage({ config, layout, ads, signals, stats, activeUsers, user, onLogin, onLogout, onBack, viewMode, setViewMode }: any) {
+  const [activeTab, setActiveTab] = useState('analytics');
+  
+  const isAdmin = user?.email === "geetharithvika2021@gmail.com";
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-zinc-800 max-w-md w-full text-center shadow-2xl">
+          <Lock className="text-red-600 mx-auto mb-4" size={48} />
+          <h2 className="text-2xl font-bold mb-2">Admin Authentication</h2>
+          <p className="text-zinc-500 text-sm mb-6">Access restricted to authorized administrators only.</p>
+          <button 
+            onClick={onLogin}
+            className="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
+          >
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-red-900/50 max-w-md w-full text-center">
+          <AlertCircle className="text-red-600 mx-auto mb-4" size={48} />
+          <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
+          <p className="text-zinc-500 text-sm mb-6">You do not have administrative privileges.</p>
+          <button onClick={onLogout} className="text-red-600 font-bold underline">Sign out</button>
+        </div>
+      </div>
+    );
+  }
+
+  const revenueINR = ((4 * 500) / 1000) * config.cpm * config.exchangeRate;
+
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#111] border-r border-zinc-800 flex flex-col">
+        <div className="p-6 border-b border-zinc-800">
+          <div className="flex items-center gap-2 text-red-600 font-black text-xl italic mb-1">
+            <Shield size={24} />
+            RUTHLESS
+          </div>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Command Center</p>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1">
+          {[
+            { id: 'analytics', label: 'Analytics', icon: Activity },
+            { id: 'layout', label: 'Layout Builder', icon: Layout },
+            { id: 'ads', label: 'Ad Slots', icon: Monitor },
+            { id: 'signals', label: 'Signals & Tools', icon: Plus },
+            { id: 'security', label: 'Security', icon: Shield },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                activeTab === tab.id ? 'bg-red-600 text-white shadow-lg shadow-red-600/20' : 'text-zinc-500 hover:bg-zinc-800/50'
+              }`}
+            >
+              <tab.icon size={18} />
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-zinc-800">
+          <button onClick={onBack} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-500 hover:text-white transition-all">
+            <ExternalLink size={18} />
+            View Site
+          </button>
+          <button onClick={onLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-600 hover:bg-red-600/10 transition-all">
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto p-8">
+        {activeTab === 'analytics' && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-zinc-800">
+                <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Unique Visitors</p>
+                <h3 className="text-3xl font-black">{stats.uniqueVisitors}</h3>
+              </div>
+              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-zinc-800">
+                <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Live Active Users</p>
+                <h3 className="text-3xl font-black text-emerald-500">{activeUsers}</h3>
+              </div>
+              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-zinc-800">
+                <p className="text-xs font-bold text-zinc-500 uppercase mb-2">Today Revenue (Est)</p>
+                <h3 className="text-3xl font-black text-[#00ffcc]">₹{revenueINR.toLocaleString()}</h3>
+              </div>
+            </div>
+
+            <section className="bg-[#1a1a1a] p-8 rounded-2xl border border-zinc-800">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <Settings size={20} className="text-red-600" />
+                Affiliate & Revenue Settings
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase">Affiliate Link</label>
+                  <input 
+                    type="text" 
+                    value={config.affiliateLink}
+                    onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { affiliateLink: e.target.value })}
+                    className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-sm focus:border-red-600 transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase">Today CPM ($)</label>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    value={config.cpm}
+                    onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { cpm: parseFloat(e.target.value) })}
+                    className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-sm focus:border-red-600 transition-all"
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'layout' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Live Layout Builder</h2>
+              <div className="flex bg-[#1a1a1a] p-1 rounded-xl border border-zinc-800">
+                <button onClick={() => setViewMode('desktop')} className={`p-2 rounded-lg ${viewMode === 'desktop' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}><Monitor size={20} /></button>
+                <button onClick={() => setViewMode('mobile')} className={`p-2 rounded-lg ${viewMode === 'mobile' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}><Smartphone size={20} /></button>
+              </div>
+            </div>
+
+            <div className="relative bg-black border-2 border-zinc-800 rounded-2xl min-h-[600px] overflow-hidden flex items-center justify-center">
+              <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+              
+              <motion.div 
+                animate={{ width: viewMode === 'mobile' ? 375 : '100%' }}
+                className="relative h-[600px] bg-black border-x border-zinc-800"
+              >
+                {layout.map((el: LayoutElement) => {
+                  const pos = viewMode === 'mobile' ? el.mobile : el.desktop;
+                  return (
+                    <motion.div
+                      key={el.id}
+                      drag
+                      dragMomentum={false}
+                      onDragEnd={(_, info) => {
+                        const updates: any = {};
+                        updates[viewMode] = { ...pos, x: pos.x + info.offset.x, y: pos.y + info.offset.y };
+                        updateDoc(doc(db, 'layout', el.id), updates);
+                      }}
+                      style={{ position: 'absolute', left: pos.x, top: pos.y, cursor: 'grab' }}
+                      className="group"
+                    >
+                      <div className="bg-red-600/10 border border-red-600 p-2 rounded flex items-center gap-2">
+                        <Move size={12} className="text-red-600" />
+                        <span className="text-[10px] font-bold uppercase">{el.label}</span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'ads' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {ads.map((ad: AdSlot) => (
+              <div key={ad.id} className="bg-[#1a1a1a] p-6 rounded-2xl border border-zinc-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold uppercase tracking-widest text-xs text-zinc-500">Ad Slot: {ad.id}</h3>
+                  <button 
+                    onClick={() => updateDoc(doc(db, 'ads', ad.id), { active: !ad.active })}
+                    className={`px-3 py-1 rounded-full text-[10px] font-bold ${ad.active ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}
+                  >
+                    {ad.active ? 'ACTIVE' : 'INACTIVE'}
+                  </button>
+                </div>
+                <textarea 
+                  value={ad.code}
+                  onChange={(e) => updateDoc(doc(db, 'ads', ad.id), { code: e.target.value })}
+                  className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-xs font-mono h-40 focus:border-red-600 transition-all"
+                  placeholder="Paste ad code snippet here..."
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'signals' && (
+          <div className="space-y-6">
+            <section className="bg-[#1a1a1a] p-8 rounded-2xl border border-zinc-800 space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <Plus size={20} className="text-red-600" />
+                  Signal Platforms
+                </h2>
+                <button 
+                  onClick={() => {
+                    const name = prompt('Enter platform name:');
+                    if (name) {
+                      const id = name.toLowerCase().replace(/\s+/g, '-');
+                      setDoc(doc(db, 'signals', id), { name, active: true });
+                    }
+                  }}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-700 transition-all"
+                >
+                  ADD PLATFORM
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {signals.map((sig: any) => (
+                  <div key={sig.id} className="bg-black p-4 rounded-xl border border-zinc-800 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold">{sig.name}</p>
+                      <p className="text-[10px] text-zinc-500 uppercase">ID: {sig.id}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => updateDoc(doc(db, 'signals', sig.id), { active: !sig.active })}
+                        className={`p-2 rounded-lg transition-all ${sig.active ? 'text-emerald-500 bg-emerald-500/10' : 'text-zinc-500 bg-zinc-800'}`}
+                      >
+                        <RefreshCw size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="bg-[#1a1a1a] p-8 rounded-2xl border border-zinc-800 space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Search size={20} className="text-red-600" />
+                HTML Tool Integration
+              </h2>
+              <p className="text-xs text-zinc-500">Paste HTML codes for indicators, clocks, or other custom tools here.</p>
+              <textarea 
+                className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-xs font-mono h-40 focus:border-red-600 transition-all"
+                placeholder="<!-- Custom Tool HTML Code -->"
+              />
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'security' && (
+          <div className="max-w-2xl space-y-6">
+            <section className="bg-[#1a1a1a] p-8 rounded-2xl border border-zinc-800 space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Shield size={20} className="text-red-600" />
+                Security & Access
+              </h2>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase">Secret Admin Path</label>
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    value={config.secretPath}
+                    onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { secretPath: e.target.value })}
+                    className="flex-1 bg-black border border-zinc-800 rounded-xl p-4 text-sm focus:border-red-600 transition-all"
+                  />
+                </div>
+                <p className="text-[10px] text-zinc-500 italic">Current Access URL: {window.location.origin}/{config.secretPath}</p>
+              </div>
+              <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
+                <div>
+                  <p className="text-sm font-bold">OTP Login Switch</p>
+                  <p className="text-[10px] text-zinc-500">Require OTP for administrative access</p>
+                </div>
+                <button 
+                  onClick={() => updateDoc(doc(db, 'settings', 'config'), { otpLoginEnabled: !config.otpLoginEnabled })}
+                  className={`w-12 h-6 rounded-full transition-all relative ${config.otpLoginEnabled ? 'bg-red-600' : 'bg-zinc-800'}`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${config.otpLoginEnabled ? 'left-7' : 'left-1'}`} />
+                </button>
+              </div>
+
+              <div className="pt-6 border-t border-zinc-800 space-y-4">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500">Giveaway Management</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Winner Name</label>
+                    <input 
+                      type="text" 
+                      value={config.giveawayWinner || ''}
+                      onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { giveawayWinner: e.target.value })}
+                      className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Prize Money (₹)</label>
+                    <input 
+                      type="number" 
+                      value={config.giveawayPrize}
+                      onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { giveawayPrize: parseFloat(e.target.value) })}
+                      className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-zinc-800 space-y-4">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500">SEO & Branding</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase">Logo URL</label>
+                      <input 
+                        type="text" 
+                        value={config.logoUrl || ''}
+                        onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { logoUrl: e.target.value })}
+                        className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase">Telegram Link</label>
+                      <input 
+                        type="text" 
+                        value={config.telegramLink || ''}
+                        onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { telegramLink: e.target.value })}
+                        className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase">Instagram Link</label>
+                      <input 
+                        type="text" 
+                        value={config.instagramLink || ''}
+                        onChange={(e) => updateDoc(doc(db, 'settings', 'config'), { instagramLink: e.target.value })}
+                        className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Site Keywords</label>
+                    <input 
+                      type="text" 
+                      placeholder="trading, binary, signals..."
+                      className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm focus:border-red-600 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Meta Description</label>
+                    <textarea 
+                      placeholder="Best binary trading signals..."
+                      className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm h-20 focus:border-red-600 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+      </main>
+    </div>
+  );
 }
