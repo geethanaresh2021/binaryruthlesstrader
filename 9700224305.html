@@ -1,85 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Ruthless Admin Dashboard</title>
     <style>
-        body { background: #0a0a0a; color: #eee; font-family: 'Roboto Mono', monospace; padding: 20px; }
-        .admin-card { background: #1a1a1a; border-left: 5px solid #ff0000; padding: 20px; margin-bottom: 20px; }
-        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .stat-box { background: #222; padding: 15px; text-align: center; border-radius: 4px; }
-        .stat-val { font-size: 24px; color: #ff0000; display: block; }
-        input, select, button { background: #222; border: 1px solid #444; color: #fff; padding: 10px; margin: 5px 0; width: 100%; }
-        button { background: #ff0000; font-weight: bold; cursor: pointer; transition: 0.3s; border: none; }
-        button:hover { background: #cc0000; }
-        .revenue-inr { color: #00ffcc; font-size: 35px; font-weight: bold; text-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        body { background: #111; color: #eee; font-family: sans-serif; padding: 20px; }
+        .card { background: #1a1a1a; padding: 20px; margin-bottom: 20px; border-left: 5px solid red; }
+        .preview-window { width: 100%; height: 500px; background: #000; position: relative; border: 2px solid #333; margin-top: 10px; overflow: hidden; }
+        .mobile-view { width: 375px; margin: 0 auto; }
+        .revenue-inr { color: #00ffcc; font-size: 32px; font-weight: bold; font-family: 'Roboto Mono'; }
+        .controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        button { background: red; color: white; border: none; padding: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="admin-card">
-        <h2>1. USERS & POSTS (Today)</h2>
-        <div class="stat-grid">
-            <div class="stat-box">Today Views<span class="stat-val" id="today-views">0</span></div>
-            <div class="stat-box">Unique Visitors<span class="stat-val" id="unique-users">0</span></div>
-            <div class="stat-box">Active Users<span class="stat-val" id="active-now">0</span></div>
-            <div class="stat-box">Today Posts<span class="stat-val" id="today-posts">0</span></div>
+    <div class="card">
+        <h2>1. USERS & POSTS (Top)</h2>
+        <div style="display: flex; gap: 20px;">
+            <span>Unique Visitors: <b>1</b></span> | <span>Views: <b>120</b></span> | <span>Active: <b>5</b></span>
         </div>
     </div>
 
-    <div class="admin-card">
+    <div class="card">
         <h2>2. ESTIMATED REVENUE</h2>
-        <div class="revenue-inr">₹ <span id="inr-display">0.00</span></div>
+        <div class="revenue-inr">₹ <span id="rev">0.00</span></div>
+        <small>Formula: (Ads x Refreshes / 1000) x CPM x Rate</small>
     </div>
 
-    <div class="admin-card">
-        <h2>3. INDIVIDUAL ADS CONTROL</h2>
-        <div id="ad-list">
-            <div style="border-bottom: 1px solid #333; padding: 10px;">
-                <label>Ad Slot 1 (Snippet/Size/Hide)</label>
-                <input type="text" placeholder="Ad Snippet Code">
-                <input type="text" placeholder="Size (e.g. 300x250)">
-                <button style="width: auto;">HIDE</button>
-                <button style="width: auto; background:#444;">SAVE</button>
-            </div>
+    <div class="card">
+        <h2>3. LIVE LAYOUT BUILDER</h2>
+        <div class="controls">
+            <button onclick="toggleView('desktop')">Desktop View</button>
+            <button onclick="toggleView('mobile')" style="background: #444;">Mobile View</button>
+            <button onclick="saveLayout()" style="background: green; margin-left: auto;">SAVE LAYOUT</button>
         </div>
-        <button style="margin-top:10px;">+ ADD NEW AD CONTAINER</button>
+        <div id="preview" class="preview-window">
+            <div style="color:red; border:1px solid red; position:absolute; top:20px; left:20px; padding:10px;">LOGO (Move Me)</div>
+            <div style="background:red; color:white; position:absolute; top:100px; left:20px; padding:10px;">JOIN BUTTON</div>
+        </div>
     </div>
 
-    <div class="admin-card">
-        <h2>4. SECURITY & ACCESS</h2>
+    <div class="card">
+        <h2>4. AFFILIATE & ADS</h2>
+        <label>Affiliate Link (Join Button):</label>
+        <input type="text" id="affLink" placeholder="https://quotex.com/..." style="width:100%; padding:10px;">
+        <br><br>
+        <label>Today CPM ($):</label>
+        <input type="number" id="cpm" value="1.50" style="padding:10px;">
+    </div>
+
+    <div class="card">
+        <h2>5. SECURITY</h2>
         <label>Edit Secret Path:</label>
-        <input type="text" id="path-input" value="9700224305">
-        <button onclick="updateSecretPath()">CHANGE & SAVE PATH</button>
-        <hr>
-        <label>Admin Password:</label>
-        <input type="password" value="9700224305">
-        <label><input type="checkbox"> Enable Login OTP (Phone: 9700224305)</label>
-        <button>UPDATE SECURITY</button>
-    </div>
-
-    <div class="admin-card">
-        <h2>5. SIGNALS & TOOLS</h2>
-        <label>Signal Names (Separate with comma):</label>
-        <input type="text" placeholder="e.g. quotex, toxa, binomo">
-        <label>Tool HTML Code:</label>
-        <textarea style="width:100%; height:100px; background:#222; color:white;"></textarea>
-        <button>UPDATE FRONTEND</button>
+        <input type="text" value="9700224305" style="padding:10px;">
+        <button>SAVE PATH</button>
     </div>
 
     <script>
-        function updateSecretPath() {
-            const newPath = document.getElementById('path-input').value;
-            localStorage.setItem('ruthless_path', newPath);
-            alert("Success! Now rename your file on GitHub to: " + newPath + ".html");
+        function toggleView(type) {
+            const p = document.getElementById('preview');
+            if(type === 'mobile') p.classList.add('mobile-view');
+            else p.classList.remove('mobile-view');
         }
 
-        // Simulating Live INR Revenue fetch
-        function calculateRevenue(usd) {
-            const exchangeRate = 83.45; 
-            document.getElementById('inr-display').innerText = (usd * exchangeRate).toFixed(2);
+        function saveLayout() {
+            const link = document.getElementById('affLink').value;
+            localStorage.setItem('affiliate_link', link);
+            alert("Layout and Affiliate Link Saved Successfully!");
         }
-        calculateRevenue(12.50); // Example $12.50
+
+        // Simulating Revenue Calculation
+        setInterval(() => {
+            let activeAds = 4;
+            let refreshes = 500;
+            let cpm = document.getElementById('cpm').value;
+            let rate = 83.50;
+            let est = ((activeAds * refreshes) / 1000) * cpm * rate;
+            document.getElementById('rev').innerText = est.toFixed(2);
+        }, 2000);
     </script>
 </body>
 </html>
