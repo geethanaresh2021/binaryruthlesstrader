@@ -3,62 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="site-title">Binary Ruthless Trader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+    <title>Binary Ruthless Trader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow: hidden; user-select: none; }
-        .site-wrapper { width: 100vw; height: 100vh; position: relative; }
-        /* Border-less Containers */
-        .ruthless-element { position: absolute; border: none !important; outline: none !important; background: transparent; }
-        .signal-font { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: #ff0000; text-shadow: 0 0 15px rgba(255,0,0,0.8); }
+        :root { --main-red: #ff0000; --bg-black: #000000; --neon-cyan: #00ffcc; }
+        body { background-color: var(--bg-black); color: var(--main-red); font-family: 'Orbitron', sans-serif; margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
+        #admin-link { display: none; position: fixed; top: 0; left: 0; width: 100%; background: var(--main-red); color: white; text-align: center; padding: 12px; font-size: 14px; cursor: pointer; z-index: 9999; text-transform: uppercase; font-weight: bold; }
+        .header { text-align: center; padding: 40px 20px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+        .trading-box { background: rgba(15, 15, 15, 0.95); border: none; aspect-ratio: 1 / 1.5; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255, 0, 0, 0.1); }
+        .ad-container { width: 100%; background: transparent; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
+        .revenue-num { font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 32px; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
     </style>
 </head>
-<body oncontextmenu="return false;">
-    <div id="layout-engine" class="site-wrapper"></div>
+<body>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
-            authDomain: "binary-ruthless-trader.firebaseapp.com",
-            databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
-            projectId: "binary-ruthless-trader",
-            appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+<div id="admin-link">Access Admin Dashboard</div>
 
-        // Dynamic SEO & Layout Loader
-        db.ref('siteSettings').on('value', snap => {
-            const s = snap.val();
-            if(s) {
-                document.title = s.title;
-                document.getElementById('site-title').innerText = s.title;
-            }
-        });
+<header class="header">
+    <div id="brand-logo"></div>
+    <h1 id="brand-name">BINARY RUTHLESS TRADER</h1>
+</header>
 
-        db.ref('layout').on('value', snap => {
-            const engine = document.getElementById('layout-engine');
-            engine.innerHTML = ''; // Clear for update
-            const elements = snap.val();
-            for(let id in elements) {
-                const el = elements[id];
-                const div = document.createElement('div');
-                div.className = 'ruthless-element';
-                // Device-specific positioning logic
-                const pos = (window.innerWidth <= 768) ? el.mobile : el.desktop;
-                div.style.left = pos.x + 'px';
-                div.style.top = pos.y + 'px';
-                div.innerHTML = el.content; // Ad snippet or Signal
-                engine.appendChild(div);
-            }
-        });
+<div class="grid-container" id="main-layout">
+    <div class="ad-container" id="ad-slot-1"></div>
+    
+    <div class="trading-box" id="signal-box">
+        <select id="signal-selector" style="background:#000; color:red; border:1px solid red; padding:10px;"></select>
+        <div id="signal-display">Waiting for Signals...</div>
+    </div>
 
-        // Silent Protection
-        document.onkeydown = e => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false; };
-        setInterval(() => { debugger; }, 100);
-    </script>
+    <div class="ad-container" id="ad-slot-2"></div>
+</div>
+
+<script>
+    // 1. Secret Path Verification
+    const currentPath = window.location.pathname;
+    const secretKey = localStorage.getItem('ruthless_path') || '9700224305';
+    if(currentPath.includes(secretKey)) {
+        document.getElementById('admin-link').style.display = 'block';
+        document.getElementById('admin-link').onclick = () => window.location.href = secretKey + '.html';
+    }
+
+    // 2. 15s Smart Ad Refresh Logic
+    let lastActivity = Date.now();
+    const minGap = 15000; 
+    function triggerAdRefresh() {
+        let now = Date.now();
+        if(now - lastActivity > minGap) {
+            console.log("Activity detected: Refreshing Ads...");
+            // Logic to reload ad scripts
+            lastActivity = now;
+        }
+    }
+    window.onscroll = triggerAdRefresh;
+    window.onclick = triggerAdRefresh;
+
+    // 3. Today Unique Visitor Logic (IP/Device 1 Count)
+    const today = new Date().toDateString();
+    if(localStorage.getItem('last_visit_date') !== today) {
+        localStorage.setItem('last_visit_date', today);
+        // Firebase.database().ref('analytics/unique_visitors').transaction(v => (v || 0) + 1);
+    }
+
+    // 4. No-Freeze Redirect Security
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 85)) {
+            window.location.replace("about:blank");
+            return false;
+        }
+    };
+</script>
 </body>
 </html>
