@@ -5,180 +5,197 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
     <style>
         :root { --red: #ff0000; --bg: #000; --neon: #00ffcc; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--red); font-family: 'Orbitron', sans-serif; overflow-x: hidden; user-select: none; }
-        
-        /* --- HOME PAGE STYLE --- */
-        #home-view { display: block; height: 100vh; position: relative; }
-        #admin-entry-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--red); color: #fff; text-align: center; padding: 12px; z-index: 10000; cursor: pointer; border: none; font-weight: bold; }
-        .element { position: absolute; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; }
-        .join-btn { background: var(--red); color: #fff; border: none; padding: 15px 35px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--red); border-radius: 4px; }
-        .number-glow { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: var(--red); text-shadow: 0 0 15px var(--red); }
-        .trading-box { border: 2px solid var(--red); background: rgba(15, 15, 15, 0.95); box-shadow: inset 0 0 20px rgba(255,0,0,0.2); }
 
-        /* --- ADMIN PAGE STYLE --- */
+        /* --- HOME PAGE VIEW --- */
+        #home-view { display: block; height: 100vh; position: relative; width: 100vw; }
+        #admin-entry-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--red); color: #fff; text-align: center; padding: 12px; z-index: 10000; cursor: pointer; border: none; font-weight: bold; font-family: 'Orbitron'; }
+        
+        .element { position: absolute; display: flex; align-items: center; justify-content: center; touch-action: none; }
+        .join-btn { background: var(--red); color: #fff; border: none; padding: 15px 35px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--red); border-radius: 4px; font-family: 'Orbitron'; }
+        
+        /* Ruthless Numbers */
+        .number-glow { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: var(--red); text-shadow: 0 0 15px var(--red); }
+        .trading-box { border: 2px solid var(--red); background: rgba(15, 15, 15, 0.95); }
+
+        /* --- ADMIN PAGE VIEW --- */
         #admin-view { display: none; background: #0a0a0a; color: #fff; font-family: 'Roboto Mono', monospace; padding: 20px; min-height: 100vh; overflow-y: auto; }
-        .section { background: #151515; border-left: 5px solid var(--red); padding: 20px; margin-bottom: 25px; border-radius: 0 10px 10px 0; }
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .stat-card { background: #222; padding: 15px; text-align: center; border: 1px solid #333; }
+        .section { background: #151515; border-left: 5px solid var(--red); padding: 20px; margin-bottom: 25px; border-radius: 0 5px 5px 0; }
         .val { display: block; font-size: 28px; color: var(--red); font-weight: bold; }
-        .revenue-text { font-size: 40px; color: var(--neon); text-shadow: 0 0 15px var(--neon); font-weight: bold; margin: 10px 0; }
+        .revenue-text { font-size: 40px; color: var(--neon); text-shadow: 0 0 15px var(--neon); font-weight: bold; }
+
+        /* Canvas Styles */
+        #canvas-container { width: 100%; display: flex; justify-content: center; }
+        .preview-area { width: 100%; height: 500px; background: #000; border: 2px solid #444; position: relative; overflow: hidden; }
+        .mobile-canvas { width: 375px !important; height: 667px !important; border: 4px solid var(--red); }
         
-        /* Layout Builder Area */
-        .preview-area { width: 100%; height: 450px; background: #000; border: 2px solid #444; position: relative; margin: 15px 0; overflow: hidden; }
-        .mobile-toggle { width: 375px; margin: 0 auto; border: 5px solid var(--red); height: 600px; }
+        .draggable-item { cursor: move; border: 1px dashed #fff; padding: 10px; position: absolute; background: rgba(255,0,0,0.1); }
         
-        input, select, textarea { background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px; margin: 8px 0; width: 100%; font-family: 'Roboto Mono'; }
-        .input-green { color: var(--neon) !important; font-weight: bold; font-size: 18px; }
-        .btn-action { background: var(--red); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
-        .btn-action:hover { background: #b30000; box-shadow: 0 0 10px var(--red); }
+        input, textarea { background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px; margin: 8px 0; width: 100%; font-family: 'Roboto Mono'; }
+        .input-green { color: var(--neon) !important; font-weight: bold; }
+        .btn-action { background: var(--red); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-    <button id="admin-entry-btn" onclick="openAdminPanel()">ENTER RUTHLESS COMMAND CENTER</button>
+    <button id="admin-entry-btn" onclick="showAdmin()">ENTER RUTHLESS COMMAND CENTER</button>
 
     <div id="home-view">
-        <div id="logo-box" class="element" style="top:30px; left:30px;">LOGO</div>
-        <div id="join-box" class="element" style="top:100px; left:30px;">
-            <button class="join-btn" onclick="handleJoin()">JOIN NOW</button>
+        <div id="h-logo" class="element">LOGO</div>
+        <div id="h-join" class="element">
+            <button class="join-btn" onclick="openAffiliate()">JOIN NOW</button>
         </div>
-        <div id="signal-box" class="element trading-box" style="top:30px; right:30px; width:220px; aspect-ratio:1/1.5;">
-            <div class="number-glow">92%</div>
+        <div id="h-signal" class="element trading-box" style="width:220px; height:320px;">
+            <div class="number-glow">98% ITM</div>
         </div>
-        <div id="ad-slot-1" class="element" style="bottom:20px; left:50%; transform:translateX(-50%); width:320px; height:50px; border:1px dashed #444;">AD SLOT 1</div>
     </div>
 
     <div id="admin-view">
-        <h1 style="color:red; text-align:center; margin-bottom: 20px;">RUTHLESS CONTROL PANEL</h1>
+        <h1 style="color:red; text-align:center; margin-bottom:20px;">RUTHLESS ADMIN DASHBOARD</h1>
 
         <div class="section">
-            <h3>1. USERS & POSTS (TODAY)</h3>
-            <div class="grid-stats">
-                <div class="stat-card">Unique Visitors <span class="val" id="uv">1</span></div>
-                <div class="stat-card">Total Views <span class="val" id="tv">0</span></div>
-                <div class="stat-card">Active Now <span class="val">5</span></div>
-                <div class="stat-card">Today Posts <span class="val">1440</span></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>2. REVENUE ENGINE (₹ INR)</h3>
-            <div class="revenue-text">₹ <span id="revenue-val">0.00</span></div>
+            <h3>1. REVENUE ENGINE (₹ INR)</h3>
+            <div class="revenue-text">₹ <span id="rev-display">0.00</span></div>
             <div style="display:flex; gap:10px;">
                 <div style="flex:1;">
-                    <label>Today CPM ($):</label>
-                    <input type="number" id="cpm-input" value="1.50" step="0.01" class="input-green">
+                    <label>CPM ($):</label>
+                    <input type="number" id="cpm-val" value="1.50" step="0.01" class="input-green">
                 </div>
                 <div style="flex:1;">
-                    <label>Exchange Rate (USD-INR):</label>
-                    <input type="number" id="rate-input" value="83.50" class="input-green">
+                    <label>USD Rate:</label>
+                    <input type="number" id="rate-val" value="83.50" class="input-green">
                 </div>
             </div>
         </div>
 
         <div class="section">
-            <h3>3. LIVE LAYOUT BUILDER</h3>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button class="btn-action" onclick="changeView('desktop')">Desktop</button>
-                <button class="btn-action" onclick="changeView('mobile')" style="background:#333;">Mobile View</button>
-                <button class="btn-action" onclick="saveMasterData()" style="background:green;">SAVE LAYOUT</button>
+            <h3>2. VISUAL LAYOUT BUILDER</h3>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button class="btn-action" onclick="toggleCanvas('desktop')" style="flex:1;">Desktop</button>
+                <button class="btn-action" onclick="toggleCanvas('mobile')" style="flex:1; background:#333;">Mobile</button>
+                <button class="btn-action" onclick="saveMasterSettings()" style="flex:1; background:green;">SAVE LAYOUT</button>
             </div>
-            <div id="builder-canvas" class="preview-area">
-                <div style="position:absolute; top:20px; left:20px; border:1px solid red; padding:5px; cursor:move;">LOGO</div>
-                <div style="position:absolute; top:80px; left:20px; background:red; color:white; padding:8px; cursor:move;">JOIN BTN</div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>4. AFFILIATE LINKS & AD SLOTS</h3>
-            <label>Join Button Link (Affiliate):</label>
-            <input type="text" id="aff-link" placeholder="Enter Broker URL">
-            <hr style="border:0.5px solid #333; margin:15px 0;">
-            <div id="ad-manager">
-                <label>Ad Slot 1 (HTML Snippet):</label>
-                <textarea rows="3" placeholder="Paste Adsterra/Propeller Code"></textarea>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" placeholder="Size (e.g. 300x250)" style="flex:1;">
-                    <button class="btn-action" style="width:100px; background:#444;">HIDE</button>
-                    <button class="btn-action" style="width:100px;">DELETE</button>
+            <div id="canvas-container">
+                <div id="canvas" class="preview-area">
+                    <div id="b-logo" class="draggable-item" data-id="h-logo">LOGO</div>
+                    <div id="b-join" class="draggable-item" data-id="h-join">JOIN BUTTON</div>
+                    <div id="b-signal" class="draggable-item" data-id="h-signal">SIGNAL BOX</div>
                 </div>
-                <button class="btn-action" style="background:#0066ff; margin-top:10px;">+ ADD NEW AD CONTAINER</button>
             </div>
         </div>
 
         <div class="section">
-            <h3>5. SIGNALS & SECURITY</h3>
-            <label>Signal Dropdown Names (e.g. quotex, binomo):</label>
-            <input type="text" id="sig-names" placeholder="comma separated names">
-            <hr style="border:0.5px solid #333; margin:15px 0;">
-            <label>Secret Access Path:</label>
-            <input type="text" id="path-val" value="9700224305">
-            <label><input type="checkbox" id="otp-check"> Enable OTP on Login</label>
-            <button class="btn-action" onclick="location.reload()" style="background:#222; margin-top:15px;">EXIT ADMIN</button>
+            <h3>3. AFFILIATE & ADS</h3>
+            <label>Affiliate Link:</label>
+            <input type="text" id="aff-link-input" placeholder="Paste Broker Link Here">
+            <label>Ad Script:</label>
+            <textarea id="ad-snippet" rows="3" placeholder="Paste Ad Code"></textarea>
+        </div>
+
+        <div class="section">
+            <h3>4. SECURITY</h3>
+            <label>Secret Path (Current: 9700224305):</label>
+            <input type="text" id="path-input" value="9700224305">
+            <button class="btn-action" onclick="location.reload()" style="background:#222; margin-top:10px;">EXIT & REFRESH</button>
         </div>
     </div>
 
     <script>
-        // 1. Authentication Check
-        const secretPath = "9700224305";
-        if(window.location.hash === "#" + secretPath || sessionStorage.getItem('is_ruthless')) {
+        // --- 1. INITIAL SETUP & LOAD ---
+        window.onload = () => {
+            const savedLayout = JSON.parse(localStorage.getItem('ruthless_layout')) || {};
+            Object.keys(savedLayout).forEach(id => {
+                const el = document.getElementById(id);
+                const b_el = document.querySelector(`[data-id="${id}"]`);
+                if(el && b_el) {
+                    const pos = savedLayout[id];
+                    el.style.left = b_el.style.left = pos.x + 'px';
+                    el.style.top = b_el.style.top = pos.y + 'px';
+                    b_el.setAttribute('data-x', pos.x);
+                    b_el.setAttribute('data-y', pos.y);
+                }
+            });
+            document.getElementById('aff-link-input').value = localStorage.getItem('ruthless_aff_link') || '';
+        };
+
+        // --- 2. SECRET AUTH ---
+        if(window.location.hash === "#9700224305" || sessionStorage.getItem('ruthless_auth')) {
             document.getElementById('admin-entry-btn').style.display = 'block';
-            sessionStorage.setItem('is_ruthless', 'true');
+            sessionStorage.setItem('ruthless_auth', 'true');
         }
 
-        function openAdminPanel() {
+        function showAdmin() {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('admin-view').style.display = 'block';
             document.getElementById('admin-entry-btn').style.display = 'none';
         }
 
-        // 2. Revenue & Ad Refresh Logic
-        let adRefreshes = 0;
-        let lastRef = Date.now();
-        function checkRefresh() {
-            if(Date.now() - lastRef > 15000) {
-                adRefreshes++;
-                lastRef = Date.now();
-                updateRevenue();
+        // --- 3. DRAG & DROP ENGINE ---
+        interact('.draggable-item').draggable({
+            listeners: {
+                move (event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    target.style.left = x + 'px';
+                    target.style.top = y + 'px';
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
             }
-        }
-        window.addEventListener('scroll', checkRefresh);
-        window.addEventListener('click', checkRefresh);
+        });
 
-        function updateRevenue() {
-            const cpm = parseFloat(document.getElementById('cpm-input').value) || 0;
-            const rate = parseFloat(document.getElementById('rate-input').value) || 0;
-            const totalAds = 4;
-            const calc = ((totalAds * adRefreshes) / 1000) * cpm * rate;
-            document.getElementById('revenue-val').innerText = calc.toFixed(2);
+        // --- 4. MASTER SAVE ---
+        function saveMasterSettings() {
+            const layout = {};
+            document.querySelectorAll('.draggable-item').forEach(el => {
+                const id = el.getAttribute('data-id');
+                layout[id] = {
+                    x: parseFloat(el.getAttribute('data-x')) || 0,
+                    y: parseFloat(el.getAttribute('data-y')) || 0
+                };
+            });
+            localStorage.setItem('ruthless_layout', JSON.stringify(layout));
+            localStorage.setItem('ruthless_aff_link', document.getElementById('aff-link-input').value);
+            alert("RUTHLESS: Layout & Affiliate Link Saved Successfully!");
+            location.reload(); 
         }
 
-        // 3. Affiliate Handle
-        function handleJoin() {
-            const link = localStorage.getItem('ruthless_link') || '#';
+        // --- 5. REVENUE & REFRESH ---
+        let refreshes = 0;
+        let lastTime = Date.now();
+        window.addEventListener('scroll', () => {
+            if(Date.now() - lastTime > 15000) {
+                refreshes++;
+                lastTime = Date.now();
+                const cpm = parseFloat(document.getElementById('cpm-val').value) || 0;
+                const rate = parseFloat(document.getElementById('rate-val').value) || 0;
+                const total = ((4 * refreshes) / 1000) * cpm * rate;
+                document.getElementById('rev-display').innerText = total.toFixed(2);
+            }
+        });
+
+        function toggleCanvas(mode) {
+            const canvas = document.getElementById('canvas');
+            if(mode === 'mobile') canvas.classList.add('mobile-canvas');
+            else canvas.classList.remove('mobile-canvas');
+        }
+
+        function openAffiliate() {
+            const link = localStorage.getItem('ruthless_aff_link') || '#';
             window.open(link, '_blank');
         }
 
-        // 4. Builder & Save
-        function changeView(v) {
-            const p = document.getElementById('builder-canvas');
-            if(v === 'mobile') p.classList.add('mobile-toggle');
-            else p.classList.remove('mobile-toggle');
-        }
-
-        function saveMasterData() {
-            const link = document.getElementById('aff-link').value;
-            localStorage.setItem('ruthless_link', link);
-            alert("RUTHLESS UPDATE: Layout & Affiliate Links Saved!");
-        }
-
-        // 5. Security (Inspect Block)
+        // --- 6. SECURITY ---
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => {
-            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key == 'J'))) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.key == 'I')) {
                 window.location.replace("about:blank");
                 return false;
             }
