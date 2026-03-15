@@ -4,63 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader</title>
-    
     <link rel="stylesheet" href="styles-ruthless.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
-<body>
-
-    <button id="admin-entry-btn" class="admin-lock-btn" onclick="showAdminPanel()" style="display:none; position:fixed; top:10px; left:10px; z-index:9999; background:red; color:white; border:none; padding:10px; cursor:pointer;">
-        <i class="fas fa-user-shield"></i> ADMIN
-    </button>
+<body style="background-color: black;">
 
     <div id="home-view">
-        <header class="top-nav">
-            <div id="h-logo" class="logo-area element">
-                <img src="logo.png" alt="Logo" class="brand-img" onerror="this.style.display='none'">
-                <span class="brand-name">RUTHLESS TRADER</span>
+        <header class="top-nav" style="display:flex; justify-content:space-between; padding:20px;">
+            <div class="logo-area">
+                <span style="color:red; font-family:'Orbitron'; font-size:20px;">RUTHLESS TRADER</span>
             </div>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
+            <button id="admin-entry-btn" onclick="showAdmin()" style="display:none; background:none; border:none; color:#222;"><i class="fas fa-shield-alt"></i></button>
         </header>
 
-        <main style="padding-top: 100px;">
-            <div class="main-content-wrapper">
-                <div id="h-main-container-1" class="element main-box">
-                    <h2 class="glow-text">LIVE ACCURACY</h2>
-                    <div id="itm-rate" class="number-glow">98%</div>
-                </div>
-                <div id="h-main-container-2" class="element main-box">
-                    <h2 class="glow-text">PROFIT TRACKER</h2>
-                    <div class="number-glow">+$1,240</div>
-                </div>
+        <div class="main-content-wrapper" style="padding:20px;">
+            <div id="h-main-container-1" class="element main-box" style="border:2px solid red; padding:30px; margin-bottom:20px; text-align:center;">
+                <h2 style="color:white;">ACCURACY</h2>
+                <div id="itm-rate" style="color:red; font-size:32px; font-family:'Roboto Mono';">98%</div>
             </div>
-
-            <div class="ads-grid">
-                <div id="ad-slot-1" class="element ad-box">AD SLOT 1</div>
-                <div id="ad-slot-2" class="element ad-box">AD SLOT 2</div>
-                <div id="ad-slot-3" class="element ad-box">AD SLOT 3</div>
-                <div id="ad-slot-4" class="element ad-box">AD SLOT 4</div>
-            </div>
-        </main>
-
-        <footer class="bottom-strip">
-            <div class="footer-links">
-                <a href="#">ABOUT US</a>
-                <a href="#">CONTACT US</a>
-            </div>
-            <div class="trademark">© 2026 BINARY RUTHLESS TRADER</div>
-        </footer>
+        </div>
+        <p style="color:gray; text-align:center;">Site is Loading...</p>
     </div>
 
-    <div id="admin-view-placeholder"></div>
+    <div id="admin-view" style="display:none; background:#111; padding:20px; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; overflow-y:auto;">
+        <h1 style="color:red;">ADMIN PANEL</h1>
+        <button onclick="hideAdmin()" style="background:red; color:white; border:none; padding:10px;">EXIT</button>
+        </div>
 
     <script src="builder-engine.js"></script>
     <script src="revenue-calc.js"></script>
@@ -69,30 +40,31 @@
     <script src="signals-sync.js"></script>
 
     <script>
-        async function initRuthless() {
-            // Load Admin Dashboard into placeholder
-            try {
-                const response = await fetch('admin-dashboard.html');
-                const html = await response.text();
-                document.getElementById('admin-view-placeholder').innerHTML = html;
-            } catch (e) { console.error("Admin dashboard load failed"); }
-
-            // Initialize Security & Layout
-            if (typeof checkSecretAccess === "function") checkSecretAccess();
-            if (typeof enableShield === "function") enableShield();
-            if (typeof loadLayout === "function") loadLayout();
-            if (typeof startAccuracySimulator === "function") startAccuracySimulator();
-        }
-
-        function showAdminPanel() {
-            if(typeof openDashboard === "function") openDashboard();
-            else {
-                document.getElementById('home-view').style.display = 'none';
-                document.getElementById('admin-view').style.display = 'block';
+        // Emergency Script to stop White Screen
+        window.onload = function() {
+            console.log("Ruthless Booting...");
+            
+            // Check Secret Path
+            if(window.location.hash === "#9700224305") {
+                document.getElementById('admin-entry-btn').style.display = 'block';
             }
-        }
 
-        window.onload = initRuthless;
+            // Accuracy Simulation
+            setInterval(() => {
+                const rate = Math.floor(Math.random() * (99 - 94 + 1)) + 94;
+                const el = document.getElementById('itm-rate');
+                if(el) el.innerText = rate + "%";
+            }, 3000);
+        };
+
+        function showAdmin() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('admin-view').style.display = 'block';
+        }
+        function hideAdmin() {
+            document.getElementById('admin-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        }
     </script>
 </body>
 </html>
