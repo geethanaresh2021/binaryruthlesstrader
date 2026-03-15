@@ -4,67 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader</title>
-    <link rel="stylesheet" href="styles-ruthless.css">
+    
+    <style>
+        :root { --red: #ff0000; --dark-bg: #000000; --neon-green: #00ffcc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--dark-bg); color: var(--red); font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #000; border-bottom: 1px solid #222; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .brand-name { font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); }
+        .admin-lock-btn { background: transparent; border: none; color: #111; cursor: pointer; font-size: 20px; }
+        
+        #home-view { padding: 100px 20px 80px; min-height: 100vh; }
+        .main-content-wrapper { display: flex; flex-direction: column; gap: 20px; }
+        .main-box { background: #0a0a0a; border: 2px solid var(--red); padding: 30px; text-align: center; box-shadow: inset 0 0 15px rgba(255,0,0,0.2); }
+        
+        .number-glow { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; text-shadow: 0 0 15px var(--red); margin-top: 10px; }
+        .ads-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .ad-box { background: #050505; border: 1px dashed #333; height: 100px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 10px; }
+        
+        .bottom-strip { background: #0a0a0a; border-top: 1px solid #222; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: fixed; bottom: 0; width: 100%; font-size: 10px; }
+        
+        /* Admin Dashboard Style */
+        #admin-panel { display: none; background: #0a0a0a; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; padding: 20px; overflow-y: auto; color: white; }
+        .ruthless-input { width: 100%; background: #000; border: 1px solid #444; color: var(--neon-green); padding: 10px; margin-bottom: 15px; font-weight: bold; }
+        .dash-btn { background: var(--red); color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
+    </style>
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
-<body style="background-color: black;">
+<body>
 
     <div id="home-view">
-        <header class="top-nav" style="display:flex; justify-content:space-between; padding:20px;">
-            <div class="logo-area">
-                <span style="color:red; font-family:'Orbitron'; font-size:20px;">RUTHLESS TRADER</span>
-            </div>
-            <button id="admin-entry-btn" onclick="showAdmin()" style="display:none; background:none; border:none; color:#222;"><i class="fas fa-shield-alt"></i></button>
-        </header>
+        <header class="top-nav">
+            <button id="admin-entry-btn" class="admin-lock-btn" onclick="openAdmin()"><i class="fas fa-user-shield"></i></button>
+            <div class="brand-name">RUTHLESS TRADER</div>
+            <div style="width: 30px;"></div> </header>
 
-        <div class="main-content-wrapper" style="padding:20px;">
-            <div id="h-main-container-1" class="element main-box" style="border:2px solid red; padding:30px; margin-bottom:20px; text-align:center;">
-                <h2 style="color:white;">ACCURACY</h2>
-                <div id="itm-rate" style="color:red; font-size:32px; font-family:'Roboto Mono';">98%</div>
+        <div class="main-content-wrapper">
+            <div class="main-box">
+                <h2 style="font-size: 14px; color: white;">LIVE ACCURACY</h2>
+                <div id="itm-rate" class="number-glow">98%</div>
+            </div>
+            <div class="main-box">
+                <h2 style="font-size: 14px; color: white;">TRADING SIGNALS</h2>
+                <button onclick="window.location.href='#'" style="margin-top:10px; background:red; color:white; border:none; padding:10px 20px; font-family:'Orbitron';">JOIN NOW</button>
             </div>
         </div>
-        <p style="color:gray; text-align:center;">Site is Loading...</p>
+
+        <div class="ads-grid">
+            <div class="ad-box">AD SLOT 1</div>
+            <div class="ad-box">AD SLOT 2</div>
+            <div class="ad-box">AD SLOT 3</div>
+            <div class="ad-box">AD SLOT 4</div>
+        </div>
+
+        <footer class="bottom-strip">
+            <div style="display:flex; gap:20px;">
+                <span>ABOUT US</span>
+                <span>CONTACT US</span>
+            </div>
+            <div>© 2026 BINARY RUTHLESS TRADER</div>
+        </footer>
     </div>
 
-    <div id="admin-view" style="display:none; background:#111; padding:20px; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; overflow-y:auto;">
-        <h1 style="color:red;">ADMIN PANEL</h1>
-        <button onclick="hideAdmin()" style="background:red; color:white; border:none; padding:10px;">EXIT</button>
-        </div>
+    <div id="admin-panel">
+        <h1 style="color:red; text-align:center; margin-bottom:30px;">COMMAND CENTER</h1>
+        
+        <label>AVG CPM ($)</label>
+        <input type="number" id="admin-cpm" value="1.50" class="ruthless-input">
+        
+        <label>SECRET ACCESS PATH</label>
+        <input type="text" id="admin-path" value="9700224305" class="ruthless-input">
 
-    <script src="builder-engine.js"></script>
-    <script src="revenue-calc.js"></script>
-    <script src="affiliate-manager.js"></script>
-    <script src="security-core.js"></script>
-    <script src="signals-sync.js"></script>
+        <label>AFFILIATE LINK</label>
+        <input type="text" id="admin-aff-link" placeholder="Paste link here" class="ruthless-input">
+
+        <button class="dash-btn" onclick="saveAdmin()">SAVE & EXIT</button>
+    </div>
 
     <script>
-        // Emergency Script to stop White Screen
-        window.onload = function() {
-            console.log("Ruthless Booting...");
-            
-            // Check Secret Path
+        // Security Logic
+        function checkAccess() {
             if(window.location.hash === "#9700224305") {
-                document.getElementById('admin-entry-btn').style.display = 'block';
+                document.getElementById('admin-entry-btn').style.color = "#444";
             }
-
-            // Accuracy Simulation
-            setInterval(() => {
-                const rate = Math.floor(Math.random() * (99 - 94 + 1)) + 94;
-                const el = document.getElementById('itm-rate');
-                if(el) el.innerText = rate + "%";
-            }, 3000);
-        };
-
-        function showAdmin() {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('admin-view').style.display = 'block';
         }
-        function hideAdmin() {
-            document.getElementById('admin-view').style.display = 'none';
+
+        function openAdmin() {
+            if(window.location.hash === "#9700224305") {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('home-view').style.display = 'none';
+            }
+        }
+
+        function saveAdmin() {
+            alert("Settings Saved Locally!");
+            document.getElementById('admin-panel').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
         }
+
+        // Accuracy Simulation
+        setInterval(() => {
+            const rate = Math.floor(Math.random() * (99 - 94 + 1)) + 94;
+            const el = document.getElementById('itm-rate');
+            if(el) el.innerText = rate + "%";
+        }, 5000);
+
+        // Anti-Inspect Alert
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        window.onload = checkAccess;
     </script>
 </body>
 </html>
