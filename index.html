@@ -3,229 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader | Official System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <title id="meta-title">Loading...</title>
+    <meta name="description" id="meta-desc" content="">
+    <link rel="icon" id="meta-favicon" href="">
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --red: #ff0000; 
-            --green: #00ffcc; 
-            --bg: #050505; 
-            --neon: 0 0 15px var(--red); 
+        body {
+            background-color: #000; color: #fff; font-family: 'Orbitron', sans-serif;
+            margin: 0; padding: 0; overflow: hidden; user-select: none;
         }
+        /* Border-less Container Logic */
+        .ruthless-container {
+            position: absolute; border: none !important; outline: none !important;
+            background: transparent; display: flex; align-items: center; justify-content: center;
+        }
+        .signal-box { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: #ff0000; text-shadow: 0 0 15px rgba(255,0,0,0.7); }
+        .ad-slot { overflow: hidden; }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html, body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
-            overflow-x: hidden; touch-action: pan-y;
-        }
-
-        /* Header Section */
-        .header-container {
-            width: 100%; 
-            padding: 15px 50px;
-            display: grid; 
-            grid-template-columns: 180px 1fr 250px; 
-            align-items: center; 
-            border-bottom: 2px solid var(--red);
-            background: #000;
-            position: sticky; top: 0; z-index: 1000;
-        }
-
-        .logo-img { width: 110px; height: auto; }
-
-        .header-center { display: flex; justify-content: center; }
-        .brand-name-img { 
-            width: 550px; 
-            height: auto; 
-            max-width: 95%; 
-            filter: drop-shadow(0 0 12px var(--red)); 
-        }
-
-        .social-links { display: flex; gap: 15px; justify-content: flex-end; }
-        .social-links a { 
-            color: #fff; text-decoration: none; font-size: 11px; 
-            font-family: 'Roboto Mono'; border: 1px solid #333; 
-            padding: 8px 15px; border-radius: 5px; transition: 0.3s;
-        }
-        .social-links a:hover { border-color: var(--red); box-shadow: var(--neon); color: var(--red); }
-
-        /* Main Content Layout */
-        .main-content {
-            display: flex; 
-            flex-direction: row; 
-            justify-content: center; 
-            align-items: center;
-            gap: 30px; 
-            padding: 60px 20px; 
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .small-container {
-            flex: 1;
-            max-width: 380px;
-            min-height: 520px; 
-            background: #0a0a0a; 
-            border: 1px solid var(--red);
-            padding: 35px; 
-            border-radius: 20px; 
-            box-shadow: var(--neon);
-            display: flex; 
-            flex-direction: column; 
-            transition: 0.4s;
-        }
-        
-        .small-container:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--red); }
-
-        .small-container h3 { 
-            text-align: center; color: var(--red); margin-bottom: 25px; 
-            font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 15px; 
-        }
-
-        input, select {
-            width: 100%; padding: 16px; margin: 12px 0; background: #111; 
-            border: 1px solid #333; color: var(--green); border-radius: 8px; 
-            font-family: 'Roboto Mono'; font-weight: bold; font-size: 15px;
-            outline: none;
-        }
-
-        .action-btn {
-            background: var(--red); color: #fff; border: none; padding: 20px; 
-            width: 100%; border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; 
-            font-weight: 900; margin-top: auto; transition: 0.3s;
-            text-transform: uppercase;
-        }
-        .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
-
-        /* Footer */
-        .footer-container {
-            width: 100%; padding: 40px 60px; background: #000; border-top: 2px solid var(--red);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .footer-item { font-family: 'Roboto Mono'; font-size: 11px; color: #666; flex: 1; }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-content { flex-wrap: wrap; }
-            .header-container { grid-template-columns: 1fr 1fr; }
-            .header-right { display: none; } 
-        }
-
-        @media (max-width: 768px) {
-            .header-container { display: flex; flex-direction: column; padding: 20px; }
-            .brand-name-img { width: 350px; }
-            .main-content { flex-direction: column; } 
-            .footer-container { flex-direction: column; text-align: center; gap: 15px; }
-        }
+        /* Fixed Desktop/Tablet View */
+        @media (min-width: 769px) { .site-wrapper { width: 1280px; height: 720px; margin: auto; position: relative; } }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <header class="header-container">
-        <div class="header-left"><img src="logo.png" alt="Logo" class="logo-img"></div>
-        <div class="header-center"><img src="brand-name.png" alt="Binary Ruthless Trader" class="brand-name-img"></div>
-        <div class="header-right">
-            <div class="social-links">
-                <a href="#">TELEGRAM</a>
-                <a href="#">YOUTUBE</a>
-            </div>
+    <div id="layout-engine" class="site-wrapper">
         </div>
-    </header>
-
-    <main class="main-content">
-        <div class="small-container">
-            <h3>LOGIN</h3>
-            <input type="email" id="loginEmail" placeholder="ENTER EMAIL">
-            <input type="text" id="loginId" placeholder="ENTER USER ID">
-            <button class="action-btn" onclick="sendToFirebase('Login')">ACCESS SYSTEM</button>
-        </div>
-
-        <div class="small-container">
-            <h3>SIGNUP</h3>
-            <input type="email" id="signupEmail" placeholder="ENTER NEW EMAIL">
-            <select id="signupBroker">
-                <option value="">SELECT BROKER</option>
-                <option value="QUOTEX">QUOTEX</option>
-                <option value="POCKET_OPTION">POCKET OPTION</option>
-            </select>
-            <button class="action-btn" onclick="sendToFirebase('Signup')">GET LINK</button>
-        </div>
-
-        <div class="small-container">
-            <h3>VERIFY ID</h3>
-            <input type="email" id="verifyEmail" placeholder="REGISTERED EMAIL">
-            <input type="text" id="verifyId" placeholder="BROKER ID">
-            <button class="action-btn" onclick="sendToFirebase('Verify')">VERIFY NOW</button>
-        </div>
-    </main>
-
-    <footer class="footer-container">
-        <div class="footer-item"><b>WARNING:</b> High risk investment.</div>
-        <div class="footer-item" style="text-align: center;">@BinaryRuthlessAdmin</div>
-        <div class="footer-item" style="text-align: right;">© 2026 BINARY RUTHLESS TRADER™</div>
-    </footer>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
-            authDomain: "binary-ruthless-trader.firebaseapp.com",
-            databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
-            projectId: "binary-ruthless-trader",
-            storageBucket: "binary-ruthless-trader.firebasestorage.app",
-            messagingSenderId: "363803749428",
-            appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
+        // Silent Protection: Key Blocks (F12, Ctrl+U, etc.)
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // Debugger Trap: Freezes site if Inspect is forced
+        (function() {
+            setInterval(function() { debugger; }, 100);
+        })();
 
-        function sendToFirebase(type) {
-            let email, id, extra = "";
-            
-            if(type === 'Login') {
-                email = document.getElementById('loginEmail').value;
-                id = document.getElementById('loginId').value;
-            } else if(type === 'Signup') {
-                email = document.getElementById('signupEmail').value;
-                id = "PENDING_ID";
-                extra = document.getElementById('signupBroker').value;
-            } else if(type === 'Verify') {
-                email = document.getElementById('verifyEmail').value;
-                id = document.getElementById('verifyId').value;
-            }
-
-            if(!email || !id) {
-                alert("Please fill all details!");
-                return;
-            }
-
-            // Pushing data to Firebase
-            const requestRef = database.ref('requests/' + Date.now());
-            requestRef.set({
-                requestType: type,
-                userEmail: email,
-                traderId: id,
-                brokerName: extra,
-                status: 'pending',
-                timestamp: new Date().toLocaleString()
-            }).then(() => {
-                alert(type + " Request Submitted! Check Database.");
-                document.querySelectorAll('input').forEach(input => input.value = '');
-            }).catch((error) => {
-                alert("Error: " + error.message);
-            });
-        }
+        // Auto-Ad Refresh (Every 20 Seconds for Revenue)
+        setInterval(() => {
+            console.log("Revenue Cycle: Refreshing Ads...");
+            // Function to reload snippets
+        }, 20000);
     </script>
 </body>
 </html>
