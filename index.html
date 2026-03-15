@@ -7,32 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --red: #ff0000; --bg: #000; --neon: #00ffcc; }
-        * { box-sizing: border-box; }
-        body { background: var(--bg); color: var(--red); font-family: 'Orbitron', sans-serif; margin: 0; overflow: hidden; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--red); font-family: 'Orbitron', sans-serif; overflow-x: hidden; user-select: none; }
         
-        /* --- HOME PAGE STYLES --- */
+        /* --- HOME PAGE STYLE --- */
         #home-view { display: block; height: 100vh; position: relative; }
-        #admin-entry-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--red); color: #fff; text-align: center; padding: 12px; z-index: 10000; cursor: pointer; border: none; font-weight: bold; font-family: 'Orbitron'; }
+        #admin-entry-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--red); color: #fff; text-align: center; padding: 12px; z-index: 10000; cursor: pointer; border: none; font-weight: bold; }
         .element { position: absolute; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; }
-        .join-btn { background: var(--red); color: #fff; border: none; padding: 15px 35px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--red); border-radius: 4px; font-family: 'Orbitron'; }
+        .join-btn { background: var(--red); color: #fff; border: none; padding: 15px 35px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--red); border-radius: 4px; }
         .number-glow { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: var(--red); text-shadow: 0 0 15px var(--red); }
         .trading-box { border: 2px solid var(--red); background: rgba(15, 15, 15, 0.95); box-shadow: inset 0 0 20px rgba(255,0,0,0.2); }
 
-        /* --- ADMIN PAGE STYLES --- */
+        /* --- ADMIN PAGE STYLE --- */
         #admin-view { display: none; background: #0a0a0a; color: #fff; font-family: 'Roboto Mono', monospace; padding: 20px; min-height: 100vh; overflow-y: auto; }
         .section { background: #151515; border-left: 5px solid var(--red); padding: 20px; margin-bottom: 25px; border-radius: 0 10px 10px 0; }
         .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
         .stat-card { background: #222; padding: 15px; text-align: center; border: 1px solid #333; }
-        .val { display: block; font-size: 28px; color: var(--red); font-weight: bold; margin-top: 5px; }
+        .val { display: block; font-size: 28px; color: var(--red); font-weight: bold; }
         .revenue-text { font-size: 40px; color: var(--neon); text-shadow: 0 0 15px var(--neon); font-weight: bold; margin: 10px 0; }
+        
+        /* Layout Builder Area */
         .preview-area { width: 100%; height: 450px; background: #000; border: 2px solid #444; position: relative; margin: 15px 0; overflow: hidden; }
-        .mobile-toggle { width: 375px; margin: 0 auto; border: 5px solid #ff0000; height: 600px; }
+        .mobile-toggle { width: 375px; margin: 0 auto; border: 5px solid var(--red); height: 600px; }
         
         input, select, textarea { background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 12px; margin: 8px 0; width: 100%; font-family: 'Roboto Mono'; }
         .input-green { color: var(--neon) !important; font-weight: bold; font-size: 18px; }
-        .btn-action { background: var(--red); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-action { background: var(--red); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
         .btn-action:hover { background: #b30000; box-shadow: 0 0 10px var(--red); }
-        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -40,107 +41,92 @@
     <button id="admin-entry-btn" onclick="openAdminPanel()">ENTER RUTHLESS COMMAND CENTER</button>
 
     <div id="home-view">
-        <div id="logo-box" class="element" style="top:40px; left:40px;">LOGO</div>
-        <div id="join-box" class="element" style="top:120px; left:40px;">
+        <div id="logo-box" class="element" style="top:30px; left:30px;">LOGO</div>
+        <div id="join-box" class="element" style="top:100px; left:30px;">
             <button class="join-btn" onclick="handleJoin()">JOIN NOW</button>
         </div>
-        <div id="signal-box" class="element trading-box" style="top:40px; right:40px; width:220px; aspect-ratio:1/1.5;">
-            <div class="number-glow">88%</div>
+        <div id="signal-box" class="element trading-box" style="top:30px; right:30px; width:220px; aspect-ratio:1/1.5;">
+            <div class="number-glow">92%</div>
         </div>
         <div id="ad-slot-1" class="element" style="bottom:20px; left:50%; transform:translateX(-50%); width:320px; height:50px; border:1px dashed #444;">AD SLOT 1</div>
     </div>
 
     <div id="admin-view">
-        <h1 style="color:red; text-align:center; text-shadow: 0 0 10px red;">RUTHLESS ADMIN PANEL</h1>
+        <h1 style="color:red; text-align:center; margin-bottom: 20px;">RUTHLESS CONTROL PANEL</h1>
 
         <div class="section">
             <h3>1. USERS & POSTS (TODAY)</h3>
             <div class="grid-stats">
-                <div class="stat-card">Unique Visitors <span class="val" id="uv-count">1</span></div>
-                <div class="stat-card">Total Views <span class="val" id="tv-count">0</span></div>
+                <div class="stat-card">Unique Visitors <span class="val" id="uv">1</span></div>
+                <div class="stat-card">Total Views <span class="val" id="tv">0</span></div>
                 <div class="stat-card">Active Now <span class="val">5</span></div>
                 <div class="stat-card">Today Posts <span class="val">1440</span></div>
             </div>
         </div>
 
         <div class="section">
-            <h3>2. ESTIMATED REVENUE (REFRESH BASED)</h3>
+            <h3>2. REVENUE ENGINE (₹ INR)</h3>
             <div class="revenue-text">₹ <span id="revenue-val">0.00</span></div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                <div>
-                    <label>Average CPM ($):</label>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;">
+                    <label>Today CPM ($):</label>
                     <input type="number" id="cpm-input" value="1.50" step="0.01" class="input-green">
                 </div>
-                <div>
-                    <label>Live USD Rate:</label>
-                    <input type="number" id="usd-rate" value="83.50" class="input-green">
+                <div style="flex:1;">
+                    <label>Exchange Rate (USD-INR):</label>
+                    <input type="number" id="rate-input" value="83.50" class="input-green">
                 </div>
             </div>
         </div>
 
         <div class="section">
-            <h3>3. VISUAL LAYOUT BUILDER</h3>
+            <h3>3. LIVE LAYOUT BUILDER</h3>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button class="btn-action" onclick="changeView('desktop')" style="flex:1;">Desktop</button>
-                <button class="btn-action" onclick="changeView('mobile')" style="flex:1; background:#444;">Mobile View</button>
-                <button class="btn-action" onclick="saveMasterData()" style="flex:1; background:green;">SAVE LAYOUT & LINKS</button>
+                <button class="btn-action" onclick="changeView('desktop')">Desktop</button>
+                <button class="btn-action" onclick="changeView('mobile')" style="background:#333;">Mobile View</button>
+                <button class="btn-action" onclick="saveMasterData()" style="background:green;">SAVE LAYOUT</button>
             </div>
             <div id="builder-canvas" class="preview-area">
                 <div style="position:absolute; top:20px; left:20px; border:1px solid red; padding:5px; cursor:move;">LOGO</div>
                 <div style="position:absolute; top:80px; left:20px; background:red; color:white; padding:8px; cursor:move;">JOIN BTN</div>
-                <div style="position:absolute; top:20px; right:20px; width:80px; height:120px; border:2px solid red; text-align:center;">SIGNAL</div>
             </div>
         </div>
 
         <div class="section">
-            <h3>4. AFFILIATE & AD MANAGEMENT</h3>
-            <label>Affiliate / Join Link:</label>
-            <input type="text" id="aff-link" placeholder="Enter your Broker Affiliate Link">
-            
-            <hr>
-            <h4>Individual Ad Slots</h4>
-            <div id="ad-controls">
-                <div style="background:#222; padding:10px; margin-bottom:10px;">
-                    <label>Ad Slot 1 (Snippet Code):</label>
-                    <textarea placeholder="Paste Adsterra/Propeller HTML Code here..."></textarea>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" placeholder="Size (e.g. 320x50)" style="width:50%;">
-                        <button class="btn-action" style="width:25%; background:#555;">HIDE</button>
-                        <button class="btn-action" style="width:25%; background:red;">DELETE</button>
-                    </div>
+            <h3>4. AFFILIATE LINKS & AD SLOTS</h3>
+            <label>Join Button Link (Affiliate):</label>
+            <input type="text" id="aff-link" placeholder="Enter Broker URL">
+            <hr style="border:0.5px solid #333; margin:15px 0;">
+            <div id="ad-manager">
+                <label>Ad Slot 1 (HTML Snippet):</label>
+                <textarea rows="3" placeholder="Paste Adsterra/Propeller Code"></textarea>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" placeholder="Size (e.g. 300x250)" style="flex:1;">
+                    <button class="btn-action" style="width:100px; background:#444;">HIDE</button>
+                    <button class="btn-action" style="width:100px;">DELETE</button>
                 </div>
-                <button class="btn-action" style="background:#0066ff;">+ ADD NEW AD CONTAINER</button>
+                <button class="btn-action" style="background:#0066ff; margin-top:10px;">+ ADD NEW AD CONTAINER</button>
             </div>
         </div>
 
         <div class="section">
-            <h3>5. SIGNALS & TOOLS SYNC</h3>
-            <label>Signals (Add Names separated by comma):</label>
-            <input type="text" id="sig-names" placeholder="quotex, toxa, binomo, pocketoption">
-            <label>Tool Snippet (HTML Code):</label>
-            <textarea placeholder="Paste Calculator or Clock HTML here..."></textarea>
-        </div>
-
-        <div class="section">
-            <h3>6. SECURITY & PATH CONTROL</h3>
-            <label>Secret Access Path (Current: 9700224305):</label>
+            <h3>5. SIGNALS & SECURITY</h3>
+            <label>Signal Dropdown Names (e.g. quotex, binomo):</label>
+            <input type="text" id="sig-names" placeholder="comma separated names">
+            <hr style="border:0.5px solid #333; margin:15px 0;">
+            <label>Secret Access Path:</label>
             <input type="text" id="path-val" value="9700224305">
-            <div style="margin-top:10px;">
-                <label><input type="checkbox" id="otp-toggle"> Enable Mobile OTP Login</label>
-            </div>
-            <hr>
-            <button class="btn-action" onclick="location.reload()" style="background:#333;">EXIT ADMIN & REFRESH</button>
+            <label><input type="checkbox" id="otp-check"> Enable OTP on Login</label>
+            <button class="btn-action" onclick="location.reload()" style="background:#222; margin-top:15px;">EXIT ADMIN</button>
         </div>
     </div>
 
     <script>
-        // --- MASTER LOGIC ---
-
-        // 1. Secret Path Authentication
-        const masterPath = "9700224305";
-        if(window.location.hash === "#" + masterPath || sessionStorage.getItem('admin_active')) {
+        // 1. Authentication Check
+        const secretPath = "9700224305";
+        if(window.location.hash === "#" + secretPath || sessionStorage.getItem('is_ruthless')) {
             document.getElementById('admin-entry-btn').style.display = 'block';
-            sessionStorage.setItem('admin_active', 'true');
+            sessionStorage.setItem('is_ruthless', 'true');
         }
 
         function openAdminPanel() {
@@ -149,58 +135,50 @@
             document.getElementById('admin-entry-btn').style.display = 'none';
         }
 
-        // 2. 15s Smart Ad Refresh & Revenue Tracking
-        let lastRefreshTime = Date.now();
-        let refreshCount = 0;
-
-        function triggerSmartRefresh() {
-            let now = Date.now();
-            if (now - lastRefreshTime > 15000) {
-                refreshCount++;
-                lastRefreshTime = now;
-                updateLiveRevenue();
-                console.log("Ads Refreshed. Total Impressions: " + refreshCount);
+        // 2. Revenue & Ad Refresh Logic
+        let adRefreshes = 0;
+        let lastRef = Date.now();
+        function checkRefresh() {
+            if(Date.now() - lastRef > 15000) {
+                adRefreshes++;
+                lastRef = Date.now();
+                updateRevenue();
             }
         }
-        window.addEventListener('scroll', triggerSmartRefresh);
-        window.addEventListener('click', triggerSmartRefresh);
+        window.addEventListener('scroll', checkRefresh);
+        window.addEventListener('click', checkRefresh);
 
-        // 3. Revenue Estimation Formula
-        function updateLiveRevenue() {
+        function updateRevenue() {
             const cpm = parseFloat(document.getElementById('cpm-input').value) || 0;
-            const rate = parseFloat(document.getElementById('usd-rate').value) || 0;
-            const activeAds = 4; // Total slots
-            const estimatedUSD = ((activeAds * refreshCount) / 1000) * cpm;
-            const estimatedINR = estimatedUSD * rate;
-            document.getElementById('revenue-val').innerText = estimatedINR.toFixed(2);
+            const rate = parseFloat(document.getElementById('rate-input').value) || 0;
+            const totalAds = 4;
+            const calc = ((totalAds * adRefreshes) / 1000) * cpm * rate;
+            document.getElementById('revenue-val').innerText = calc.toFixed(2);
         }
 
-        // 4. Affiliate Redirect
+        // 3. Affiliate Handle
         function handleJoin() {
-            const link = localStorage.getItem('ruthless_aff_link') || '#';
+            const link = localStorage.getItem('ruthless_link') || '#';
             window.open(link, '_blank');
         }
 
-        // 5. Layout Builder Functions
+        // 4. Builder & Save
         function changeView(v) {
-            const canvas = document.getElementById('builder-canvas');
-            if(v === 'mobile') {
-                canvas.classList.add('mobile-toggle');
-            } else {
-                canvas.classList.remove('mobile-toggle');
-            }
+            const p = document.getElementById('builder-canvas');
+            if(v === 'mobile') p.classList.add('mobile-toggle');
+            else p.classList.remove('mobile-toggle');
         }
 
         function saveMasterData() {
             const link = document.getElementById('aff-link').value;
-            localStorage.setItem('ruthless_aff_link', link);
-            alert("RUTHLESS UPDATE: Layout, Affiliate Links, and Settings Saved to Firebase!");
+            localStorage.setItem('ruthless_link', link);
+            alert("RUTHLESS UPDATE: Layout & Affiliate Links Saved!");
         }
 
-        // 6. Security: Inspect Element Protection
+        // 5. Security (Inspect Block)
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => {
-            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key == 'J')) || (e.ctrlKey && e.key == 'U')) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key == 'J'))) {
                 window.location.replace("about:blank");
                 return false;
             }
