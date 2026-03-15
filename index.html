@@ -6,73 +6,57 @@
     <title>Binary Ruthless Trader</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --main-red: #ff0000; --bg-black: #000000; --neon-cyan: #00ffcc; }
-        body { background-color: var(--bg-black); color: var(--main-red); font-family: 'Orbitron', sans-serif; margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
-        #admin-link { display: none; position: fixed; top: 0; left: 0; width: 100%; background: var(--main-red); color: white; text-align: center; padding: 12px; font-size: 14px; cursor: pointer; z-index: 9999; text-transform: uppercase; font-weight: bold; }
-        .header { text-align: center; padding: 40px 20px; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .trading-box { background: rgba(15, 15, 15, 0.95); border: none; aspect-ratio: 1 / 1.5; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255, 0, 0, 0.1); }
-        .ad-container { width: 100%; background: transparent; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
-        .revenue-num { font-family: 'Roboto Mono', monospace; font-weight: bold; font-size: 32px; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+        :root { --main-red: #ff0000; --bg-black: #000; --neon-cyan: #00ffcc; }
+        body { background: var(--bg-black); color: var(--main-red); font-family: 'Orbitron', sans-serif; margin: 0; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
+        #admin-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--main-red); color: #fff; text-align: center; padding: 10px; z-index: 10000; cursor: pointer; font-weight: bold; }
+        .draggable-element { position: absolute; cursor: pointer; }
+        .join-btn { background: var(--main-red); color: #fff; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: 0 0 15px var(--main-red); }
+        .ad-container { border: 1px dashed #333; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     </style>
 </head>
 <body>
 
-<div id="admin-link">Access Admin Dashboard</div>
+<div id="admin-btn" onclick="location.href='9700224305.html'">ENTER ADMIN PANEL</div>
 
-<header class="header">
-    <div id="brand-logo"></div>
-    <h1 id="brand-name">BINARY RUTHLESS TRADER</h1>
-</header>
+<div id="brand-logo" class="draggable-element">LOGO</div>
 
-<div class="grid-container" id="main-layout">
-    <div class="ad-container" id="ad-slot-1"></div>
-    
-    <div class="trading-box" id="signal-box">
-        <select id="signal-selector" style="background:#000; color:red; border:1px solid red; padding:10px;"></select>
-        <div id="signal-display">Waiting for Signals...</div>
-    </div>
-
-    <div class="ad-container" id="ad-slot-2"></div>
+<div id="join-section" class="draggable-element">
+    <button class="join-btn" onclick="goToAffiliate()">JOIN NOW</button>
 </div>
 
+<div id="signal-container" class="draggable-element" style="aspect-ratio: 1/1.5; border: 2px solid red;">
+    </div>
+
+<div id="ad-slot-1" class="draggable-element ad-container">AD 1</div>
+
 <script>
-    // 1. Secret Path Verification
-    const currentPath = window.location.pathname;
-    const secretKey = localStorage.getItem('ruthless_path') || '9700224305';
-    if(currentPath.includes(secretKey)) {
-        document.getElementById('admin-link').style.display = 'block';
-        document.getElementById('admin-link').onclick = () => window.location.href = secretKey + '.html';
+    // 1. Secret Path Check
+    if(window.location.pathname.includes('9700224305') || sessionStorage.getItem('is_admin')) {
+        document.getElementById('admin-btn').style.display = 'block';
+        sessionStorage.setItem('is_admin', 'true');
     }
 
-    // 2. 15s Smart Ad Refresh Logic
-    let lastActivity = Date.now();
-    const minGap = 15000; 
-    function triggerAdRefresh() {
-        let now = Date.now();
-        if(now - lastActivity > minGap) {
-            console.log("Activity detected: Refreshing Ads...");
-            // Logic to reload ad scripts
-            lastActivity = now;
+    // 2. Affiliate Link Redirect
+    function goToAffiliate() {
+        const link = localStorage.getItem('affiliate_link') || '#';
+        window.open(link, '_blank');
+    }
+
+    // 3. 15s Smart Ad Refresh
+    let lastRef = Date.now();
+    function smartRefresh() {
+        if(Date.now() - lastRef > 15000) {
+            console.log("Refreshing Ads and Updating Revenue...");
+            lastRef = Date.now();
+            // Trigger Refresh
         }
     }
-    window.onscroll = triggerAdRefresh;
-    window.onclick = triggerAdRefresh;
+    window.onscroll = smartRefresh;
+    window.onclick = smartRefresh;
 
-    // 3. Today Unique Visitor Logic (IP/Device 1 Count)
-    const today = new Date().toDateString();
-    if(localStorage.getItem('last_visit_date') !== today) {
-        localStorage.setItem('last_visit_date', today);
-        // Firebase.database().ref('analytics/unique_visitors').transaction(v => (v || 0) + 1);
-    }
-
-    // 4. No-Freeze Redirect Security
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 85)) {
-            window.location.replace("about:blank");
-            return false;
-        }
-    };
+    // 4. Security: No-Freeze Redirect
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = e => { if(e.keyCode == 123) window.location.replace("about:blank"); };
 </script>
 </body>
 </html>
