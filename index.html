@@ -3,53 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader</title>
+    <title id="site-title">Binary Ruthless Trader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <style>
-        body { background-color: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Orbitron', sans-serif; }
-        #layout-engine { width: 100vw; height: 100vh; position: relative; }
-        /* Silent Security Styles */
-        body { user-select: none; -webkit-user-select: none; }
+        body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow: hidden; user-select: none; }
+        .site-wrapper { width: 100vw; height: 100vh; position: relative; }
+        /* Border-less Containers */
+        .ruthless-element { position: absolute; border: none !important; outline: none !important; background: transparent; }
+        .signal-font { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: #ff0000; text-shadow: 0 0 15px rgba(255,0,0,0.8); }
     </style>
 </head>
 <body oncontextmenu="return false;">
-    <div id="layout-engine"></div>
+    <div id="layout-engine" class="site-wrapper"></div>
 
     <script>
-        // Mee Official Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
             authDomain: "binary-ruthless-trader.firebaseapp.com",
             databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
             projectId: "binary-ruthless-trader",
-            storageBucket: "binary-ruthless-trader.firebasestorage.app",
-            messagingSenderId: "363803749428",
             appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Data Fetching Logic
-        db.ref('layout').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                // Render elements here
-                document.getElementById('layout-engine').innerHTML = "<h1>Connected & Loading...</h1>";
-                // Your rendering logic
-            } else {
-                document.getElementById('layout-engine').innerHTML = "<h1>No Layout Data Found in Firebase</h1>";
+        // Dynamic SEO & Layout Loader
+        db.ref('siteSettings').on('value', snap => {
+            const s = snap.val();
+            if(s) {
+                document.title = s.title;
+                document.getElementById('site-title').innerText = s.title;
             }
         });
 
-        // Silent Security: Key Blocks
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-                return false;
+        db.ref('layout').on('value', snap => {
+            const engine = document.getElementById('layout-engine');
+            engine.innerHTML = ''; // Clear for update
+            const elements = snap.val();
+            for(let id in elements) {
+                const el = elements[id];
+                const div = document.createElement('div');
+                div.className = 'ruthless-element';
+                // Device-specific positioning logic
+                const pos = (window.innerWidth <= 768) ? el.mobile : el.desktop;
+                div.style.left = pos.x + 'px';
+                div.style.top = pos.y + 'px';
+                div.innerHTML = el.content; // Ad snippet or Signal
+                engine.appendChild(div);
             }
-        };
+        });
+
+        // Silent Protection
+        document.onkeydown = e => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false; };
+        setInterval(() => { debugger; }, 100);
     </script>
 </body>
 </html>
