@@ -1,62 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root { --main-red: #ff0000; --bg-black: #000; --neon-cyan: #00ffcc; }
-        body { background: var(--bg-black); color: var(--main-red); font-family: 'Orbitron', sans-serif; margin: 0; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
-        #admin-btn { display: none; position: fixed; top: 0; width: 100%; background: var(--main-red); color: #fff; text-align: center; padding: 10px; z-index: 10000; cursor: pointer; font-weight: bold; }
-        .draggable-element { position: absolute; cursor: pointer; }
-        .join-btn { background: var(--main-red); color: #fff; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: 0 0 15px var(--main-red); }
-        .ad-container { border: 1px dashed #333; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    </style>
-</head>
-<body>
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: settings
+// Document: config
+// Fields: secretPath (string), affiliateLink (string), cpm (number), etc.
+//
+// Collection: layout
+// Document ID: elementId
+// Fields: id (string), type (string), label (string), desktop (map), mobile (map)
+//
+// Collection: analytics
+// Document ID: date (YYYY-MM-DD)
+// Fields: date (string), uniqueVisitors (number), views (number)
+//
+// Collection: ads
+// Document ID: slotId
+// Fields: id (string), code (string), active (bool)
+//
+// Collection: signals
+// Document ID: signalId
+// Fields: name (string), active (bool)
+//
+// ===============================================================
 
-<div id="admin-btn" onclick="location.href='9700224305.html'">ENTER ADMIN PANEL</div>
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
 
-<div id="brand-logo" class="draggable-element">LOGO</div>
-
-<div id="join-section" class="draggable-element">
-    <button class="join-btn" onclick="goToAffiliate()">JOIN NOW</button>
-</div>
-
-<div id="signal-container" class="draggable-element" style="aspect-ratio: 1/1.5; border: 2px solid red;">
-    </div>
-
-<div id="ad-slot-1" class="draggable-element ad-container">AD 1</div>
-
-<script>
-    // 1. Secret Path Check
-    if(window.location.pathname.includes('9700224305') || sessionStorage.getItem('is_admin')) {
-        document.getElementById('admin-btn').style.display = 'block';
-        sessionStorage.setItem('is_admin', 'true');
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
-    // 2. Affiliate Link Redirect
-    function goToAffiliate() {
-        const link = localStorage.getItem('affiliate_link') || '#';
-        window.open(link, '_blank');
+    function isAdmin() {
+      return isAuthenticated() &&
+        ((exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+          (request.auth.token.email == "geetharithvika2021@gmail.com" && request.auth.token.email_verified == true));
     }
 
-    // 3. 15s Smart Ad Refresh
-    let lastRef = Date.now();
-    function smartRefresh() {
-        if(Date.now() - lastRef > 15000) {
-            console.log("Refreshing Ads and Updating Revenue...");
-            lastRef = Date.now();
-            // Trigger Refresh
-        }
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
     }
-    window.onscroll = smartRefresh;
-    window.onclick = smartRefresh;
 
-    // 4. Security: No-Freeze Redirect
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = e => { if(e.keyCode == 123) window.location.replace("about:blank"); };
-</script>
-</body>
-</html>
+    function isValidConfig(data) {
+      return data.secretPath is string && data.secretPath.size() > 0 && data.secretPath.size() < 100 &&
+             data.affiliateLink is string && data.affiliateLink.size() < 500 &&
+             data.cpm is number && data.cpm >= 0 &&
+             data.exchangeRate is number &&
+             data.adRefreshInterval is number &&
+             data.giveawayPrize is number;
+    }
+
+    function isValidLayout(data) {
+      return data.id is string && data.type in ['logo', 'button', 'signals', 'ad', 'tool'] &&
+             data.desktop is map && data.mobile is map;
+    }
+
+    function isValidAd(data) {
+      return data.id is string && data.code is string && data.active is bool;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Settings
+    match /settings/config {
+      allow read: if true; // Publicly readable for the home page
+      allow write: if isAdmin() && isValidConfig(request.resource.data);
+    }
+
+    // Layout
+    match /layout/{elementId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidLayout(request.resource.data);
+    }
+
+    // Ads
+    match /ads/{slotId} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidAd(request.resource.data);
+    }
+
+    // Signals
+    match /signals/{signalId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Analytics
+    match /analytics/{date} {
+      allow read: if true; // Admin reads, but home page might need to increment
+      allow write: if true; // Home page increments views/visitors
+    }
+
+    // Users (for RBAC)
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin();
+    }
+  }
+}
