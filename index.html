@@ -3,51 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="meta-title">Loading...</title>
-    <meta name="description" id="meta-desc" content="">
-    <link rel="icon" id="meta-favicon" href="">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <title>Binary Ruthless Trader</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <style>
-        body {
-            background-color: #000; color: #fff; font-family: 'Orbitron', sans-serif;
-            margin: 0; padding: 0; overflow: hidden; user-select: none;
-        }
-        /* Border-less Container Logic */
-        .ruthless-container {
-            position: absolute; border: none !important; outline: none !important;
-            background: transparent; display: flex; align-items: center; justify-content: center;
-        }
-        .signal-box { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; color: #ff0000; text-shadow: 0 0 15px rgba(255,0,0,0.7); }
-        .ad-slot { overflow: hidden; }
-        
-        /* Fixed Desktop/Tablet View */
-        @media (min-width: 769px) { .site-wrapper { width: 1280px; height: 720px; margin: auto; position: relative; } }
+        body { background-color: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Orbitron', sans-serif; }
+        #layout-engine { width: 100vw; height: 100vh; position: relative; }
+        /* Silent Security Styles */
+        body { user-select: none; -webkit-user-select: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
-
-    <div id="layout-engine" class="site-wrapper">
-        </div>
+    <div id="layout-engine"></div>
 
     <script>
-        // Silent Protection: Key Blocks (F12, Ctrl+U, etc.)
+        // Mee Official Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
+            authDomain: "binary-ruthless-trader.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader",
+            storageBucket: "binary-ruthless-trader.firebasestorage.app",
+            messagingSenderId: "363803749428",
+            appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Data Fetching Logic
+        db.ref('layout').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                // Render elements here
+                document.getElementById('layout-engine').innerHTML = "<h1>Connected & Loading...</h1>";
+                // Your rendering logic
+            } else {
+                document.getElementById('layout-engine').innerHTML = "<h1>No Layout Data Found in Firebase</h1>";
+            }
+        });
+
+        // Silent Security: Key Blocks
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
                 return false;
             }
         };
-
-        // Debugger Trap: Freezes site if Inspect is forced
-        (function() {
-            setInterval(function() { debugger; }, 100);
-        })();
-
-        // Auto-Ad Refresh (Every 20 Seconds for Revenue)
-        setInterval(() => {
-            console.log("Revenue Cycle: Refreshing Ads...");
-            // Function to reload snippets
-        }, 20000);
     </script>
 </body>
 </html>
