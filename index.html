@@ -6,6 +6,7 @@
     <title>Binary Ruthless Trader | System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -59,19 +60,17 @@
 <body>
 
     <header class="header">
-        <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
-            <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            
-            <button onclick="adminLogin()" style="margin-left: 15px; background: transparent; border: 1px solid #333; color: #444; padding: 5px 10px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 10px; border-radius: 4px; font-weight: bold;">ADMIN</button>
-        </div>
-
-        <div class="social-links" style="display: flex; gap: 25px; margin-top: 15px;">
-            <a href="#" style="color: #fff; text-decoration: none; font-size: 20px;"><i class="fab fa-telegram"></i></a>
-            <a href="#" style="color: #fff; text-decoration: none; font-size: 20px;"><i class="fab fa-youtube"></i></a>
-            <a href="#" style="color: #fff; text-decoration: none; font-size: 20px;"><i class="fab fa-facebook"></i></a>
-            <a href="#" style="color: #fff; text-decoration: none; font-size: 20px;"><i class="fab fa-instagram"></i></a>
-        </div>
-    </header>
+    <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative;">
+        <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
+        <button onclick="adminLogin()" style="margin-left: 15px; background: transparent; border: 1px solid #333; color: #444; padding: 5px 10px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 10px; border-radius: 4px; font-weight: bold;">ADMIN</button>
+    </div>
+    <div class="social-links" style="display: flex; gap: 25px; margin-top: 15px;">
+        <a href="#" style="color: #fff;"><i class="fab fa-telegram"></i></a>
+        <a href="#" style="color: #fff;"><i class="fab fa-youtube"></i></a>
+        <a href="#" style="color: #fff;"><i class="fab fa-facebook"></i></a>
+        <a href="#" style="color: #fff;"><i class="fab fa-instagram"></i></a>
+    </div>
+</header>
 
     <div class="page-content">
         
@@ -127,6 +126,13 @@
         } else if (pass !== null) {
             alert("ACCESS DENIED");
         }
+    }
+</script>
+<script>
+    function adminLogin() {
+        const pass = prompt("ENTER ACCESS KEY:");
+        if(pass === "0000") { window.location.href = "admin.html"; }
+        else if (pass !== null) { alert("ACCESS DENIED"); }
     }
 </script>
 </body>
