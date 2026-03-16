@@ -110,9 +110,35 @@
     function updateAds() { alert("ADS UPDATED!"); }
 
     window.onload = function() {
-        const saved = localStorage.getItem('ruthless_fb_config');
-        if(saved) { document.getElementById('fbConfig').value = saved; }
+    const saved = localStorage.getItem('ruthless_fb_config');
+    if(saved) {
+        // Box lo పాత డీటెయిల్స్ ని నింపుతుంది
+        document.getElementById('fbConfig').value = saved;
+        
+        // Refresh అయినప్పుడు ఆటోమేటిక్ గా మళ్ళీ కనెక్ట్ చేసే లాజిక్
+        const status = document.getElementById('fbStatus');
+        try {
+            const config = JSON.parse(saved);
+            
+            // Firebase ని మళ్ళీ ఇనిషియలైజ్ చేస్తున్నాం
+            if (!firebase.apps.length) {
+                firebase.initializeApp(config);
+            }
+
+            firebase.database().ref(".info/connected").on("value", (snap) => {
+                if (snap.val() === true) {
+                    status.innerText = "STATUS: CONNECTED (AUTO)";
+                    status.style.color = "#00ffcc";
+                } else {
+                    status.innerText = "STATUS: RECONNECTING...";
+                    status.style.color = "orange";
+                }
+            });
+        } catch (e) {
+            console.log("Auto-connect failed, please connect manually.");
+        }
     }
+}
 </script>
 </body>
 </html>
