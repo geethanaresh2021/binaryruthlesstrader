@@ -162,6 +162,14 @@
             document.getElementById('live-acc').innerText = acc + "%";
         }, 5000);
     </script>
-
+function checkAdminAccess() {
+    let code = prompt("Enter Admin Secret Key:");
+    if(code === "0000") {
+        window.location.hash = "#9700224305";
+        location.reload();
+    } else {
+        alert("Access Denied!");
+    }
+}
 </body>
 </html>
