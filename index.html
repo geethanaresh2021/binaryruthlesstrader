@@ -116,14 +116,19 @@
 
     <script>
         // Check Access on Load
-        window.onload = function() {
-            if(window.location.hash === "#9700224305") {
-                showAdmin();
-            } else {
-                showHome();
-            }
-            loadBrokerList();
-        };
+       window.onload = function() {
+    const home = document.getElementById('home-view');
+    const admin = document.getElementById('admin-wrapper');
+
+    // Hash check chesi correct view chupistham
+    if (window.location.hash === "#9700224305") {
+        home.style.setProperty('display', 'none', 'important');
+        admin.style.setProperty('display', 'flex', 'important');
+    } else {
+        home.style.setProperty('display', 'block', 'important');
+        admin.style.setProperty('display', 'none', 'important');
+    }
+};
 
         function showAdmin() {
             document.getElementById('home-view').style.display = 'none';
