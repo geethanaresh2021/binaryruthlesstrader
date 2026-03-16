@@ -1,101 +1,227 @@
-<div class="admin-card" style="border: 1px solid var(--red); padding: 25px; margin-bottom: 30px; background: #0a0a0a;">
-    <h2 style="color: var(--red); font-size: 20px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">SIGNAL WEBHOOK CONFIG</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binary Ruthless Trader | Official System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     
-    <div class="control-row" style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-        <div style="flex: 1;">
-            <label style="font-size: 12px; color: #888;">QUOTEX WEBHOOK URL (Must match MT5 URL)</label>
-            <input type="text" id="quotexUrl" placeholder="binaryruthlesstrader.com/quotex" style="width: 100%; margin-top: 5px;">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root { 
+            --red: #ff0000; 
+            --green: #00ffcc; 
+            --bg: #050505; 
+            --neon: 0 0 15px var(--red); 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
+            min-width: 1024px; min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* --- AD CONTAINERS --- */
+        .ad-v { background: #0a0a0a; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px; }
+        .ad-h { background: #0a0a0a; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px; }
+
+        /* --- HEADER --- */
+        .header {
+            width: 100%; padding: 15px 50px; display: grid; grid-template-columns: 150px 1fr 150px;
+            align-items: center; border-bottom: 2px solid var(--red); background: #000; position: sticky; top: 0; z-index: 1000;
+        }
+        .brand-img { width: 350px; margin: 0 auto; filter: drop-shadow(0 0 10px var(--red)); }
+        .admin-trigger { background: transparent; border: 1px solid #333; color: #555; padding: 5px 10px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 10px; }
+
+        /* --- HOME PAGE LAYOUT --- */
+        .home-wrapper { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+        .main-grid { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px; width: 100%; max-width: 1400px; }
+        .content-boxes { display: flex; gap: 30px; justify-content: center; }
+
+        .card {
+            flex: 1; max-width: 400px; background: #0a0a0a; border: 1px solid var(--red);
+            padding: 35px; border-radius: 15px; box-shadow: var(--neon); text-align: center;
+        }
+        .card h3 { color: var(--red); margin-bottom: 25px; font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+
+        select, input[type="text"], textarea {
+            width: 100%; padding: 16px; margin: 10px 0; background: #111; border: 1px solid #333;
+            color: var(--green); border-radius: 8px; font-family: 'Roboto Mono'; font-weight: bold; font-size: 15px; outline: none;
+        }
+
+        .btn-red {
+            background: var(--red); color: #fff; border: none; padding: 18px; width: 100%;
+            border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; font-weight: 900; text-transform: uppercase;
+        }
+        .btn-red:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+
+        /* --- ADMIN PANEL --- */
+        #adminPanel {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 2000; padding: 50px; overflow-y: auto;
+        }
+        .admin-nav { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .admin-btn { background: #111; border: 1px solid #444; color: #fff; padding: 12px 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; }
+        .admin-btn.active { border-color: var(--red); color: var(--red); }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            body { min-width: 100%; }
+            .header { grid-template-columns: 1fr; text-align: center; gap: 10px; }
+            .main-grid { display: flex; flex-direction: column; }
+            .content-boxes { flex-direction: column; }
+            .desktop-ad { display: none; }
+            .card { width: 100vw; margin-left: -20px; border-radius: 0; border-left: none; border-right: none; }
+            .mobile-ad-row { display: flex; gap: 10px; width: 100%; height: 150px; margin: 15px 0; }
+            .mobile-ad-row .ad-v { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">LOGO</div>
+        <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
+        <button class="admin-trigger" onclick="openAdmin()">ADMIN (0000)</button>
+    </header>
+
+    <div id="homePage" class="home-wrapper">
+        <div class="ad-h mobile-only" style="width:100%; height:80px; margin-bottom:15px;">TOP HORIZONTAL AD</div>
+
+        <div class="main-grid">
+            <div class="ad-v desktop-ad">LEFT VERTICAL AD</div>
+
+            <div class="content-area">
+                <div class="content-boxes">
+                    <div class="card" id="signalContainer">
+                        <h3>SIGNALS</h3>
+                        <select id="signalDropdown">
+                            <option value="">SELECT SIGNAL</option>
+                            <option value="quotex" id="opt-quotex">QUOTEX SIGNALS</option>
+                            <option value="toxa" id="opt-toxa">TOXA SIGNALS</option>
+                        </select>
+                        <button class="btn-red">GENERATE</button>
+                    </div>
+
+                    <div class="ad-h mobile-only" style="width:100%; height:80px; margin:15px 0;">MID HORIZONTAL AD</div>
+
+                    <div class="card" id="toolsContainer">
+                        <h3>TRADING TOOLS</h3>
+                        <select id="toolsDropdown">
+                            <option value="">SELECT TOOL</option>
+                            <option value="mm">MONEY MANAGEMENT</option>
+                            <option value="cc">COMPOUNDING CALC</option>
+                        </select>
+                        <button class="btn-red">LAUNCH TOOL</button>
+                    </div>
+                </div>
+
+                <div class="mobile-ad-row mobile-only">
+                    <div class="ad-v">VERTICAL AD 1</div>
+                    <div class="ad-v">VERTICAL AD 2</div>
+                </div>
+            </div>
+
+            <div class="ad-v desktop-ad">RIGHT VERTICAL AD</div>
         </div>
-        <div style="text-align: center;">
-            <label style="font-size: 10px;">DROP-DOWN</label><br>
-            <input type="checkbox" id="quotexToggle" onchange="toggleSignalVisibility('Quotex')" class="toggle-switch">
+
+        <div class="desktop-ad" style="display:flex; gap:20px; width:100%; max-width:1000px; margin-top:40px;">
+            <div class="ad-h" style="flex:1; height:100px;">BOTTOM HORIZONTAL 1</div>
+            <div class="ad-h" style="flex:1; height:100px;">BOTTOM HORIZONTAL 2</div>
         </div>
-        <button class="action-btn" onclick="saveSignalSettings('Quotex')" style="width: 120px; margin-top: 15px; font-size: 12px; padding: 12px;">SAVE</button>
     </div>
 
-    <div class="control-row" style="display: flex; align-items: center; gap: 20px;">
-        <div style="flex: 1;">
-            <label style="font-size: 12px; color: #888;">TOXA WEBHOOK URL (Must match MT5 URL)</label>
-            <input type="text" id="toxaUrl" placeholder="binaryruthlesstrader.com/toxa" style="width: 100%; margin-top: 5px;">
+    <div id="adminPanel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="color:var(--red)">ADMIN COMMAND CENTER</h2>
+            <button class="admin-btn" onclick="closeAdmin()">X CLOSE</button>
         </div>
-        <div style="text-align: center;">
-            <label style="font-size: 10px;">DROP-DOWN</label><br>
-            <input type="checkbox" id="toxaToggle" onchange="toggleSignalVisibility('Toxa')" class="toggle-switch">
+
+        <div class="admin-nav">
+            <button class="admin-btn" onclick="tab('ads')">ADS</button>
+            <button class="admin-btn" onclick="tab('signals')">SIGNALS</button>
+            <button class="admin-btn" onclick="tab('tools')">TOOLS</button>
+            <button class="admin-btn" onclick="tab('firebase')">FIREBASE</button>
+            <button class="admin-btn" onclick="tab('vps')">VPS</button>
         </div>
-        <button class="action-btn" onclick="saveSignalSettings('Toxa')" style="width: 120px; margin-top: 15px; font-size: 12px; padding: 12px;">SAVE</button>
-    </div>
-</div>
 
-<div class="admin-card" style="border: 1px solid var(--red); padding: 25px; background: #0a0a0a;">
-    <h2 style="color: var(--red); font-size: 20px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">TOOLS REGISTRY</h2>
-    
-    <button class="action-btn" onclick="openNewToolForm()" style="margin-bottom: 20px; width: 200px; font-size: 12px;">+ ADD NEW TOOL</button>
-
-    <div id="toolForm" style="display:none; background: #000; padding: 20px; border: 1px solid #333; margin-bottom: 25px;">
-        <input type="text" id="toolName" placeholder="ENTER TOOL NAME">
-        <textarea id="toolCode" placeholder="PASTE HTML/CSS/JS CODE HERE..." style="width: 100%; height: 200px; background: #111; color: var(--green); border: 1px solid #333; padding: 15px; font-family: 'Roboto Mono'; margin-top: 10px;"></textarea>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="action-btn" onclick="confirmSaveTool()">SAVE & DEPLOY</button>
-            <button class="sub-btn" onclick="closeToolForm()" style="border: 1px solid #444; color: #666; background: none; padding: 10px 20px; cursor: pointer;">CANCEL</button>
-        </div>
-    </div>
-
-    <div id="toolsListContainer">
-        <div class="tool-item" style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-left: 3px solid var(--red); margin-bottom: 10px;">
-            <span style="font-weight: bold; letter-spacing: 1px;">MONEY MANAGEMENT TOOL</span>
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <label style="font-size: 10px;">ENABLE</label>
-                <input type="checkbox" checked onchange="autoSaveTool('mm_tool')" class="toggle-switch">
-                <button class="edit-btn" onclick="editExistingTool('mm_tool')">EDIT</button>
-                <button class="delete-btn" onclick="deleteTool('mm_tool')" style="color: var(--red); background: none; border: none; cursor: pointer; font-family: 'Roboto Mono';">DELETE</button>
+        <div id="sec-ads" class="admin-section">
+            <button class="admin-btn" onclick="alert('Network Verified')">ADS NETWORK VERIFY</button>
+            <div style="margin-top:20px; border:1px solid #222; padding:20px;">
+                <h3>Manage Containers</h3>
+                <p>Ad Container 1: [Resize] [Snippet] [Delete]</p>
             </div>
         </div>
+
+        <div id="sec-signals" class="admin-section">
+            <div style="margin-bottom:20px;">
+                <label>QUOTEX MT5 PATH:</label>
+                <input type="text" id="adminQuotexUrl" placeholder="binaryruthlesstrader.com/quotex">
+                <label>ENABLE QUOTEX:</label> <input type="checkbox" id="checkQuotex" checked>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label>TOXA MT5 PATH:</label>
+                <input type="text" id="adminToxaUrl" placeholder="binaryruthlesstrader.com/toxa">
+                <label>ENABLE TOXA:</label> <input type="checkbox" id="checkToxa" checked>
+            </div>
+            <button class="btn-red" style="width:200px;" onclick="saveSignalSettings()">SAVE SETTINGS</button>
+        </div>
+
+        <div id="sec-tools" class="admin-section">
+            <button class="admin-btn" onclick="alert('Tool Form Opened')">+ ADD NEW TOOL</button>
+            <div style="margin-top:20px;">
+                <p>Money Management: [Edit] [Delete] [Enable/Disable Toggle]</p>
+            </div>
+        </div>
+
+        <div id="sec-firebase" class="admin-section">
+            <textarea placeholder="Paste Firebase SDK here..." style="height:200px;"></textarea>
+            <button class="btn-red" style="width:200px;">LINK FIREBASE</button>
+        </div>
+
+        <div id="sec-vps" class="admin-section">
+            <input type="text" placeholder="Server IP">
+            <input type="text" placeholder="SSH Username">
+            <button class="btn-red" style="width:200px;">CONNECT VPS</button>
+        </div>
     </div>
-</div>
 
-<style>
-    .toggle-switch { width: 40px; height: 20px; accent-color: var(--red); cursor: pointer; }
-    input[type="text"] { background: #000; border: 1px solid #333; color: var(--green); padding: 15px; border-radius: 5px; font-family: 'Roboto Mono'; font-weight: bold; }
-    .edit-btn { background: #222; border: 1px solid #444; color: #fff; padding: 8px 15px; cursor: pointer; font-size: 11px; font-family: 'Orbitron'; }
-    .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
-</style>
+    <script>
+        // Tab Navigation
+        function tab(name) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('sec-' + name).classList.add('active');
+        }
 
-<script>
-    // Signals Logic
-    function saveSignalSettings(type) {
-        const urlValue = document.getElementById(type.toLowerCase() + 'Url').value;
-        const isEnabled = document.getElementById(type.toLowerCase() + 'Toggle').checked;
-        
-        // This will sync with Firebase so the Home Page knows which signals to fetch
-        console.log(`System: Mapping MT5 Path [${urlValue}] to ${type} Container. Status: ${isEnabled}`);
-        alert(`${type} Configuration Saved Successfully.`);
-    }
+        // Admin Access
+        function openAdmin() {
+            const pass = prompt("ENTER ADMIN PASSWORD:");
+            if(pass === "0000") document.getElementById('adminPanel').style.display = 'block';
+            else alert("WRONG PASSWORD!");
+        }
 
-    function toggleSignalVisibility(type) {
-        const isEnabled = document.getElementById(type.toLowerCase() + 'Toggle').checked;
-        // Immediate database update to show/hide in Home Page dropdown
-        console.log(`${type} visibility updated to: ${isEnabled}`);
-    }
+        function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
 
-    // Tools Logic
-    function openNewToolForm() {
-        document.getElementById('toolForm').style.display = 'block';
-        document.getElementById('toolName').value = '';
-        document.getElementById('toolCode').value = '';
-    }
+        // Signals & Tools Visibility Logic
+        function saveSignalSettings() {
+            const qEnable = document.getElementById('checkQuotex').checked;
+            const tEnable = document.getElementById('checkToxa').checked;
 
-    function confirmSaveTool() {
-        const name = document.getElementById('toolName').value;
-        if(!name) return alert("Tool Name Required!");
-        
-        // Logic to push HTML code to database
-        // Home page dropdown will automatically fetch this name
-        alert(`${name} has been added to the System.`);
-        document.getElementById('toolForm').style.display = 'none';
-    }
+            // Update Home Dropdown
+            document.getElementById('opt-quotex').style.display = qEnable ? 'block' : 'none';
+            document.getElementById('opt-toxa').style.display = tEnable ? 'block' : 'none';
 
-    function autoSaveTool(toolId) {
-        // Toggle switch logic for Tools
-        console.log(`Tool ${toolId} status toggled in Firebase.`);
-    }
-</script>
+            alert("Signals Visibility Updated Successfully!");
+        }
+
+        // VPS & Firebase placeholders
+        function saveConfig() { alert("Configuration Stored."); }
+    </script>
+</body>
+</html>
