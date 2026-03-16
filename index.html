@@ -3,219 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader</title>
+    <title>Binary Ruthless Trader V7</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body oncontextmenu="return false;">
 
-   <div id="home-view">
-    
-    <header class="home-header">
-        <div class="header-left">
-            <img src="logo.png" class="main-logo" alt="Logo">
-            <img src="brandname.png" class="brand-img" alt="RUTHLESS TRADER">
-        </div>
-        
-        <div class="admin-trigger" onclick="checkAdminAccess()" title="Admin Access">
-            <i class="fas fa-user-shield"></i>
-        </div>
-    </header>
-
-    <main class="home-container">
-        
-        <section class="glass-container" id="signal-box">
-            <div class="container-tag"><i class="fas fa-signal"></i> LIVE SIGNALS</div>
-            <div id="active-signal-content">
-                <h2 id="pair-name">EUR/USD (OTC)</h2>
-                <div class="signal-direction UP">CALL (UP)</div>
-                <div class="timer" id="signal-timer">00:45</div>
+    <div id="home-view">
+        <header class="home-header">
+            <div class="header-left">
+                <div class="logo-box">R</div> 
+                <span class="brand-text">RUTHLESS TRADER V7</span>
             </div>
-            <button class="join-btn" onclick="handleJoin()">JOIN BROKER TO TRADE</button>
-        </section>
+            
+            <div class="admin-trigger" onclick="checkAdminAccess()">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </header>
 
-        <section class="glass-container" id="tool-box">
-            <div class="container-tag"><i class="fas fa-tools"></i> TRADING TOOLS</div>
-            <div class="tool-list">
-                <div class="tool-item">
-                    <span>TREND METER</span>
-                    <div class="power-bar"><div class="fill" style="width: 85%;"></div></div>
+        <main class="home-container">
+            <section class="glass-container" id="signal-box">
+                <div class="container-tag"><i class="fas fa-signal"></i> LIVE SIGNALS</div>
+                <div id="active-signal-content">
+                    <h2 id="pair-name">EUR/USD (OTC)</h2>
+                    <div class="signal-direction">CALL (UP)</div>
+                    <div class="timer" id="signal-timer">00:45</div>
                 </div>
-                <div class="tool-item">
-                    <span>VOLATILITY</span>
-                    <span style="color: #ff0000;">HIGH RISK</span>
+                <button class="join-btn" onclick="handleJoin()">JOIN & GET SIGNALS</button>
+            </section>
+
+            <section class="glass-container" id="tool-box">
+                <div class="container-tag"><i class="fas fa-tools"></i> TRADING TOOLS</div>
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <span>TREND METER</span>
+                        <span style="color:#00ffcc; font-weight:bold;">STRONG BUY</span>
+                    </div>
+                    <div class="tool-item" style="margin-top:10px;">
+                        <span>VOLATILITY</span>
+                        <span style="color:red; font-weight:bold;">HIGH RISK</span>
+                    </div>
                 </div>
-            </div>
-        </section>
-
-    </main>
-
-    <div class="floating-socials">
-        <a href="#" class="s-btn tg"><i class="fab fa-telegram-plane"></i></a>
-        <a href="#" class="s-btn yt"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="s-btn ig"><i class="fab fa-instagram"></i></a>
-    </div>
-
-</div>
-            <div class="signal-box">
-                <h5>SELECT BROKER</h5>
-                <select id="broker-select" class="ruthless-input">
-                    </select>
-                <button onclick="handleJoin()" class="join-btn">JOIN & GET SIGNALS</button>
-            </div>
-
-            <div class="ads-grid">
-                <div class="ad-slot">AD 1</div>
-                <div class="ad-slot">AD 2</div>
-            </div>
+            </section>
         </main>
 
-        <footer class="footer-strip">
-            <p>© 2026 BINARY RUTHLESS TRADER</p>
-        </footer>
+        <div class="floating-socials">
+            <a href="#" class="s-btn"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" class="s-btn"><i class="fab fa-youtube"></i></a>
+        </div>
     </div>
 
-    <div id="admin-wrapper" style="display: none;">
+    <div id="admin-wrapper">
         <aside id="sidebar">
             <div class="sidebar-header">
-                <h2>ADMIN PANEL</h2>
+                <h2>ADMIN DASHBOARD</h2>
             </div>
             <nav id="menu-list">
-                </nav>
+                <button class="nav-btn active" onclick="openTab(event, 'tab-affiliate')">
+                    <i class="fas fa-link"></i> Affiliate & Join
+                </button>
+                <button class="nav-btn" onclick="openTab(event, 'tab-revenue')">
+                    <i class="fas fa-calculator"></i> Revenue Calc
+                </button>
+                <button class="nav-btn" onclick="openTab(event, 'tab-layout')">
+                    <i class="fas fa-vector-square"></i> Layout Builder
+                </button>
+                <button class="nav-btn" onclick="openTab(event, 'tab-ads')">
+                    <i class="fas fa-ad"></i> Ad Containers
+                </button>
+                <button class="nav-btn" onclick="openTab(event, 'tab-security')">
+                    <i class="fas fa-shield-alt"></i> Security
+                </button>
+            </nav>
             <button onclick="logout()" class="nav-btn logout">LOGOUT</button>
         </aside>
 
         <main id="content-area">
-           <div class="stats-horizontal-bar">
-    <div class="h-stat-item">
-        <span class="h-stat-label">ACTIVE</span>
-        <span class="h-stat-value" id="s-active" style="color: #00ffcc;">1</span>
-    </div>
-    <div class="h-stat-item">
-        <span class="h-stat-label">VIEWS</span>
-        <span class="h-stat-value" id="s-views">0</span>
-    </div>
-    <div class="h-stat-item">
-        <span class="h-stat-label">UNIQUE</span>
-        <span class="h-stat-value" id="s-unique">0</span>
-    </div>
-    <div class="h-stat-item">
-        <span class="h-stat-label">POSTS</span>
-        <span class="h-stat-value" id="s-posts">0</span>
-    </div>
-</div>
-            
-            <div id="admin-welcome">
-                <h1>COMMAND CENTER</h1>
-                <p>Select a setting from the sidebar to modify.</p>
+            <div class="stats-horizontal-bar">
+                <div class="h-stat-item">
+                    <span class="h-stat-label">ACTIVE</span>
+                    <span class="h-stat-value" id="s-active">1</span>
+                </div>
+                <div class="h-stat-item">
+                    <span class="h-stat-label">VIEWS</span>
+                    <span class="h-stat-value" id="s-views">124</span>
+                </div>
+                <div class="h-stat-item">
+                    <span class="h-stat-label">UNIQUE</span>
+                    <span class="h-stat-value" id="s-unique">42</span>
+                </div>
             </div>
-            </main>
+
+            <section id="tab-affiliate" class="tab-content active">
+                <h1>Affiliate Settings</h1>
+                <div class="admin-card">
+                    <label>Registration Link</label>
+                    <input type="text" id="inp-link" class="ruthless-input" placeholder="Paste link here...">
+                    <button class="save-btn" onclick="alert('Affiliate Saved!')">SAVE CHANGES</button>
+                </div>
+            </section>
+            
+            <section id="tab-revenue" class="tab-content">
+                <h1>Revenue Calculator</h1>
+                <p style="color:#444">Coming Soon: CPM & Earnings logic.</p>
+            </section>
+
+        </main>
     </div>
 
     <script>
-        // Check Access on Load
-       window.onload = function() {
-    const home = document.getElementById('home-view');
-    const admin = document.getElementById('admin-wrapper');
-
-    // Hash check chesi correct view chupistham
-    if (window.location.hash === "#9700224305") {
-        home.style.setProperty('display', 'none', 'important');
-        admin.style.setProperty('display', 'flex', 'important');
-    } else {
-        home.style.setProperty('display', 'block', 'important');
-        admin.style.setProperty('display', 'none', 'important');
-    }
-};
-
-        function showAdmin() {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('admin-wrapper').style.display = 'flex';
+        // 1. Admin Access
+        function checkAdminAccess() {
+            let code = prompt("Enter Admin Secret Key:");
+            if(code === "0000") {
+                window.location.hash = "#9700224305";
+                location.reload();
+            } else {
+                alert("Access Denied!");
+            }
         }
 
-        function showHome() {
-            document.getElementById('home-view').style.display = 'block';
-            document.getElementById('admin-wrapper').style.display = 'none';
+        // 2. Initial View Controller
+        window.onload = function() {
+            const home = document.getElementById('home-view');
+            const admin = document.getElementById('admin-wrapper');
+
+            if(window.location.hash === "#9700224305") {
+                home.style.display = 'none';
+                admin.style.display = 'flex';
+            } else {
+                home.style.display = 'block';
+                admin.style.display = 'none';
+            }
+        };
+
+        // 3. Admin Navigation
+        function openTab(evt, tabName) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let content of contents) { content.style.display = "none"; }
+            
+            const btns = document.getElementsByClassName("nav-btn");
+            for (let btn of btns) { btn.classList.remove("active"); }
+            
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
 
-        function loadBrokerList() {
-            const savedSigs = localStorage.getItem('ruthless_sigs') || "QUOTEX, BINOMO, POCKET OPTION";
-            const dropdown = document.getElementById('broker-select');
-            dropdown.innerHTML = '';
-            savedSigs.split(',').forEach(sig => {
-                let opt = document.createElement('option');
-                opt.text = sig.trim();
-                dropdown.add(opt);
-            });
-        }
-
-        function handleJoin() {
-            const link = localStorage.getItem('ruthless_link') || "#";
-            window.open(link, '_blank');
-        }
-
+        // 4. Actions
         function logout() {
             window.location.hash = "";
             location.reload();
         }
 
-        // Live Accuracy Sim
-        setInterval(() => {
-            const acc = (Math.random() * (99.8 - 95.5) + 95.5).toFixed(1);
-            document.getElementById('live-acc').innerText = acc + "%";
-        }, 5000);
-    </script>
-   <script>
-    // 1. Secret Prompt Logic
-    function checkAdminAccess() {
-        console.log("Admin button clicked!"); // Check cheyadaniki (F12 lo kanipisthundi)
-        let code = prompt("Enter Admin Secret Key:");
-        if(code === "0000") {
-            window.location.hash = "9700224305"; // Hash update chesthunnam
-            location.reload(); // Page reload chesthunnam
-        } else {
-            alert("Access Denied!");
+        function handleJoin() {
+            alert("Redirecting to Broker Registration...");
         }
-    }
-
-    // 2. Page Load Logic (Hash detection)
-    window.onload = function() {
-        const home = document.getElementById('home-view');
-        const admin = document.getElementById('admin-wrapper');
-
-        // URL lo hash undho ledho check chesthunnam
-        if(window.location.hash === "#9700224305") {
-            if(home) home.style.display = 'none';
-            if(admin) admin.style.display = 'flex';
-        } else {
-            if(home) home.style.display = 'block';
-            if(admin) admin.style.display = 'none';
-        }
-    };
-</script>
-
-</body>
-    <body>
-
-    <div id="home-view"> 
-        <h1>Home Page Content</h1>
-        <div class="admin-trigger" onclick="checkAdminAccess()">Secret Admin</div>
-    </div>
-
-    <div id="admin-wrapper" style="display:none;"> 
-        <h1>Admin Dashboard</h1>
-    </div>
-
-    <script>
-        // మీ checkAdminAccess మరియు window.onload లాజిక్ ఇక్కడ ఉంటుంది
     </script>
-<body>
-    <div id="home-view">
-        </div>
-
-    <div id="admin-wrapper">
-        </div>
 </body>
 </html>
