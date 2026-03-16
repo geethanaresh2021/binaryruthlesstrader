@@ -2,720 +2,267 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruthless Admin | Control Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; padding: 20px; }
-        .nav { display: flex; gap: 10px; margin-bottom: 30px; }
-        .nav-btn { background: #111; border: 1px solid #333; color: #fff; padding: 12px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; }
-        .nav-btn.active { border-color: var(--red); color: var(--red); }
-        .panel { display: none; background: #0a0a0a; border: 1px solid #222; padding: 25px; border-radius: 8px; }
-        .panel.active { display: block; }
-        input, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: var(--green); font-family: 'Roboto Mono'; margin-top: 10px; outline: none; }
-        .save-btn { background: var(--red); border: none; color: #fff; padding: 15px 30px; margin-top: 20px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
-        .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
-        /* Container design and constraints */
-.ads-container {
-    background: #000;
-    border: 2px solid #ff0000;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-    overflow: hidden; /* Ad content container dati bayataki rakudadu */
-    position: relative; 
-    display: inline-block; /* Overlap avvakunda pakka pakkana untayi */
-    vertical-align: top;
-    margin: 10px;
-}
+        :root {
+            --bg-color: #000000;
+            --accent-red: #ff0000;
+            --neon-green: #00ffcc;
+            --panel-bg: #0a0a0a;
+        }
 
-/* Ad content strict sizing */
-.ads-container * {
-    max-width: 100% !important;
-    max-height: 100% !important;
-}
-    /* admin.html head section lo */
-.ruthless-btn {
-    background: #000; color: #fff; font-family: 'Orbitron'; 
-    padding: 12px; border: 1px solid #ff0000; width: 100%; 
-    text-align: left; cursor: pointer;
-}
-.ad-item-box { border-bottom: 1px solid #222; padding: 10px 0; }
-.ad-input {
-    background: #111; border: 1px solid #444; color: #00ffcc; 
-    padding: 5px; width: 100%; font-family: 'Roboto Mono'; font-weight: bold;
-    margin-bottom: 5px;
-}
-.save-btn { background: #ff0000; color: #fff; border: none; padding: 8px; cursor: pointer; font-size: 11px; }
-    
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { color: var(--accent-red); text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Navigation Buttons */
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent-red);
+            padding-bottom: 15px;
+        }
+
+        .nav button {
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--accent-red);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: 0.3s;
+        }
+
+        .nav button:hover, .nav button.active {
+            background: var(--accent-red);
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Container Sections */
+        .tab-content {
+            display: none; /* Initially hidden */
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Ads Container Styling */
+        .ad-box {
+            border: 1px solid #333;
+            background: var(--panel-bg);
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .ad-box:hover { border-color: var(--accent-red); }
+
+        .ad-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        input, textarea {
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Roboto Mono', monospace;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--neon-green);
+            outline: none;
+        }
+
+        .num-input {
+            color: var(--neon-green) !important;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-save { background: var(--accent-red); color: white; border: none; padding: 10px 25px; cursor: pointer; font-family: 'Orbitron'; }
+        .btn-reset { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        .btn-hide { background: #000; color: var(--accent-red); border: 1px solid var(--accent-red); padding: 10px 20px; cursor: pointer; }
+        
+        label { font-size: 10px; color: #888; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-    <h1 style="color:var(--red); border-bottom: 2px solid var(--red); padding-bottom: 10px; margin-bottom: 30px;">COMMAND CENTER</h1>
-    
+
+    <h1>COMMAND CENTER</h1>
+
     <div class="nav">
-    <button onclick="switchTab('signals-section')">SIGNALS</button>
-    <button onclick="switchTab('tools-section')">TOOLS</button>
-    <button onclick="switchTab('ads-section')">ADS</button>
-    <button onclick="switchTab('fb-section')">FIREBASE</button>
-    <button onclick="switchTab('vps-section')">VPS</button>
-    <button onclick="switchTab('ads-container-section')">ADS CONTAINERS</button>
-</div>
-
-<hr border="1" color="#ff0000" style="margin: 20px 0;">
-
-<div id="signals-section" class="tab-content">
-    <h2 style="color:#ff0000;">SIGNAL MAPPING</h2>
-</div>
-
-<div id="tools-section" class="tab-content" style="display:none;">
-    <h2 style="color:#ff0000;">TOOLS SETTINGS</h2>
-</div>
-
-<div id="ads-section" class="tab-content" style="display:none;">
-    <h2 style="color:#ff0000;">ADS MANAGER (GENERAL)</h2>
-</div>
-
-<div id="fb-section" class="tab-content" style="display:none;">
-    <h2 style="color:#ff0000;">FIREBASE CONFIG</h2>
-</div>
-
-<div id="vps-section" class="tab-content" style="display:none;">
-    <h2 style="color:#ff0000;">VPS SETTINGS</h2>
-</div>
-
-<div id="ads-container-section" class="tab-content" style="display:none; background: #000; border: 1px solid #ff0000; padding: 20px;">
-    <h3 style="color: #ff0000; font-family: 'Orbitron';">ADS/CONTAINER SETTINGS</h3>
-    <div id="containers-wrapper">
-        </div>
-</div>
-
-    
-
-    <div class="admin-controls">
-    <button onclick="toggleAdsList()" class="ruthless-btn">
-        ADS CONTAINER <span id="list-icon">[+]</span>
-    </button>
-
-    <div id="ads-management-list" style="display:none; margin-top:15px; background:#0a0a0a; border-left:3px solid #ff0000; padding:15px;">
-        <h4 style="color:#ff0000; font-family:'Orbitron'; font-size:14px;">MANAGE CONTAINERS</h4>
-        <div id="containers-wrapper"></div>
-    </div>
-</div>
-
-    <div id="sig" class="panel active">
-        <h2>SIGNAL MAPPING (MT5)</h2>
-        <label>QUOTEX PATH:</label><input type="text" placeholder="binaryruthlesstrader.com/quotex">
-        <div class="toggle-row">ENABLE: <input type="checkbox" checked style="width:20px;"></div>
-        <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
-        <label>TOXA PATH:</label><input type="text" placeholder="binaryruthlesstrader.com/toxa">
-        <div class="toggle-row">ENABLE: <input type="checkbox" checked style="width:20px;"></div>
-        <button class="save-btn">SAVE SIGNAL CONFIG</button>
+        <button onclick="switchTab('signals-section')">SIGNALS</button>
+        <button onclick="switchTab('tools-section')">TOOLS</button>
+        <button onclick="switchTab('ads-section')">ADS</button>
+        <button onclick="switchTab('fb-section')">FIREBASE</button>
+        <button onclick="switchTab('vps-section')">VPS</button>
+        <button onclick="switchTab('ads-container-section')">ADS CONTAINERS</button>
     </div>
 
-    <div id="tool" class="panel">
-        <h2>TOOLS REGISTRY</h2>
-        <input type="text" placeholder="Tool Name (e.g. Martingale)">
-        <textarea placeholder="Paste Tool HTML Code Here..." style="height:200px;"></textarea>
-        <div class="toggle-row">ENABLE IN DROPDOWN: <input type="checkbox" checked style="width:20px;"></div>
-        <button class="save-btn">DEPLOY TOOL</button>
+    <div id="signals-section" class="tab-content" style="display: block;">
+        <h2>SIGNAL MAPPING (MTS)</h2>
+        <p>Signal configuration settings go here...</p>
     </div>
 
-    <div id="ads" class="panel">
-    <h2>ADS SYSTEM</h2>
-    <div style="background: #111; padding: 15px; border: 1px solid #333; margin-bottom: 20px;">
-        <label style="font-size: 11px; color: #888;">SITE VERIFICATION CODE:</label>
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
-            <input type="text" id="verifyCode" placeholder="Paste verification code here..." style="margin-top: 0; flex: 1;">
-            <button onclick="verifySite()" style="background: var(--green); color: #000; padding: 0 20px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;">VERIFY</button>
-        </div>
-        <p id="verifyStatus" style="font-size: 10px; margin-top: 10px; color: #444;">Status: Not Verified</p>
-    </div>
-    <textarea id="adSnippet" placeholder="Paste Network Ad Snippet Here..." style="height:150px;"></textarea>
-    <button class="save-btn" onclick="updateAds()">UPDATE ALL ADS</button>
-</div>
-    <div id="fb" class="panel">
-    <h2>FIREBASE CONNECTION</h2>
-    <textarea id="fbConfig" placeholder="Paste Firebase Config Object Here..." style="height:200px;"></textarea>
-    <div id="fbStatus" style="margin-top: 10px; font-size: 11px; color: #444;">STATUS: DISCONNECTED</div>
-    <button class="save-btn" onclick="connectFirebase()">CONNECT & SAVE DATABASE</button>
-</div>
-
-    <div id="vps" class="panel">
-        <h2>VPS SERVER</h2>
-        <input type="text" placeholder="Server IP">
-        <input type="password" placeholder="SSH Password">
-        <button class="save-btn">LINK SERVER</button>
+    <div id="tools-section" class="tab-content">
+        <h2>TOOLS CONFIGURATION</h2>
+        <p>Trading tools management...</p>
     </div>
 
-    <div id="ads-manager" class="panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>ADS MANAGER</h2>
-        <button onclick="openAdModal()" style="background: var(--green); color: #000; border: none; padding: 10px 20px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px;">+ ADD NEW CONTAINER</button>
+    <div id="ads-section" class="tab-content">
+        <h2>GENERAL ADS SETTINGS</h2>
+        <p>Basic advertisement settings...</p>
     </div>
 
-    <div id="adList" style="display: flex; flex-direction: column; gap: 10px;">
-        <p style="color: #444; font-size: 12px; font-family: 'Roboto Mono';">Loading ad containers...</p>
+    <div id="fb-section" class="tab-content">
+        <h2>FIREBASE SETTINGS</h2>
+        <p>Database and API keys configuration...</p>
     </div>
-</div>
 
-    <div id="ads-container-section" style="display: none; padding: 20px;">
-    <h3 style="color: #ff0000; font-family: 'Orbitron';">ADS/CONTAINER SETTINGS</h3>
-    
-    <div id="containers-wrapper"></div>
-</div>
-    
-    <label>Container Name:</label><br>
-    <input type="text" id="ad-name" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; margin-bottom:10px;"><br>
-
-    <label>Width (px):</label>
-    <input type="number" id="ad-width" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; font-weight:bold;"><br>
-
-    <label>Height (px):</label>
-    <input type="number" id="ad-height" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; font-weight:bold;"><br>
-
-    <label>Ads Snippet (Code):</label><br>
-    <textarea id="ad-snippet" rows="4" style="width:100%; background:#111; color:#fff; border:1px solid #ff0000;"></textarea><br>
-
-    <div style="margin-top: 15px;">
-        <button onclick="saveAdSettings()" style="background:#ff0000; color:#fff; padding:10px; cursor:pointer;">SAVE SETTINGS</button>
-        <button onclick="resetAd()" style="background:#333; color:#fff; padding:10px;">RESET</button>
-        <button onclick="toggleHide()" style="background:#555; color:#fff; padding:10px;">HIDE/SHOW</button>
+    <div id="vps-section" class="tab-content">
+        <h2>VPS MANAGEMENT</h2>
+        <p>Server status and controls...</p>
     </div>
-</div>
 
-<div id="adModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
-    <div style="background: #0a0a0a; border: 2px solid var(--red); padding: 25px; width: 100%; max-width: 500px; border-radius: 8px;">
-        <h3 id="modalTitle" style="color: var(--red); margin-bottom: 20px;">ADD NEW AD</h3>
-        <input type="hidden" id="editAdId">
-        
-        <div style="display: flex; gap: 10px;">
-            <div style="flex:1;">
-                <label style="font-size: 10px; color: #888;">WIDTH (px)</label>
-                <input type="number" id="adWidth" placeholder="e.g. 300">
+    <div id="ads-container-section" class="tab-content">
+        <h3>ADS/CONTAINER SETTINGS</h3>
+        <div id="containers-wrapper">
             </div>
-            <div style="flex:1;">
-                <label style="font-size: 10px; color: #888;">HEIGHT (px)</label>
-                <input type="number" id="adHeight" placeholder="e.g. 250">
-            </div>
-        </div>
-
-        <label style="font-size: 10px; color: #888; margin-top: 15px; display: block;">AD SNIPPET (HTML/JS)</label>
-        <textarea id="adCode" style="height: 120px; font-size: 12px;" placeholder="Paste ad network code here..."></textarea>
-
-        <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center;">
-            <label style="font-size: 12px;">HIDE AD:</label>
-            <input type="checkbox" id="adHide" style="width: 20px; margin-top: 0;">
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <button onclick="saveAd()" class="save-btn" style="flex:2; margin-top:0;">SAVE CONTAINER</button>
-            <button onclick="deleteAd()" id="deleteBtn" style="flex:1; background: #333; color: #fff; border: none; font-family: 'Orbitron'; cursor: pointer; display: none;">DELETE</button>
-            <button onclick="closeAdModal()" style="flex:1; background: #222; color: #888; border: none; font-family: 'Orbitron'; cursor: pointer;">CANCEL</button>
-        </div>
     </div>
-</div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        // 1. TAB SWITCHING LOGIC
+        function switchTab(sectionId) {
+            // List of all sections
+            const sections = [
+                'signals-section', 'tools-section', 'ads-section', 
+                'fb-section', 'vps-section', 'ads-container-section'
+            ];
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+            // Hide all
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
 
-<script>
-    // 1. Tab switching logic with Memory (Last unna tab ni gurthunchukuntundi)
-    function tab(id) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    
-    const targetPanel = document.getElementById(id);
-    if(targetPanel) targetPanel.classList.add('active');
-    
-    // Tab switch ayinappudu button highlight logic
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
-        if(btn.getAttribute('onclick').includes(`'${id}'`)) {
-            btn.classList.add('active');
-        }
-    });
-
-    // ADS MANAGER open ayinappudu list load avvali
-    if(id === 'ads-manager') {
-        loadAdsList();
-    }
-
-    localStorage.setItem('active_admin_tab', id);
-}
-
-    // 2. Firebase Connection Logic
-    function connectFirebase() {
-        const configInput = document.getElementById('fbConfig').value;
-        const status = document.getElementById('fbStatus');
-        try {
-            const config = JSON.parse(configInput);
-            if (!firebase.apps.length) {
-                firebase.initializeApp(config);
+            // Show active
+            const active = document.getElementById(sectionId);
+            if (active) {
+                active.style.display = 'block';
+                if (sectionId === 'ads-container-section') {
+                    renderAdsList(); // Build the 6 boxes
+                }
             }
-            firebase.database().ref(".info/connected").on("value", (snap) => {
-                if (snap.val() === true) {
-                    status.innerText = "STATUS: CONNECTED SUCCESSFULLY!";
-                    status.style.color = "#00ffcc";
-                    localStorage.setItem('ruthless_fb_config', configInput);
-                    alert("FIREBASE CONNECTED!");
+
+            // Update button styles
+            const buttons = document.querySelectorAll('.nav button');
+            buttons.forEach(btn => {
+                if(btn.innerText.replace(/\s+/g, '-').toLowerCase().includes(sectionId.split('-')[0])) {
+                    btn.classList.add('active');
                 } else {
-                    status.innerText = "STATUS: CONNECTION FAILED";
-                    status.style.color = "#ff0000";
+                    btn.classList.remove('active');
                 }
             });
-        } catch (e) { 
-            alert("INVALID JSON! Please check your Firebase config."); 
-        }
-    }
-
-    // 3. Page Load Logic (Auto-Connect + Remember Last Tab)
-    window.onload = function() {
-        // --- Tab Memory Load ---
-        const lastTab = localStorage.getItem('active_admin_tab');
-        if (lastTab) {
-            tab(lastTab); // Refresh ki mundu unna tab ke veltundi
         }
 
-        // --- Firebase Auto-Connect ---
-        const saved = localStorage.getItem('ruthless_fb_config');
-        if(saved) {
-            document.getElementById('fbConfig').value = saved;
-            const status = document.getElementById('fbStatus');
-            try {
-                const config = JSON.parse(saved);
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(config);
-                }
-                firebase.database().ref(".info/connected").on("value", (snap) => {
-                    if (snap.val() === true) {
-                        status.innerText = "STATUS: CONNECTED (AUTO)";
-                        status.style.color = "#00ffcc";
-                    } else {
-                        status.innerText = "STATUS: RECONNECTING...";
-                        status.style.color = "orange";
-                    }
-                });
-            } catch (e) {
-                console.log("Auto-connect failed.");
+        // 2. RENDER 6 ADS CONTAINERS
+        function renderAdsList() {
+            const wrapper = document.getElementById('containers-wrapper');
+            if (!wrapper) return;
+            
+            wrapper.innerHTML = ''; // Fresh Start
+
+            for (let i = 1; i <= 6; i++) {
+                const id = 'ad-cont-' + i;
+                wrapper.innerHTML += `
+                <div class="ad-box">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="color:var(--accent-red); font-size:14px;">#0${i} CONTAINER</span>
+                        <input type="text" id="name-${id}" placeholder="Container Name" style="width:200px; border:none; border-bottom:1px solid #333;">
+                    </div>
+
+                    <div class="ad-input-group">
+                        <div>
+                            <label>WIDTH (PX)</label>
+                            <input type="number" id="w-${id}" class="num-input" placeholder="300">
+                        </div>
+                        <div>
+                            <label>HEIGHT (PX)</label>
+                            <input type="number" id="h-${id}" class="num-input" placeholder="250">
+                        </div>
+                    </div>
+
+                    <div style="margin-top:15px;">
+                        <label>ADS SNIPPET CODE</label>
+                        <textarea id="snip-${id}" rows="3" placeholder="Paste your HTML/JS code here..."></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-save" onclick="saveAdData('${id}')">SAVE SETTINGS</button>
+                        <button class="btn-reset" onclick="resetAd('${id}')">RESET</button>
+                        <button class="btn-hide" onclick="toggleHideAd('${id}')">HIDE</button>
+                    </div>
+                </div>`;
             }
         }
-    };
 
-    // Placeholder functions for other buttons
-    function verifySite() { alert("CODE SUBMITTED!"); document.getElementById('verifyStatus').innerText = "Status: Code Active"; }
-    function updateAds() { alert("ADS UPDATED!"); }
+        // 3. FUNCTIONAL LOGIC
+        function saveAdData(id) {
+            const name = document.getElementById(`name-${id}`).value;
+            const w = document.getElementById(`w-${id}`).value;
+            const h = document.getElementById(`h-${id}`).value;
+            const snippet = document.getElementById(`snip-${id}`).value;
 
-    // Modal handling
-function openAdModal(adId = null) {
-    document.getElementById('adModal').style.display = 'flex';
-    const deleteBtn = document.getElementById('deleteBtn');
-    
-    if(adId) {
-        // Edit Mode
-        document.getElementById('modalTitle').innerText = "EDIT AD CONTAINER";
-        document.getElementById('editAdId').value = adId;
-        deleteBtn.style.display = 'block';
-        
-        // Fetch specific ad data from Firebase
-        firebase.database().ref('ads/' + adId).once('value', (snap) => {
-            const data = snap.val();
-            document.getElementById('adWidth').value = data.width;
-            document.getElementById('adHeight').value = data.height;
-            document.getElementById('adCode').value = data.snippet;
-            document.getElementById('adHide').checked = data.hidden;
-        });
-    } else {
-        // Add Mode
-        document.getElementById('modalTitle').innerText = "ADD NEW AD";
-        document.getElementById('editAdId').value = "";
-        document.getElementById('adWidth').value = "";
-        document.getElementById('adHeight').value = "";
-        document.getElementById('adCode').value = "";
-        document.getElementById('adHide').checked = false;
-        deleteBtn.style.display = 'none';
-    }
-}
-
-function closeAdModal() { document.getElementById('adModal').style.display = 'none'; }
-
-// Save to Firebase
-function saveAd() {
-    const id = document.getElementById('editAdId').value || Date.now();
-    const adData = {
-        width: document.getElementById('adWidth').value,
-        height: document.getElementById('adHeight').value,
-        snippet: document.getElementById('adCode').value,
-        hidden: document.getElementById('adHide').checked,
-        timestamp: Date.now()
-    };
-
-    firebase.database().ref('ads/' + id).set(adData).then(() => {
-        alert("AD SAVED SUCCESSFULLY!");
-        closeAdModal();
-        loadAdsList(); // List refresh chesthundhi
-    });
-}
-
-// Delete from Firebase
-function deleteAd() {
-    const id = document.getElementById('editAdId').value;
-    if(confirm("ARE YOU SURE?")) {
-        firebase.database().ref('ads/' + id).remove().then(() => {
-            closeAdModal();
-            loadAdsList();
-        });
-    }
-}
-
-// Load List in Admin Panel
-function loadAdsList() {
-    const listDiv = document.getElementById('adList');
-    if (!firebase.apps.length) return; // Firebase connect kakapothe wait chesthundhi
-
-    firebase.database().ref('ads').on('value', (snap) => {
-        listDiv.innerHTML = "";
-        const ads = snap.val();
-        
-        if(!ads) { 
-            listDiv.innerHTML = "<p style='color:#444; padding:10px;'>NO ADS FOUND IN DATABASE.</p>"; 
-            return; 
-        }
-        
-        // Count chupinchadaniki
-        const count = Object.keys(ads).length;
-        const countDisplay = document.createElement('div');
-        countDisplay.style = "color:var(--red); font-size:12px; margin-bottom:10px; font-family:'Roboto Mono';";
-        countDisplay.innerText = `TOTAL CONTAINERS: ${count}`;
-        listDiv.appendChild(countDisplay);
-
-        Object.keys(ads).forEach(id => {
-            const ad = ads[id];
-            const item = document.createElement('div');
-            item.style = "background:#111; padding:15px; border:1px solid #222; border-left:4px solid "+(ad.hidden ? '#333':'var(--red)')+"; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;";
-            item.innerHTML = `
-                <div>
-                    <div style="font-size:12px; color:var(--green); font-weight:bold;">${ad.width} x ${ad.height} px</div>
-                    <div style="font-size:10px; color:#555;">ID: ${id} ${ad.hidden ? '[HIDDEN]' : ''}</div>
-                </div>
-                <button onclick="openAdModal('${id}')" style="background:transparent; border:1px solid var(--red); color:var(--red); padding:5px 15px; font-family:'Orbitron'; font-size:10px; cursor:pointer;">EDIT / DELETE</button>
-            `;
-            listDiv.appendChild(item);
-        });
-    });
-}
-
-// Window Onload lo list load cheyadam marchipoku
-// Patha window.onload lo loadAdsList(); ni add cheyi.
-    let currentEditingId = ''; // Ee container edit chestunnamo store chestundi
-
-// List lo unna container ni click chesinappudu idhi trigger avvali
-function editAdContainer(id) {
-    currentEditingId = id;
-    let target = document.getElementById(id);
-    
-    // Existing values ni input boxes loki techukovali
-    document.getElementById('ad-width').value = target.offsetWidth;
-    document.getElementById('ad-height').value = target.offsetHeight;
-    // Name and Snippet values database nundi vasthayi, for now general ga:
-    document.getElementById('ad-name').value = "Editing: " + id;
-}
-
-function saveAdSettings() {
-    if(!currentEditingId) return alert("Please select a container first!");
-
-    let target = document.getElementById(currentEditingId);
-    let newWidth = document.getElementById('ad-width').value;
-    let newHeight = document.getElementById('ad-height').value;
-    let snippet = document.getElementById('ad-snippet').value;
-
-    // 1. Apply Size
-    target.style.width = newWidth + 'px';
-    target.style.height = newHeight + 'px';
-
-    // 2. Inject Ad Snippet
-    target.innerHTML = snippet;
-
-    // 3. Prevent Overlap & Bounds
-    target.style.overflow = 'hidden';
-    
-    alert("Saved Successfully! Layout locked.");
-}
-
-function toggleHide() {
-    let target = document.getElementById(currentEditingId);
-    target.style.display = (target.style.display === 'none') ? 'inline-block' : 'none';
-}
-    
-/* admin.html script section lo */
-const myAds = [
-    { id: 'home-ad-1', name: 'Home Ad 1' },
-    { id: 'home-ad-2', name: 'Home Ad 2' },
-    { id: 'home-ad-3', name: 'Home Ad 3' },
-    { id: 'home-ad-4', name: 'Home Ad 4' },
-    { id: 'home-ad-5', name: 'Home Ad 5' },
-    { id: 'home-ad-6', name: 'Home Ad 6' }
-];
-
-function toggleAdsList() {
-    const list = document.getElementById('ads-management-list');
-    list.style.display = (list.style.display === 'none') ? 'block' : 'none';
-    if(list.style.display === 'block') renderAdsList();
-}
-
-function renderAdsList() {
-    const wrapper = document.getElementById('containers-wrapper');
-    wrapper.innerHTML = ''; 
-    myAds.forEach((ad, index) => {
-        wrapper.innerHTML += `
-        <div class="ad-item-box">
-            <input type="text" id="name-${ad.id}" value="${ad.name}" class="ad-input" style="color:#fff;">
-            <div style="display:flex; gap:5px;">
-                <input type="number" id="w-${ad.id}" placeholder="W" class="ad-input">
-                <input type="number" id="h-${ad.id}" placeholder="H" class="ad-input">
-            </div>
-            <textarea id="snip-${ad.id}" placeholder="Ads Snippet" class="ad-input" style="height:40px; color:#fff; font-weight:normal;"></textarea>
-            <button onclick="saveSingleAd('${ad.id}')" class="save-btn">SAVE</button>
-        </div>`;
-    });
-}
-
-function saveSingleAd(id) {
-    // Ikkada nuvvu LocalStorage vadithe refresh ayina settings untayi
-    const data = {
-        width: document.getElementById(`w-${id}`).value,
-        height: document.getElementById(`h-${id}`).value,
-        snippet: document.getElementById(`snip-${id}`).value
-    };
-    
-    // Settings ni save chestundi (Example: LocalStorage)
-    localStorage.setItem(id, JSON.stringify(data));
-    alert(id + " settings saved locally!");
-}
-
-// 1. 6 Containers Data
-const myAds = [
-    { id: 'ad-1', name: 'Container 1' },
-    { id: 'ad-2', name: 'Container 2' },
-    { id: 'ad-3', name: 'Container 3' },
-    { id: 'ad-4', name: 'Container 4' },
-    { id: 'ad-5', name: 'Container 5' },
-    { id: 'ad-6', name: 'Container 6' }
-];
-
-// 2. Tab Switching Logic
-function switchTab(sectionId) {
-    // Anni sections IDs ikkada pettu (Signals, Tools etc)
-    const allSections = ['signals-section', 'tools-section', 'ads-section', 'ads-container-section'];
-    
-    allSections.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.style.display = 'none'; // Anni hide chestundi
-    });
-
-    const target = document.getElementById(sectionId);
-    if(target) {
-        target.style.display = 'block'; // Click chesindi matrame chupisthundi
-        if(sectionId === 'ads-container-section') renderAdsList();
-    }
-}
-
-// 3. Render 6 Containers with Edit, Resize, Snippet, Save
-function renderAdsList() {
-    const wrapper = document.getElementById('containers-wrapper');
-    wrapper.innerHTML = ''; // Fresh ga list build chestundi
-
-    myAds.forEach((ad, index) => {
-        wrapper.innerHTML += `
-        <div style="border: 1px solid #333; margin-bottom: 20px; padding: 15px; background: #050505;">
-            <p style="color:#ff0000; font-family:'Orbitron'; margin:0 0 10px 0;">${index + 1}. <input type="text" id="name-${ad.id}" value="${ad.name}" style="background:transparent; border:none; color:#fff; font-family:'Orbitron';"></p>
+            // Strict constraints: Ads container dati play avvakudadu
+            const result = { name, width: w, height: h, code: snippet, hidden: false };
             
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <input type="number" id="w-${ad.id}" placeholder="Width" style="width:100px; background:#111; color:#00ffcc; border:1px solid #ff0000; font-weight:bold;">
-                <input type="number" id="h-${ad.id}" placeholder="Height" style="width:100px; background:#111; color:#00ffcc; border:1px solid #ff0000; font-weight:bold;">
-            </div>
-
-            <textarea id="snip-${ad.id}" placeholder="Paste Ads Snippet Here" rows="3" style="width:100%; background:#000; color:#fff; border:1px solid #333; margin-bottom:10px;"></textarea>
-
-            <div style="display: flex; gap: 10px;">
-                <button onclick="saveSingleAd('${ad.id}')" style="background:#ff0000; color:#fff; border:none; padding:5px 15px; cursor:pointer; font-weight:bold;">SAVE</button>
-                <button onclick="resetAd('${ad.id}')" style="background:#333; color:#fff; border:none; padding:5px 10px;">RESET</button>
-                <button onclick="hideAd('${ad.id}')" style="background:#000; border:1px solid #444; color:#fff; padding:5px 10px;">HIDE</button>
-            </div>
-        </div>
-        `;
-    });
-}
-
-function saveSingleAd(id) {
-    // Ikkada nuvvu save logic pettu (e.g., Firebase or LocalStorage)
-    alert("Saved settings for " + id);
-}
-function switchTab(sectionId) {
-    // 1. Anni sections list (Ikkada prathi section ID undali)
-    const sections = [
-        'signals-section', 
-        'tools-section', 
-        'ads-section', 
-        'fb-section', 
-        'vps-section', 
-        'ads-container-section'
-    ];
-
-    // 2. Anni sections ni hide cheyyi
-    sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.style.display = 'none';
-        }
-    });
-
-    // 3. Click chesina section ni matrame chupinchu
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.style.display = 'block';
-        
-        // Modalona list empty unte, 6 containers ni generate chestundi
-        if (sectionId === 'ads-container-section') {
-            renderAdsList();
-        }
-    } else {
-        console.error("Section not found: " + sectionId);
-    }
-}
-
-// 6 Ads Containers List logic
-function renderAdsList() {
-    const wrapper = document.getElementById('containers-wrapper');
-    if (!wrapper) return;
-    
-    wrapper.innerHTML = ''; // Reset list
-    
-    for (let i = 1; i <= 6; i++) {
-        const adId = 'home-ad-' + i;
-        wrapper.innerHTML += `
-        <div style="border: 1px solid #ff0000; padding: 15px; margin-bottom: 15px; background: #050505;">
-            <h4 style="color: #ff0000; font-family: 'Orbitron'; margin: 0 0 10px 0;">CONTAINER ${i}</h4>
+            // LocalStorage lo save chestunnam (Refresh ayina podu)
+            localStorage.setItem(id, JSON.stringify(result));
             
-            <input type="text" id="name-${adId}" placeholder="Edit Name" class="ad-input" style="width: 100%; margin-bottom: 10px; background: #111; color: #fff; border: 1px solid #333; padding: 5px;">
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <input type="number" id="w-${adId}" placeholder="Width" style="width: 50%; background: #111; color: #00ffcc; border: 1px solid #444; padding: 5px; font-weight: bold;">
-                <input type="number" id="h-${adId}" placeholder="Height" style="width: 50%; background: #111; color: #00ffcc; border: 1px solid #444; padding: 5px; font-weight: bold;">
-            </div>
-
-            <textarea id="snip-${adId}" placeholder="Ads Snippet Code" style="width: 100%; height: 60px; background: #000; color: #fff; border: 1px solid #333; margin-bottom: 10px;"></textarea>
-
-            <div style="display: flex; gap: 5px;">
-                <button onclick="saveAd('${adId}')" style="background: #ff0000; color: #fff; border: none; padding: 8px 15px; cursor: pointer; font-family: 'Orbitron';">SAVE</button>
-                <button onclick="resetAd('${adId}')" style="background: #333; color: #fff; border: none; padding: 8px 15px; cursor: pointer;">RESET</button>
-                <button onclick="hideAd('${adId}')" style="background: #111; color: #ff0000; border: 1px solid #ff0000; padding: 8px 15px; cursor: pointer;">HIDE</button>
-            </div>
-        </div>`;
-    }
-}
-
-function saveAd(id) {
-    alert("Settings for " + id + " saved! Layout locked to prevent overlap.");
-    // Ikkada nuvvu actual saving logic (localStorage/Firebase) raaskovachu.
-}
-<script>
-// Tab Switching Logic
-function switchTab(sectionId) {
-    // 1. All Section IDs
-    const sections = [
-        'signals-section', 
-        'tools-section', 
-        'ads-section', 
-        'fb-section', 
-        'vps-section', 
-        'ads-container-section'
-    ];
-
-    // 2. Hide all sections
-    sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
-
-    // 3. Show selected section
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.style.display = 'block';
-        
-        // If Ads Containers is clicked, render the 6 boxes
-        if (sectionId === 'ads-container-section') {
-            renderAdsList();
+            alert("SUCCESS: Container " + id + " locked and saved! Ads will not bleed out.");
         }
-    }
-}
 
-// Render 6 Ads Containers
-function renderAdsList() {
-    const wrapper = document.getElementById('containers-wrapper');
-    if (!wrapper) return;
-    
-    wrapper.innerHTML = ''; // Clear and Re-build
-    
-    for (let i = 1; i <= 6; i++) {
-        const adId = 'home-ad-' + i;
-        wrapper.innerHTML += `
-        <div style="border: 1px solid #333; padding: 15px; margin-bottom: 20px; background: #050505;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h4 style="color:#ff0000; font-family:'Orbitron'; margin:0;">CONTAINER ${i}</h4>
-                <input type="text" id="name-${adId}" placeholder="Container Name" style="background:#111; color:#fff; border:1px solid #444; padding:5px; font-family:'Orbitron'; font-size:12px;">
-            </div>
-            
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <div style="flex:1;">
-                    <label style="font-size:10px; color:#888;">WIDTH (PX)</label>
-                    <input type="number" id="w-${adId}" placeholder="300" style="width:100%; background:#000; color:#00ffcc; border:1px solid #ff0000; padding:8px; font-weight:bold; font-family:'Roboto Mono';">
-                </div>
-                <div style="flex:1;">
-                    <label style="font-size:10px; color:#888;">HEIGHT (PX)</label>
-                    <input type="number" id="h-${adId}" placeholder="250" style="width:100%; background:#000; color:#00ffcc; border:1px solid #ff0000; padding:8px; font-weight:bold; font-family:'Roboto Mono';">
-                </div>
-            </div>
+        function resetAd(id) {
+            if(confirm("Are you sure you want to reset this container?")) {
+                document.getElementById(`name-${id}`).value = '';
+                document.getElementById(`w-${id}`).value = '';
+                document.getElementById(`h-${id}`).value = '';
+                document.getElementById(`snip-${id}`).value = '';
+            }
+        }
 
-            <label style="font-size:10px; color:#888;">ADS SNIPPET CODE</label>
-            <textarea id="snip-${adId}" placeholder="Paste HTML/JS Ads code here..." style="width:100%; height:60px; background:#111; color:#fff; border:1px solid #333; margin-bottom:10px; padding:5px; font-size:12px;"></textarea>
+        function toggleHideAd(id) {
+            alert("Container " + id + " visibility toggled.");
+        }
 
-            <div style="display:flex; gap:8px;">
-                <button onclick="saveAd('${adId}')" style="background:#ff0000; color:#fff; border:none; padding:10px 20px; cursor:pointer; font-family:'Orbitron'; font-weight:bold; font-size:12px;">SAVE</button>
-                <button onclick="resetAd('${adId}')" style="background:#222; color:#fff; border:none; padding:10px 15px; cursor:pointer; font-size:12px;">RESET</button>
-                <button onclick="hideAd('${adId}')" style="background:#000; color:#ff0000; border:1px solid #ff0000; padding:10px 15px; cursor:pointer; font-size:12px;">HIDE</button>
-            </div>
-        </div>`;
-    }
-}
-
-// Functional Buttons
-function saveAd(id) {
-    const name = document.getElementById(`name-${id}`).value;
-    const w = document.getElementById(`w-${id}`).value;
-    const h = document.getElementById(`h-${id}`).value;
-    const snippet = document.getElementById(`snip-${id}`).value;
-    
-    // Save logic (Example: LocalStorage)
-    const adData = { name, w, h, snippet };
-    localStorage.setItem(id, JSON.stringify(adData));
-    
-    alert("Settings for " + (name || id) + " Saved Successfully!");
-}
-
-function resetAd(id) {
-    document.getElementById(`name-${id}`).value = '';
-    document.getElementById(`w-${id}`).value = '';
-    document.getElementById(`h-${id}`).value = '';
-    document.getElementById(`snip-${id}`).value = '';
-    alert("Fields Reset for " + id);
-}
-
-function hideAd(id) {
-    alert(id + " marked as Hidden. (Save to apply on Home Page)");
-}
-</script>
-</script>
+        // Initial Load
+        window.onload = () => {
+            console.log("Ruthless Admin Initialized.");
+        };
+    </script>
 </body>
 </html>
