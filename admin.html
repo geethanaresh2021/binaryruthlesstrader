@@ -620,6 +620,102 @@ function saveAd(id) {
     alert("Settings for " + id + " saved! Layout locked to prevent overlap.");
     // Ikkada nuvvu actual saving logic (localStorage/Firebase) raaskovachu.
 }
+<script>
+// Tab Switching Logic
+function switchTab(sectionId) {
+    // 1. All Section IDs
+    const sections = [
+        'signals-section', 
+        'tools-section', 
+        'ads-section', 
+        'fb-section', 
+        'vps-section', 
+        'ads-container-section'
+    ];
+
+    // 2. Hide all sections
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // 3. Show selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.style.display = 'block';
+        
+        // If Ads Containers is clicked, render the 6 boxes
+        if (sectionId === 'ads-container-section') {
+            renderAdsList();
+        }
+    }
+}
+
+// Render 6 Ads Containers
+function renderAdsList() {
+    const wrapper = document.getElementById('containers-wrapper');
+    if (!wrapper) return;
+    
+    wrapper.innerHTML = ''; // Clear and Re-build
+    
+    for (let i = 1; i <= 6; i++) {
+        const adId = 'home-ad-' + i;
+        wrapper.innerHTML += `
+        <div style="border: 1px solid #333; padding: 15px; margin-bottom: 20px; background: #050505;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h4 style="color:#ff0000; font-family:'Orbitron'; margin:0;">CONTAINER ${i}</h4>
+                <input type="text" id="name-${adId}" placeholder="Container Name" style="background:#111; color:#fff; border:1px solid #444; padding:5px; font-family:'Orbitron'; font-size:12px;">
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <div style="flex:1;">
+                    <label style="font-size:10px; color:#888;">WIDTH (PX)</label>
+                    <input type="number" id="w-${adId}" placeholder="300" style="width:100%; background:#000; color:#00ffcc; border:1px solid #ff0000; padding:8px; font-weight:bold; font-family:'Roboto Mono';">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size:10px; color:#888;">HEIGHT (PX)</label>
+                    <input type="number" id="h-${adId}" placeholder="250" style="width:100%; background:#000; color:#00ffcc; border:1px solid #ff0000; padding:8px; font-weight:bold; font-family:'Roboto Mono';">
+                </div>
+            </div>
+
+            <label style="font-size:10px; color:#888;">ADS SNIPPET CODE</label>
+            <textarea id="snip-${adId}" placeholder="Paste HTML/JS Ads code here..." style="width:100%; height:60px; background:#111; color:#fff; border:1px solid #333; margin-bottom:10px; padding:5px; font-size:12px;"></textarea>
+
+            <div style="display:flex; gap:8px;">
+                <button onclick="saveAd('${adId}')" style="background:#ff0000; color:#fff; border:none; padding:10px 20px; cursor:pointer; font-family:'Orbitron'; font-weight:bold; font-size:12px;">SAVE</button>
+                <button onclick="resetAd('${adId}')" style="background:#222; color:#fff; border:none; padding:10px 15px; cursor:pointer; font-size:12px;">RESET</button>
+                <button onclick="hideAd('${adId}')" style="background:#000; color:#ff0000; border:1px solid #ff0000; padding:10px 15px; cursor:pointer; font-size:12px;">HIDE</button>
+            </div>
+        </div>`;
+    }
+}
+
+// Functional Buttons
+function saveAd(id) {
+    const name = document.getElementById(`name-${id}`).value;
+    const w = document.getElementById(`w-${id}`).value;
+    const h = document.getElementById(`h-${id}`).value;
+    const snippet = document.getElementById(`snip-${id}`).value;
+    
+    // Save logic (Example: LocalStorage)
+    const adData = { name, w, h, snippet };
+    localStorage.setItem(id, JSON.stringify(adData));
+    
+    alert("Settings for " + (name || id) + " Saved Successfully!");
+}
+
+function resetAd(id) {
+    document.getElementById(`name-${id}`).value = '';
+    document.getElementById(`w-${id}`).value = '';
+    document.getElementById(`h-${id}`).value = '';
+    document.getElementById(`snip-${id}`).value = '';
+    alert("Fields Reset for " + id);
+}
+
+function hideAd(id) {
+    alert(id + " marked as Hidden. (Save to apply on Home Page)");
+}
+</script>
 </script>
 </body>
 </html>
