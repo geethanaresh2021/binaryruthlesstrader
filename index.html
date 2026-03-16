@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader V7</title>
+    <title>Binary Ruthless Trader V7 - Pro Builder</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,34 +13,30 @@
 <body oncontextmenu="return false;">
 
     <div id="home-view">
-        <header class="home-header">
-            <div class="header-side-spacer"></div>
+        <header id="h-header" class="home-header draggable-target">
             <div class="header-center">
                 <div class="brand-group">
-                    <img src="logo.png" class="main-logo" alt="Logo">
+                    <img src="logo.png" class="main-logo" alt="L">
                     <img src="brand-name.png" class="brand-img" alt="RUTHLESS">
                 </div>
                 <div class="top-socials">
-                    <a href="#" class="s-icon"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#" class="s-icon"><i class="fab fa-youtube"></i></a>
+                    <i class="fab fa-telegram-plane"></i>
+                    <i class="fab fa-youtube"></i>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="admin-trigger" onclick="checkAdminAccess()"><i class="fas fa-user-shield"></i></div>
-            </div>
+            <div class="admin-trigger" onclick="checkAdminAccess()"><i class="fas fa-user-shield"></i></div>
         </header>
 
-        <main class="home-container" id="home-main">
-            <div id="signal-box" class="glass-container draggable-element">
+        <main class="home-container">
+            <div id="h-signal" class="glass-container draggable-target">
                 <div class="container-tag">LIVE SIGNAL</div>
-                <h2 style="color:var(--neon)">EUR/USD (OTC)</h2>
-                <div class="signal-direction">CALL (UP)</div>
+                <div class="signal-direction">EUR/USD CALL</div>
                 <button class="join-btn">JOIN NOW</button>
             </div>
 
-            <div id="tool-box" class="glass-container draggable-element">
+            <div id="h-tool" class="glass-container draggable-target">
                 <div class="container-tag">TREND METER</div>
-                <div class="signal-direction" style="font-size:20px;">STRONG BUY</div>
+                <div class="signal-direction" style="font-size:20px; color:var(--neon)">STRONG BUY</div>
             </div>
         </main>
     </div>
@@ -48,30 +44,31 @@
     <div id="admin-wrapper" style="display:none;">
         <aside id="sidebar">
             <div class="sidebar-header"><h2>RUTHLESS ADMIN</h2></div>
-            <nav id="menu-list">
-                <button class="nav-btn active" onclick="openTab(event, 'tab-layout')"><i class="fas fa-vector-square"></i> Layout Builder</button>
-                <button class="nav-btn" onclick="openTab(event, 'tab-affiliate')"><i class="fas fa-link"></i> Affiliate</button>
-                <button onclick="logout()" class="nav-btn logout">LOGOUT</button>
+            <nav>
+                <button class="nav-btn active" onclick="openTab('tab-layout')"><i class="fas fa-th-large"></i> Layout Builder</button>
+                <button class="nav-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </nav>
         </aside>
 
         <main id="content-area">
-            <section id="tab-layout" class="tab-content active">
+            <section id="tab-layout" class="tab-content">
                 <div class="builder-header">
                     <h1>Visual Layout Builder</h1>
                     <div class="toggle-group">
                         <button id="btn-desk" class="tgl-btn active" onclick="setPreview('desktop')">DESKTOP</button>
                         <button id="btn-mob" class="tgl-btn" onclick="setPreview('mobile')">MOBILE</button>
                     </div>
-                    <button class="save-btn" onclick="savePositions()">SAVE & APPLY</button>
+                    <button class="save-btn" onclick="saveAllPositions()">SAVE & APPLY LAYOUT</button>
                 </div>
 
-                <div id="preview-container" class="view-desktop">
-                    <div class="preview-overlay">
-                        <div id="drag-signal" class="drag-box" data-target="signal-box">SIGNAL BOX</div>
-                        <div id="drag-tool" class="drag-box" data-target="tool-box">TOOL BOX</div>
+                <div id="preview-frame" class="p-desktop">
+                    <iframe id="home-preview-iframe" src="about:blank"></iframe>
+                    
+                    <div class="builder-overlay">
+                        <div id="drag-header" class="drag-item" data-id="h-header">HEADER AREA</div>
+                        <div id="drag-signal" class="drag-item" data-id="h-signal">SIGNAL BOX</div>
+                        <div id="drag-tool" class="drag-item" data-id="h-tool">TOOL BOX</div>
                     </div>
-                    <iframe src="about:blank" id="preview-iframe"></iframe>
                 </div>
             </section>
         </main>
@@ -79,7 +76,7 @@
 
     <script>
         function checkAdminAccess() {
-            if(prompt("Enter Admin Secret Key:") === "0000") {
+            if(prompt("Secret Key:") === "0000") {
                 window.location.hash = "#9700224305";
                 location.reload();
             }
@@ -87,42 +84,28 @@
 
         window.onload = function() {
             const isAdmin = window.location.hash === "#9700224305";
-            const home = document.getElementById('home-view');
-            const admin = document.getElementById('admin-wrapper');
+            document.getElementById('home-view').style.display = isAdmin ? 'none' : 'block';
+            document.getElementById('admin-wrapper').style.display = isAdmin ? 'flex' : 'none';
 
             if(isAdmin) {
-                home.style.display = 'none';
-                admin.style.display = 'flex';
-                setupIframe();
+                initIframe();
+                loadGhostPositions();
             } else {
-                home.style.display = 'block';
-                admin.style.display = 'none';
                 applySavedLayout();
             }
         };
 
-        function setupIframe() {
-            const frame = document.getElementById('preview-iframe');
-            const homeContent = document.getElementById('home-view').innerHTML;
+        function initIframe() {
+            const frame = document.getElementById('home-preview-iframe');
+            const doc = frame.contentDocument;
             const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('');
-            
-            frame.contentDocument.write(`
-                <html>
-                    <head>${styles}<style>body{background:#000; overflow:hidden;} .admin-trigger{display:none;}</style></head>
-                    <body>${homeContent}</body>
-                </html>
-            `);
-            frame.contentDocument.close();
+            const body = document.getElementById('home-view').innerHTML;
+            doc.write(`<html><head>${styles}</head><body style="background:#000; overflow:hidden;">${body}</body></html>`);
+            doc.close();
         }
 
-        function setPreview(mode) {
-            const container = document.getElementById('preview-container');
-            document.getElementById('btn-desk').classList.toggle('active', mode === 'desktop');
-            document.getElementById('btn-mob').classList.toggle('active', mode === 'mobile');
-            container.className = (mode === 'mobile') ? 'view-mobile' : 'view-desktop';
-        }
-
-        interact('.drag-box').draggable({
+        // --- INTERACT JS LOGIC ---
+        interact('.drag-item').draggable({
             listeners: { move(event) {
                 const target = event.target;
                 const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -132,43 +115,81 @@
                 target.setAttribute('data-y', y);
             }}
         }).resizable({
-            edges: { right: true, bottom: true },
+            edges: { right: true, bottom: true, left: true, top: true },
             listeners: { move(event) {
-                Object.assign(event.target.style, {
-                    width: `${event.rect.width}px`,
-                    height: `${event.rect.height}px`
-                });
+                let target = event.target;
+                let x = (parseFloat(target.getAttribute('data-x')) || 0);
+                let y = (parseFloat(target.getAttribute('data-y')) || 0);
+                target.style.width = event.rect.width + 'px';
+                target.style.height = event.rect.height + 'px';
+                x += event.deltaRect.left;
+                y += event.deltaRect.top;
+                target.style.transform = `translate(${x}px, ${y}px)`;
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
             }}
         });
 
-        function savePositions() {
-            const signal = document.getElementById('drag-signal');
-            const tool = document.getElementById('drag-tool');
-            const layout = {
-                signal: { x: signal.getAttribute('data-x'), y: signal.getAttribute('data-y'), w: signal.style.width, h: signal.style.height },
-                tool: { x: tool.getAttribute('data-x'), y: tool.getAttribute('data-y'), w: tool.style.width, h: tool.style.height }
-            };
-            localStorage.setItem('ruthless_layout', JSON.stringify(layout));
-            location.reload(); 
+        function saveAllPositions() {
+            const elements = ['drag-header', 'drag-signal', 'drag-tool'];
+            const layoutData = {};
+
+            elements.forEach(id => {
+                const el = document.getElementById(id);
+                layoutData[el.getAttribute('data-id')] = {
+                    x: el.getAttribute('data-x') || 0,
+                    y: el.getAttribute('data-y') || 0,
+                    w: el.style.width,
+                    h: el.style.height
+                };
+            });
+
+            localStorage.setItem('ruthless_v7_pos', JSON.stringify(layoutData));
+            alert("Layout Saved Successfully!");
+            location.reload();
         }
 
         function applySavedLayout() {
-            const data = JSON.parse(localStorage.getItem('ruthless_layout'));
+            const data = JSON.parse(localStorage.getItem('ruthless_v7_pos'));
             if(!data) return;
-            const apply = (id, d) => {
+            Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
-                if(el && d) {
+                const d = data[id];
+                if(el) {
                     el.style.position = 'absolute';
-                    el.style.transform = `translate(${d.x || 0}px, ${d.y || 0}px)`;
-                    el.style.width = d.w;
-                    el.style.height = d.h;
+                    el.style.left = '0'; el.style.top = '0';
+                    el.style.transform = `translate(${d.x}px, ${d.y}px)`;
+                    if(d.w) el.style.width = d.w;
+                    if(d.h) el.style.height = d.h;
                 }
-            };
-            apply('signal-box', data.signal);
-            apply('tool-box', data.tool);
+            });
         }
 
-        function openTab(evt, name) { /* Logic same as before */ }
+        function loadGhostPositions() {
+            const data = JSON.parse(localStorage.getItem('ruthless_v7_pos'));
+            if(!data) return;
+            const map = { 'h-header': 'drag-header', 'h-signal': 'drag-signal', 'h-tool': 'drag-tool' };
+            Object.keys(data).forEach(homeId => {
+                const ghostId = map[homeId];
+                const ghost = document.getElementById(ghostId);
+                const d = data[homeId];
+                if(ghost) {
+                    ghost.style.transform = `translate(${d.x}px, ${d.y}px)`;
+                    ghost.setAttribute('data-x', d.x);
+                    ghost.setAttribute('data-y', d.y);
+                    ghost.style.width = d.w;
+                    ghost.style.height = d.h;
+                }
+            });
+        }
+
+        function setPreview(mode) {
+            const frame = document.getElementById('preview-frame');
+            frame.className = (mode === 'mobile') ? 'p-mobile' : 'p-desktop';
+            document.getElementById('btn-desk').classList.toggle('active', mode === 'desktop');
+            document.getElementById('btn-mob').classList.toggle('active', mode === 'mobile');
+        }
+
         function logout() { window.location.hash = ""; location.reload(); }
     </script>
 </body>
