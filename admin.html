@@ -126,26 +126,27 @@
 <script>
     // 1. Tab switching logic with Memory (Last unna tab ni gurthunchukuntundi)
     function tab(id) {
-        // Anni panels ni hide cheyadam
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        // Anni buttons nundi active class theseyadam
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        // Click chesina panel ni chupinchadam
-        const targetPanel = document.getElementById(id);
-        if(targetPanel) targetPanel.classList.add('active');
-        
-        // Button ni highlight cheyadam (Tab switching smooth ga avvadaniki)
-        const buttons = document.querySelectorAll('.nav-btn');
-        buttons.forEach(btn => {
-            if(btn.getAttribute('onclick').includes(`'${id}'`)) {
-                btn.classList.add('active');
-            }
-        });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    const targetPanel = document.getElementById(id);
+    if(targetPanel) targetPanel.classList.add('active');
+    
+    // Tab switch ayinappudu button highlight logic
+    const buttons = document.querySelectorAll('.nav-btn');
+    buttons.forEach(btn => {
+        if(btn.getAttribute('onclick').includes(`'${id}'`)) {
+            btn.classList.add('active');
+        }
+    });
 
-        // Nuvvu ye tab lo unnavo browser memory lo save chesthundi
-        localStorage.setItem('active_admin_tab', id);
+    // ADS MANAGER open ayinappudu list load avvali
+    if(id === 'ads-manager') {
+        loadAdsList();
     }
+
+    localStorage.setItem('active_admin_tab', id);
+}
 
     // 2. Firebase Connection Logic
     function connectFirebase() {
@@ -274,21 +275,34 @@ function deleteAd() {
 // Load List in Admin Panel
 function loadAdsList() {
     const listDiv = document.getElementById('adList');
+    if (!firebase.apps.length) return; // Firebase connect kakapothe wait chesthundhi
+
     firebase.database().ref('ads').on('value', (snap) => {
         listDiv.innerHTML = "";
         const ads = snap.val();
-        if(!ads) { listDiv.innerHTML = "<p>No containers found.</p>"; return; }
         
+        if(!ads) { 
+            listDiv.innerHTML = "<p style='color:#444; padding:10px;'>NO ADS FOUND IN DATABASE.</p>"; 
+            return; 
+        }
+        
+        // Count chupinchadaniki
+        const count = Object.keys(ads).length;
+        const countDisplay = document.createElement('div');
+        countDisplay.style = "color:var(--red); font-size:12px; margin-bottom:10px; font-family:'Roboto Mono';";
+        countDisplay.innerText = `TOTAL CONTAINERS: ${count}`;
+        listDiv.appendChild(countDisplay);
+
         Object.keys(ads).forEach(id => {
             const ad = ads[id];
             const item = document.createElement('div');
-            item.style = "background:#111; padding:15px; border-left:4px solid "+(ad.hidden ? '#333':'var(--red)')+"; display:flex; justify-content:space-between; align-items:center;";
+            item.style = "background:#111; padding:15px; border:1px solid #222; border-left:4px solid "+(ad.hidden ? '#333':'var(--red)')+"; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;";
             item.innerHTML = `
                 <div>
-                    <div style="font-size:12px; color:var(--green)">${ad.width} x ${ad.height} px</div>
-                    <div style="font-size:10px; color:#555; font-family:'Roboto Mono'">${id}</div>
+                    <div style="font-size:12px; color:var(--green); font-weight:bold;">${ad.width} x ${ad.height} px</div>
+                    <div style="font-size:10px; color:#555;">ID: ${id} ${ad.hidden ? '[HIDDEN]' : ''}</div>
                 </div>
-                <button onclick="openAdModal('${id}')" style="background:transparent; border:1px solid #444; color:#fff; padding:5px 10px; font-family:'Orbitron'; font-size:10px; cursor:pointer;">EDIT</button>
+                <button onclick="openAdModal('${id}')" style="background:transparent; border:1px solid var(--red); color:var(--red); padding:5px 15px; font-family:'Orbitron'; font-size:10px; cursor:pointer;">EDIT / DELETE</button>
             `;
             listDiv.appendChild(item);
         });
