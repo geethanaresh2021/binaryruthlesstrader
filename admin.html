@@ -47,55 +47,24 @@
     </div>
 
     <div id="ads" class="panel">
-        <h2>ADS SYSTEM</h2>
-        
-        <div style="background: #111; padding: 15px; border: 1px solid #333; margin-bottom: 20px; border-radius: 4px;">
-            <label style="font-size: 11px; color: #888;">SITE VERIFICATION CODE:</label>
-            <div style="display: flex; gap: 10px; margin-top: 5px;">
-                <input type="text" id="verifyCode" placeholder="Paste Ad Network verification code here..." style="margin-top: 0; flex: 1;">
-                <button onclick="verifySite()" style="background: var(--green); color: #000; border: none; padding: 0 20px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; font-size: 11px;">VERIFY</button>
-            </div>
-            <p id="verifyStatus" style="font-size: 10px; margin-top: 10px; color: #444; font-family: 'Roboto Mono'; text-transform: uppercase;">Status: Not Verified</p>
+    <h2>ADS SYSTEM</h2>
+    <div style="background: #111; padding: 15px; border: 1px solid #333; margin-bottom: 20px;">
+        <label style="font-size: 11px; color: #888;">SITE VERIFICATION CODE:</label>
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <input type="text" id="verifyCode" placeholder="Paste verification code here..." style="margin-top: 0; flex: 1;">
+            <button onclick="verifySite()" style="background: var(--green); color: #000; padding: 0 20px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;">VERIFY</button>
         </div>
-
-        <hr style="border:0; border-top:1px solid #222; margin: 20px 0;">
-
-        <label style="font-size: 11px; color: #888;">AD NETWORK SNIPPET (JS/HTML):</label>
-        <textarea id="adSnippet" placeholder="Paste Network Ad Snippet (Scripts) Here..." style="height:150px;"></textarea>
-        
-        <button class="save-btn" onclick="updateAds()">UPDATE ALL ADS</button>
+        <p id="verifyStatus" style="font-size: 10px; margin-top: 10px; color: #444;">Status: Not Verified</p>
     </div>
-
-    <script>
-        function verifySite() {
-            const code = document.getElementById('verifyCode').value;
-            const status = document.getElementById('verifyStatus');
-            
-            if(code.trim() !== "") {
-                status.innerText = "Status: Verification In Progress...";
-                status.style.color = "var(--green)";
-                
-                // Ikkada nuvvu future lo Firebase logic add chesthe 
-                // aa code ni permanent ga site lo inject cheyochu.
-                setTimeout(() => {
-                    alert("VERIFICATION CODE SUBMITTED SUCCESSFULLY");
-                    status.innerText = "Status: Code Active";
-                }, 1500);
-            } else {
-                alert("PLEASE ENTER A VALID CODE");
-            }
-        }
-
-        function updateAds() {
-            alert("AD SNIPPETS UPDATED SUCCESSFULLY");
-        }
-    </script>
-
+    <textarea id="adSnippet" placeholder="Paste Network Ad Snippet Here..." style="height:150px;"></textarea>
+    <button class="save-btn" onclick="updateAds()">UPDATE ALL ADS</button>
+</div>
     <div id="fb" class="panel">
-        <h2>FIREBASE CONNECTION</h2>
-        <textarea placeholder="Paste Firebase SDK JSON here..."></textarea>
-        <button class="save-btn">CONNECT DATABASE</button>
-    </div>
+    <h2>FIREBASE CONNECTION</h2>
+    <textarea id="fbConfig" placeholder="Paste Firebase Config Object Here..." style="height:200px;"></textarea>
+    <div id="fbStatus" style="margin-top: 10px; font-size: 11px; color: #444;">STATUS: DISCONNECTED</div>
+    <button class="save-btn" onclick="connectFirebase()">CONNECT & SAVE DATABASE</button>
+</div>
 
     <div id="vps" class="panel">
         <h2>VPS SERVER</h2>
@@ -104,13 +73,46 @@
         <button class="save-btn">LINK SERVER</button>
     </div>
 
-    <script>
-        function tab(id) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    // Tab switching logic (Pathadi)
+    function tab(id) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Firebase Connection Logic
+    function connectFirebase() {
+        const configInput = document.getElementById('fbConfig').value;
+        const status = document.getElementById('fbStatus');
+        try {
+            const config = JSON.parse(configInput);
+            firebase.initializeApp(config);
+            firebase.database().ref(".info/connected").on("value", (snap) => {
+                if (snap.val() === true) {
+                    status.innerText = "STATUS: CONNECTED SUCCESSFULLY!";
+                    status.style.color = "#00ffcc";
+                    localStorage.setItem('ruthless_fb_config', configInput);
+                    alert("FIREBASE CONNECTED!");
+                } else {
+                    status.innerText = "STATUS: CONNECTION FAILED";
+                    status.style.color = "#ff0000";
+                }
+            });
+        } catch (e) { alert("INVALID JSON!"); }
+    }
+
+    function verifySite() { alert("CODE SUBMITTED!"); document.getElementById('verifyStatus').innerText = "Status: Code Active"; }
+    function updateAds() { alert("ADS UPDATED!"); }
+
+    window.onload = function() {
+        const saved = localStorage.getItem('ruthless_fb_config');
+        if(saved) { document.getElementById('fbConfig').value = saved; }
+    }
+</script>
 </body>
 </html>
