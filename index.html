@@ -3,201 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader</title>
-    
-    <style>
-        :root { --red: #ff0000; --dark-bg: #000000; --neon-green: #00ffcc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--dark-bg); color: var(--red); font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
-        
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #000; border-bottom: 1px solid #222; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .brand-name { font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px var(--red); }
-        .admin-lock-btn { background: transparent; border: none; color: #111; cursor: pointer; font-size: 20px; }
-        
-        #home-view { padding: 100px 20px 80px; min-height: 100vh; }
-        .main-content-wrapper { display: flex; flex-direction: column; gap: 20px; }
-        .main-box { background: #0a0a0a; border: 2px solid var(--red); padding: 30px; text-align: center; box-shadow: inset 0 0 15px rgba(255,0,0,0.2); }
-        
-        .number-glow { font-family: 'Roboto Mono', monospace; font-size: 32px; font-weight: bold; text-shadow: 0 0 15px var(--red); margin-top: 10px; }
-        .ads-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .ad-box { background: #050505; border: 1px dashed #333; height: 100px; display: flex; align-items: center; justify-content: center; color: #444; font-size: 10px; }
-        
-        .bottom-strip { background: #0a0a0a; border-top: 1px solid #222; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: fixed; bottom: 0; width: 100%; font-size: 10px; }
-        
-        /* Admin Dashboard Style */
-        #admin-panel { display: none; background: #0a0a0a; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; padding: 20px; overflow-y: auto; color: white; }
-        .ruthless-input { width: 100%; background: #000; border: 1px solid #444; color: var(--neon-green); padding: 10px; margin-bottom: 15px; font-weight: bold; }
-        .dash-btn { background: var(--red); color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
-    </style>
-
+    <title>Binary Ruthless Trader - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { --red: #ff0000; --dark: #000000; --card: #0a0a0a; --neon: #00ffcc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--dark); color: white; font-family: 'Orbitron', sans-serif; overflow: hidden; }
+
+        /* Sidebar Style */
+        #admin-wrapper { display: flex; height: 100vh; width: 100vw; }
+        #sidebar { width: 260px; background: #050505; border-right: 2px solid var(--red); display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid #222; text-align: center; }
+        .nav-btn { 
+            width: 100%; padding: 15px 20px; background: transparent; border: none; 
+            color: #666; text-align: left; cursor: pointer; transition: 0.3s;
+            font-family: 'Orbitron'; font-size: 11px; border-left: 4px solid transparent;
+        }
+        .nav-btn.active, .nav-btn:hover { color: var(--red); background: #111; border-left: 4px solid var(--red); }
+
+        /* Main Content Area */
+        #content-area { flex: 1; padding: 40px; overflow-y: auto; background: var(--dark); }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+
+        /* UI Elements */
+        .admin-card { background: var(--card); border: 1px solid #222; padding: 25px; border-radius: 10px; margin-bottom: 20px; }
+        h1 { color: var(--red); margin-bottom: 30px; font-size: 24px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+        .ruthless-input { 
+            width: 100%; background: #000; border: 1px solid #333; color: var(--neon); 
+            padding: 12px; margin-bottom: 20px; font-family: 'Roboto Mono'; font-weight: bold; outline: none;
+        }
+        .save-btn { background: var(--red); color: white; border: none; padding: 15px 30px; cursor: pointer; font-family: 'Orbitron'; width: 100%; font-size: 14px; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-box { background: #111; padding: 20px; border: 1px solid #222; text-align: center; border-radius: 8px; }
+        .stat-box h5 { font-size: 10px; color: #555; }
+        .stat-box p { font-family: 'Roboto Mono'; font-size: 26px; color: var(--red); text-shadow: 0 0 10px var(--red); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
 
-    <div id="home-view">
-        <header class="top-nav">
-            <button id="admin-entry-btn" class="admin-lock-btn" onclick="openAdmin()"><i class="fas fa-user-shield"></i></button>
-            <div class="brand-name">RUTHLESS TRADER</div>
-            <div style="width: 30px;"></div> </header>
-
-        <div class="main-content-wrapper">
-            <div class="main-box">
-                <h2 style="font-size: 14px; color: white;">LIVE ACCURACY</h2>
-                <div id="itm-rate" class="number-glow">98%</div>
-            </div>
-            <div class="main-box">
-                <h2 style="font-size: 14px; color: white;">TRADING SIGNALS</h2>
-                <button onclick="window.location.href='#'" style="margin-top:10px; background:red; color:white; border:none; padding:10px 20px; font-family:'Orbitron';">JOIN NOW</button>
-            </div>
+<div id="admin-wrapper">
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:var(--red); font-size:16px;">RUTHLESS V7</h2>
+            <p style="font-size:8px; color:#444; margin-top:5px;">CONTROL PANEL</p>
         </div>
-
-        <div class="ads-grid">
-            <div class="ad-box">AD SLOT 1</div>
-            <div class="ad-box">AD SLOT 2</div>
-            <div class="ad-box">AD SLOT 3</div>
-            <div class="ad-box">AD SLOT 4</div>
-        </div>
-
-        <footer class="bottom-strip">
-            <div style="display:flex; gap:20px;">
-                <span>ABOUT US</span>
-                <span>CONTACT US</span>
-            </div>
-            <div>© 2026 BINARY RUTHLESS TRADER</div>
-        </footer>
+        <nav style="flex:1;">
+            <button class="nav-btn active" onclick="openTab(event, 'tab-stats')"><i class="fas fa-bolt"></i> Live Stats</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-affiliate')"><i class="fas fa-link"></i> Affiliate & Join</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-revenue')"><i class="fas fa-calculator"></i> Revenue Calc</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-layout')"><i class="fas fa-vector-square"></i> Layout Builder</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-ads')"><i class="fas fa-ad"></i> Ad Containers</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-security')"><i class="fas fa-shield-alt"></i> Security & SEO</button>
+            <button class="nav-btn" onclick="openTab(event, 'tab-backend')"><i class="fas fa-server"></i> Firebase / VPS</button>
+        </nav>
+        <button onclick="logout()" style="background:#111; color:red; border:none; padding:15px; font-family:'Orbitron'; cursor:pointer; font-size:10px;">LOGOUT</button>
     </div>
 
-    <div id="admin-panel" style="background: #050505; color: white; padding-bottom: 100px;">
-    
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 2px solid #ff0000; background: #000;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="logo.png" alt="Logo" style="height: 40px; filter: drop-shadow(0 0 5px red);" onerror="this.style.display='none'">
-            <span style="font-family: 'Orbitron'; font-size: 18px; color: #ff0000; text-shadow: 0 0 10px red;">RUTHLESS TRADER</span>
-        </div>
-        <button onclick="saveAdmin()" style="background: #ff0000; color: white; border: none; padding: 8px 15px; font-family: 'Orbitron'; cursor: pointer; font-size: 12px;">LOGOUT</button>
-    </header>
-
-    <div style="display: flex; overflow-x: auto; gap: 15px; padding: 20px; background: #0a0a0a; border-bottom: 1px solid #222;">
-        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
-            <p style="font-size: 10px; color: #888;">ACTIVE NOW</p>
-            <h3 id="stat-active" style="color: #00ffcc; font-family: 'Roboto Mono'; font-size: 20px;">1</h3>
-        </div>
-        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
-            <p style="font-size: 10px; color: #888;">TOTAL VIEWS</p>
-            <h3 id="stat-views" style="color: #ff0000; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
-        </div>
-        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
-            <p style="font-size: 10px; color: #888;">UNQ USERS</p>
-            <h3 id="stat-unique" style="color: #ff0000; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
-        </div>
-        <div style="min-width: 120px; text-align: center;">
-            <p style="font-size: 10px; color: #888;">POST COUNT</p>
-            <h3 id="stat-posts" style="color: #00ffcc; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
-        </div>
-    </div>
-
-    <div style="padding: 20px;">
-        <div class="admin-card" style="background: #111; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-            <label style="color: #ff0000; font-size: 12px;">AFFILIATE LINK</label>
-            <input type="text" id="admin-aff-link" class="ruthless-input" placeholder="Broker registration link">
-        </div>
+    <div id="content-area">
+        
+        <div id="tab-stats" class="tab-content active">
+            <h1>Daily Live Stats</h1>
+            <div class="stats-grid">
+                <div class="stat-box"><h5>ACTIVE USERS</h5><p id="s-active">1</p></div>
+                <div class="stat-box"><h5>TOTAL VIEWS</h5><p id="s-views">0</p></div>
+                <div class="stat-box"><h5>UNIQUE USERS</h5><p id="s-unique">0</p></div>
+                <div class="stat-box"><h5>POST COUNT</h5><p id="s-posts">0</p></div>
+            </div>
+            <p style="font-size:10px; color:#444;">*Stats reset automatically at 12:00 AM</p>
         </div>
 
-    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); border: 1px solid #ff0000; border-radius: 50px; padding: 10px 30px; display: flex; gap: 25px; box-shadow: 0 0 20px rgba(255,0,0,0.3); z-index: 10001;">
-        <i class="fab fa-telegram" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
-        <i class="fab fa-youtube" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
-        <i class="fab fa-instagram" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
-        <i class="fas fa-envelope" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
+        <div id="tab-affiliate" class="tab-content">
+            <h1>Affiliate & Join Button</h1>
+            <div class="admin-card">
+                <label>Broker Registration Link (Affiliate)</label>
+                <input type="text" id="inp-aff-link" class="ruthless-input" placeholder="https://quotex.com/register...">
+                
+                <label>Signal Dropdown Options (Comma Separated)</label>
+                <input type="text" id="inp-sigs" class="ruthless-input" value="QUOTEX, BINOMO, POCKET OPTION">
+                
+                <button class="save-btn" onclick="saveSettings()">SAVE CHANGES</button>
+            </div>
+        </div>
+
+        <div id="tab-revenue" class="tab-content">
+            <h1>Revenue Estimation</h1>
+            <div class="admin-card">
+                <label>Average CPM Rate ($)</label>
+                <input type="number" id="inp-cpm" class="ruthless-input" value="1.50">
+                
+                <label>USD to INR Conversion Rate</label>
+                <input type="number" id="inp-usd" class="ruthless-input" value="83.50">
+                
+                <div style="background:#000; padding:20px; border-left:4px solid var(--neon); margin-top:10px;">
+                    <h4 style="font-size:12px; color:#888;">ESTIMATED TODAY'S EARNINGS</h4>
+                    <p style="font-family:'Roboto Mono'; font-size:32px; color:var(--neon); margin-top:5px;">₹ <span id="val-earnings">0.00</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-layout" class="tab-content">
+            <h1>Layout Builder</h1>
+            <div class="admin-card">
+                <label>Device View Toggle</label>
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <button class="save-btn" style="flex:1; background:#333;">MOBILE VIEW</button>
+                    <button class="save-btn" style="flex:1; background:#333;">DESKTOP VIEW</button>
+                </div>
+                <p style="color:#555; font-size:12px;">Drag & Drop Mode is currently: <b>DISABLED</b> (Manual CSS Update Required)</p>
+            </div>
+        </div>
+
+        <div id="tab-ads" class="tab-content">
+            <h1>Ad Management</h1>
+            <div class="admin-card">
+                <label>Ad Refresh Interval (Seconds)</label>
+                <input type="number" id="inp-ad-timer" class="ruthless-input" value="15">
+                
+                <label>Ad Container 1 (Snippet/Code)</label>
+                <textarea class="ruthless-input" style="height:80px;"></textarea>
+                
+                <button class="save-btn" onclick="saveSettings()">UPDATE AD SCRIPTS</button>
+            </div>
+        </div>
+
+        <div id="tab-security" class="tab-content">
+            <h1>Security & SEO</h1>
+            <div class="admin-card">
+                <label>Secret Path (Change /9700224305)</label>
+                <input type="text" id="inp-path" class="ruthless-input" value="9700224305">
+                
+                <label>SEO Keywords</label>
+                <input type="text" class="ruthless-input" value="Binary Trading, Ruthless Signals, Quotex Sureshot">
+                
+                <label>Anti-Inspect (F12) Redirect URL</label>
+                <input type="text" class="ruthless-input" value="about:blank">
+            </div>
+        </div>
+
+        <div id="tab-backend" class="tab-content">
+            <h1>Firebase & VPS</h1>
+            <div class="admin-card">
+                <label>Firebase API Key</label>
+                <input type="password" class="ruthless-input" value="••••••••••••••••">
+                
+                <label>VPS Signal Connection (MT5)</label>
+                <div style="color:var(--red); font-size:11px;">Status: OFFLINE</div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    // Stats Initialization
-    let dailyStats = JSON.parse(localStorage.getItem('daily_stats')) || {
-        date: new Date().toLocaleDateString(),
-        views: 0,
-        uniqueUsers: 0,
-        posts: 0,
-        visitors: [] // To track unique IDs
-    };
-
-    function updateStats() {
-        const today = new Date().toLocaleDateString();
-
-        // 12 AM Reset Logic
-        if (dailyStats.date !== today) {
-            dailyStats = { date: today, views: 0, uniqueUsers: 0, posts: 0, visitors: [] };
+    // TAB SWITCH LOGIC
+    function openTab(evt, tabName) {
+        let i, tabcontent, navlinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].classList.remove("active");
         }
-
-        // Increment Total Views (Every Refresh)
-        dailyStats.views++;
-
-        // Unique User Logic (Session Based)
-        let sessionID = sessionStorage.getItem('user_session');
-        if (!sessionID) {
-            sessionID = 'user_' + Math.random().toString(36).substr(2, 9);
-            sessionStorage.setItem('user_session', sessionID);
-            
-            if (!dailyStats.visitors.includes(sessionID)) {
-                dailyStats.uniqueUsers++;
-                dailyStats.visitors.push(sessionID);
-            }
+        navlinks = document.getElementsByClassName("nav-btn");
+        for (i = 0; i < navlinks.length; i++) {
+            navlinks[i].classList.remove("active");
         }
-
-        localStorage.setItem('daily_stats', JSON.stringify(dailyStats));
-        refreshUI();
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
     }
 
-    function refreshUI() {
-        document.getElementById('stat-views').innerText = dailyStats.views;
-        document.getElementById('stat-unique').innerText = dailyStats.uniqueUsers;
-        document.getElementById('stat-posts').innerText = dailyStats.posts;
+    // STATS & REVENUE LOGIC
+    function loadStats() {
+        const stats = JSON.parse(localStorage.getItem('daily_stats')) || { views: 0, unique: 0, posts: 0 };
+        document.getElementById('s-views').innerText = stats.views;
+        document.getElementById('s-unique').innerText = stats.unique;
+        document.getElementById('s-posts').innerText = stats.posts;
         
-        // Simulating Active Users (Since it's a static site)
-        document.getElementById('stat-active').innerText = Math.floor(Math.random() * 5) + 1;
+        // Simulating Revenue (CPM Calculation)
+        const cpm = document.getElementById('inp-cpm').value;
+        const usd = document.getElementById('inp-usd').value;
+        const earnings = ((stats.views / 1000) * cpm * usd).toFixed(2);
+        document.getElementById('val-earnings').innerText = earnings;
     }
 
-    // Call stats on load
-    window.addEventListener('load', () => {
-        updateStats();
-        // Existing login checks...
-    });
+    function saveSettings() {
+        const affLink = document.getElementById('inp-aff-link').value;
+        localStorage.setItem('ruthless_link', affLink);
+        alert("RUTHLESS: SETTINGS SAVED!");
+    }
+
+    function logout() {
+        window.location.hash = "";
+        location.reload();
+    }
+
+    window.onload = loadStats;
 </script>
 
-
-    <script>
-        // Security Logic
-        function checkAccess() {
-            if(window.location.hash === "#9700224305") {
-                document.getElementById('admin-entry-btn').style.color = "#444";
-            }
-        }
-
-        function openAdmin() {
-            if(window.location.hash === "#9700224305") {
-                document.getElementById('admin-panel').style.display = 'block';
-                document.getElementById('home-view').style.display = 'none';
-            }
-        }
-
-        function saveAdmin() {
-            alert("Settings Saved Locally!");
-            document.getElementById('admin-panel').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
-        }
-
-        // Accuracy Simulation
-        setInterval(() => {
-            const rate = Math.floor(Math.random() * (99 - 94 + 1)) + 94;
-            const el = document.getElementById('itm-rate');
-            if(el) el.innerText = rate + "%";
-        }, 5000);
-
-        // Anti-Inspect Alert
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        window.onload = checkAccess;
-    </script>
 </body>
 </html>
