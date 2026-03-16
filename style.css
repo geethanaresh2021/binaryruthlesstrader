@@ -1,0 +1,143 @@
+/* --- RUTHLESS V7 CORE STYLES --- */
+:root { 
+    --red: #ff0000; 
+    --dark-bg: #050505; 
+    --sidebar-bg: #0a0a0a;
+    --card-bg: rgba(20, 20, 20, 0.8);
+    --neon: #00ffcc; 
+    --glow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    background: var(--dark-bg); 
+    color: white; 
+    font-family: 'Orbitron', sans-serif; 
+    overflow: hidden; 
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.5px;
+}
+
+/* --- SIDEBAR LAYOUT --- */
+#admin-wrapper { display: flex; height: 100vh; width: 100vw; }
+
+#sidebar { 
+    width: 260px; 
+    background: var(--sidebar-bg); 
+    border-right: 1px solid #222; 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 10;
+}
+
+.sidebar-header { padding: 25px; border-bottom: 1px solid #222; text-align: center; }
+
+/* --- NAV BUTTONS & HOVER --- */
+.nav-btn { 
+    width: 100%; 
+    padding: 18px 25px; 
+    background: transparent; 
+    border: none; 
+    color: #555; 
+    text-align: left; 
+    cursor: pointer; 
+    font-family: 'Orbitron'; 
+    font-size: 10px; 
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-left: 3px solid transparent;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-btn:hover { 
+    color: white; 
+    background: rgba(255, 0, 0, 0.05);
+    padding-left: 35px;
+    border-left: 3px solid var(--red);
+    text-shadow: 0 0 8px var(--red);
+}
+
+.nav-btn.active { 
+    color: var(--red) !important; 
+    background: #111; 
+    border-left: 3px solid var(--red);
+    text-shadow: 0 0 10px var(--red);
+    box-shadow: inset 10px 0 20px rgba(255, 0, 0, 0.1);
+}
+
+/* --- CONTENT AREA & CARDS --- */
+#content-area { 
+    flex: 1; 
+    padding: 40px; 
+    overflow-y: auto; 
+    background: radial-gradient(circle at top right, #110000, #050505);
+}
+
+h1 { 
+    font-size: 26px; 
+    color: var(--red); 
+    text-transform: uppercase; 
+    letter-spacing: 4px; 
+    text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.5);
+    margin-bottom: 30px; 
+    border-bottom: 2px solid var(--red); 
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.admin-card { 
+    background: var(--card-bg); 
+    border: 1px solid #222; 
+    padding: 30px; 
+    border-radius: 12px; 
+    margin-bottom: 25px; 
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+/* --- TEXT & INPUT STYLES --- */
+label { 
+    font-size: 10px; 
+    color: #888; 
+    margin-bottom: 10px; 
+    display: block; 
+    letter-spacing: 2px;
+    transition: color 0.3s;
+}
+
+.admin-card:hover label { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
+
+.ruthless-input { 
+    width: 100%; 
+    background: #000; 
+    border: 1px solid #222; 
+    color: var(--neon) !important; 
+    padding: 15px; 
+    font-family: 'Roboto Mono', monospace; 
+    font-weight: 900;
+    text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+    outline: none;
+    transition: 0.3s;
+}
+
+.ruthless-input:focus { border: 1px solid var(--neon); box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
+
+/* --- STATS BOXES --- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+.stat-box { background: #0a0a0a; padding: 25px; border: 1px solid #222; border-radius: 10px; text-align: center; transition: 0.3s; }
+.stat-box:hover { border-color: var(--red); box-shadow: var(--glow); }
+
+.stat-box p { 
+    font-family: 'Roboto Mono', monospace; 
+    font-size: 32px; 
+    font-weight: 900; 
+    color: var(--red); 
+    text-shadow: 0 0 15px var(--red), 0 0 5px #fff; 
+}
