@@ -6,9 +6,6 @@
     <title>Binary Ruthless Trader | Official System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
     <style>
         :root { 
             --red: #ff0000; 
@@ -21,207 +18,156 @@
         
         body { 
             background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
-            min-width: 1024px; min-height: 100vh; overflow-x: hidden;
+            min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- AD CONTAINERS --- */
-        .ad-v { background: #0a0a0a; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px; }
-        .ad-h { background: #0a0a0a; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px; }
-
-        /* --- HEADER --- */
+        /* --- STATIC HEADER (Not Floating) --- */
         .header {
-            width: 100%; padding: 15px 50px; display: grid; grid-template-columns: 150px 1fr 150px;
-            align-items: center; border-bottom: 2px solid var(--red); background: #000; position: sticky; top: 0; z-index: 1000;
+            width: 100%; padding: 20px 5%; display: flex; flex-direction: column;
+            align-items: center; border-bottom: 2px solid var(--red); background: #000;
+            gap: 15px;
         }
-        .brand-img { width: 350px; margin: 0 auto; filter: drop-shadow(0 0 10px var(--red)); }
-        .admin-trigger { background: transparent; border: 1px solid #333; color: #555; padding: 5px 10px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 10px; }
+        .brand-img { width: 100%; max-width: 450px; filter: drop-shadow(0 0 10px var(--red)); }
+        .social-links { display: flex; gap: 15px; }
+        .social-links a { color: #555; text-decoration: none; font-family: 'Roboto Mono'; font-size: 11px; border: 1px solid #222; padding: 5px 10px; border-radius: 4px; }
+        .admin-trigger { background: transparent; border: 1px solid #333; color: #444; padding: 5px 15px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 11px; margin-top: 10px; }
 
-        /* --- HOME PAGE LAYOUT --- */
-        .home-wrapper { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
-        .main-grid { display: grid; grid-template-columns: 160px 1fr 160px; gap: 30px; width: 100%; max-width: 1400px; }
-        .content-boxes { display: flex; gap: 30px; justify-content: center; }
-
-        .card {
-            flex: 1; max-width: 400px; background: #0a0a0a; border: 1px solid var(--red);
-            padding: 35px; border-radius: 15px; box-shadow: var(--neon); text-align: center;
+        /* --- LAYOUT STRUCTURE --- */
+        .home-wrapper { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .main-grid { display: grid; grid-template-columns: 160px 1fr 160px; gap: 20px; width: 100%; max-width: 1400px; }
+        
+        /* Containers */
+        .section-container { width: 100%; max-width: 500px; margin: 0 auto 30px auto; }
+        .dropdown-top { margin-bottom: 10px; }
+        
+        .display-box {
+            width: 100%; min-height: 400px; max-height: 600px;
+            background: #0a0a0a; border: 1px solid var(--red);
+            border-radius: 10px; box-shadow: var(--neon);
+            overflow-y: auto; overflow-x: hidden; position: relative;
+            padding: 15px;
         }
-        .card h3 { color: var(--red); margin-bottom: 25px; font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
-        select, input[type="text"], textarea {
-            width: 100%; padding: 16px; margin: 10px 0; background: #111; border: 1px solid #333;
-            color: var(--green); border-radius: 8px; font-family: 'Roboto Mono'; font-weight: bold; font-size: 15px; outline: none;
+        /* Signal Styling */
+        .signal-note { font-family: 'Roboto Mono'; font-size: 10px; color: #444; text-transform: lowercase; text-align: center; margin-top: 180px; }
+        .signal-post { background: #111; border-left: 3px solid var(--red); padding: 10px; margin-bottom: 10px; font-family: 'Roboto Mono'; font-size: 13px; color: var(--green); }
+
+        /* Dropdown & Tools Styling */
+        select {
+            width: 100%; padding: 15px; background: #111; border: 1px solid #333;
+            color: var(--green); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 5px; outline: none;
         }
 
-        .btn-red {
-            background: var(--red); color: #fff; border: none; padding: 18px; width: 100%;
-            border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; font-weight: 900; text-transform: uppercase;
-        }
-        .btn-red:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+        /* Tool Code Reset */
+        .tool-content { width: 100%; height: auto; }
 
-        /* --- ADMIN PANEL --- */
-        #adminPanel {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 2000; padding: 50px; overflow-y: auto;
-        }
-        .admin-nav { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
-        .admin-btn { background: #111; border: 1px solid #444; color: #fff; padding: 12px 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; }
-        .admin-btn.active { border-color: var(--red); color: var(--red); }
-        .admin-section { display: none; }
-        .admin-section.active { display: block; }
+        /* --- AD PLACEHOLDERS --- */
+        .ad-v { background: #0a0a0a; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
+        .ad-h { background: #0a0a0a; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
 
-        /* --- MOBILE RESPONSIVE --- */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            body { min-width: 100%; }
-            .header { grid-template-columns: 1fr; text-align: center; gap: 10px; }
-            .main-grid { display: flex; flex-direction: column; }
-            .content-boxes { flex-direction: column; }
+            .main-grid { grid-template-columns: 1fr; }
             .desktop-ad { display: none; }
-            .card { width: 100vw; margin-left: -20px; border-radius: 0; border-left: none; border-right: none; }
-            .mobile-ad-row { display: flex; gap: 10px; width: 100%; height: 150px; margin: 15px 0; }
-            .mobile-ad-row .ad-v { flex: 1; }
+            .section-container { max-width: 100%; }
+            .display-box { border-radius: 0; border-left: none; border-right: none; width: 100vw; margin-left: -20px; }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="logo">LOGO</div>
+        <img src="logo.png" alt="LOGO" style="width:60px;">
         <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-        <button class="admin-trigger" onclick="openAdmin()">ADMIN (0000)</button>
+        <div class="social-links">
+            <a href="#">TELEGRAM</a>
+            <a href="#">YOUTUBE</a>
+        </div>
+        <button class="admin-trigger" onclick="checkAdmin()">ADMIN ACCESS</button>
     </header>
 
-    <div id="homePage" class="home-wrapper">
-        <div class="ad-h mobile-only" style="width:100%; height:80px; margin-bottom:15px;">TOP HORIZONTAL AD</div>
+    <div class="home-wrapper">
+        <div class="ad-h" style="width:100%; height:70px; margin-bottom:20px;">TOP AD</div>
 
         <div class="main-grid">
-            <div class="ad-v desktop-ad">LEFT VERTICAL AD</div>
+            <div class="ad-v desktop-ad">SIDE AD</div>
 
             <div class="content-area">
-                <div class="content-boxes">
-                    <div class="card" id="signalContainer">
-                        <h3>SIGNALS</h3>
-                        <select id="signalDropdown">
-                            <option value="">SELECT SIGNAL</option>
-                            <option value="quotex" id="opt-quotex">QUOTEX SIGNALS</option>
-                            <option value="toxa" id="opt-toxa">TOXA SIGNALS</option>
+                
+                <div class="section-container">
+                    <div class="dropdown-top">
+                        <select id="signalSelect" onchange="loadSignalPath()">
+                            <option value="">SELECT SIGNAL FEED</option>
+                            <option value="quotex">QUOTEX SIGNALS</option>
+                            <option value="toxa">TOXA SIGNALS</option>
                         </select>
-                        <button class="btn-red">GENERATE</button>
                     </div>
+                    <div class="display-box" id="signalDisplay">
+                        <div class="signal-note">wait for signals...</div>
+                    </div>
+                </div>
 
-                    <div class="ad-h mobile-only" style="width:100%; height:80px; margin:15px 0;">MID HORIZONTAL AD</div>
+                <div class="ad-h" style="width:100%; height:70px; margin-bottom:20px;">MID AD</div>
 
-                    <div class="card" id="toolsContainer">
-                        <h3>TRADING TOOLS</h3>
-                        <select id="toolsDropdown">
-                            <option value="">SELECT TOOL</option>
+                <div class="section-container">
+                    <div class="dropdown-top">
+                        <select id="toolSelect" onchange="renderTool()">
+                            <option value="">SELECT TRADING TOOL</option>
                             <option value="mm">MONEY MANAGEMENT</option>
                             <option value="cc">COMPOUNDING CALC</option>
                         </select>
-                        <button class="btn-red">LAUNCH TOOL</button>
                     </div>
+                    <div class="display-box" id="toolDisplay">
+                        </div>
                 </div>
 
-                <div class="mobile-ad-row mobile-only">
-                    <div class="ad-v">VERTICAL AD 1</div>
-                    <div class="ad-v">VERTICAL AD 2</div>
-                </div>
             </div>
 
-            <div class="ad-v desktop-ad">RIGHT VERTICAL AD</div>
-        </div>
-
-        <div class="desktop-ad" style="display:flex; gap:20px; width:100%; max-width:1000px; margin-top:40px;">
-            <div class="ad-h" style="flex:1; height:100px;">BOTTOM HORIZONTAL 1</div>
-            <div class="ad-h" style="flex:1; height:100px;">BOTTOM HORIZONTAL 2</div>
-        </div>
-    </div>
-
-    <div id="adminPanel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h2 style="color:var(--red)">ADMIN COMMAND CENTER</h2>
-            <button class="admin-btn" onclick="closeAdmin()">X CLOSE</button>
-        </div>
-
-        <div class="admin-nav">
-            <button class="admin-btn" onclick="tab('ads')">ADS</button>
-            <button class="admin-btn" onclick="tab('signals')">SIGNALS</button>
-            <button class="admin-btn" onclick="tab('tools')">TOOLS</button>
-            <button class="admin-btn" onclick="tab('firebase')">FIREBASE</button>
-            <button class="admin-btn" onclick="tab('vps')">VPS</button>
-        </div>
-
-        <div id="sec-ads" class="admin-section">
-            <button class="admin-btn" onclick="alert('Network Verified')">ADS NETWORK VERIFY</button>
-            <div style="margin-top:20px; border:1px solid #222; padding:20px;">
-                <h3>Manage Containers</h3>
-                <p>Ad Container 1: [Resize] [Snippet] [Delete]</p>
-            </div>
-        </div>
-
-        <div id="sec-signals" class="admin-section">
-            <div style="margin-bottom:20px;">
-                <label>QUOTEX MT5 PATH:</label>
-                <input type="text" id="adminQuotexUrl" placeholder="binaryruthlesstrader.com/quotex">
-                <label>ENABLE QUOTEX:</label> <input type="checkbox" id="checkQuotex" checked>
-            </div>
-            <div style="margin-bottom:20px;">
-                <label>TOXA MT5 PATH:</label>
-                <input type="text" id="adminToxaUrl" placeholder="binaryruthlesstrader.com/toxa">
-                <label>ENABLE TOXA:</label> <input type="checkbox" id="checkToxa" checked>
-            </div>
-            <button class="btn-red" style="width:200px;" onclick="saveSignalSettings()">SAVE SETTINGS</button>
-        </div>
-
-        <div id="sec-tools" class="admin-section">
-            <button class="admin-btn" onclick="alert('Tool Form Opened')">+ ADD NEW TOOL</button>
-            <div style="margin-top:20px;">
-                <p>Money Management: [Edit] [Delete] [Enable/Disable Toggle]</p>
-            </div>
-        </div>
-
-        <div id="sec-firebase" class="admin-section">
-            <textarea placeholder="Paste Firebase SDK here..." style="height:200px;"></textarea>
-            <button class="btn-red" style="width:200px;">LINK FIREBASE</button>
-        </div>
-
-        <div id="sec-vps" class="admin-section">
-            <input type="text" placeholder="Server IP">
-            <input type="text" placeholder="SSH Username">
-            <button class="btn-red" style="width:200px;">CONNECT VPS</button>
+            <div class="ad-v desktop-ad">SIDE AD</div>
         </div>
     </div>
 
     <script>
-        // Tab Navigation
-        function tab(name) {
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.admin-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('sec-' + name).classList.add('active');
+        // Admin Password Check
+        function checkAdmin() {
+            if(prompt("PASSWORD:") === "0000") alert("Redirecting to Admin Panel...");
         }
 
-        // Admin Access
-        function openAdmin() {
-            const pass = prompt("ENTER ADMIN PASSWORD:");
-            if(pass === "0000") document.getElementById('adminPanel').style.display = 'block';
-            else alert("WRONG PASSWORD!");
+        // Signal Display Logic (MT5 Hook)
+        function loadSignalPath() {
+            const select = document.getElementById('signalSelect').value;
+            const display = document.getElementById('signalDisplay');
+            
+            if(!select) {
+                display.innerHTML = '<div class="signal-note">wait for signals...</div>';
+                return;
+            }
+            
+            // Simulation of receiving MT5 post
+            display.innerHTML = '<div class="signal-post">[MT5] '+select.toUpperCase()+' - SELL EURUSD @ 1.0845 (WAITING...)</div>';
         }
 
-        function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
-
-        // Signals & Tools Visibility Logic
-        function saveSignalSettings() {
-            const qEnable = document.getElementById('checkQuotex').checked;
-            const tEnable = document.getElementById('checkToxa').checked;
-
-            // Update Home Dropdown
-            document.getElementById('opt-quotex').style.display = qEnable ? 'block' : 'none';
-            document.getElementById('opt-toxa').style.display = tEnable ? 'block' : 'none';
-
-            alert("Signals Visibility Updated Successfully!");
+        // Tool Injection Logic
+        function renderTool() {
+            const tool = document.getElementById('toolSelect').value;
+            const display = document.getElementById('toolDisplay');
+            
+            if(tool === 'mm') {
+                // Example of injected HTML from Admin
+                display.innerHTML = `
+                    <div class="tool-content" style="padding:10px;">
+                        <h4 style="color:var(--red)">Money Management</h4>
+                        <input type="number" placeholder="Balance" style="width:100%; padding:10px; margin:10px 0; background:#000; color:#00ffcc; border:1px solid #333;">
+                        <button style="width:100%; padding:15px; background:var(--red); color:#fff; border:none;">CALCULATE</button>
+                        <div style="height:800px; margin-top:20px; border:1px dashed #222;">Scrollable Area Test</div>
+                    </div>
+                `;
+            } else if(tool === 'cc') {
+                display.innerHTML = '<p style="padding:20px;">Compounding Calculator Loading...</p>';
+            } else {
+                display.innerHTML = '';
+            }
         }
-
-        // VPS & Firebase placeholders
-        function saveConfig() { alert("Configuration Stored."); }
     </script>
 </body>
 </html>
