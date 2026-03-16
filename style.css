@@ -189,7 +189,7 @@ body {
 }
 
 .brand-img { 
-    height: 35px; /* Image height ni adjust chesthunnam */
+    height: 70px; /* Image height ni adjust chesthunnam */
     width: auto;
     object-fit: contain;
 }
