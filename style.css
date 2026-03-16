@@ -1,50 +1,46 @@
 :root { --red: #ff0000; --neon: #00ffcc; --bg: #000; --border: #1a1a1a; }
 body { margin: 0; background: var(--bg); color: #fff; font-family: 'Arial'; overflow: hidden; }
 
-/* HEADER */
-.home-header { display: flex; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); background: #000; }
-.header-side-spacer, .header-right { width: 60px; }
+/* Home Elements Styles */
+.home-header { width: 100%; display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--border); background: #000; z-index: 100; box-sizing: border-box; }
 .header-center { flex: 1; display: flex; flex-direction: column; align-items: center; }
 .brand-group { display: flex; align-items: center; gap: 10px; }
-.main-logo { height: 40px; } .brand-img { height: 30px; }
-.top-socials { display: flex; gap: 20px; margin-top: 15px; }
-.s-icon { color: #222; font-size: 18px; transition: 0.3s; }
-.s-icon:hover { color: var(--red); }
-.admin-trigger { color: #050505; cursor: pointer; text-align: right; }
+.main-logo { height: 35px; } .brand-img { height: 25px; }
+.top-socials { display: flex; gap: 20px; margin-top: 10px; color: #333; }
+.admin-trigger { cursor: pointer; color: #050505; }
 
-/* HOME ELEMENTS */
-.home-container { position: relative; width: 100vw; height: 100vh; background: #000; }
-.glass-container { background: #080808; border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
-.container-tag { font-family: 'Orbitron'; color: var(--red); font-size: 10px; margin-bottom: 10px; }
-.signal-direction { font-family: 'Roboto Mono'; font-size: 28px; color: var(--neon); font-weight: bold; margin-bottom: 15px; }
-.join-btn { background: var(--red); border: none; color: #fff; padding: 10px; width: 100%; font-family: 'Orbitron'; cursor: pointer; }
+.home-container { position: relative; width: 100vw; height: 100vh; }
+.glass-container { background: #0a0a0a; border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; width: 300px; box-sizing: border-box; }
+.container-tag { font-family: 'Orbitron'; color: var(--red); font-size: 9px; margin-bottom: 10px; }
+.signal-direction { font-family: 'Roboto Mono'; font-size: 22px; color: var(--neon); font-weight: bold; }
+.join-btn { background: var(--red); color: #fff; border: none; padding: 10px; width: 100%; margin-top: 15px; font-family: 'Orbitron'; cursor: pointer; }
 
-/* ADMIN UI */
+/* Admin View */
 #admin-wrapper { height: 100vh; display: flex; background: #000; }
-#sidebar { width: 250px; border-right: 1px solid var(--border); background: #050505; }
-.nav-btn { width: 100%; padding: 18px; background: none; border: none; color: #444; text-align: left; font-family: 'Orbitron'; cursor: pointer; }
+#sidebar { width: 240px; border-right: 1px solid var(--border); background: #050505; }
+.nav-btn { width: 100%; padding: 18px; background: none; border: none; color: #555; text-align: left; font-family: 'Orbitron'; cursor: pointer; }
 .nav-btn.active { color: var(--red); background: #0a0000; border-left: 4px solid var(--red); }
-#content-area { flex: 1; padding: 30px; overflow-y: auto; }
+#content-area { flex: 1; padding: 20px; overflow-y: auto; }
 
-/* LAYOUT BUILDER PREVIEW */
-.builder-header { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
-.tgl-btn { background: #111; border: 1px solid #333; color: #666; padding: 8px 15px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; }
-.tgl-btn.active { background: var(--red); color: #fff; border-color: var(--red); }
-.save-btn { background: var(--neon); color: #000; border: none; padding: 10px 25px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; margin-left: auto; border-radius: 4px; }
+/* Builder UI */
+.builder-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+.tgl-btn { background: #111; border: 1px solid #333; color: #fff; padding: 8px 15px; cursor: pointer; font-size: 10px; font-family: 'Orbitron'; }
+.tgl-btn.active { background: var(--red); }
+.save-btn { background: var(--neon); color: #000; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; margin-left: auto; font-family: 'Orbitron'; }
 
-#preview-container { margin: 0 auto; border: 4px solid #222; border-radius: 10px; position: relative; background: #000; overflow: hidden; transition: 0.4s; }
-.view-desktop { width: 100%; height: 500px; }
-.view-mobile { width: 375px; height: 667px; }
+/* Preview Frame */
+#preview-frame { margin: 0 auto; position: relative; border: 4px solid #222; background: #000; overflow: hidden; transition: 0.3s; }
+.p-desktop { width: 100%; height: 550px; }
+.p-mobile { width: 375px; height: 667px; }
 
-#preview-iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
-.preview-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: auto; }
+#home-preview-iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+.builder-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
 
-/* DRAG BOXES (RED OUTLINES) */
-.drag-box {
-    position: absolute; width: 180px; height: 120px;
-    border: 2px dashed var(--red); background: rgba(255, 0, 0, 0.1);
-    color: #fff; font-family: 'Orbitron'; font-size: 9px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: move; touch-action: none;
+/* Draggable Red Boxes */
+.drag-item {
+    position: absolute; border: 2px dashed var(--red); background: rgba(255, 0, 0, 0.1);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: 'Orbitron'; cursor: move; touch-action: none;
+    min-width: 50px; min-height: 30px;
 }
-.drag-box:hover { background: rgba(255, 0, 0, 0.2); }
+.drag-item:hover { background: rgba(255, 0, 0, 0.2); }
