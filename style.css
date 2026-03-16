@@ -175,3 +175,27 @@ body {
 }
 
 .save-btn { background: var(--neon); color: black; border: none; padding: 10px 20px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+.brand-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* Logo ki image ki madhya gap */
+}
+
+.main-logo { 
+    height: 45px; 
+    width: auto;
+    filter: drop-shadow(0 0 8px var(--red)); 
+}
+
+.brand-img { 
+    height: 35px; /* Image height ni adjust chesthunnam */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+    .main-logo { height: 35px; }
+    .brand-img { height: 25px; }
+}
