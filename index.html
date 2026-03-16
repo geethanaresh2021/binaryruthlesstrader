@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <style>
         :root { --red: #ff0000; --green: #00ffcc; --bg: #050505; --neon: 0 0 15px var(--red); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,6 +137,49 @@
         if(pass === "0000") { window.location.href = "admin.html"; }
         else if (pass !== null) { alert("ACCESS DENIED"); }
     }
+// 1. Firebase initialize cheyadam (Memory nundi config ni teesukuntundi)
+const savedConfig = localStorage.getItem('ruthless_fb_config');
+if (savedConfig) {
+    const config = JSON.parse(savedConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(config);
+    }
+
+    // 2. Database lo unna 'ads' section ni monitor cheyadam
+    firebase.database().ref('ads').on('value', (snap) => {
+        const ads = snap.val();
+        
+        // Patha dynamic ads (old ones) ni clear chesi kothavi add chesthunnam
+        document.querySelectorAll('.dynamic-ad-container').forEach(el => el.remove());
+
+        if (ads) {
+            Object.keys(ads).forEach(id => {
+                const ad = ads[id];
+                
+                // Ad hidden kakunda unte mathrame chupistham
+                if (!ad.hidden) {
+                    const adDiv = document.createElement('div');
+                    adDiv.className = 'dynamic-ad-container';
+                    
+                    // Styling: Layout disturb avvakunda centralize chesthunnam
+                    adDiv.style.width = ad.width + 'px';
+                    adDiv.style.height = ad.height + 'px';
+                    adDiv.style.margin = '30px auto'; // Containers madhya gap kosam
+                    adDiv.style.display = 'flex';
+                    adDiv.style.justifyContent = 'center';
+                    adDiv.style.align = 'center';
+                    adDiv.style.overflow = 'hidden';
+
+                    // Ad snippet ni inject chesthunnam
+                    adDiv.innerHTML = ad.snippet;
+
+                    // Page content area chivarlo ad ni append chesthunnam
+                    document.querySelector('.page-content').appendChild(adDiv);
+                }
+            });
+        }
+    });
+}
 </script>
 </body>
 </html>
