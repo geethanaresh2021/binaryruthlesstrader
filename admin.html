@@ -57,8 +57,10 @@
         <button class="nav-btn" onclick="tab('ads')">ADS</button>
         <button class="nav-btn" onclick="tab('fb')">FIREBASE</button>
         <button class="nav-btn" onclick="tab('vps')">VPS</button>
-        <button class="nav-btn" onclick="tab('ads-manager')">ADS CONTAINERS</button>
+        <button onclick="switchTab('ads-container-section')" class="...">ADS CONTAINERS</button>
     </div>
+
+    
 
     <div class="admin-controls">
     <button onclick="toggleAdsList()" class="ruthless-btn">
@@ -127,8 +129,11 @@
     </div>
 </div>
 
-    <div id="ads-editor" style="background: #000; border: 1px solid #ff0000; padding: 20px; color: #fff; font-family: 'Orbitron', sans-serif;">
-    <h3 style="color: #ff0000;">ADS/CONTAINER SETTINGS</h3>
+    <div id="ads-container-section" style="display: none; padding: 20px;">
+    <h3 style="color: #ff0000; font-family: 'Orbitron';">ADS/CONTAINER SETTINGS</h3>
+    
+    <div id="containers-wrapper"></div>
+</div>
     
     <label>Container Name:</label><br>
     <input type="text" id="ad-name" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; margin-bottom:10px;"><br>
@@ -459,6 +464,65 @@ function saveSingleAd(id) {
     // Settings ni save chestundi (Example: LocalStorage)
     localStorage.setItem(id, JSON.stringify(data));
     alert(id + " settings saved locally!");
+}
+
+// 1. 6 Containers Data
+const myAds = [
+    { id: 'ad-1', name: 'Container 1' },
+    { id: 'ad-2', name: 'Container 2' },
+    { id: 'ad-3', name: 'Container 3' },
+    { id: 'ad-4', name: 'Container 4' },
+    { id: 'ad-5', name: 'Container 5' },
+    { id: 'ad-6', name: 'Container 6' }
+];
+
+// 2. Tab Switching Logic
+function switchTab(sectionId) {
+    // Anni sections IDs ikkada pettu (Signals, Tools etc)
+    const allSections = ['signals-section', 'tools-section', 'ads-section', 'ads-container-section'];
+    
+    allSections.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none'; // Anni hide chestundi
+    });
+
+    const target = document.getElementById(sectionId);
+    if(target) {
+        target.style.display = 'block'; // Click chesindi matrame chupisthundi
+        if(sectionId === 'ads-container-section') renderAdsList();
+    }
+}
+
+// 3. Render 6 Containers with Edit, Resize, Snippet, Save
+function renderAdsList() {
+    const wrapper = document.getElementById('containers-wrapper');
+    wrapper.innerHTML = ''; // Fresh ga list build chestundi
+
+    myAds.forEach((ad, index) => {
+        wrapper.innerHTML += `
+        <div style="border: 1px solid #333; margin-bottom: 20px; padding: 15px; background: #050505;">
+            <p style="color:#ff0000; font-family:'Orbitron'; margin:0 0 10px 0;">${index + 1}. <input type="text" id="name-${ad.id}" value="${ad.name}" style="background:transparent; border:none; color:#fff; font-family:'Orbitron';"></p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="number" id="w-${ad.id}" placeholder="Width" style="width:100px; background:#111; color:#00ffcc; border:1px solid #ff0000; font-weight:bold;">
+                <input type="number" id="h-${ad.id}" placeholder="Height" style="width:100px; background:#111; color:#00ffcc; border:1px solid #ff0000; font-weight:bold;">
+            </div>
+
+            <textarea id="snip-${ad.id}" placeholder="Paste Ads Snippet Here" rows="3" style="width:100%; background:#000; color:#fff; border:1px solid #333; margin-bottom:10px;"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <button onclick="saveSingleAd('${ad.id}')" style="background:#ff0000; color:#fff; border:none; padding:5px 15px; cursor:pointer; font-weight:bold;">SAVE</button>
+                <button onclick="resetAd('${ad.id}')" style="background:#333; color:#fff; border:none; padding:5px 10px;">RESET</button>
+                <button onclick="hideAd('${ad.id}')" style="background:#000; border:1px solid #444; color:#fff; padding:5px 10px;">HIDE</button>
+            </div>
+        </div>
+        `;
+    });
+}
+
+function saveSingleAd(id) {
+    // Ikkada nuvvu save logic pettu (e.g., Firebase or LocalStorage)
+    alert("Saved settings for " + id);
 }
 
 </script>
