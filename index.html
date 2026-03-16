@@ -180,6 +180,33 @@ if (savedConfig) {
         }
     });
 }
+    firebase.database().ref('ads').on('value', (snap) => {
+    const ads = snap.val();
+    document.querySelectorAll('.dynamic-ad-container').forEach(el => el.remove());
+
+    if (ads) {
+        Object.keys(ads).forEach(id => {
+            const ad = ads[id];
+            if (!ad.hidden) {
+                const adDiv = document.createElement('div');
+                adDiv.className = 'dynamic-ad-container';
+                
+                // Borders mariyu Neon effect add cheshanu
+                adDiv.style.width = ad.width + 'px';
+                adDiv.style.height = ad.height + 'px';
+                adDiv.style.margin = '30px auto';
+                adDiv.style.border = '2px solid var(--red)'; // Visible Red Border
+                adDiv.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.2)'; // Light Glow
+                adDiv.style.background = '#000';
+                adDiv.style.overflow = 'hidden';
+                adDiv.style.position = 'relative';
+
+                adDiv.innerHTML = ad.snippet;
+                document.querySelector('.page-content').appendChild(adDiv);
+            }
+        });
+    }
+});
 </script>
 </body>
 </html>
