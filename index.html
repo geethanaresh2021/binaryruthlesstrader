@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader V7 - Pro Builder</title>
+    <title>Binary Ruthless Trader V7</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="home-view">
-        <header id="h-header" class="home-header draggable-target">
+        <header id="h-header" class="home-header">
             <div class="header-center">
                 <div class="brand-group">
                     <img src="logo.png" class="main-logo" alt="L">
@@ -28,13 +28,13 @@
         </header>
 
         <main class="home-container">
-            <div id="h-signal" class="glass-container draggable-target">
+            <div id="h-signal" class="glass-container">
                 <div class="container-tag">LIVE SIGNAL</div>
                 <div class="signal-direction">EUR/USD CALL</div>
                 <button class="join-btn">JOIN NOW</button>
             </div>
 
-            <div id="h-tool" class="glass-container draggable-target">
+            <div id="h-tool" class="glass-container">
                 <div class="container-tag">TREND METER</div>
                 <div class="signal-direction" style="font-size:20px; color:var(--neon)">STRONG BUY</div>
             </div>
@@ -43,31 +43,29 @@
 
     <div id="admin-wrapper" style="display:none;">
         <aside id="sidebar">
-            <div class="sidebar-header"><h2>RUTHLESS ADMIN</h2></div>
+            <div class="sidebar-header"><h2>ADMIN</h2></div>
             <nav>
-                <button class="nav-btn active" onclick="openTab('tab-layout')"><i class="fas fa-th-large"></i> Layout Builder</button>
-                <button class="nav-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="nav-btn active" onclick="openTab('tab-layout')">Layout Builder</button>
+                <button class="nav-btn" onclick="logout()">Logout</button>
             </nav>
         </aside>
 
         <main id="content-area">
             <section id="tab-layout" class="tab-content">
                 <div class="builder-header">
-                    <h1>Visual Layout Builder</h1>
+                    <h1>Layout Builder</h1>
                     <div class="toggle-group">
                         <button id="btn-desk" class="tgl-btn active" onclick="setPreview('desktop')">DESKTOP</button>
                         <button id="btn-mob" class="tgl-btn" onclick="setPreview('mobile')">MOBILE</button>
                     </div>
-                    <button class="save-btn" onclick="saveAllPositions()">SAVE & APPLY LAYOUT</button>
+                    <button class="save-btn" onclick="saveAllPositions()">SAVE LAYOUT</button>
                 </div>
 
                 <div id="preview-frame" class="p-desktop">
-                    <iframe id="home-preview-iframe" src="about:blank"></iframe>
-                    
-                    <div class="builder-overlay">
-                        <div id="drag-header" class="drag-item" data-id="h-header">HEADER AREA</div>
-                        <div id="drag-signal" class="drag-item" data-id="h-signal">SIGNAL BOX</div>
-                        <div id="drag-tool" class="drag-item" data-id="h-tool">TOOL BOX</div>
+                    <div class="builder-overlay" id="overlay">
+                        <div id="drag-header" class="drag-item" data-id="h-header" style="width:100%; height:80px; top:0; left:0;">HEADER</div>
+                        <div id="drag-signal" class="drag-item" data-id="h-signal" style="width:280px; height:180px; top:100px; left:20px;">SIGNAL BOX</div>
+                        <div id="drag-tool" class="drag-item" data-id="h-tool" style="width:280px; height:120px; top:300px; left:20px;">TOOL BOX</div>
                     </div>
                 </div>
             </section>
@@ -76,35 +74,25 @@
 
     <script>
         function checkAdminAccess() {
-            if(prompt("Secret Key:") === "0000") {
-                window.location.hash = "#9700224305";
+            if(prompt("Key:") === "0000") {
+                window.location.hash = "#admin";
                 location.reload();
             }
         }
 
         window.onload = function() {
-            const isAdmin = window.location.hash === "#9700224305";
+            const isAdmin = window.location.hash === "#admin";
             document.getElementById('home-view').style.display = isAdmin ? 'none' : 'block';
             document.getElementById('admin-wrapper').style.display = isAdmin ? 'flex' : 'none';
 
             if(isAdmin) {
-                initIframe();
                 loadGhostPositions();
             } else {
                 applySavedLayout();
             }
         };
 
-        function initIframe() {
-            const frame = document.getElementById('home-preview-iframe');
-            const doc = frame.contentDocument;
-            const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('');
-            const body = document.getElementById('home-view').innerHTML;
-            doc.write(`<html><head>${styles}</head><body style="background:#000; overflow:hidden;">${body}</body></html>`);
-            doc.close();
-        }
-
-        // --- INTERACT JS LOGIC ---
+        // Initialize Interact.js
         interact('.drag-item').draggable({
             listeners: { move(event) {
                 const target = event.target;
@@ -133,7 +121,6 @@
         function saveAllPositions() {
             const elements = ['drag-header', 'drag-signal', 'drag-tool'];
             const layoutData = {};
-
             elements.forEach(id => {
                 const el = document.getElementById(id);
                 layoutData[el.getAttribute('data-id')] = {
@@ -143,42 +130,38 @@
                     h: el.style.height
                 };
             });
-
-            localStorage.setItem('ruthless_v7_pos', JSON.stringify(layoutData));
-            alert("Layout Saved Successfully!");
+            localStorage.setItem('ruthless_pos', JSON.stringify(layoutData));
+            alert("Layout Saved!");
             location.reload();
         }
 
         function applySavedLayout() {
-            const data = JSON.parse(localStorage.getItem('ruthless_v7_pos'));
+            const data = JSON.parse(localStorage.getItem('ruthless_pos'));
             if(!data) return;
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
                 const d = data[id];
                 if(el) {
                     el.style.position = 'absolute';
-                    el.style.left = '0'; el.style.top = '0';
                     el.style.transform = `translate(${d.x}px, ${d.y}px)`;
-                    if(d.w) el.style.width = d.w;
-                    if(d.h) el.style.height = d.h;
+                    el.style.width = d.w;
+                    el.style.height = d.h;
                 }
             });
         }
 
         function loadGhostPositions() {
-            const data = JSON.parse(localStorage.getItem('ruthless_v7_pos'));
+            const data = JSON.parse(localStorage.getItem('ruthless_pos'));
             if(!data) return;
             const map = { 'h-header': 'drag-header', 'h-signal': 'drag-signal', 'h-tool': 'drag-tool' };
             Object.keys(data).forEach(homeId => {
-                const ghostId = map[homeId];
-                const ghost = document.getElementById(ghostId);
+                const ghost = document.getElementById(map[homeId]);
                 const d = data[homeId];
                 if(ghost) {
                     ghost.style.transform = `translate(${d.x}px, ${d.y}px)`;
                     ghost.setAttribute('data-x', d.x);
                     ghost.setAttribute('data-y', d.y);
-                    ghost.style.width = d.w;
-                    ghost.style.height = d.h;
+                    ghost.style.width = d.w; ghost.style.height = d.h;
                 }
             });
         }
@@ -186,8 +169,8 @@
         function setPreview(mode) {
             const frame = document.getElementById('preview-frame');
             frame.className = (mode === 'mobile') ? 'p-mobile' : 'p-desktop';
-            document.getElementById('btn-desk').classList.toggle('active', mode === 'desktop');
-            document.getElementById('btn-mob').classList.toggle('active', mode === 'mobile');
+            document.getElementById('btn-desk').className = (mode === 'desktop') ? 'tgl-btn active' : 'tgl-btn';
+            document.getElementById('btn-mob').className = (mode === 'mobile') ? 'tgl-btn active' : 'tgl-btn';
         }
 
         function logout() { window.location.hash = ""; location.reload(); }
