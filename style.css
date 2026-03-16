@@ -189,7 +189,7 @@ body {
 }
 
 .brand-img { 
-    height: 70px; /* Image height ni adjust chesthunnam */
+    height: 100px; /* Image height ni adjust chesthunnam */
     width: auto;
     object-fit: contain;
 }
@@ -197,5 +197,5 @@ body {
 /* Mobile Adjustments */
 @media screen and (max-width: 768px) {
     .main-logo { height: 35px; }
-    .brand-img { height: 25px; }
+    .brand-img { height: 70px; }
 }
