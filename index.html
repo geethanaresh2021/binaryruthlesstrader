@@ -68,20 +68,103 @@
         </footer>
     </div>
 
-    <div id="admin-panel">
-        <h1 style="color:red; text-align:center; margin-bottom:30px;">COMMAND CENTER</h1>
-        
-        <label>AVG CPM ($)</label>
-        <input type="number" id="admin-cpm" value="1.50" class="ruthless-input">
-        
-        <label>SECRET ACCESS PATH</label>
-        <input type="text" id="admin-path" value="9700224305" class="ruthless-input">
+    <div id="admin-panel" style="background: #050505; color: white; padding-bottom: 100px;">
+    
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 2px solid #ff0000; background: #000;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="logo.png" alt="Logo" style="height: 40px; filter: drop-shadow(0 0 5px red);" onerror="this.style.display='none'">
+            <span style="font-family: 'Orbitron'; font-size: 18px; color: #ff0000; text-shadow: 0 0 10px red;">RUTHLESS TRADER</span>
+        </div>
+        <button onclick="saveAdmin()" style="background: #ff0000; color: white; border: none; padding: 8px 15px; font-family: 'Orbitron'; cursor: pointer; font-size: 12px;">LOGOUT</button>
+    </header>
 
-        <label>AFFILIATE LINK</label>
-        <input type="text" id="admin-aff-link" placeholder="Paste link here" class="ruthless-input">
-
-        <button class="dash-btn" onclick="saveAdmin()">SAVE & EXIT</button>
+    <div style="display: flex; overflow-x: auto; gap: 15px; padding: 20px; background: #0a0a0a; border-bottom: 1px solid #222;">
+        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
+            <p style="font-size: 10px; color: #888;">ACTIVE NOW</p>
+            <h3 id="stat-active" style="color: #00ffcc; font-family: 'Roboto Mono'; font-size: 20px;">1</h3>
+        </div>
+        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
+            <p style="font-size: 10px; color: #888;">TOTAL VIEWS</p>
+            <h3 id="stat-views" style="color: #ff0000; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
+        </div>
+        <div style="min-width: 120px; text-align: center; border-right: 1px solid #333;">
+            <p style="font-size: 10px; color: #888;">UNQ USERS</p>
+            <h3 id="stat-unique" style="color: #ff0000; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
+        </div>
+        <div style="min-width: 120px; text-align: center;">
+            <p style="font-size: 10px; color: #888;">POST COUNT</p>
+            <h3 id="stat-posts" style="color: #00ffcc; font-family: 'Roboto Mono'; font-size: 20px;">0</h3>
+        </div>
     </div>
+
+    <div style="padding: 20px;">
+        <div class="admin-card" style="background: #111; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <label style="color: #ff0000; font-size: 12px;">AFFILIATE LINK</label>
+            <input type="text" id="admin-aff-link" class="ruthless-input" placeholder="Broker registration link">
+        </div>
+        </div>
+
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); border: 1px solid #ff0000; border-radius: 50px; padding: 10px 30px; display: flex; gap: 25px; box-shadow: 0 0 20px rgba(255,0,0,0.3); z-index: 10001;">
+        <i class="fab fa-telegram" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
+        <i class="fab fa-youtube" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
+        <i class="fab fa-instagram" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
+        <i class="fas fa-envelope" style="color: #ff0000; font-size: 24px; cursor: pointer;"></i>
+    </div>
+</div>
+
+<script>
+    // Stats Initialization
+    let dailyStats = JSON.parse(localStorage.getItem('daily_stats')) || {
+        date: new Date().toLocaleDateString(),
+        views: 0,
+        uniqueUsers: 0,
+        posts: 0,
+        visitors: [] // To track unique IDs
+    };
+
+    function updateStats() {
+        const today = new Date().toLocaleDateString();
+
+        // 12 AM Reset Logic
+        if (dailyStats.date !== today) {
+            dailyStats = { date: today, views: 0, uniqueUsers: 0, posts: 0, visitors: [] };
+        }
+
+        // Increment Total Views (Every Refresh)
+        dailyStats.views++;
+
+        // Unique User Logic (Session Based)
+        let sessionID = sessionStorage.getItem('user_session');
+        if (!sessionID) {
+            sessionID = 'user_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('user_session', sessionID);
+            
+            if (!dailyStats.visitors.includes(sessionID)) {
+                dailyStats.uniqueUsers++;
+                dailyStats.visitors.push(sessionID);
+            }
+        }
+
+        localStorage.setItem('daily_stats', JSON.stringify(dailyStats));
+        refreshUI();
+    }
+
+    function refreshUI() {
+        document.getElementById('stat-views').innerText = dailyStats.views;
+        document.getElementById('stat-unique').innerText = dailyStats.uniqueUsers;
+        document.getElementById('stat-posts').innerText = dailyStats.posts;
+        
+        // Simulating Active Users (Since it's a static site)
+        document.getElementById('stat-active').innerText = Math.floor(Math.random() * 5) + 1;
+    }
+
+    // Call stats on load
+    window.addEventListener('load', () => {
+        updateStats();
+        // Existing login checks...
+    });
+</script>
+
 
     <script>
         // Security Logic
