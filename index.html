@@ -3,278 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader - Admin</title>
+    <title>Binary Ruthless Trader</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    
-
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-<div id="admin-wrapper">
-    <div id="sidebar">
-        <div class="sidebar-header">
-            <h2 style="color:var(--red); font-size:16px;">RUTHLESS V7</h2>
-            <p style="font-size:8px; color:#444; margin-top:5px;">CONTROL PANEL</p>
-        </div>
-        <nav style="flex:1;">
-            <button class="nav-btn active" onclick="openTab(event, 'tab-stats')"><i class="fas fa-bolt"></i> Live Stats</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-affiliate')"><i class="fas fa-link"></i> Affiliate & Join</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-revenue')"><i class="fas fa-calculator"></i> Revenue Calc</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-layout')"><i class="fas fa-vector-square"></i> Layout Builder</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-ads')"><i class="fas fa-ad"></i> Ad Containers</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-security')"><i class="fas fa-shield-alt"></i> Security & SEO</button>
-            <button class="nav-btn" onclick="openTab(event, 'tab-backend')"><i class="fas fa-server"></i> Firebase / VPS</button>
-        </nav>
-        <button onclick="logout()" style="background:#111; color:red; border:none; padding:15px; font-family:'Orbitron'; cursor:pointer; font-size:10px;">LOGOUT</button>
-    </div>
-    <style>
-    :root { 
-        --red: #ff0000; 
-        --dark-bg: #050505; 
-        --sidebar-bg: #0a0a0a;
-        --card-bg: rgba(20, 20, 20, 0.8);
-        --neon: #00ffcc; 
-        --glow: 0 0 15px rgba(255, 0, 0, 0.6);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body { 
-        background: var(--dark-bg); 
-        color: white; 
-        font-family: 'Orbitron', sans-serif; 
-        overflow: hidden; 
-    }
-
-    /* Sidebar Styling with Hover */
-    #sidebar { 
-        width: 260px; 
-        background: var(--sidebar-bg); 
-        border-right: 1px solid #222; 
-        display: flex; 
-        flex-direction: column; 
-        transition: all 0.3s ease;
-    }
-
-    .nav-btn { 
-        width: 100%; 
-        padding: 18px 25px; 
-        background: transparent; 
-        border: none; 
-        color: #555; 
-        text-align: left; 
-        cursor: pointer; 
-        font-family: 'Orbitron'; 
-        font-size: 11px; 
-        letter-spacing: 1px;
-        border-left: 3px solid transparent;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Smooth Bounce Effect */
-    }
-
-    /* Hover Effect: Glow + Slide */
-    .nav-btn:hover { 
-        color: white; 
-        background: rgba(255, 0, 0, 0.05);
-        padding-left: 35px; /* Subtle slide right */
-        border-left: 3px solid var(--red);
-        text-shadow: 0 0 8px var(--red);
-    }
-
-    .nav-btn.active { 
-        color: var(--red); 
-        background: #111; 
-        border-left: 3px solid var(--red);
-        box-shadow: inset 10px 0 20px rgba(255, 0, 0, 0.1);
-    }
-
-    /* Content Area & Cards */
-    #content-area { 
-        flex: 1; 
-        padding: 40px; 
-        overflow-y: auto; 
-        background: radial-gradient(circle at top right, #110000, #050505); /* Soft Red Gradient */
-    }
-
-    .admin-card { 
-        background: var(--card-bg); 
-        border: 1px solid #222; 
-        padding: 30px; 
-        border-radius: 12px; 
-        margin-bottom: 25px; 
-        backdrop-filter: blur(10px); /* Glass effect */
-        transition: transform 0.3s ease, border 0.3s ease;
-    }
-
-    .admin-card:hover {
-        transform: translateY(-5px); /* Lift effect */
-        border: 1px solid rgba(255, 0, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Input Glow Focus */
-    .ruthless-input { 
-        width: 100%; 
-        background: #000; 
-        border: 1px solid #333; 
-        color: var(--neon); 
-        padding: 15px; 
-        border-radius: 5px;
-        font-family: 'Roboto Mono'; 
-        font-weight: bold; 
-        outline: none;
-        transition: border 0.3s, box-shadow 0.3s;
-    }
-
-    .ruthless-input:focus {
-        border: 1px solid var(--neon);
-        box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
-    }
-
-    /* Stats Box Hover */
-    .stat-box { 
-        background: #0a0a0a; 
-
-    
-    <div id="content-area">
-        
-        <div id="tab-stats" class="tab-content active">
-            <h1>Daily Live Stats</h1>
-            <div class="stats-grid">
-                <div class="stat-box"><h5>ACTIVE USERS</h5><p id="s-active">1</p></div>
-                <div class="stat-box"><h5>TOTAL VIEWS</h5><p id="s-views">0</p></div>
-                <div class="stat-box"><h5>UNIQUE USERS</h5><p id="s-unique">0</p></div>
-                <div class="stat-box"><h5>POST COUNT</h5><p id="s-posts">0</p></div>
+    <div id="home-view">
+        <header class="top-nav">
+            <div class="logo-area">
+                <span class="brand-name">RUTHLESS TRADER V7</span>
             </div>
-            <p style="font-size:10px; color:#444;">*Stats reset automatically at 12:00 AM</p>
-        </div>
-
-        <div id="tab-affiliate" class="tab-content">
-            <h1>Affiliate & Join Button</h1>
-            <div class="admin-card">
-                <label>Broker Registration Link (Affiliate)</label>
-                <input type="text" id="inp-aff-link" class="ruthless-input" placeholder="https://quotex.com/register...">
-                
-                <label>Signal Dropdown Options (Comma Separated)</label>
-                <input type="text" id="inp-sigs" class="ruthless-input" value="QUOTEX, BINOMO, POCKET OPTION">
-                
-                <button class="save-btn" onclick="saveSettings()">SAVE CHANGES</button>
+            <div class="social-links">
+                <i class="fab fa-telegram"></i>
+                <i class="fab fa-youtube"></i>
             </div>
-        </div>
+        </header>
 
-        <div id="tab-revenue" class="tab-content">
-            <h1>Revenue Estimation</h1>
-            <div class="admin-card">
-                <label>Average CPM Rate ($)</label>
-                <input type="number" id="inp-cpm" class="ruthless-input" value="1.50">
-                
-                <label>USD to INR Conversion Rate</label>
-                <input type="number" id="inp-usd" class="ruthless-input" value="83.50">
-                
-                <div style="background:#000; padding:20px; border-left:4px solid var(--neon); margin-top:10px;">
-                    <h4 style="font-size:12px; color:#888;">ESTIMATED TODAY'S EARNINGS</h4>
-                    <p style="font-family:'Roboto Mono'; font-size:32px; color:var(--neon); margin-top:5px;">₹ <span id="val-earnings">0.00</span></p>
+        <main class="home-main">
+            <div class="stats-container">
+                <div class="h-card">
+                    <h5>LIVE ACCURACY</h5>
+                    <p id="live-acc" class="neon-text">98.2%</p>
+                </div>
+                <div class="h-card">
+                    <h5>TOTAL PROFIT</h5>
+                    <p class="neon-text">+$1,440</p>
                 </div>
             </div>
-        </div>
 
-        <div id="tab-layout" class="tab-content">
-            <h1>Layout Builder</h1>
-            <div class="admin-card">
-                <label>Device View Toggle</label>
-                <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <button class="save-btn" style="flex:1; background:#333;">MOBILE VIEW</button>
-                    <button class="save-btn" style="flex:1; background:#333;">DESKTOP VIEW</button>
-                </div>
-                <p style="color:#555; font-size:12px;">Drag & Drop Mode is currently: <b>DISABLED</b> (Manual CSS Update Required)</p>
+            <div class="signal-box">
+                <h5>SELECT BROKER</h5>
+                <select id="broker-select" class="ruthless-input">
+                    </select>
+                <button onclick="handleJoin()" class="join-btn">JOIN & GET SIGNALS</button>
             </div>
-        </div>
 
-        <div id="tab-ads" class="tab-content">
-            <h1>Ad Management</h1>
-            <div class="admin-card">
-                <label>Ad Refresh Interval (Seconds)</label>
-                <input type="number" id="inp-ad-timer" class="ruthless-input" value="15">
-                
-                <label>Ad Container 1 (Snippet/Code)</label>
-                <textarea class="ruthless-input" style="height:80px;"></textarea>
-                
-                <button class="save-btn" onclick="saveSettings()">UPDATE AD SCRIPTS</button>
+            <div class="ads-grid">
+                <div class="ad-slot">AD 1</div>
+                <div class="ad-slot">AD 2</div>
             </div>
-        </div>
+        </main>
 
-        <div id="tab-security" class="tab-content">
-            <h1>Security & SEO</h1>
-            <div class="admin-card">
-                <label>Secret Path (Change /9700224305)</label>
-                <input type="text" id="inp-path" class="ruthless-input" value="9700224305">
-                
-                <label>SEO Keywords</label>
-                <input type="text" class="ruthless-input" value="Binary Trading, Ruthless Signals, Quotex Sureshot">
-                
-                <label>Anti-Inspect (F12) Redirect URL</label>
-                <input type="text" class="ruthless-input" value="about:blank">
-            </div>
-        </div>
-
-        <div id="tab-backend" class="tab-content">
-            <h1>Firebase & VPS</h1>
-            <div class="admin-card">
-                <label>Firebase API Key</label>
-                <input type="password" class="ruthless-input" value="••••••••••••••••">
-                
-                <label>VPS Signal Connection (MT5)</label>
-                <div style="color:var(--red); font-size:11px;">Status: OFFLINE</div>
-            </div>
-        </div>
-
+        <footer class="footer-strip">
+            <p>© 2026 BINARY RUTHLESS TRADER</p>
+        </footer>
     </div>
-</div>
 
-<script>
-    // TAB SWITCH LOGIC
-    function openTab(evt, tabName) {
-        let i, tabcontent, navlinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].classList.remove("active");
+    <div id="admin-wrapper" style="display: none;">
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h2>ADMIN PANEL</h2>
+            </div>
+            <nav id="menu-list">
+                </nav>
+            <button onclick="logout()" class="nav-btn logout">LOGOUT</button>
+        </aside>
+
+        <main id="content-area">
+            <div id="admin-welcome">
+                <h1>COMMAND CENTER</h1>
+                <p>Select a setting from the sidebar to modify.</p>
+            </div>
+            </main>
+    </div>
+
+    <script>
+        // Check Access on Load
+        window.onload = function() {
+            if(window.location.hash === "#9700224305") {
+                showAdmin();
+            } else {
+                showHome();
+            }
+            loadBrokerList();
+        };
+
+        function showAdmin() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('admin-wrapper').style.display = 'flex';
         }
-        navlinks = document.getElementsByClassName("nav-btn");
-        for (i = 0; i < navlinks.length; i++) {
-            navlinks[i].classList.remove("active");
+
+        function showHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('admin-wrapper').style.display = 'none';
         }
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-    }
 
-    // STATS & REVENUE LOGIC
-    function loadStats() {
-        const stats = JSON.parse(localStorage.getItem('daily_stats')) || { views: 0, unique: 0, posts: 0 };
-        document.getElementById('s-views').innerText = stats.views;
-        document.getElementById('s-unique').innerText = stats.unique;
-        document.getElementById('s-posts').innerText = stats.posts;
-        
-        // Simulating Revenue (CPM Calculation)
-        const cpm = document.getElementById('inp-cpm').value;
-        const usd = document.getElementById('inp-usd').value;
-        const earnings = ((stats.views / 1000) * cpm * usd).toFixed(2);
-        document.getElementById('val-earnings').innerText = earnings;
-    }
+        function loadBrokerList() {
+            const savedSigs = localStorage.getItem('ruthless_sigs') || "QUOTEX, BINOMO, POCKET OPTION";
+            const dropdown = document.getElementById('broker-select');
+            dropdown.innerHTML = '';
+            savedSigs.split(',').forEach(sig => {
+                let opt = document.createElement('option');
+                opt.text = sig.trim();
+                dropdown.add(opt);
+            });
+        }
 
-    function saveSettings() {
-        const affLink = document.getElementById('inp-aff-link').value;
-        localStorage.setItem('ruthless_link', affLink);
-        alert("RUTHLESS: SETTINGS SAVED!");
-    }
+        function handleJoin() {
+            const link = localStorage.getItem('ruthless_link') || "#";
+            window.open(link, '_blank');
+        }
 
-    function logout() {
-        window.location.hash = "";
-        location.reload();
-    }
+        function logout() {
+            window.location.hash = "";
+            location.reload();
+        }
 
-    window.onload = loadStats;
-</script>
+        // Live Accuracy Sim
+        setInterval(() => {
+            const acc = (Math.random() * (99.8 - 95.5) + 95.5).toFixed(1);
+            document.getElementById('live-acc').innerText = acc + "%";
+        }, 5000);
+    </script>
 
 </body>
 </html>
