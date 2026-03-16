@@ -21,151 +21,184 @@
             min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- STATIC HEADER (Not Floating) --- */
+        /* --- STATIC HEADER --- */
         .header {
-            width: 100%; padding: 20px 5%; display: flex; flex-direction: column;
+            width: 100%; padding: 25px 20px; display: flex; flex-direction: column;
             align-items: center; border-bottom: 2px solid var(--red); background: #000;
             gap: 15px;
         }
-        .brand-img { width: 100%; max-width: 450px; filter: drop-shadow(0 0 10px var(--red)); }
-        .social-links { display: flex; gap: 15px; }
-        .social-links a { color: #555; text-decoration: none; font-family: 'Roboto Mono'; font-size: 11px; border: 1px solid #222; padding: 5px 10px; border-radius: 4px; }
-        .admin-trigger { background: transparent; border: 1px solid #333; color: #444; padding: 5px 15px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 11px; margin-top: 10px; }
+        .logo-img { width: 60px; height: auto; }
+        .brand-img { width: 100%; max-width: 480px; filter: drop-shadow(0 0 10px var(--red)); }
+        
+        .header-bottom { display: flex; gap: 20px; align-items: center; margin-top: 10px; }
+        .social-link { color: #666; text-decoration: none; font-family: 'Roboto Mono'; font-size: 11px; border: 1px solid #222; padding: 6px 12px; border-radius: 4px; transition: 0.3s; }
+        .social-link:hover { color: var(--red); border-color: var(--red); }
+        .admin-trigger { background: transparent; border: 1px solid #333; color: #444; padding: 6px 15px; cursor: pointer; font-family: 'Roboto Mono'; font-size: 11px; }
 
-        /* --- LAYOUT STRUCTURE --- */
-        .home-wrapper { display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .main-grid { display: grid; grid-template-columns: 160px 1fr 160px; gap: 20px; width: 100%; max-width: 1400px; }
+        /* --- MAIN LAYOUT --- */
+        .page-content { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        /* Containers */
-        .section-container { width: 100%; max-width: 500px; margin: 0 auto 30px auto; }
-        .dropdown-top { margin-bottom: 10px; }
-        
-        .display-box {
-            width: 100%; min-height: 400px; max-height: 600px;
-            background: #0a0a0a; border: 1px solid var(--red);
-            border-radius: 10px; box-shadow: var(--neon);
-            overflow-y: auto; overflow-x: hidden; position: relative;
-            padding: 15px;
+        .layout-grid {
+            display: grid; grid-template-columns: 160px 1fr 160px;
+            gap: 20px; width: 100%; max-width: 1400px;
         }
 
-        /* Signal Styling */
-        .signal-note { font-family: 'Roboto Mono'; font-size: 10px; color: #444; text-transform: lowercase; text-align: center; margin-top: 180px; }
-        .signal-post { background: #111; border-left: 3px solid var(--red); padding: 10px; margin-bottom: 10px; font-family: 'Roboto Mono'; font-size: 13px; color: var(--green); }
+        /* Containers Styles */
+        .widget-wrapper { width: 100%; max-width: 600px; margin: 0 auto 40px; }
+        .label-select { margin-bottom: 15px; }
+        
+        .main-display {
+            width: 100%; height: 450px; background: #080808; 
+            border: 1px solid var(--red); border-radius: 12px;
+            box-shadow: var(--neon); overflow-y: auto; overflow-x: hidden;
+            position: relative; padding: 20px;
+        }
 
-        /* Dropdown & Tools Styling */
+        /* Dropdown Styling */
         select {
-            width: 100%; padding: 15px; background: #111; border: 1px solid #333;
-            color: var(--green); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 5px; outline: none;
+            width: 100%; padding: 18px; background: #111; border: 1px solid #333;
+            color: var(--green); font-family: 'Roboto Mono'; font-weight: bold;
+            font-size: 15px; border-radius: 8px; outline: none; cursor: pointer;
         }
 
-        /* Tool Code Reset */
-        .tool-content { width: 100%; height: auto; }
+        /* Signal Section Specifics */
+        .signal-placeholder {
+            height: 100%; display: flex; align-items: center; justify-content: center;
+        }
+        .wait-note { font-family: 'Roboto Mono'; font-size: 12px; color: #444; text-transform: lowercase; letter-spacing: 1px; }
+        
+        .signal-entry {
+            background: #111; border-left: 4px solid var(--red); 
+            padding: 15px; margin-bottom: 12px; font-family: 'Roboto Mono';
+            font-size: 14px; color: var(--green); animation: fadeIn 0.5s ease;
+        }
 
-        /* --- AD PLACEHOLDERS --- */
-        .ad-v { background: #0a0a0a; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
-        .ad-h { background: #0a0a0a; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
+        /* Ads Placeholders */
+        .ad-box-v { background: #0a0a0a; border: 1px dashed #222; height: 600px; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
+        .ad-box-h { background: #0a0a0a; border: 1px dashed #222; width: 100%; height: 90px; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Roboto Mono'; font-size: 10px; }
 
-        /* --- MOBILE --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- MOBILE VIEW --- */
         @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .desktop-ad { display: none; }
-            .section-container { max-width: 100%; }
-            .display-box { border-radius: 0; border-left: none; border-right: none; width: 100vw; margin-left: -20px; }
+            .layout-grid { grid-template-columns: 1fr; }
+            .side-ad { display: none; }
+            .widget-wrapper { max-width: 100%; }
+            .main-display { border-radius: 0; border-left: none; border-right: none; width: 100vw; margin-left: -20px; }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <img src="logo.png" alt="LOGO" style="width:60px;">
+        <img src="logo.png" alt="LOGO" class="logo-img">
         <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-        <div class="social-links">
-            <a href="#">TELEGRAM</a>
-            <a href="#">YOUTUBE</a>
+        <div class="header-bottom">
+            <a href="#" class="social-link">TELEGRAM</a>
+            <a href="#" class="social-link">YOUTUBE</a>
+            <button class="admin-trigger" onclick="goToAdmin()">ADMIN</button>
         </div>
-        <button class="admin-trigger" onclick="checkAdmin()">ADMIN ACCESS</button>
     </header>
 
-    <div class="home-wrapper">
-        <div class="ad-h" style="width:100%; height:70px; margin-bottom:20px;">TOP AD</div>
+    <div class="page-content">
+        <div class="ad-box-h">ADS SLOT: TOP HORIZONTAL</div>
 
-        <div class="main-grid">
-            <div class="ad-v desktop-ad">SIDE AD</div>
+        <div class="layout-grid">
+            <div class="ad-box-v side-ad">ADS SLOT: VERTICAL LEFT</div>
 
-            <div class="content-area">
+            <div class="main-content-area">
                 
-                <div class="section-container">
-                    <div class="dropdown-top">
-                        <select id="signalSelect" onchange="loadSignalPath()">
-                            <option value="">SELECT SIGNAL FEED</option>
+                <div class="widget-wrapper">
+                    <div class="label-select">
+                        <select id="signalType" onchange="updateSignalView()">
+                            <option value="">-- SELECT SIGNAL FEED --</option>
                             <option value="quotex">QUOTEX SIGNALS</option>
                             <option value="toxa">TOXA SIGNALS</option>
                         </select>
                     </div>
-                    <div class="display-box" id="signalDisplay">
-                        <div class="signal-note">wait for signals...</div>
+                    <div class="main-display" id="signalScreen">
+                        <div class="signal-placeholder">
+                            <span class="wait-note">wait for signals...</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="ad-h" style="width:100%; height:70px; margin-bottom:20px;">MID AD</div>
+                <div class="ad-box-h" style="display: block;">ADS SLOT: MIDDLE HORIZONTAL</div>
 
-                <div class="section-container">
-                    <div class="dropdown-top">
-                        <select id="toolSelect" onchange="renderTool()">
-                            <option value="">SELECT TRADING TOOL</option>
-                            <option value="mm">MONEY MANAGEMENT</option>
-                            <option value="cc">COMPOUNDING CALC</option>
+                <div class="widget-wrapper">
+                    <div class="label-select">
+                        <select id="toolType" onchange="updateToolView()">
+                            <option value="">-- SELECT TRADING TOOL --</option>
+                            <option value="money_management">MONEY MANAGEMENT TOOL</option>
+                            <option value="compounding">COMPOUNDING CALCULATOR</option>
                         </select>
                     </div>
-                    <div class="display-box" id="toolDisplay">
+                    <div class="main-display" id="toolScreen">
                         </div>
                 </div>
 
             </div>
 
-            <div class="ad-v desktop-ad">SIDE AD</div>
+            <div class="ad-box-v side-ad">ADS SLOT: VERTICAL RIGHT</div>
         </div>
     </div>
 
     <script>
-        // Admin Password Check
-        function checkAdmin() {
-            if(prompt("PASSWORD:") === "0000") alert("Redirecting to Admin Panel...");
+        function goToAdmin() {
+            const p = prompt("ENTER ACCESS KEY:");
+            if(p === "0000") {
+                window.location.href = "admin.html";
+            } else {
+                alert("ACCESS DENIED");
+            }
         }
 
-        // Signal Display Logic (MT5 Hook)
-        function loadSignalPath() {
-            const select = document.getElementById('signalSelect').value;
-            const display = document.getElementById('signalDisplay');
-            
-            if(!select) {
-                display.innerHTML = '<div class="signal-note">wait for signals...</div>';
+        // SIGNAL LOGIC
+        function updateSignalView() {
+            const type = document.getElementById('signalType').value;
+            const screen = document.getElementById('signalScreen');
+
+            if(!type) {
+                screen.innerHTML = '<div class="signal-placeholder"><span class="wait-note">wait for signals...</span></div>';
                 return;
             }
-            
-            // Simulation of receiving MT5 post
-            display.innerHTML = '<div class="signal-post">[MT5] '+select.toUpperCase()+' - SELL EURUSD @ 1.0845 (WAITING...)</div>';
+
+            // Simulated Signal Fetching (In real app, this connects to Firebase)
+            screen.innerHTML = `
+                <div class="signal-entry">
+                    [${type.toUpperCase()}] EUR/USD - CALL - 5 MIN <br>
+                    <small style="color:#555">Received: Just Now</small>
+                </div>
+                <div class="signal-entry">
+                    [${type.toUpperCase()}] GBP/JPY - PUT - 1 MIN <br>
+                    <small style="color:#555">Received: 2 mins ago</small>
+                </div>
+            `;
         }
 
-        // Tool Injection Logic
-        function renderTool() {
-            const tool = document.getElementById('toolSelect').value;
-            const display = document.getElementById('toolDisplay');
-            
-            if(tool === 'mm') {
-                // Example of injected HTML from Admin
-                display.innerHTML = `
-                    <div class="tool-content" style="padding:10px;">
-                        <h4 style="color:var(--red)">Money Management</h4>
-                        <input type="number" placeholder="Balance" style="width:100%; padding:10px; margin:10px 0; background:#000; color:#00ffcc; border:1px solid #333;">
-                        <button style="width:100%; padding:15px; background:var(--red); color:#fff; border:none;">CALCULATE</button>
-                        <div style="height:800px; margin-top:20px; border:1px dashed #222;">Scrollable Area Test</div>
+        // TOOL LOGIC
+        function updateToolView() {
+            const tool = document.getElementById('toolType').value;
+            const screen = document.getElementById('toolScreen');
+
+            if(tool === 'money_management') {
+                // Example of auto-fitting tool code
+                screen.innerHTML = `
+                    <div style="width:100%; color:var(--green); font-family:'Roboto Mono';">
+                        <h3 style="color:var(--red); margin-bottom:15px;">MONEY MANAGEMENT</h3>
+                        <label style="font-size:12px;">Capital Amount:</label>
+                        <input type="number" style="width:100%; padding:12px; margin:10px 0; background:#000; border:1px solid #333; color:var(--green);">
+                        <button style="width:100%; padding:15px; background:var(--red); color:#fff; font-family:'Orbitron'; border:none; cursor:pointer;">CALCULATE RISK</button>
+                        
+                        <div style="height:600px; margin-top:20px; border:1px dashed #222; display:flex; align-items:center; justify-content:center; color:#333;">
+                            Tool content scroll area
+                        </div>
                     </div>
                 `;
-            } else if(tool === 'cc') {
-                display.innerHTML = '<p style="padding:20px;">Compounding Calculator Loading...</p>';
+            } else if(tool === 'compounding') {
+                screen.innerHTML = '<p style="text-align:center; margin-top:100px; color:#444;">Compounding Tool Loading...</p>';
             } else {
-                display.innerHTML = '';
+                screen.innerHTML = '';
             }
         }
     </script>
