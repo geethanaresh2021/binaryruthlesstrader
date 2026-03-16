@@ -3,155 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader V7</title>
+    <title>Binary Ruthless Trader V7 - Layout Builder</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="home-view">
         <header class="home-header">
             <div class="header-side-spacer"></div>
-
             <div class="header-center">
-               <div class="brand-group">
-    <img src="logo.png" class="main-logo" alt="Ruthless Logo">
-    
-    <img src="brand-name.png" class="brand-img" alt="RUTHLESS TRADER">
-</div>
-                
+                <div class="brand-group">
+                    <img src="logo.png" class="main-logo" alt="Logo">
+                    <img src="brand-name.png" class="brand-img" alt="RUTHLESS">
+                </div>
                 <div class="top-socials">
                     <a href="#" class="s-icon"><i class="fab fa-telegram-plane"></i></a>
                     <a href="#" class="s-icon"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="s-icon"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-
             <div class="header-right">
-                <div class="admin-trigger" onclick="checkAdminAccess()">
-                    <i class="fas fa-user-shield"></i>
-                </div>
+                <div class="admin-trigger" onclick="checkAdminAccess()"><i class="fas fa-user-shield"></i></div>
             </div>
         </header>
 
-        <main class="home-container">
-            <section class="glass-container" id="signal-box">
-                <div class="container-tag"><i class="fas fa-signal"></i> LIVE SIGNALS</div>
-                <div id="active-signal-content">
-                    <h2 id="pair-name">EUR/USD (OTC)</h2>
-                    <div class="signal-direction">CALL (UP)</div>
-                    <div class="timer" id="signal-timer">00:45</div>
-                </div>
-                <button class="join-btn" onclick="handleJoin()">JOIN & GET SIGNALS</button>
-            </section>
+        <main class="home-container" id="home-main">
+            <div id="signal-box" class="glass-container">
+                <div class="container-tag">LIVE SIGNAL</div>
+                <h2 style="color:var(--neon)">EUR/USD</h2>
+                <div class="signal-direction">CALL (UP)</div>
+            </div>
 
-            <section class="glass-container" id="tool-box">
-                <div class="container-tag"><i class="fas fa-tools"></i> TRADING TOOLS</div>
-                <div class="tool-list">
-                    <div class="tool-item">
-                        <span>TREND METER</span>
-                        <span class="neon-text">STRONG BUY</span>
-                    </div>
-                    <div class="tool-item">
-                        <span>VOLATILITY</span>
-                        <span class="red-text">HIGH RISK</span>
-                    </div>
-                </div>
-            </section>
+            <div id="tool-box" class="glass-container">
+                <div class="container-tag">TRADING TOOL</div>
+                <p>METER: <span style="color:var(--neon)">STRONG</span></p>
+            </div>
         </main>
     </div>
 
-    <div id="admin-wrapper" style="display: none;">
+    <div id="admin-wrapper" style="display:none;">
         <aside id="sidebar">
-            <div class="sidebar-header">
-                <h2>RUTHLESS ADMIN</h2>
-            </div>
+            <div class="sidebar-header"><h2>RUTHLESS ADMIN</h2></div>
             <nav id="menu-list">
-                <button class="nav-btn active" onclick="openTab(event, 'tab-affiliate')">
-                    <i class="fas fa-link"></i> Affiliate & Join
-                </button>
-                <button class="nav-btn" onclick="openTab(event, 'tab-revenue')">
-                    <i class="fas fa-calculator"></i> Revenue Calc
-                </button>
-                <button class="nav-btn" onclick="openTab(event, 'tab-layout')">
-                    <i class="fas fa-vector-square"></i> Layout Builder
-                </button>
-                <button class="nav-btn" onclick="openTab(event, 'tab-ads')">
-                    <i class="fas fa-ad"></i> Ad Containers
-                </button>
-                <button class="nav-btn" onclick="openTab(event, 'tab-security')">
-                    <i class="fas fa-shield-alt"></i> Security
-                </button>
+                <button class="nav-btn active" onclick="openTab(event, 'tab-layout')"><i class="fas fa-vector-square"></i> Layout Builder</button>
+                <button class="nav-btn" onclick="openTab(event, 'tab-affiliate')"><i class="fas fa-link"></i> Affiliate</button>
+                <button onclick="logout()" class="nav-btn logout">LOGOUT</button>
             </nav>
-            <button onclick="logout()" class="nav-btn logout">LOGOUT</button>
         </aside>
 
         <main id="content-area">
-            <div class="stats-horizontal-bar">
-                <div class="h-stat-item">
-                    <span class="h-stat-label">ACTIVE</span>
-                    <span class="h-stat-value" id="s-active">1</span>
+            <section id="tab-layout" class="tab-content active">
+                <div class="builder-header">
+                    <h1>Visual Layout Builder</h1>
+                    <div class="toggle-group">
+                        <button class="tgl-btn active" onclick="setPreview('desktop')">DESKTOP</button>
+                        <button class="tgl-btn" onclick="setPreview('mobile')">MOBILE</button>
+                    </div>
+                    <button class="save-btn" onclick="savePositions()">SAVE LAYOUT</button>
                 </div>
-                <div class="h-stat-item">
-                    <span class="h-stat-label">VIEWS</span>
-                    <span class="h-stat-value" id="s-views">0</span>
-                </div>
-                <div class="h-stat-item">
-                    <span class="h-stat-label">UNIQUE</span>
-                    <span class="h-stat-value" id="s-unique">0</span>
-                </div>
-            </div>
 
-            <section id="tab-affiliate" class="tab-content active">
-                <h1>Affiliate Settings</h1>
-                <div class="admin-card">
-                    <label>Broker Link</label>
-                    <input type="text" id="inp-link" class="ruthless-input" placeholder="Paste link...">
-                    <button class="save-btn" onclick="alert('Saved!')">SAVE SETTINGS</button>
+                <div id="preview-frame" class="p-desktop">
+                    <div id="canvas">
+                        <div id="drag-signal" class="draggable">
+                            <div class="drag-label">SIGNAL BOX</div>
+                        </div>
+                        <div id="drag-tool" class="draggable">
+                            <div class="drag-label">TOOL BOX</div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
     </div>
 
     <script>
+        // 1. Admin Access
         function checkAdminAccess() {
-            let code = prompt("Enter Admin Secret Key:");
-            if(code === "0000") {
+            if(prompt("Enter Secret Key:") === "0000") {
                 window.location.hash = "#9700224305";
                 location.reload();
-            } else {
-                alert("Access Denied!");
             }
         }
 
         window.onload = function() {
-            const home = document.getElementById('home-view');
-            const admin = document.getElementById('admin-wrapper');
-            if(window.location.hash === "#9700224305") {
-                home.style.display = 'none';
-                admin.style.display = 'flex';
-            } else {
-                home.style.display = 'block';
-                admin.style.display = 'none';
-            }
+            const isAdmin = window.location.hash === "#9700224305";
+            document.getElementById('home-view').style.display = isAdmin ? 'none' : 'block';
+            document.getElementById('admin-wrapper').style.display = isAdmin ? 'flex' : 'none';
+            if(!isAdmin) applySavedLayout();
         };
 
-        function openTab(evt, tabName) {
-            const contents = document.getElementsByClassName("tab-content");
-            for (let content of contents) { content.style.display = "none"; }
-            const btns = document.getElementsByClassName("nav-btn");
-            for (let btn of btns) { btn.classList.remove("active"); }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.classList.add("active");
+        // 2. Drag & Resize Logic (Interact.js)
+        interact('.draggable').draggable({
+            listeners: { move (event) {
+                var target = event.target;
+                var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                target.style.transform = `translate(${x}px, ${y}px)`;
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            }}
+        }).resizable({
+            edges: { left: true, right: true, bottom: true, top: true },
+            listeners: { move (event) {
+                var target = event.target;
+                var x = (parseFloat(target.getAttribute('data-x')) || 0);
+                var y = (parseFloat(target.getAttribute('data-y')) || 0);
+                target.style.width = event.rect.width + 'px';
+                target.style.height = event.rect.height + 'px';
+                x += event.deltaRect.left;
+                y += event.deltaRect.top;
+                target.style.transform = `translate(${x}px, ${y}px)`;
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            }}
+        });
+
+        // 3. Save & Load Positions
+        function savePositions() {
+            const signal = document.getElementById('drag-signal');
+            const tool = document.getElementById('drag-tool');
+            const layout = {
+                signal: { x: signal.getAttribute('data-x'), y: signal.getAttribute('data-y'), w: signal.style.width, h: signal.style.height },
+                tool: { x: tool.getAttribute('data-x'), y: tool.getAttribute('data-y'), w: tool.style.width, h: tool.style.height }
+            };
+            localStorage.setItem('ruthless_v7_layout', JSON.stringify(layout));
+            alert("Layout Saved! Check Home Page.");
         }
 
-        function logout() {
-            window.location.hash = "";
-            location.reload();
+        function applySavedLayout() {
+            const data = JSON.parse(localStorage.getItem('ruthless_v7_layout'));
+            if(data) {
+                applyStyle('signal-box', data.signal);
+                applyStyle('tool-box', data.tool);
+            }
         }
+
+        function applyStyle(id, d) {
+            const el = document.getElementById(id);
+            if(!el || !d) return;
+            el.style.position = 'absolute';
+            el.style.transform = `translate(${d.x}px, ${d.y}px)`;
+            el.style.width = d.w;
+            el.style.height = d.h;
+        }
+
+        function setPreview(mode) {
+            const frame = document.getElementById('preview-frame');
+            frame.className = (mode === 'mobile') ? 'p-mobile' : 'p-desktop';
+        }
+
+        function logout() { window.location.hash = ""; location.reload(); }
     </script>
 </body>
 </html>
