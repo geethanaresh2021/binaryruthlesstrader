@@ -178,3 +178,42 @@ label {
     color: var(--red);
     text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
+/* Home Page Layout */
+.home-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; border-bottom: 1px solid #222; background: #000;
+}
+.main-logo { height: 40px; filter: drop-shadow(0 0 5px red); }
+.brand-img { height: 25px; margin-left: 10px; }
+
+/* Secret Admin Button Style */
+.admin-trigger {
+    color: #111; cursor: pointer; transition: 0.3s;
+}
+.admin-trigger:hover { color: var(--red); text-shadow: 0 0 10px var(--red); }
+
+/* Container Styling */
+.glass-container {
+    background: rgba(10, 10, 10, 0.9); border: 1px solid #222;
+    padding: 20px; border-radius: 15px; margin: 20px;
+    position: relative; overflow: hidden;
+}
+.container-tag {
+    font-size: 10px; color: var(--red); margin-bottom: 15px;
+    letter-spacing: 2px; font-weight: bold;
+}
+
+/* Signal Styling */
+.signal-direction.UP { color: #00ffcc; font-size: 24px; font-weight: 900; margin: 10px 0; }
+
+/* Floating Socials */
+.floating-socials {
+    position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px;
+}
+.s-btn {
+    width: 45px; height: 45px; border-radius: 50%; background: #000;
+    border: 1px solid var(--red); color: white; display: flex;
+    align-items: center; justify-content: center; text-decoration: none;
+    transition: 0.3s; box-shadow: 0 0 10px rgba(255,0,0,0.2);
+}
+.s-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--red); background: var(--red); }
