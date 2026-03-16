@@ -1,228 +1,249 @@
-/* --- RUTHLESS V7 CORE STYLES --- */
-:root { 
-    --red: #ff0000; 
-    --dark-bg: #050505; 
-    --sidebar-bg: #0a0a0a;
-    --card-bg: rgba(20, 20, 20, 0.8);
-    --neon: #00ffcc; 
-    --glow: 0 0 15px rgba(255, 0, 0, 0.6);
+/* ROOT SETTINGS */
+:root {
+    --red: #ff0000;
+    --neon: #00ffcc;
+    --bg: #000000;
+    --card: #0a0a0a;
+    --border: #222;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body { 
-    background: var(--dark-bg); 
-    color: white; 
-    font-family: 'Orbitron', sans-serif; 
-    overflow: hidden; 
-    -webkit-font-smoothing: antialiased;
-    letter-spacing: 0.5px;
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: white;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
 }
 
-/* --- SIDEBAR LAYOUT --- */
-#admin-wrapper { display: flex; height: 100vh; width: 100vw; }
-
-#sidebar { 
-    width: 260px; 
-    background: var(--sidebar-bg); 
-    border-right: 1px solid #222; 
-    display: flex; 
-    flex-direction: column; 
-    z-index: 10;
+/* HOME VIEW STYLES */
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
 }
 
-.sidebar-header { padding: 25px; border-bottom: 1px solid #222; text-align: center; }
-
-/* --- NAV BUTTONS & HOVER --- */
-.nav-btn { 
-    width: 100%; 
-    padding: 18px 25px; 
-    background: transparent; 
-    border: none; 
-    color: #555; 
-    text-align: left; 
-    cursor: pointer; 
-    font-family: 'Orbitron'; 
-    font-size: 10px; 
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    border-left: 3px solid transparent;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.logo-box {
+    width: 35px;
+    height: 35px;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron';
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 0 10px var(--red);
 }
 
-.nav-btn:hover { 
-    color: white; 
-    background: rgba(255, 0, 0, 0.05);
-    padding-left: 35px;
-    border-left: 3px solid var(--red);
-    text-shadow: 0 0 8px var(--red);
+.brand-text {
+    font-family: 'Orbitron';
+    margin-left: 10px;
+    letter-spacing: 1px;
 }
 
-.nav-btn.active { 
-    color: var(--red) !important; 
-    background: #111; 
-    border-left: 3px solid var(--red);
-    text-shadow: 0 0 10px var(--red);
-    box-shadow: inset 10px 0 20px rgba(255, 0, 0, 0.1);
-}
-
-/* --- CONTENT AREA & CARDS --- */
-#content-area { 
-    flex: 1; 
-    padding: 40px; 
-    overflow-y: auto; 
-    background: radial-gradient(circle at top right, #110000, #050505);
-}
-
-h1 { 
-    font-size: 26px; 
-    color: var(--red); 
-    text-transform: uppercase; 
-    letter-spacing: 4px; 
-    text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.5);
-    margin-bottom: 30px; 
-    border-bottom: 2px solid var(--red); 
-    display: inline-block;
-    padding-bottom: 5px;
-}
-
-.admin-card { 
-    background: var(--card-bg); 
-    border: 1px solid #222; 
-    padding: 30px; 
-    border-radius: 12px; 
-    margin-bottom: 25px; 
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, border 0.3s ease;
-}
-
-.admin-card:hover {
-    transform: translateY(-5px);
-    border: 1px solid rgba(255, 0, 0, 0.3);
-}
-
-/* --- TEXT & INPUT STYLES --- */
-label { 
-    font-size: 10px; 
-    color: #888; 
-    margin-bottom: 10px; 
-    display: block; 
-    letter-spacing: 2px;
-    transition: color 0.3s;
-}
-
-.admin-card:hover label { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
-
-.ruthless-input { 
-    width: 100%; 
-    background: #000; 
-    border: 1px solid #222; 
-    color: var(--neon) !important; 
-    padding: 15px; 
-    font-family: 'Roboto Mono', monospace; 
-    font-weight: 900;
-    text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
-    outline: none;
+.admin-trigger {
+    color: #0c0c0c; /* Hidden but clickable */
+    cursor: pointer;
     transition: 0.3s;
 }
 
-.ruthless-input:focus { border: 1px solid var(--neon); box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
-
-/* --- STATS BOXES --- */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
-.stat-box { background: #0a0a0a; padding: 25px; border: 1px solid #222; border-radius: 10px; text-align: center; transition: 0.3s; }
-.stat-box:hover { border-color: var(--red); box-shadow: var(--glow); }
-
-.stat-box p { 
-    font-family: 'Roboto Mono', monospace; 
-    font-size: 32px; 
-    font-weight: 900; 
-    color: var(--red); 
-    text-shadow: 0 0 15px var(--red), 0 0 5px #fff; 
+.admin-trigger:hover {
+    color: var(--red);
 }
-/* Horizontal Stats Bar */
+
+.glass-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    margin: 20px;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.container-tag {
+    font-family: 'Orbitron';
+    color: var(--red);
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.signal-direction {
+    font-family: 'Roboto Mono';
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--neon);
+    text-shadow: 0 0 15px var(--neon);
+    margin: 15px 0;
+}
+
+.join-btn {
+    background: var(--red);
+    border: none;
+    color: white;
+    padding: 15px;
+    width: 100%;
+    font-family: 'Orbitron';
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.join-btn:hover {
+    box-shadow: 0 0 20px var(--red);
+    transform: translateY(-2px);
+}
+
+/* ADMIN PANEL STYLES */
+#admin-wrapper {
+    height: 100vh;
+    display: flex;
+}
+
+#sidebar {
+    width: 260px;
+    background: #050505;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h2 {
+    font-family: 'Orbitron';
+    font-size: 14px;
+    color: var(--red);
+    margin: 0;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #555;
+    padding: 18px 25px;
+    text-align: left;
+    font-family: 'Orbitron';
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.nav-btn.active, .nav-btn:hover {
+    color: var(--red);
+    background: #0d0000;
+    border-left: 3px solid var(--red);
+}
+
+.logout {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    color: #444;
+}
+
+#content-area {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* HORIZONTAL STATS BAR */
 .stats-horizontal-bar {
     display: flex;
-    justify-content: space-between;
-    background: rgba(255, 0, 0, 0.05);
-    border: 1px solid #222;
-    padding: 15px 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    backdrop-filter: blur(5px);
+    gap: 20px;
+    background: #080808;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
 }
 
 .h-stat-item {
-    text-align: center;
     flex: 1;
-    border-right: 1px solid #222;
+    text-align: center;
+    border-right: 1px solid #111;
 }
 
-.h-stat-item:last-child {
-    border-right: none;
-}
+.h-stat-item:last-child { border-right: none; }
 
-.h-stat-label {
-    display: block;
-    font-size: 9px;
-    color: #666;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-}
+.h-stat-label { font-size: 9px; color: #444; display: block; margin-bottom: 5px; }
 
 .h-stat-value {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 20px;
-    font-weight: 900;
+    font-family: 'Roboto Mono';
+    font-size: 24px;
     color: var(--red);
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
-}
-/* Home Page Layout */
-.home-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; border-bottom: 1px solid #222; background: #000;
-}
-.main-logo { height: 40px; filter: drop-shadow(0 0 5px red); }
-.brand-img { height: 25px; margin-left: 10px; }
-
-/* Secret Admin Button Style */
-.admin-trigger {
-    color: #111; cursor: pointer; transition: 0.3s;
-}
-.admin-trigger:hover { color: var(--red); text-shadow: 0 0 10px var(--red); }
-
-/* Container Styling */
-.glass-container {
-    background: rgba(10, 10, 10, 0.9); border: 1px solid #222;
-    padding: 20px; border-radius: 15px; margin: 20px;
-    position: relative; overflow: hidden;
-}
-.container-tag {
-    font-size: 10px; color: var(--red); margin-bottom: 15px;
-    letter-spacing: 2px; font-weight: bold;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(255,0,0,0.3);
 }
 
-/* Signal Styling */
-.signal-direction.UP { color: #00ffcc; font-size: 24px; font-weight: 900; margin: 10px 0; }
+/* INPUTS & CARDS */
+.admin-card {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
 
-/* Floating Socials */
-.floating-socials {
-    position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px;
-}
-.s-btn {
-    width: 45px; height: 45px; border-radius: 50%; background: #000;
-    border: 1px solid var(--red); color: white; display: flex;
-    align-items: center; justify-content: center; text-decoration: none;
-    transition: 0.3s; box-shadow: 0 0 10px rgba(255,0,0,0.2);
-}
-.s-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--red); background: var(--red); }
-#admin-wrapper {
-    display: none !important; /* Default ga hide chestham */
+.ruthless-input {
     width: 100%;
-    height: 100vh;
+    background: #000;
+    border: 1px solid #333;
+    padding: 12px;
+    color: var(--neon);
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    margin: 15px 0;
+    box-sizing: border-box;
 }
 
-#home-view {
-    display: block; /* Default ga home matrame kanipisthundi */
+.save-btn {
+    background: var(--neon);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Orbitron';
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
 }
+
+/* FLOATING SOCIALS */
+.floating-socials {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.s-btn {
+    background: #000;
+    border: 1px solid var(--red);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.s-btn:hover {
+    background: var(--red);
+    box-shadow: 0 0 15px var(--red);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
