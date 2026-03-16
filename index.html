@@ -3,177 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader V7</title>
+    <title>Binary Ruthless Trader | Official System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="home-view">
-        <header id="h-header" class="home-header">
-            <div class="header-center">
-                <div class="brand-group">
-                    <img src="logo.png" class="main-logo" alt="L">
-                    <img src="brand-name.png" class="brand-img" alt="RUTHLESS">
-                </div>
-                <div class="top-socials">
-                    <i class="fab fa-telegram-plane"></i>
-                    <i class="fab fa-youtube"></i>
+        <header id="h-header" class="header-container">
+            <div class="header-left"><img src="logo.png" alt="Logo" class="logo-img"></div>
+            <div class="header-center"><img src="brand-name.png" alt="Binary Ruthless" class="brand-name-img"></div>
+            <div class="header-right">
+                <div class="social-links">
+                    <a href="#">TELEGRAM</a>
+                    <a href="#" onclick="checkAdminAccess()">ADMIN</a>
                 </div>
             </div>
-            <div class="admin-trigger" onclick="checkAdminAccess()"><i class="fas fa-user-shield"></i></div>
         </header>
 
-        <main class="home-container">
-            <div id="h-signal" class="glass-container">
-                <div class="container-tag">LIVE SIGNAL</div>
-                <div class="signal-direction">EUR/USD CALL</div>
-                <button class="join-btn">JOIN NOW</button>
+        <main class="main-content" id="home-main">
+            <div id="cont-login" class="small-container">
+                <h3>LOGIN</h3>
+                <input type="email" id="loginEmail" placeholder="ENTER EMAIL">
+                <input type="text" id="loginId" placeholder="ENTER USER ID">
+                <button class="action-btn" onclick="sendToFirebase('Login')">ACCESS SYSTEM</button>
             </div>
 
-            <div id="h-tool" class="glass-container">
-                <div class="container-tag">TREND METER</div>
-                <div class="signal-direction" style="font-size:20px; color:var(--neon)">STRONG BUY</div>
+            <div id="cont-signup" class="small-container">
+                <h3>SIGNUP</h3>
+                <input type="email" id="signupEmail" placeholder="ENTER NEW EMAIL">
+                <select id="signupBroker">
+                    <option value="">SELECT BROKER</option>
+                    <option value="QUOTEX">QUOTEX</option>
+                    <option value="POCKET_OPTION">POCKET OPTION</option>
+                </select>
+                <button class="action-btn" onclick="sendToFirebase('Signup')">GET LINK</button>
+            </div>
+
+            <div id="cont-verify" class="small-container">
+                <h3>VERIFY ID</h3>
+                <input type="email" id="verifyEmail" placeholder="REGISTERED EMAIL">
+                <input type="text" id="verifyId" placeholder="BROKER ID">
+                <button class="action-btn" onclick="sendToFirebase('Verify')">VERIFY NOW</button>
             </div>
         </main>
     </div>
 
     <div id="admin-wrapper" style="display:none;">
-        <aside id="sidebar">
-            <div class="sidebar-header"><h2>ADMIN</h2></div>
-            <nav>
-                <button class="nav-btn active" onclick="openTab('tab-layout')">Layout Builder</button>
-                <button class="nav-btn" onclick="logout()">Logout</button>
-            </nav>
-        </aside>
+        <div id="builder-sidebar">
+            <h2 style="color:var(--red); font-size:12px; padding:20px;">LAYOUT BUILDER</h2>
+            <button class="nav-btn active">Position Editor</button>
+            <button class="save-btn-final" onclick="saveAllPositions()">SAVE & APPLY</button>
+            <button class="nav-btn" onclick="logout()" style="margin-top:auto">LOGOUT</button>
+        </div>
 
-        <main id="content-area">
-            <section id="tab-layout" class="tab-content">
-                <div class="builder-header">
-                    <h1>Layout Builder</h1>
-                    <div class="toggle-group">
-                        <button id="btn-desk" class="tgl-btn active" onclick="setPreview('desktop')">DESKTOP</button>
-                        <button id="btn-mob" class="tgl-btn" onclick="setPreview('mobile')">MOBILE</button>
-                    </div>
-                    <button class="save-btn" onclick="saveAllPositions()">SAVE LAYOUT</button>
-                </div>
+        <div id="builder-canvas-area">
+            <div class="builder-tools">
+                <button class="tgl-btn active" id="btn-desk" onclick="setPreview('desktop')">DESKTOP</button>
+                <button class="tgl-btn" id="btn-mob" onclick="setPreview('mobile')">MOBILE</button>
+                <span style="font-size: 10px; color: #555;">Drag boxes to move, pull corners to resize</span>
+            </div>
 
-                <div id="preview-frame" class="p-desktop">
-                    <div class="builder-overlay" id="overlay">
-                        <div id="drag-header" class="drag-item" data-id="h-header" style="width:100%; height:80px; top:0; left:0;">HEADER</div>
-                        <div id="drag-signal" class="drag-item" data-id="h-signal" style="width:280px; height:180px; top:100px; left:20px;">SIGNAL BOX</div>
-                        <div id="drag-tool" class="drag-item" data-id="h-tool" style="width:280px; height:120px; top:300px; left:20px;">TOOL BOX</div>
-                    </div>
+            <div id="preview-frame" class="p-desktop">
+                <div class="overlay-grid" id="drag-overlay">
+                    <div id="drag-login" class="drag-box" data-id="cont-login">LOGIN BOX</div>
+                    <div id="drag-signup" class="drag-box" data-id="cont-signup">SIGNUP BOX</div>
+                    <div id="drag-verify" class="drag-box" data-id="cont-verify">VERIFY BOX</div>
                 </div>
-            </section>
-        </main>
+                <iframe id="iframe-preview" src="about:blank"></iframe>
+            </div>
+        </div>
     </div>
 
     <script>
+        // --- Firebase Config (Mee original config ni ikkada unchandi) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
+            authDomain: "binary-ruthless-trader.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader",
+            storageBucket: "binary-ruthless-trader.firebasestorage.app",
+            messagingSenderId: "363803749428",
+            appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- Admin & Navigation Logic ---
         function checkAdminAccess() {
-            if(prompt("Key:") === "0000") {
-                window.location.hash = "#admin";
+            if(prompt("Admin Key:") === "0000") {
+                window.location.hash = "#9700224305";
                 location.reload();
             }
         }
 
         window.onload = function() {
-            const isAdmin = window.location.hash === "#admin";
+            const isAdmin = window.location.hash === "#9700224305";
             document.getElementById('home-view').style.display = isAdmin ? 'none' : 'block';
             document.getElementById('admin-wrapper').style.display = isAdmin ? 'flex' : 'none';
 
             if(isAdmin) {
-                loadGhostPositions();
+                setupPreview();
+                loadSavedGhostPositions();
             } else {
                 applySavedLayout();
             }
         };
 
-        // Initialize Interact.js
-        interact('.drag-item').draggable({
+        function setupPreview() {
+            const frame = document.getElementById('iframe-preview');
+            const homeHtml = document.getElementById('home-view').innerHTML;
+            const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('');
+            frame.contentDocument.write(`<html><head>${styles}<style>body{background:#000; overflow:hidden;}</style></head><body>${homeHtml}</body></html>`);
+            frame.contentDocument.close();
+        }
+
+        // --- Interact.js (Drag & Resize) ---
+        interact('.drag-box').draggable({
             listeners: { move(event) {
-                const target = event.target;
-                const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                target.style.transform = `translate(${x}px, ${y}px)`;
-                target.setAttribute('data-x', x);
-                target.setAttribute('data-y', y);
+                const t = event.target;
+                const x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx;
+                const y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy;
+                t.style.transform = `translate(${x}px, ${y}px)`;
+                t.setAttribute('data-x', x); t.setAttribute('data-y', y);
             }}
         }).resizable({
             edges: { right: true, bottom: true, left: true, top: true },
             listeners: { move(event) {
-                let target = event.target;
-                let x = (parseFloat(target.getAttribute('data-x')) || 0);
-                let y = (parseFloat(target.getAttribute('data-y')) || 0);
-                target.style.width = event.rect.width + 'px';
-                target.style.height = event.rect.height + 'px';
-                x += event.deltaRect.left;
-                y += event.deltaRect.top;
-                target.style.transform = `translate(${x}px, ${y}px)`;
-                target.setAttribute('data-x', x);
-                target.setAttribute('data-y', y);
+                let t = event.target;
+                let x = (parseFloat(t.getAttribute('data-x')) || 0);
+                let y = (parseFloat(t.getAttribute('data-y')) || 0);
+                t.style.width = event.rect.width + 'px';
+                t.style.height = event.rect.height + 'px';
+                x += event.deltaRect.left; y += event.deltaRect.top;
+                t.style.transform = `translate(${x}px, ${y}px)`;
+                t.setAttribute('data-x', x); t.setAttribute('data-y', y);
             }}
         });
 
         function saveAllPositions() {
-            const elements = ['drag-header', 'drag-signal', 'drag-tool'];
-            const layoutData = {};
-            elements.forEach(id => {
+            const ids = ['drag-login', 'drag-signup', 'drag-verify'];
+            const data = {};
+            ids.forEach(id => {
                 const el = document.getElementById(id);
-                layoutData[el.getAttribute('data-id')] = {
+                data[el.getAttribute('data-id')] = {
                     x: el.getAttribute('data-x') || 0,
                     y: el.getAttribute('data-y') || 0,
-                    w: el.style.width,
-                    h: el.style.height
+                    w: el.style.width, h: el.style.height
                 };
             });
-            localStorage.setItem('ruthless_pos', JSON.stringify(layoutData));
-            alert("Layout Saved!");
+            localStorage.setItem('ruthless_layout_v7', JSON.stringify(data));
+            alert("Layout Saved Permanently!");
             location.reload();
         }
 
         function applySavedLayout() {
-            const data = JSON.parse(localStorage.getItem('ruthless_pos'));
+            const data = JSON.parse(localStorage.getItem('ruthless_layout_v7'));
             if(!data) return;
             Object.keys(data).forEach(id => {
                 const el = document.getElementById(id);
-                const d = data[id];
                 if(el) {
                     el.style.position = 'absolute';
-                    el.style.transform = `translate(${d.x}px, ${d.y}px)`;
-                    el.style.width = d.w;
-                    el.style.height = d.h;
+                    el.style.transform = `translate(${data[id].x}px, ${data[id].y}px)`;
+                    el.style.width = data[id].w; el.style.height = data[id].h;
                 }
             });
         }
 
-        function loadGhostPositions() {
-            const data = JSON.parse(localStorage.getItem('ruthless_pos'));
+        function loadSavedGhostPositions() {
+            const data = JSON.parse(localStorage.getItem('ruthless_layout_v7'));
             if(!data) return;
-            const map = { 'h-header': 'drag-header', 'h-signal': 'drag-signal', 'h-tool': 'drag-tool' };
-            Object.keys(data).forEach(homeId => {
-                const ghost = document.getElementById(map[homeId]);
-                const d = data[homeId];
-                if(ghost) {
-                    ghost.style.transform = `translate(${d.x}px, ${d.y}px)`;
-                    ghost.setAttribute('data-x', d.x);
-                    ghost.setAttribute('data-y', d.y);
-                    ghost.style.width = d.w; ghost.style.height = d.h;
+            const map = {'cont-login':'drag-login', 'cont-signup':'drag-signup', 'cont-verify':'drag-verify'};
+            Object.keys(data).forEach(k => {
+                const g = document.getElementById(map[k]);
+                if(g) {
+                    g.style.transform = `translate(${data[k].x}px, ${data[k].y}px)`;
+                    g.setAttribute('data-x', data[k].x); g.setAttribute('data-y', data[k].y);
+                    g.style.width = data[k].w; g.style.height = data[k].h;
                 }
             });
         }
 
-        function setPreview(mode) {
-            const frame = document.getElementById('preview-frame');
-            frame.className = (mode === 'mobile') ? 'p-mobile' : 'p-desktop';
-            document.getElementById('btn-desk').className = (mode === 'desktop') ? 'tgl-btn active' : 'tgl-btn';
-            document.getElementById('btn-mob').className = (mode === 'mobile') ? 'tgl-btn active' : 'tgl-btn';
+        function setPreview(m) {
+            const f = document.getElementById('preview-frame');
+            f.className = (m === 'mobile') ? 'p-mobile' : 'p-desktop';
+            document.getElementById('btn-desk').classList.toggle('active', m === 'desktop');
+            document.getElementById('btn-mob').classList.toggle('active', m === 'mobile');
         }
 
         function logout() { window.location.hash = ""; location.reload(); }
+        
+        // --- Mee Original Firebase Function ---
+        function sendToFirebase(type) {
+            let email, id, extra = "";
+            if(type === 'Login') {
+                email = document.getElementById('loginEmail').value;
+                id = document.getElementById('loginId').value;
+            } else if(type === 'Signup') {
+                email = document.getElementById('signupEmail').value;
+                id = "PENDING_ID";
+                extra = document.getElementById('signupBroker').value;
+            } else if(type === 'Verify') {
+                email = document.getElementById('verifyEmail').value;
+                id = document.getElementById('verifyId').value;
+            }
+
+            if(!email || !id) { alert("Please fill all details!"); return; }
+
+            const requestRef = database.ref('requests/' + Date.now());
+            requestRef.set({
+                requestType: type, userEmail: email, traderId: id,
+                brokerName: extra, status: 'pending', timestamp: new Date().toLocaleString()
+            }).then(() => {
+                alert(type + " Request Submitted!");
+                document.querySelectorAll('input').forEach(i => i.value = '');
+            });
+        }
     </script>
 </body>
 </html>
