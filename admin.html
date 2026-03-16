@@ -15,6 +15,23 @@
         input, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: var(--green); font-family: 'Roboto Mono'; margin-top: 10px; outline: none; }
         .save-btn { background: var(--red); border: none; color: #fff; padding: 15px 30px; margin-top: 20px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
         .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
+        /* Container design and constraints */
+.ads-container {
+    background: #000;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    overflow: hidden; /* Ad content container dati bayataki rakudadu */
+    position: relative; 
+    display: inline-block; /* Overlap avvakunda pakka pakkana untayi */
+    vertical-align: top;
+    margin: 10px;
+}
+
+/* Ad content strict sizing */
+.ads-container * {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
     </style>
 </head>
 <body>
@@ -82,6 +99,28 @@
 
     <div id="adList" style="display: flex; flex-direction: column; gap: 10px;">
         <p style="color: #444; font-size: 12px; font-family: 'Roboto Mono';">Loading ad containers...</p>
+    </div>
+</div>
+
+    <div id="ads-editor" style="background: #000; border: 1px solid #ff0000; padding: 20px; color: #fff; font-family: 'Orbitron', sans-serif;">
+    <h3 style="color: #ff0000;">ADS/CONTAINER SETTINGS</h3>
+    
+    <label>Container Name:</label><br>
+    <input type="text" id="ad-name" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; margin-bottom:10px;"><br>
+
+    <label>Width (px):</label>
+    <input type="number" id="ad-width" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; font-weight:bold;"><br>
+
+    <label>Height (px):</label>
+    <input type="number" id="ad-height" style="background:#111; color:#00ffcc; border:1px solid #ff0000; padding:5px; font-weight:bold;"><br>
+
+    <label>Ads Snippet (Code):</label><br>
+    <textarea id="ad-snippet" rows="4" style="width:100%; background:#111; color:#fff; border:1px solid #ff0000;"></textarea><br>
+
+    <div style="margin-top: 15px;">
+        <button onclick="saveAdSettings()" style="background:#ff0000; color:#fff; padding:10px; cursor:pointer;">SAVE SETTINGS</button>
+        <button onclick="resetAd()" style="background:#333; color:#fff; padding:10px;">RESET</button>
+        <button onclick="toggleHide()" style="background:#555; color:#fff; padding:10px;">HIDE/SHOW</button>
     </div>
 </div>
 
@@ -311,6 +350,45 @@ function loadAdsList() {
 
 // Window Onload lo list load cheyadam marchipoku
 // Patha window.onload lo loadAdsList(); ni add cheyi.
+    let currentEditingId = ''; // Ee container edit chestunnamo store chestundi
+
+// List lo unna container ni click chesinappudu idhi trigger avvali
+function editAdContainer(id) {
+    currentEditingId = id;
+    let target = document.getElementById(id);
+    
+    // Existing values ni input boxes loki techukovali
+    document.getElementById('ad-width').value = target.offsetWidth;
+    document.getElementById('ad-height').value = target.offsetHeight;
+    // Name and Snippet values database nundi vasthayi, for now general ga:
+    document.getElementById('ad-name').value = "Editing: " + id;
+}
+
+function saveAdSettings() {
+    if(!currentEditingId) return alert("Please select a container first!");
+
+    let target = document.getElementById(currentEditingId);
+    let newWidth = document.getElementById('ad-width').value;
+    let newHeight = document.getElementById('ad-height').value;
+    let snippet = document.getElementById('ad-snippet').value;
+
+    // 1. Apply Size
+    target.style.width = newWidth + 'px';
+    target.style.height = newHeight + 'px';
+
+    // 2. Inject Ad Snippet
+    target.innerHTML = snippet;
+
+    // 3. Prevent Overlap & Bounds
+    target.style.overflow = 'hidden';
+    
+    alert("Saved Successfully! Layout locked.");
+}
+
+function toggleHide() {
+    let target = document.getElementById(currentEditingId);
+    target.style.display = (target.style.display === 'none') ? 'inline-block' : 'none';
+}
     
 </script>
 </body>
