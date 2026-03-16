@@ -162,15 +162,34 @@
             document.getElementById('live-acc').innerText = acc + "%";
         }, 5000);
     </script>
+   <script>
+    // 1. Secret Prompt Logic
     function checkAdminAccess() {
-    let code = prompt("Enter Admin Secret Key:");
-    if(code === "0000") {
-        window.location.hash = "#9700224305";
-        location.reload();
-    } else {
-        alert("Access Denied!");
+        console.log("Admin button clicked!"); // Check cheyadaniki (F12 lo kanipisthundi)
+        let code = prompt("Enter Admin Secret Key:");
+        if(code === "0000") {
+            window.location.hash = "9700224305"; // Hash update chesthunnam
+            location.reload(); // Page reload chesthunnam
+        } else {
+            alert("Access Denied!");
+        }
     }
-}
+
+    // 2. Page Load Logic (Hash detection)
+    window.onload = function() {
+        const home = document.getElementById('home-view');
+        const admin = document.getElementById('admin-wrapper');
+
+        // URL lo hash undho ledho check chesthunnam
+        if(window.location.hash === "#9700224305") {
+            if(home) home.style.display = 'none';
+            if(admin) admin.style.display = 'flex';
+        } else {
+            if(home) home.style.display = 'block';
+            if(admin) admin.style.display = 'none';
+        }
+    };
+</script>
 
 </body>
 </html>
