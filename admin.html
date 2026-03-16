@@ -76,22 +76,42 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 <script>
-    // Tab switching logic (Pathadi)
+    // 1. Tab switching logic with Memory (Last unna tab ni gurthunchukuntundi)
     function tab(id) {
+        // Anni panels ni hide cheyadam
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        // Anni buttons nundi active class theseyadam
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
+        
+        // Click chesina panel ni chupinchadam
+        const targetPanel = document.getElementById(id);
+        if(targetPanel) targetPanel.classList.add('active');
+        
+        // Button ni highlight cheyadam (Tab switching smooth ga avvadaniki)
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => {
+            if(btn.getAttribute('onclick').includes(`'${id}'`)) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Nuvvu ye tab lo unnavo browser memory lo save chesthundi
+        localStorage.setItem('active_admin_tab', id);
     }
 
-    // Firebase Connection Logic
+    // 2. Firebase Connection Logic
     function connectFirebase() {
         const configInput = document.getElementById('fbConfig').value;
         const status = document.getElementById('fbStatus');
         try {
             const config = JSON.parse(configInput);
-            firebase.initializeApp(config);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(config);
+            }
             firebase.database().ref(".info/connected").on("value", (snap) => {
                 if (snap.val() === true) {
                     status.innerText = "STATUS: CONNECTED SUCCESSFULLY!";
@@ -103,42 +123,47 @@
                     status.style.color = "#ff0000";
                 }
             });
-        } catch (e) { alert("INVALID JSON!"); }
-    }
-
-    function verifySite() { alert("CODE SUBMITTED!"); document.getElementById('verifyStatus').innerText = "Status: Code Active"; }
-    function updateAds() { alert("ADS UPDATED!"); }
-
-    window.onload = function() {
-    const saved = localStorage.getItem('ruthless_fb_config');
-    if(saved) {
-        // Box lo పాత డీటెయిల్స్ ని నింపుతుంది
-        document.getElementById('fbConfig').value = saved;
-        
-        // Refresh అయినప్పుడు ఆటోమేటిక్ గా మళ్ళీ కనెక్ట్ చేసే లాజిక్
-        const status = document.getElementById('fbStatus');
-        try {
-            const config = JSON.parse(saved);
-            
-            // Firebase ని మళ్ళీ ఇనిషియలైజ్ చేస్తున్నాం
-            if (!firebase.apps.length) {
-                firebase.initializeApp(config);
-            }
-
-            firebase.database().ref(".info/connected").on("value", (snap) => {
-                if (snap.val() === true) {
-                    status.innerText = "STATUS: CONNECTED (AUTO)";
-                    status.style.color = "#00ffcc";
-                } else {
-                    status.innerText = "STATUS: RECONNECTING...";
-                    status.style.color = "orange";
-                }
-            });
-        } catch (e) {
-            console.log("Auto-connect failed, please connect manually.");
+        } catch (e) { 
+            alert("INVALID JSON! Please check your Firebase config."); 
         }
     }
-}
+
+    // 3. Page Load Logic (Auto-Connect + Remember Last Tab)
+    window.onload = function() {
+        // --- Tab Memory Load ---
+        const lastTab = localStorage.getItem('active_admin_tab');
+        if (lastTab) {
+            tab(lastTab); // Refresh ki mundu unna tab ke veltundi
+        }
+
+        // --- Firebase Auto-Connect ---
+        const saved = localStorage.getItem('ruthless_fb_config');
+        if(saved) {
+            document.getElementById('fbConfig').value = saved;
+            const status = document.getElementById('fbStatus');
+            try {
+                const config = JSON.parse(saved);
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(config);
+                }
+                firebase.database().ref(".info/connected").on("value", (snap) => {
+                    if (snap.val() === true) {
+                        status.innerText = "STATUS: CONNECTED (AUTO)";
+                        status.style.color = "#00ffcc";
+                    } else {
+                        status.innerText = "STATUS: RECONNECTING...";
+                        status.style.color = "orange";
+                    }
+                });
+            } catch (e) {
+                console.log("Auto-connect failed.");
+            }
+        }
+    };
+
+    // Placeholder functions for other buttons
+    function verifySite() { alert("CODE SUBMITTED!"); document.getElementById('verifyStatus').innerText = "Status: Code Active"; }
+    function updateAds() { alert("ADS UPDATED!"); }
 </script>
 </body>
 </html>
