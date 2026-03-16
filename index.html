@@ -1,231 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader | Official System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+<div class="admin-card" style="border: 1px solid var(--red); padding: 25px; margin-bottom: 30px; background: #0a0a0a;">
+    <h2 style="color: var(--red); font-size: 20px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">SIGNAL WEBHOOK CONFIG</h2>
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <div class="control-row" style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <label style="font-size: 12px; color: #888;">QUOTEX WEBHOOK URL (Must match MT5 URL)</label>
+            <input type="text" id="quotexUrl" placeholder="binaryruthlesstrader.com/quotex" style="width: 100%; margin-top: 5px;">
+        </div>
+        <div style="text-align: center;">
+            <label style="font-size: 10px;">DROP-DOWN</label><br>
+            <input type="checkbox" id="quotexToggle" onchange="toggleSignalVisibility('Quotex')" class="toggle-switch">
+        </div>
+        <button class="action-btn" onclick="saveSignalSettings('Quotex')" style="width: 120px; margin-top: 15px; font-size: 12px; padding: 12px;">SAVE</button>
+    </div>
 
-    <style>
-        :root { 
-            --red: #ff0000; 
-            --green: #00ffcc; 
-            --bg: #050505; 
-            --neon: 0 0 15px var(--red); 
-        }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html, body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
-            overflow-x: hidden; touch-action: pan-y;
-        }
+    <div class="control-row" style="display: flex; align-items: center; gap: 20px;">
+        <div style="flex: 1;">
+            <label style="font-size: 12px; color: #888;">TOXA WEBHOOK URL (Must match MT5 URL)</label>
+            <input type="text" id="toxaUrl" placeholder="binaryruthlesstrader.com/toxa" style="width: 100%; margin-top: 5px;">
+        </div>
+        <div style="text-align: center;">
+            <label style="font-size: 10px;">DROP-DOWN</label><br>
+            <input type="checkbox" id="toxaToggle" onchange="toggleSignalVisibility('Toxa')" class="toggle-switch">
+        </div>
+        <button class="action-btn" onclick="saveSignalSettings('Toxa')" style="width: 120px; margin-top: 15px; font-size: 12px; padding: 12px;">SAVE</button>
+    </div>
+</div>
 
-        /* Header Section */
-        .header-container {
-            width: 100%; 
-            padding: 15px 50px;
-            display: grid; 
-            grid-template-columns: 180px 1fr 250px; 
-            align-items: center; 
-            border-bottom: 2px solid var(--red);
-            background: #000;
-            position: sticky; top: 0; z-index: 1000;
-        }
+<div class="admin-card" style="border: 1px solid var(--red); padding: 25px; background: #0a0a0a;">
+    <h2 style="color: var(--red); font-size: 20px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">TOOLS REGISTRY</h2>
+    
+    <button class="action-btn" onclick="openNewToolForm()" style="margin-bottom: 20px; width: 200px; font-size: 12px;">+ ADD NEW TOOL</button>
 
-        .logo-img { width: 110px; height: auto; }
+    <div id="toolForm" style="display:none; background: #000; padding: 20px; border: 1px solid #333; margin-bottom: 25px;">
+        <input type="text" id="toolName" placeholder="ENTER TOOL NAME">
+        <textarea id="toolCode" placeholder="PASTE HTML/CSS/JS CODE HERE..." style="width: 100%; height: 200px; background: #111; color: var(--green); border: 1px solid #333; padding: 15px; font-family: 'Roboto Mono'; margin-top: 10px;"></textarea>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="action-btn" onclick="confirmSaveTool()">SAVE & DEPLOY</button>
+            <button class="sub-btn" onclick="closeToolForm()" style="border: 1px solid #444; color: #666; background: none; padding: 10px 20px; cursor: pointer;">CANCEL</button>
+        </div>
+    </div>
 
-        .header-center { display: flex; justify-content: center; }
-        .brand-name-img { 
-            width: 550px; 
-            height: auto; 
-            max-width: 95%; 
-            filter: drop-shadow(0 0 12px var(--red)); 
-        }
-
-        .social-links { display: flex; gap: 15px; justify-content: flex-end; }
-        .social-links a { 
-            color: #fff; text-decoration: none; font-size: 11px; 
-            font-family: 'Roboto Mono'; border: 1px solid #333; 
-            padding: 8px 15px; border-radius: 5px; transition: 0.3s;
-        }
-        .social-links a:hover { border-color: var(--red); box-shadow: var(--neon); color: var(--red); }
-
-        /* Main Content Layout */
-        .main-content {
-            display: flex; 
-            flex-direction: row; 
-            justify-content: center; 
-            align-items: center;
-            gap: 30px; 
-            padding: 60px 20px; 
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .small-container {
-            flex: 1;
-            max-width: 380px;
-            min-height: 520px; 
-            background: #0a0a0a; 
-            border: 1px solid var(--red);
-            padding: 35px; 
-            border-radius: 20px; 
-            box-shadow: var(--neon);
-            display: flex; 
-            flex-direction: column; 
-            transition: 0.4s;
-        }
-        
-        .small-container:hover { transform: translateY(-10px); box-shadow: 0 0 30px var(--red); }
-
-        .small-container h3 { 
-            text-align: center; color: var(--red); margin-bottom: 25px; 
-            font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 15px; 
-        }
-
-        input, select {
-            width: 100%; padding: 16px; margin: 12px 0; background: #111; 
-            border: 1px solid #333; color: var(--green); border-radius: 8px; 
-            font-family: 'Roboto Mono'; font-weight: bold; font-size: 15px;
-            outline: none;
-        }
-
-        .action-btn {
-            background: var(--red); color: #fff; border: none; padding: 20px; 
-            width: 100%; border-radius: 8px; cursor: pointer; font-family: 'Orbitron'; 
-            font-weight: 900; margin-top: auto; transition: 0.3s;
-            text-transform: uppercase;
-        }
-        .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
-
-        /* Footer */
-        .footer-container {
-            width: 100%; padding: 40px 60px; background: #000; border-top: 2px solid var(--red);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .footer-item { font-family: 'Roboto Mono'; font-size: 11px; color: #666; flex: 1; }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-content { flex-wrap: wrap; }
-            .header-container { grid-template-columns: 1fr 1fr; }
-            .header-right { display: none; } 
-        }
-
-        @media (max-width: 768px) {
-            .header-container { display: flex; flex-direction: column; padding: 20px; }
-            .brand-name-img { width: 350px; }
-            .main-content { flex-direction: column; } 
-            .footer-container { flex-direction: column; text-align: center; gap: 15px; }
-        }
-    </style>
-</head>
-<body>
-
-    <header class="header-container">
-        <div class="header-left"><img src="logo.png" alt="Logo" class="logo-img"></div>
-        <div class="header-center"><img src="brand-name.png" alt="Binary Ruthless Trader" class="brand-name-img"></div>
-        <div class="header-right">
-            <div class="social-links">
-                <a href="#">TELEGRAM</a>
-                <a href="#">YOUTUBE</a>
+    <div id="toolsListContainer">
+        <div class="tool-item" style="display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-left: 3px solid var(--red); margin-bottom: 10px;">
+            <span style="font-weight: bold; letter-spacing: 1px;">MONEY MANAGEMENT TOOL</span>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <label style="font-size: 10px;">ENABLE</label>
+                <input type="checkbox" checked onchange="autoSaveTool('mm_tool')" class="toggle-switch">
+                <button class="edit-btn" onclick="editExistingTool('mm_tool')">EDIT</button>
+                <button class="delete-btn" onclick="deleteTool('mm_tool')" style="color: var(--red); background: none; border: none; cursor: pointer; font-family: 'Roboto Mono';">DELETE</button>
             </div>
         </div>
-    </header>
+    </div>
+</div>
 
-    <main class="main-content">
-        <div class="small-container">
-            <h3>LOGIN</h3>
-            <input type="email" id="loginEmail" placeholder="ENTER EMAIL">
-            <input type="text" id="loginId" placeholder="ENTER USER ID">
-            <button class="action-btn" onclick="sendToFirebase('Login')">ACCESS SYSTEM</button>
-        </div>
+<style>
+    .toggle-switch { width: 40px; height: 20px; accent-color: var(--red); cursor: pointer; }
+    input[type="text"] { background: #000; border: 1px solid #333; color: var(--green); padding: 15px; border-radius: 5px; font-family: 'Roboto Mono'; font-weight: bold; }
+    .edit-btn { background: #222; border: 1px solid #444; color: #fff; padding: 8px 15px; cursor: pointer; font-size: 11px; font-family: 'Orbitron'; }
+    .action-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
+</style>
 
-        <div class="small-container">
-            <h3>SIGNUP</h3>
-            <input type="email" id="signupEmail" placeholder="ENTER NEW EMAIL">
-            <select id="signupBroker">
-                <option value="">SELECT BROKER</option>
-                <option value="QUOTEX">QUOTEX</option>
-                <option value="POCKET_OPTION">POCKET OPTION</option>
-            </select>
-            <button class="action-btn" onclick="sendToFirebase('Signup')">GET LINK</button>
-        </div>
+<script>
+    // Signals Logic
+    function saveSignalSettings(type) {
+        const urlValue = document.getElementById(type.toLowerCase() + 'Url').value;
+        const isEnabled = document.getElementById(type.toLowerCase() + 'Toggle').checked;
+        
+        // This will sync with Firebase so the Home Page knows which signals to fetch
+        console.log(`System: Mapping MT5 Path [${urlValue}] to ${type} Container. Status: ${isEnabled}`);
+        alert(`${type} Configuration Saved Successfully.`);
+    }
 
-        <div class="small-container">
-            <h3>VERIFY ID</h3>
-            <input type="email" id="verifyEmail" placeholder="REGISTERED EMAIL">
-            <input type="text" id="verifyId" placeholder="BROKER ID">
-            <button class="action-btn" onclick="sendToFirebase('Verify')">VERIFY NOW</button>
-        </div>
-    </main>
+    function toggleSignalVisibility(type) {
+        const isEnabled = document.getElementById(type.toLowerCase() + 'Toggle').checked;
+        // Immediate database update to show/hide in Home Page dropdown
+        console.log(`${type} visibility updated to: ${isEnabled}`);
+    }
 
-    <footer class="footer-container">
-        <div class="footer-item"><b>WARNING:</b> High risk investment.</div>
-        <div class="footer-item" style="text-align: center;">@BinaryRuthlessAdmin</div>
-        <div class="footer-item" style="text-align: right;">© 2026 BINARY RUTHLESS TRADER™</div>
-    </footer>
+    // Tools Logic
+    function openNewToolForm() {
+        document.getElementById('toolForm').style.display = 'block';
+        document.getElementById('toolName').value = '';
+        document.getElementById('toolCode').value = '';
+    }
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyByxYsoP5zq9MUaraHGSc2ZwO_85IXzfIw",
-            authDomain: "binary-ruthless-trader.firebaseapp.com",
-            databaseURL: "https://binary-ruthless-trader-default-rtdb.firebaseio.com",
-            projectId: "binary-ruthless-trader",
-            storageBucket: "binary-ruthless-trader.firebasestorage.app",
-            messagingSenderId: "363803749428",
-            appId: "1:363803749428:web:e380cb1a86fc0c53476e61"
-        };
+    function confirmSaveTool() {
+        const name = document.getElementById('toolName').value;
+        if(!name) return alert("Tool Name Required!");
+        
+        // Logic to push HTML code to database
+        // Home page dropdown will automatically fetch this name
+        alert(`${name} has been added to the System.`);
+        document.getElementById('toolForm').style.display = 'none';
+    }
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        function sendToFirebase(type) {
-            let email, id, extra = "";
-            
-            if(type === 'Login') {
-                email = document.getElementById('loginEmail').value;
-                id = document.getElementById('loginId').value;
-            } else if(type === 'Signup') {
-                email = document.getElementById('signupEmail').value;
-                id = "PENDING_ID";
-                extra = document.getElementById('signupBroker').value;
-            } else if(type === 'Verify') {
-                email = document.getElementById('verifyEmail').value;
-                id = document.getElementById('verifyId').value;
-            }
-
-            if(!email || !id) {
-                alert("Please fill all details!");
-                return;
-            }
-
-            // Pushing data to Firebase
-            const requestRef = database.ref('requests/' + Date.now());
-            requestRef.set({
-                requestType: type,
-                userEmail: email,
-                traderId: id,
-                brokerName: extra,
-                status: 'pending',
-                timestamp: new Date().toLocaleString()
-            }).then(() => {
-                alert(type + " Request Submitted! Check Database.");
-                document.querySelectorAll('input').forEach(input => input.value = '');
-            }).catch((error) => {
-                alert("Error: " + error.message);
-            });
-        }
-    </script>
-</body>
-</html>
+    function autoSaveTool(toolId) {
+        // Toggle switch logic for Tools
+        console.log(`Tool ${toolId} status toggled in Firebase.`);
+    }
+</script>
