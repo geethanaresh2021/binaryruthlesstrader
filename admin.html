@@ -51,29 +51,34 @@
         /* --- Main Layout --- */
         .admin-wrapper { display: flex; flex: 1; overflow: hidden; }
 
-        /* --- Sidebar Navigation --- */
-        .sidebar {
-            width: 260px; background: var(--sidebar-bg); border-right: 1px solid #1a1a1a;
-            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: auto;
-        }
+        /* --- Sidebar Navigation Updated --- */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 10px;
+    
+    /* Ikkada scrolling logic add chesam */
+    overflow-y: auto;          /* Vertical scrolling enable chestundi */
+    overflow-x: hidden;        /* Horizontal scrolling rakunda chestundi */
+    height: calc(100vh - 80px); /* Header height ni tisesi migilina space motham scroll avthundi */
+}
 
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--red); }
+/* Scrollbar Style (Sidebar scrollbar kanipinchadaniki mariyu stylish ga undadaniki) */
+.sidebar::-webkit-scrollbar {
+    width: 4px; /* Scrollbar sanna ga undali */
+}
 
-        .nav-group-label {
-            font-size: 10px; color: #444; margin: 20px 0 10px 10px;
-            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
-        }
+.sidebar::-webkit-scrollbar-track {
+    background: #000; /* Scrollbar venuka background black */
+}
 
-        .nav-btn {
-            background: #0f0f0f; border: 1px solid #1a1a1a; color: #888;
-            padding: 12px 15px; margin-bottom: 6px; text-align: left;
-            font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase;
-            cursor: pointer; transition: var(--transition); display: flex;
-            align-items: center; gap: 12px; border-radius: 4px; position: relative;
-        }
-
-        .nav-btn i { width: 18px; color: var(--red); font-size: 14px; text-align: center; transition: var(--transition); }
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--red); /* Scrollbar stick matram red ga vuntundi */
+    border-radius: 10px;
+}
 
         /* White Accent for Analytics Group Icons */
         .nav-btn.white-accent i { color: var(--white); }
