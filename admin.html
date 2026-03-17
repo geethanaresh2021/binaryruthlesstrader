@@ -177,7 +177,10 @@
     </div>
 
     <script>
-        function loadContent(moduleName) {
+                function loadContent(moduleName) {
+            // Memory lo save chesthunnam
+            localStorage.setItem('activeModule', moduleName);
+
             // Update Active Class
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
@@ -203,6 +206,15 @@
                 </div>
             `;
         }
+
+            // Refresh chesinappudu patha module ni load chesthundhi
+        window.onload = function() {
+            const lastModule = localStorage.getItem('activeModule');
+            if (lastModule) {
+                loadContent(lastModule);
+            }
+        };
+
     </script>
 </body>
 </html>
