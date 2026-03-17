@@ -6,12 +6,6 @@
     <title>Admin Dashboard | Ruthless System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    <link rel="icon" type="image/png" href="logo.png">
-    
-
     
     <style>
         :root {
@@ -185,13 +179,12 @@
         
         // --- Global Logic for Firebase & UI ---
 function loadContent(moduleName) {
-    // 1. Memory lo save chesthunnam
+    // Memory lo save chesthunnam
     localStorage.setItem('activeModule', moduleName);
 
-    // 2. Sidebar Buttons visual highlight (Active state)
+    // Update Active Class for Sidebar Buttons
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Button text ni trim chesi check chesthunnam
         if (btn.innerText.trim() === moduleName) {
             btn.classList.add('active');
         } else {
@@ -199,40 +192,31 @@ function loadContent(moduleName) {
         }
     });
 
-    // 3. Header Title Update (Mee mistake ikkade undi undochu)
-    // Dynamic ga module name vacchela ikkada logic update cheshanu
-    const headerElement = document.getElementById('panelHeader');
-    if (headerElement) {
-        headerElement.innerHTML = `
-            <h1>${moduleName}</h1>
-            <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
-        `;
-    }
+    // Update Header
+    document.getElementById('panelHeader').innerHTML = `
+        <h1>${moduleName}</h1>
+        <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
+    `;
 
     const mainDisplay = document.getElementById('mainDisplay');
 
-    // 4. Module wise content routing
+    // --- Module Routing ---
     switch (moduleName) {
         case 'Firebase':
             renderFirebaseModule();
             break;
-
-        case 'Website SEO':
-            renderSEOModule();
-            break;
-
-        // Ikkada placeholder logic
+            
+        // Ikkada future lo vere modules (Signal Connection, VPS, etc.) logic add cheసుకోవచ్చు
         default:
             mainDisplay.innerHTML = `
                 <div class="placeholder-card">
                     <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
                     [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO CONFIGURE ${moduleName} DATA.</small>
+                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH FIREBASE DATABASE.</small>
                 </div>
             `;
     }
 }
-
 
 // --- Firebase Specific Logic ---
 function renderFirebaseModule() {
@@ -332,168 +316,7 @@ window.onload = function() {
     const lastModule = localStorage.getItem('activeModule') || 'Views';
     loadContent(lastModule);
 };
-// --- Website SEO Module Logic ---
-function renderSEOModule() {
-    const seoData = JSON.parse(localStorage.getItem('seo_settings')) || {
-        name: "Binary Ruthless Trader",
-        desc: "Official System for high accuracy signals.",
-        keywords: "binary, ruthless, trader",
-        favicon: "// Favicon Section in renderSEOModule function
-<div class="seo-field">
-    <span class="seo-label"><i class="fas fa-image"></i> Current Favicon (GitHub Source)</span>
-    <div class="fav-container">
-        <div class="favicon-preview" id="fav-preview">
-            <img src="logo.png" onerror="this.src='https://via.placeholder.com/60?text=No+Logo'">
-        </div>
-        <div>
-            <p style="font-size: 10px; color: #555; font-family: 'Roboto Mono'; margin-top: 5px;">
-                FILE PATH: <span style="color: #00ffcc;">./logo.png</span>
-            </p>
-            <small style="color: #444; font-size: 9px;">Note: To change, replace logo.png in your GitHub folder.</small>
-        </div>
-    </div>
-</div>
-        "
-    };
 
-    const seoStyle = `
-        <style>
-            .seo-card { background: #000; border: 1px solid #1a1a1a; padding: 25px; border-radius: 8px; margin-bottom: 20px; }
-            .seo-field { margin-bottom: 25px; border-bottom: 1px solid #111; padding-bottom: 20px; }
-            .seo-label { font-size: 11px; color: var(--red); letter-spacing: 2px; margin-bottom: 10px; display: block; text-transform: uppercase; }
-            .seo-display { font-family: 'Roboto Mono'; color: #00ffcc; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
-            .seo-input-hidden { display: none; width: 100%; background: #080808; border: 1px solid var(--red); color: #fff; padding: 12px; font-family: 'Roboto Mono'; margin-bottom: 10px; border-radius: 4px; }
-            .seo-btn-group { display: flex; gap: 10px; }
-            .seo-action-btn { background: transparent; border: 1px solid #333; color: #666; padding: 6px 15px; font-size: 10px; cursor: pointer; border-radius: 3px; font-family: 'Orbitron'; transition: 0.2s; }
-            .seo-action-btn:hover { border-color: var(--red); color: #fff; }
-            .save-btn-ui { display: none; background: var(--red); color: #fff; border: none; padding: 6px 15px; font-size: 10px; cursor: pointer; border-radius: 3px; font-family: 'Orbitron'; box-shadow: 0 0 10px rgba(255,0,0,0.3); }
-            .fav-container { display: flex; align-items: center; gap: 20px; margin-top: 10px; }
-            .favicon-preview { width: 60px; height: 60px; border: 2px solid #222; background: #0a0a0a; display: flex; align-items: center; justify-content: center; border-radius: 4px; overflow: hidden; }
-            .favicon-preview img { width: 100%; height: 100%; object-fit: contain; }
-        </style>
-    `;
-
-    document.getElementById('mainDisplay').innerHTML = seoStyle + `
-        <div class="seo-card">
-            <div class="seo-field" id="field-name">
-                <span class="seo-label"><i class="fas fa-globe"></i> Website Name (Title)</span>
-                <div class="seo-display" id="display-name">${seoData.name}</div>
-                <input type="text" id="input-name" class="seo-input-hidden" value="${seoData.name}">
-                <div class="seo-btn-group">
-                    <button class="seo-action-btn" onclick="toggleSEOEdit('name')">EDIT</button>
-                    <button class="save-btn-ui" onclick="saveSEOData('name')">SAVE NAME</button>
-                </div>
-            </div>
-
-            <div class="seo-field" id="field-desc">
-                <span class="seo-label"><i class="fas fa-align-left"></i> Meta Description</span>
-                <div class="seo-display" id="display-desc">${seoData.desc}</div>
-                <textarea id="input-desc" class="seo-input-hidden" rows="3">${seoData.desc}</textarea>
-                <div class="seo-btn-group">
-                    <button class="seo-action-btn" onclick="toggleSEOEdit('desc')">EDIT</button>
-                    <button class="save-btn-ui" onclick="saveSEOData('desc')">SAVE DESCRIPTION</button>
-                </div>
-            </div>
-
-            <div class="seo-field" id="field-keywords">
-                <span class="seo-label"><i class="fas fa-tags"></i> SEO Keywords (Comma Separated)</span>
-                <div class="seo-display" id="display-keywords">${seoData.keywords}</div>
-                <input type="text" id="input-keywords" class="seo-input-hidden" value="${seoData.keywords}" placeholder="e.g. binary, ruthless, trader">
-                <div class="seo-btn-group">
-                    <button class="seo-action-btn" onclick="toggleSEOEdit('keywords')">EDIT</button>
-                    <button class="save-btn-ui" onclick="saveSEOData('keywords')">SAVE KEYWORDS</button>
-                </div>
-            </div>
-
-            <div class="seo-field">
-                <span class="seo-label"><i class="fas fa-image"></i> Favicon (Upload to Firebase)</span>
-                <div class="fav-container">
-                    <div class="favicon-preview" id="fav-preview">
-                        ${seoData.favicon ? `<img src="${seoData.favicon}">` : '<i class="fas fa-cloud-upload-alt" style="color:#222; font-size:24px;"></i>'}
-                    </div>
-                    <div>
-                        <input type="file" id="fav-file" accept="image/*" style="display:none" onchange="previewSEOImage(this)">
-                        <button class="seo-action-btn" onclick="document.getElementById('fav-file').click()">CHOOSE IMAGE</button>
-                        <button id="fav-upload-btn" class="save-btn-ui" style="margin-top:10px;" onclick="uploadFaviconToFirebase()">UPLOAD & SAVE</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// --- Helper Functions ---
-
-function toggleSEOEdit(field) {
-    document.getElementById(`display-${field}`).style.display = 'none';
-    document.getElementById(`input-${field}`).style.display = 'block';
-    document.querySelector(`#field-${field} .seo-action-btn`).style.display = 'none';
-    document.querySelector(`#field-${field} .save-btn-ui`).style.display = 'inline-block';
-}
-
-function saveSEOData(field) {
-    const newVal = document.getElementById(`input-${field}`).value;
-    let seoData = JSON.parse(localStorage.getItem('seo_settings')) || {};
-    seoData[field] = newVal;
-    localStorage.setItem('seo_settings', JSON.stringify(seoData));
-
-    // Reset UI
-    document.getElementById(`display-${field}`).innerText = newVal;
-    document.getElementById(`display-${field}`).style.display = 'block';
-    document.getElementById(`input-${field}`).style.display = 'none';
-    document.querySelector(`#field-${field} .seo-action-btn`).style.display = 'inline-block';
-    document.querySelector(`#field-${field} .save-btn-ui`).style.display = 'none';
-    alert(field.toUpperCase() + " updated locally!");
-}
-
-let tempSeoFile = null;
-function previewSEOImage(input) {
-    if (input.files && input.files[0]) {
-        tempSeoFile = input.files[0];
-        const reader = new FileReader();
-        reader.onload = e => {
-            document.getElementById('fav-preview').innerHTML = `<img src="${e.target.result}">`;
-            document.getElementById('fav-upload-btn').style.display = 'inline-block';
-        };
-        reader.readAsDataURL(tempSeoFile);
-    }
-}
-
-async function uploadFaviconToFirebase() {
-    if (!tempSeoFile) return;
-    const btn = document.getElementById('fav-upload-btn');
-    btn.innerText = "UPLOADING...";
-    btn.disabled = true;
-
-    try {
-        // Firebase initialization check
-        if (!firebase.apps.length) {
-            const configs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-            const activeIdx = localStorage.getItem('fb_active_index');
-            if (configs[activeIdx]) firebase.initializeApp(configs[activeIdx]);
-            else throw new Error("No Active Firebase Connection!");
-        }
-
-        const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child('system/favicon_' + Date.now());
-        const snapshot = await fileRef.put(tempSeoFile);
-        const url = await snapshot.ref.getDownloadURL();
-
-        let seoData = JSON.parse(localStorage.getItem('seo_settings')) || {};
-        seoData.favicon = url;
-        localStorage.setItem('seo_settings', JSON.stringify(seoData));
-        
-        btn.style.display = 'none';
-        btn.innerText = "UPLOAD & SAVE";
-        btn.disabled = false;
-        alert("Favicon uploaded to Firebase successfully!");
-    } catch (err) {
-        alert("Upload Error: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "UPLOAD & SAVE";
-    }
-                                       }
-        
      
                
     </script>
