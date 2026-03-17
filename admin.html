@@ -186,22 +186,24 @@
     </div>
 
     <script>
-                        function loadContent(moduleName) {
+          function loadContent(moduleName) {
             // Memory lo save cheyyadam (Refresh chesina marakunda)
             localStorage.setItem('activeModule', moduleName);
 
             // Sidebar Buttons update (Active color kosam)
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
-                if(btn.innerText.trim() === moduleName) {
+                // Button text ni trim chesi check chesthunnam
+                if(btn.innerText.trim().includes(moduleName)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
 
-            // Ikkada Header update avthundi - "Admin Dashboard" badulu moduleName vasthundi
-            document.getElementById('panelHeader').innerHTML = `
+            // IKKADA TITLE UPDATE AVTHUNDI
+            const panelHeader = document.getElementById('panelHeader');
+            panelHeader.innerHTML = `
                 <h1 style="text-transform: uppercase; letter-spacing: 3px;">${moduleName}</h1>
                 <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
             `;
@@ -221,6 +223,7 @@
                 </div>
             `;
         }
+
 
 
         function renderFirebaseManager() {
