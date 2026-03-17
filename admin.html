@@ -185,12 +185,13 @@
         
         // --- Global Logic for Firebase & UI ---
 function loadContent(moduleName) {
-    // Memory lo save chesthunnam
+    // 1. Memory lo save chesthunnam
     localStorage.setItem('activeModule', moduleName);
 
-    // Update Active Class for Sidebar Buttons
+    // 2. Sidebar Buttons visual highlight (Active state)
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
+        // Button text ni trim chesi check chesthunnam
         if (btn.innerText.trim() === moduleName) {
             btn.classList.add('active');
         } else {
@@ -198,36 +199,40 @@ function loadContent(moduleName) {
         }
     });
 
-    // Update Header
-    document.getElementById('panelHeader').innerHTML = `
-        <h1>${moduleName}</h1>
-        <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
-    `;
+    // 3. Header Title Update (Mee mistake ikkade undi undochu)
+    // Dynamic ga module name vacchela ikkada logic update cheshanu
+    const headerElement = document.getElementById('panelHeader');
+    if (headerElement) {
+        headerElement.innerHTML = `
+            <h1>${moduleName}</h1>
+            <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
+        `;
+    }
 
     const mainDisplay = document.getElementById('mainDisplay');
 
-    // --- Module Routing ---
+    // 4. Module wise content routing
     switch (moduleName) {
         case 'Firebase':
             renderFirebaseModule();
             break;
 
-                    case 'Website SEO':
+        case 'Website SEO':
             renderSEOModule();
             break;
-            
-            
-        // Ikkada future lo vere modules (Signal Connection, VPS, etc.) logic add cheసుకోవచ్చు
+
+        // Ikkada placeholder logic
         default:
             mainDisplay.innerHTML = `
                 <div class="placeholder-card">
                     <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
                     [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH FIREBASE DATABASE.</small>
+                    <small style="color:#555; margin-top:10px; display:block;">READY TO CONFIGURE ${moduleName} DATA.</small>
                 </div>
             `;
     }
 }
+
 
 // --- Firebase Specific Logic ---
 function renderFirebaseModule() {
