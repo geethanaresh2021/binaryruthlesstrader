@@ -10,7 +10,7 @@
     <style>
         :root { 
             --red: #ff0000; 
-            --green: #00ffcc; 
+            --white: #ffffff; 
             --bg: #050505; 
             --panel: #0a0a0a;
             --neon: 0 0 15px var(--red); 
@@ -28,35 +28,66 @@
             overflow-x: hidden;
         }
 
-        /* --- Custom Scrollbar --- */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
         /* --- Header & Branding --- */
         .header { 
             width: 100%; 
-            padding: 20px; 
+            padding: 15px 30px; 
             background: #000; 
             border-bottom: 2px solid var(--red); 
             display: flex; 
-            flex-direction: column; 
-            align-items: center;
-        }
-
-        .brand-wrapper {
-            display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
-            max-width: 1200px;
+            position: relative;
         }
 
-        .brand-img { width: 320px; filter: drop-shadow(0 0 10px var(--red)); }
+        .brand-img { width: 280px; filter: drop-shadow(0 0 10px var(--red)); }
 
-        .social-login-group { display: flex; align-items: center; gap: 20px; }
-        .social-icons { display: flex; gap: 15px; }
-        .social-icons a { color: #fff; font-size: 18px; transition: var(--transition); }
-        .social-icons a:hover { color: var(--red); transform: scale(1.2); }
+        .header-right-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 25px; 
+        }
+
+        .social-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .social-group a { 
+            color: #fff; 
+            font-size: 18px; 
+            transition: var(--transition); 
+        }
+        
+        .social-group a:hover { 
+            color: var(--red); 
+            transform: translateY(-3px) scale(1.2); 
+            text-shadow: 0 0 10px var(--red);
+        }
+
+        .join-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-family: 'Orbitron';
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: var(--transition);
+            box-shadow: 0 0 5px var(--red);
+        }
+
+        .join-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--red);
+            background: #cc0000;
+        }
 
         .admin-trigger { 
             background: transparent; 
@@ -69,7 +100,7 @@
             border-radius: 4px; 
             transition: var(--transition);
         }
-        .admin-trigger:hover { border-color: var(--red); color: var(--red); }
+        .admin-trigger:hover { border-color: var(--red); color: var(--red); box-shadow: 0 0 8px rgba(255, 0, 0, 0.3); }
 
         /* --- Horizontal Info Bars --- */
         .info-bar {
@@ -81,11 +112,9 @@
             font-family: 'Roboto Mono';
             font-size: 12px;
             text-transform: uppercase;
-            overflow: hidden;
-            white-space: nowrap;
         }
         .warning-bar { background: rgba(255, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 0, 0, 0.3); color: var(--red); }
-        .winner-bar { background: rgba(0, 255, 204, 0.05); border-bottom: 1px solid #111; color: var(--green); }
+        .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
 
         /* --- Main Content --- */
         .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -99,15 +128,17 @@
             margin-top: 20px;
         }
 
-        .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
-        /* --- UI Components: Select & Display --- */
+        /* --- Custom Styled Select --- */
+        .select-wrapper { position: relative; width: 100%; }
+
         .ruthless-select {
             width: 100%;
             padding: 15px;
             background: var(--panel);
             border: 1px solid #222;
-            color: var(--green);
+            color: var(--white);
             font-family: 'Roboto Mono';
             font-weight: bold;
             border-radius: 6px;
@@ -118,7 +149,16 @@
             background-repeat: no-repeat;
             background-position: right 15px center;
         }
-        .ruthless-select:hover { border-color: var(--red); box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
+
+        .ruthless-select:hover { 
+            border-color: var(--red); 
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); 
+        }
+
+        .ruthless-select option {
+            background: #000;
+            color: #fff;
+        }
 
         .display-box { 
             width: 100%; height: 400px; 
@@ -130,7 +170,6 @@
             overflow: hidden;
         }
 
-        /* --- Footer --- */
         .footer {
             width: 100%;
             height: 40px;
@@ -144,54 +183,35 @@
             font-size: 10px;
             color: #444;
         }
-        .footer a { color: #666; text-decoration: none; transition: var(--transition); }
-        .footer a:hover { color: var(--red); }
 
-        /* --- Login Popup Styling --- */
-        .swal2-popup {
-            background: var(--panel) !important;
-            border: 1px solid var(--red) !important;
-            color: #fff !important;
-            font-family: 'Orbitron' !important;
-            border-radius: 0 !important;
-        }
-        .swal2-input {
-            border: 1px solid #222 !important;
-            background: #000 !important;
-            color: var(--green) !important;
-            font-family: 'Roboto Mono' !important;
-        }
-
-        /* Mobile Adjustments */
         @media (max-width: 768px) {
-            .brand-wrapper { flex-direction: column; gap: 15px; }
+            .header { flex-direction: column; gap: 15px; padding: 20px; }
             .widget-container { flex-direction: column; }
-            .brand-img { width: 260px; }
+            .brand-img { width: 220px; }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="brand-wrapper">
-            <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            
-            <div class="social-login-group">
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-                <button class="admin-trigger" onclick="adminLogin()">ADMIN</button>
+        <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
+        
+        <div class="header-right-group">
+            <div class="social-group">
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <button class="join-btn">JOIN</button>
             </div>
+            <button class="admin-trigger" onclick="adminLogin()">ADMIN</button>
         </div>
     </header>
 
     <div class="info-bar warning-bar">
-        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. USE SIGNALS AT YOUR OWN RESPONSIBILITY. STAY RUTHLESS.</marquee>
+        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
     </div>
     <div class="info-bar winner-bar">
-        <marquee scrollamount="4"><i class="fas fa-trophy"></i> TODAY'S GIVEAWAY WINNER: @USER_TRADER_01 --- CONGRATULATIONS! --- NEXT DRAW IN 24 HOURS.</marquee>
+        <marquee scrollamount="4"><i class="fas fa-trophy"></i> GIVEAWAY WINNER: @USER_TRADER_01 --- NEXT DRAW IN 24 HOURS.</marquee>
     </div>
 
     <div class="page-content">
@@ -219,11 +239,10 @@
     </div>
 
     <footer class="footer">
-        <div>© 2026 BINARY RUTHLESS TRADER | ALL RIGHTS RESERVED</div>
+        <div>© 2026 BINARY RUTHLESS TRADER</div>
         <div style="display: flex; gap: 20px;">
-            <a href="#">CONTACT US</a>
-            <a href="#">TERMS</a>
-            <a href="#">PRIVACY</a>
+            <a href="#" style="color: #666; text-decoration: none;">CONTACT</a>
+            <a href="#" style="color: #666; text-decoration: none;">TERMS</a>
         </div>
     </footer>
 
@@ -233,18 +252,16 @@
             Swal.fire({
                 title: 'ACCESS KEY',
                 input: 'password',
-                inputAttributes: { autocapitalize: 'off' },
                 showCancelButton: true,
                 confirmButtonText: 'LOGIN',
                 confirmButtonColor: '#ff0000',
                 background: '#0a0a0a',
+                color: '#fff'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    if(result.value === "0000") {
-                        window.location.href = "admin.html";
-                    } else {
-                        Swal.fire({ icon: 'error', title: 'DENIED', text: 'INVALID KEY', confirmButtonColor: '#ff0000' });
-                    }
+                if (result.isConfirmed && result.value === "0000") {
+                    window.location.href = "admin.html";
+                } else if (result.isConfirmed) {
+                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000' });
                 }
             })
         }
