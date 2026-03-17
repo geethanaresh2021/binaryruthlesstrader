@@ -261,34 +261,44 @@
 
     <script>
         function loadContent(moduleName) {
-            // Update Active Class
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => {
-                if(btn.innerText.includes(moduleName)) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+    // Current module ni memory lo save chesthunnam
+    localStorage.setItem('ruthless_current_page', moduleName);
 
-            // Update Header
-            document.getElementById('panelHeader').innerHTML = `
-                <h1>${moduleName}</h1>
-                <p>Managing ${moduleName} module settings and data.</p>
-            `;
-
-            // Placeholder for future logic
-            document.getElementById('mainDisplay').innerHTML = `
-                <div class="placeholder-card">
-                    [ ${moduleName} MODULE LOADED ]<br>
-                    <small style="color:#555">Functions for this module will be added in the next step.</small>
-                </div>
-            `;
+    // Sidebar active state highlight logic
+    const buttons = document.querySelectorAll('.nav-btn');
+    buttons.forEach(btn => {
+        if(btn.innerText.includes(moduleName)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
         }
+    });
+
+    // Firebase kosam special check
+    if(moduleName === 'Firebase') {
+        loadFirebaseManager();
+        return;
+    }
+
+    // Header update
+    document.getElementById('panelHeader').innerHTML = `
+        <h1>${moduleName}</h1>
+        <p>Managing ${moduleName} module settings and data.</p>
+    `;
+
+    // Content Display
+    document.getElementById('mainDisplay').innerHTML = `
+        <div class="placeholder-card">
+            [ ${moduleName} MODULE LOADED ]<br>
+            <small style="color:#555">Functions for this module will be added in the next step.</small>
+        </div>
+    `;
+}
         // --- FIREBASE MANAGER LOGIC ---
 
 function loadFirebaseManager() {
     // Sidebar active state highlight
+    localStorage.setItem('ruthless_current_page', 'Firebase');
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
         if(btn.innerText.includes('Firebase')) btn.classList.add('active');
@@ -413,12 +423,24 @@ function deleteFirebase(index) {
 
 // AUTO-CONNECT ON PAGE LOAD
 window.addEventListener('load', () => {
+    // 1. Firebase Auto-connect (Already unna logic)
     const activeConfig = localStorage.getItem('ruthless_fb_config');
     if(activeConfig) {
         try {
-            firebase.initializeApp(JSON.parse(activeConfig));
+            if (!firebase.apps.length) {
+                firebase.initializeApp(JSON.parse(activeConfig));
+            }
             console.log("Firebase Auto-connected");
         } catch(e) { console.log("Auto-connect failed"); }
+    }
+
+    // 2. Page Persistence (Refresh chesina same page ravalante)
+    const lastPage = localStorage.getItem('ruthless_current_page');
+    if(lastPage) {
+        loadContent(lastPage);
+    } else {
+        // First time load ayinappudu default ga Views or Dashboard
+        loadContent('Views'); 
     }
 });
     </script>
