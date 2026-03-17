@@ -6,9 +6,6 @@
     <title>Admin Dashboard | Ruthless System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
     <style>
         :root {
@@ -240,7 +237,7 @@
             <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
             <button class="nav-btn" onclick="loadContent('Join Section')"><i class="fas fa-user-plus"></i> Join</button>
             <button class="nav-btn" onclick="loadContent('Website SEO')"><i class="fas fa-search"></i> Website SEO</button>
-            <button class="nav-btn" onclick="loadFirebaseManager()"><i class="fas fa-fire-alt"></i> Firebase</button>
+            <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
             <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
             <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
         </nav>
@@ -261,270 +258,30 @@
 
     <script>
         function loadContent(moduleName) {
-    // Current module ni memory lo save chesthunnam
-    localStorage.setItem('ruthless_current_page', moduleName);
+            // Update Active Class
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                if(btn.innerText.includes(moduleName)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
 
-    // Sidebar active state highlight logic
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
-        if(btn.innerText.includes(moduleName)) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
+            // Update Header
+            document.getElementById('panelHeader').innerHTML = `
+                <h1>${moduleName}</h1>
+                <p>Managing ${moduleName} module settings and data.</p>
+            `;
+
+            // Placeholder for future logic
+            document.getElementById('mainDisplay').innerHTML = `
+                <div class="placeholder-card">
+                    [ ${moduleName} MODULE LOADED ]<br>
+                    <small style="color:#555">Functions for this module will be added in the next step.</small>
+                </div>
+            `;
         }
-    });
-
-    // Firebase kosam special check
-    if(moduleName === 'Firebase') {
-        loadFirebaseManager();
-        return;
-    }
-
-    // Header update
-    document.getElementById('panelHeader').innerHTML = `
-        <h1>${moduleName}</h1>
-        <p>Managing ${moduleName} module settings and data.</p>
-    `;
-
-    // Content Display
-    document.getElementById('mainDisplay').innerHTML = `
-        <div class="placeholder-card">
-            [ ${moduleName} MODULE LOADED ]<br>
-            <small style="color:#555">Functions for this module will be added in the next step.</small>
-        </div>
-    `;
-}
-        // --- FIREBASE MANAGER LOGIC ---
-
-function loadFirebaseManager() {
-    // Sidebar active state highlight
-    localStorage.setItem('ruthless_current_page', 'Firebase');
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
-        if(btn.innerText.includes('Firebase')) btn.classList.add('active');
-        else btn.classList.remove('active');
-    });
-
-    const mainDisplay = document.getElementById('mainDisplay');
-    const panelHeader = document.getElementById('panelHeader');
-
-    // Update Header Text
-    panelHeader.innerHTML = `<h1>Firebase Manager</h1><p>Manage and switch between multiple Firebase projects.</p>`;
-
-    let savedConfigs = JSON.parse(localStorage.getItem('ruthless_firebases') || '[]');
-    let activeIndex = localStorage.getItem('ruthless_active_fb_index');
-
-    let configHtml = savedConfigs.map((cfg, index) => `
-        <div style="background:#111; border:1px solid ${activeIndex == index ? 'var(--green)' : '#222'}; padding:15px; margin-bottom:10px; border-radius:8px; position:relative;">
-            <div style="font-size:10px; color:${activeIndex == index ? 'var(--green)' : '#666'}; margin-bottom:5px; font-family:'Roboto Mono';">
-                ${activeIndex == index ? '● ACTIVE CONNECTION' : 'SAVED CONFIG #' + (index + 1)}
-            </div>
-            <div style="font-family:'Roboto Mono'; font-size:11px; color:#aaa; overflow:hidden; text-overflow:ellipsis;">ID: ${cfg.projectId}</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                <button onclick="connectFirebase(${index})" style="background:${activeIndex == index ? 'var(--green)' : 'transparent'}; border:1px solid ${activeIndex == index ? 'var(--green)' : '#444'}; color:${activeIndex == index ? '#000' : '#fff'}; padding:5px 12px; cursor:pointer; font-family:'Roboto Mono'; font-size:10px; font-weight:bold; border-radius:4px; transition:0.3s;">
-                    ${activeIndex == index ? 'CONNECTED' : 'CONNECT'}
-                </button>
-                <button onclick="deleteFirebase(${index})" style="background:transparent; border:none; color:#ff0000; cursor:pointer; font-size:14px;"><i class="fas fa-trash"></i></button>
-            </div>
-        </div>
-    `).join('');
-
-    mainDisplay.innerHTML = `
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:25px;">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid #222; padding:20px; border-radius:8px;">
-                <h3 style="color:var(--red); margin-bottom:15px; font-size:12px; letter-spacing:1px;">ADD NEW FIREBASE</h3>
-                <input type="text" id="fb_apiKey" placeholder="API Key" class="fb-input">
-                <input type="text" id="fb_dbURL" placeholder="Database URL" class="fb-input">
-                <input type="text" id="fb_projectId" placeholder="Project ID" class="fb-input">
-                <input type="text" id="fb_appId" placeholder="App ID" class="fb-input">
-                
-                <button onclick="saveNewFirebase()" style="width:100%; padding:12px; background:var(--red); color:#fff; border:none; font-family:'Orbitron'; font-weight:bold; cursor:pointer; border-radius:4px; margin-top:10px;">SAVE & CONNECT</button>
-                <div id="connStatus" style="margin-top:15px; text-align:center; font-family:'Roboto Mono'; font-size:11px; font-weight:bold;"></div>
-            </div>
-
-            <div style="background:rgba(255,255,255,0.02); border:1px solid #222; padding:20px; border-radius:8px;">
-                <h3 style="color:#555; margin-bottom:15px; font-size:12px; letter-spacing:1px;">SAVED NETWORKS</h3>
-                <div id="fbList" style="max-height:400px; overflow-y:auto;">${configHtml || '<div style="color:#222; text-align:center; padding:50px; font-size:10px;">NO SAVED CONFIGS</div>'}</div>
-            </div>
-        </div>
-
-        <style>
-            .fb-input { width:100%; padding:12px; background:#000; border:1px solid #222; color:var(--green); font-family:'Roboto Mono'; margin-bottom:10px; border-radius:4px; font-size:11px; transition:0.3s; }
-            .fb-input:focus { border-color:var(--red); outline:none; box-shadow: 0 0 5px rgba(255,0,0,0.2); }
-        </style>
-    `;
-}
-
-function saveNewFirebase() {
-    const config = {
-        apiKey: document.getElementById('fb_apiKey').value,
-        databaseURL: document.getElementById('fb_dbURL').value,
-        projectId: document.getElementById('fb_projectId').value,
-        appId: document.getElementById('fb_appId').value
-    };
-
-    if(!config.apiKey || !config.projectId) {
-        alert("Enter API Key and Project ID!");
-        return;
-    }
-
-    let savedConfigs = JSON.parse(localStorage.getItem('ruthless_firebases') || '[]');
-    savedConfigs.push(config);
-    localStorage.setItem('ruthless_firebases', JSON.stringify(savedConfigs));
-    localStorage.setItem('ruthless_active_fb_index', savedConfigs.length - 1);
-    
-    testAndSaveConnection(config);
-}
-
-function testAndSaveConnection(config) {
-    const statusDiv = document.getElementById('connStatus');
-    statusDiv.innerHTML = "STATUS: CONNECTING...";
-    statusDiv.style.color = "#ffaa00";
-
-    try {
-        if (firebase.apps.length) firebase.app().delete();
-        firebase.initializeApp(config);
-        
-        firebase.database().ref('.info/connected').on('value', (snap) => {
-            if (snap.val() === true) {
-                statusDiv.innerHTML = "STATUS: CONNECTED SUCCESSFULLY";
-                statusDiv.style.color = "var(--green)";
-                localStorage.setItem('ruthless_fb_config', JSON.stringify(config)); 
-                setTimeout(loadFirebaseManager, 1000);
-            } else {
-                statusDiv.innerHTML = "STATUS: CONNECTION FAILED";
-                statusDiv.style.color = "var(--red)";
-            }
-        });
-    } catch (e) {
-        statusDiv.innerHTML = "ERROR: " + e.message;
-        statusDiv.style.color = "var(--red)";
-    }
-}
-
-function connectFirebase(index) {
-    let savedConfigs = JSON.parse(localStorage.getItem('ruthless_firebases') || '[]');
-    localStorage.setItem('ruthless_active_fb_index', index);
-    testAndSaveConnection(savedConfigs[index]);
-}
-
-function deleteFirebase(index) {
-    if(confirm("Delete this configuration?")) {
-        let savedConfigs = JSON.parse(localStorage.getItem('ruthless_firebases') || '[]');
-        savedConfigs.splice(index, 1);
-        localStorage.setItem('ruthless_firebases', JSON.stringify(savedConfigs));
-        if(localStorage.getItem('ruthless_active_fb_index') == index) {
-            localStorage.removeItem('ruthless_active_fb_index');
-            localStorage.removeItem('ruthless_fb_config');
-        }
-        loadFirebaseManager();
-    }
-}
-
-// AUTO-CONNECT ON PAGE LOAD
-window.addEventListener('load', () => {
-    // 1. Firebase Auto-connect (Already unna logic)
-    const activeConfig = localStorage.getItem('ruthless_fb_config');
-    if(activeConfig) {
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(JSON.parse(activeConfig));
-            }
-            console.log("Firebase Auto-connected");
-        } catch(e) { console.log("Auto-connect failed"); }
-    }
-
-    // 2. Page Persistence (Refresh chesina same page ravalante)
-    const lastPage = localStorage.getItem('ruthless_current_page');
-    if(lastPage) {
-        loadContent(lastPage);
-    } else {
-        // First time load ayinappudu default ga Views or Dashboard
-       function loadViewsManager() {
-    localStorage.setItem('ruthless_current_page', 'Views');
-    document.getElementById('panelHeader').innerHTML = `<h1>Live Analytics</h1><p>Real-time traffic and signal statistics.</p>`;
-    
-    document.getElementById('mainDisplay').innerHTML = `
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:30px;">
-            <div class="stat-card"><div class="stat-label">ONLINE</div><div class="stat-value" id="count_online" style="color:var(--green);">0</div></div>
-            <div class="stat-card"><div class="stat-label">UNIQUE</div><div class="stat-value" id="count_unique">0</div></div>
-            <div class="stat-card"><div class="stat-label">TRAFFIC</div><div class="stat-value" id="count_traffic">0</div></div>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-            <div class="stat-card"><div class="stat-label">QUOTEX</div><div class="stat-value" id="count_quotex">0</div></div>
-            <div class="stat-card"><div class="stat-label">TOXA</div><div class="stat-value" id="count_toxa">0</div></div>
-        </div>
-    `;
-    
-    // START TRACKING
-    startAnalyticsTracking();
-}
-    // UI Setup
-    document.getElementById('panelHeader').innerHTML = `<h1>Live Analytics</h1><p>Real-time traffic and signal statistics.</p>`;
-    
-    document.getElementById('mainDisplay').innerHTML = `
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:30px;">
-            <div class="stat-card">
-                <div class="stat-label">ONLINE USERS</div>
-                <div class="stat-value" id="count_online" style="color:var(--green); text-shadow: 0 0 10px var(--green);">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">UNIQUE USERS</div>
-                <div class="stat-value" id="count_unique">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">TODAY TRAFFIC</div>
-                <div class="stat-value" id="count_traffic">0</div>
-            </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-            <div class="stat-card" style="border-color: #555;">
-                <div class="stat-label">QUOTEX SIGNALS (TODAY)</div>
-                <div class="stat-value" id="count_quotex" style="font-size:24px;">0</div>
-            </div>
-            <div class="stat-card" style="border-color: #555;">
-                <div class="stat-label">TOXA SIGNALS (TODAY)</div>
-                <div class="stat-value" id="count_toxa" style="font-size:24px;">0</div>
-            </div>
-        </div>
-
-        <style>
-            .stat-card { background:#0a0a0a; border:1px solid #222; padding:20px; border-radius:8px; text-align:center; transition:0.3s; }
-            .stat-card:hover { border-color:var(--red); box-shadow: var(--neon); }
-            .stat-label { font-size:10px; color:#555; letter-spacing:1px; margin-bottom:10px; }
-            .stat-value { font-family:'Roboto Mono'; font-size:32px; font-weight:bold; }
-        </style>
-    `;
-
-    // Start Firebase Listeners
-    startAnalyticsTracking();
-}
-
-function startAnalyticsTracking() {
-    if (!firebase.apps.length) {
-        const config = JSON.parse(localStorage.getItem('ruthless_fb_config'));
-        if(config) firebase.initializeApp(config);
-        else return;
-    }
-
-    const db = firebase.database();
-    const today = new Date().toLocaleDateString('en-CA');
-
-    // Online Count
-    db.ref('analytics/online').on('value', (snap) => {
-        document.getElementById('count_online').innerText = snap.numChildren() || 0;
-    });
-
-    // Daily Stats
-    db.ref('analytics/daily/' + today).on('value', (snap) => {
-        const data = snap.val() || {};
-        document.getElementById('count_traffic').innerText = data.traffic || 0;
-        document.getElementById('count_unique').innerText = data.unique_list ? Object.keys(data.unique_list).length : 0;
-        document.getElementById('count_quotex').innerText = data.quotex || 0;
-        document.getElementById('count_toxa').innerText = data.toxa || 0;
-    });
-}
     </script>
 </body>
 </html>
