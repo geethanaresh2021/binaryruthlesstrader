@@ -229,51 +229,81 @@
         let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
 
         function renderFirebaseManager() {
+                function renderFirebaseManager() {
+            let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
+            
             let listHtml = firebaseList.map((fb, index) => `
-                <div class="firebase-card">
+                <div class="firebase-card" style="border-left: 3px solid ${fb.connected ? '#00ff00' : '#ff0000'}; margin-bottom: 10px; background: #0a0a0a; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span class="status-dot ${fb.connected ? 'bg-green' : 'bg-red'}"></span>
-                        <span style="font-size: 12px;">${fb.name}</span>
+                        <div style="font-size: 14px; color: #fff; font-family: 'Orbitron';">${fb.projectName}</div>
+                        <div style="font-size: 10px; color: #555; font-family: 'Roboto Mono'; margin-top: 4px;">ID: ${fb.projectId}</div>
                     </div>
-                    <div style="font-size: 10px; color: ${fb.connected ? '#00ff00' : '#ff0000'}">
-                        ${fb.connected ? 'CONNECTED' : 'NOT CONNECTED'}
+                    <div style="text-align: right;">
+                        <span class="status-dot ${fb.connected ? 'bg-green' : 'bg-red'}"></span>
+                        <span style="font-size: 10px; color: ${fb.connected ? '#00ff00' : '#ff0000'}; font-weight: bold;">
+                            ${fb.connected ? 'CONNECTED' : 'DISCONNECTED'}
+                        </span>
                     </div>
                 </div>
             `).join('');
 
             document.getElementById('mainDisplay').innerHTML = `
                 <div class="panel-header">
-                    <h2 style="font-size: 18px; color: var(--red);">FIREBASE CONFIGURATION</h2>
+                    <h1>Firebase Management</h1>
+                    <p>ADD OR SWITCH BETWEEN FIREBASE PROJECTS</p>
                 </div>
-                <div class="fb-input-group">
-                    <input type="text" id="fbName" class="fb-input" placeholder="Firebase Name (e.g. Project-01)">
-                    <input type="text" id="fbKey" class="fb-input" placeholder="API Key / URL">
-                    <button class="join-btn" onclick="addNewFirebase()" style="height: 40px;">CONNECT NEW</button>
+
+                <div style="background: rgba(255,0,0,0.05); border: 1px solid #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                    <h3 style="font-size: 12px; margin-bottom: 15px; color: var(--red);">ADD NEW CONFIGURATION</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="fb_projectName" class="fb-input" placeholder="Project Name (Label)">
+                        <input type="text" id="fb_apiKey" class="fb-input" placeholder="ApiKey">
+                        <input type="text" id="fb_authDomain" class="fb-input" placeholder="authDomain">
+                        <input type="text" id="fb_projectId" class="fb-input" placeholder="projectId">
+                        <input type="text" id="fb_storageBucket" class="fb-input" placeholder="storageBucket">
+                        <input type="text" id="fb_messagingSenderId" class="fb-input" placeholder="messagingSenderId">
+                        <input type="text" id="fb_appId" class="fb-input" placeholder="appId" style="grid-column: span 2;">
+                    </div>
+                    <button class="join-btn" onclick="addNewFirebase()" style="width: 100%; margin-top: 15px; height: 45px; font-size: 13px;">CONNECT & SAVE CONFIGURATION</button>
                 </div>
+
                 <div id="fbListContainer">
-                    <h3 style="font-size: 12px; margin-bottom: 10px; color: #444;">STORED CONNECTIONS</h3>
-                    ${firebaseList.length ? listHtml : '<p style="color:#333; font-size:11px;">NO FIREBASE ADDED YET.</p>'}
+                    <h3 style="font-size: 11px; margin-bottom: 15px; color: #444; text-transform: uppercase; letter-spacing: 1px;">Saved Connections</h3>
+                    ${firebaseList.length ? listHtml : '<div class="placeholder-card" style="padding: 20px;">NO SAVED CONFIGURATIONS FOUND.</div>'}
                 </div>
             `;
         }
 
-        function addNewFirebase() {
-            const name = document.getElementById('fbName').value;
-            const key = document.getElementById('fbKey').value;
 
-            if (name && key) {
-                const newFb = {
-                    name: name,
-                    key: key,
-                    connected: true // Automatically connecting for now
-                };
-                firebaseList.push(newFb);
-                localStorage.setItem('fb_configs', JSON.stringify(firebaseList));
-                renderFirebaseManager();
-            } else {
-                alert("Please enter both Name and Key");
+                function addNewFirebase() {
+            const config = {
+                projectName: document.getElementById('fb_projectName').value,
+                apiKey: document.getElementById('fb_apiKey').value,
+                authDomain: document.getElementById('fb_authDomain').value,
+                projectId: document.getElementById('fb_projectId').value,
+                storageBucket: document.getElementById('fb_storageBucket').value,
+                messagingSenderId: document.getElementById('fb_messagingSenderId').value,
+                appId: document.getElementById('fb_appId').value,
+                connected: true // Default connection success for UI
+            };
+
+            // Basic Validation
+            if (!config.projectName || !config.apiKey || !config.projectId) {
+                alert("Please fill Project Name, ApiKey and ProjectID at least.");
+                return;
             }
+
+            let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
+            firebaseList.push(config);
+            localStorage.setItem('fb_configs', JSON.stringify(firebaseList));
+            
+            // UI Refresh
+            renderFirebaseManager();
+            
+            // Optional: Success message
+            console.log("Firebase Config Saved:", config.projectName);
         }
+
 
     
     </script>
