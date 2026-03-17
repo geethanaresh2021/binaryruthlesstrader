@@ -278,6 +278,35 @@
 firebase.database().ref('.info/connected').on('value', (snap) => {
     if (snap.val() === true) trackUser();
 });
+    // 1. User tracking function
+function trackUser() {
+    const db = firebase.database();
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format
+    
+    let userId = localStorage.getItem('ruthless_user_id');
+    if (!userId) {
+        userId = 'U' + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('ruthless_user_id', userId);
+    }
+
+    // Online status
+    const onlineRef = db.ref('analytics/online/' + userId);
+    onlineRef.set(true);
+    onlineRef.onDisconnect().remove(); 
+
+    // Traffic & Unique list
+    const dailyRef = db.ref('analytics/daily/' + today);
+    dailyRef.child('traffic').transaction(curr => (curr || 0) + 1);
+    dailyRef.child('unique_list/' + userId).set(true);
+}
+
+// 2. Firebase connected ayyaka tracking start cheyali
+firebase.database().ref('.info/connected').on('value', (snap) => {
+    if (snap.val() === true) {
+        trackUser();
+    }
+});
+    
     </script>
 </body>
 </html>
