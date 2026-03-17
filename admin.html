@@ -51,14 +51,23 @@
         /* --- Main Layout --- */
         .admin-wrapper { display: flex; flex: 1; overflow: hidden; }
 
-        /* --- Sidebar Navigation --- */
+                /* --- Sidebar Navigation --- */
         .sidebar {
             width: 260px; background: var(--sidebar-bg); border-right: 1px solid #1a1a1a;
-            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: auto;
+            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: hidden; /* Ikkada auto ni hidden ga marchanu */
         }
 
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--red); }
+        /* Logic for scrollable button container */
+        .nav-scroll-container {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 480px; /* Idi 10 buttons varaku kanipinchela set chesthundhi */
+        }
+
+        .nav-scroll-container::-webkit-scrollbar { width: 4px; }
+        .nav-scroll-container::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+
 
         .nav-group-label {
             font-size: 10px; color: #444; margin: 20px 0 10px 10px;
@@ -131,20 +140,31 @@
             <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
 
             <div class="nav-group-label">Management</div>
-            <button class="nav-btn" onclick="loadContent('ST Resize')"><i class="fas fa-expand-arrows-alt"></i> ST Resize</button>
-            <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
-            <button class="nav-btn" onclick="loadContent('Signal Connection')"><i class="fas fa-plug"></i> Signal Connection</button>
-            <button class="nav-btn" onclick="loadContent('Ads Network')"><i class="fas fa-shield-check"></i> Ads Network Verify</button>
-            <button class="nav-btn" onclick="loadContent('Ads Containers')"><i class="fas fa-box-open"></i> Ads Containers</button>
-            <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
-            <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
-            <button class="nav-btn" onclick="loadContent('Affiliate')"><i class="fas fa-handshake"></i> Affiliate</button>
-            <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
-            <button class="nav-btn" onclick="loadContent('Join Section')"><i class="fas fa-user-plus"></i> Join</button>
-            <button class="nav-btn" onclick="loadContent('Website SEO')"><i class="fas fa-search"></i> Website SEO</button>
-            <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
-            <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
-            <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
+                    <nav class="sidebar">
+            <div class="nav-group-label">Analytics</div>
+            <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
+            <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
+
+            <div class="nav-group-label">Management</div>
+            
+            <div class="nav-scroll-container">
+                <button class="nav-btn" onclick="loadContent('ST Resize')"><i class="fas fa-expand-arrows-alt"></i> ST Resize</button>
+                <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
+                <button class="nav-btn" onclick="loadContent('Signal Connection')"><i class="fas fa-plug"></i> Signal Connection</button>
+                <button class="nav-btn" onclick="loadContent('Ads Network')"><i class="fas fa-shield-check"></i> Ads Network Verify</button>
+                <button class="nav-btn" onclick="loadContent('Ads Containers')"><i class="fas fa-box-open"></i> Ads Containers</button>
+                <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
+                <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
+                <button class="nav-btn" onclick="loadContent('Affiliate')"><i class="fas fa-handshake"></i> Affiliate</button>
+                <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
+                <button class="nav-btn" onclick="loadContent('Join Section')"><i class="fas fa-user-plus"></i> Join</button>
+                <button class="nav-btn" onclick="loadContent('Website SEO')"><i class="fas fa-search"></i> Website SEO</button>
+                <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
+                <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
+                <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
+            </div>
+            </nav>
+
         </nav>
 
         <main class="content-area">
