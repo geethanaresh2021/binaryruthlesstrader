@@ -130,8 +130,9 @@
 
     <header class="admin-header">
         <div style="width: 100px;"></div> 
-        <div class="brand-section">
+                <div class="brand-section">
             <img src="brand-name.png" alt="RUTHLESS SYSTEM" class="brand-img">
+            <h2 id="mainTitle" style="font-size: 14px; color: var(--red); margin-top: 5px; letter-spacing: 2px;">ADMIN DASHBOARD</h2>
             <div class="social-row">
                 <a href="#"><i class="fab fa-telegram"></i></a>
                 <a href="#"><i class="fab fa-youtube"></i></a>
@@ -139,6 +140,7 @@
                 <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
+
         <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
     </header>
 
@@ -186,20 +188,51 @@
     </div>
 
     <script>
-          function loadContent(moduleName) {
-            // Memory lo save cheyyadam (Refresh chesina marakunda)
+                  function loadContent(moduleName) {
+            // Memory lo save cheyyadam
             localStorage.setItem('activeModule', moduleName);
 
-            // Sidebar Buttons update (Active color kosam)
+            // 1. Branding kinda unna Title update
+            const mainTitle = document.getElementById('mainTitle');
+            if(mainTitle) {
+                mainTitle.innerText = moduleName.toUpperCase();
+            }
+
+            // 2. Sidebar Buttons Active Class update
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
-                // Button text ni trim chesi check chesthunnam
                 if(btn.innerText.trim().includes(moduleName)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
+
+            // 3. Content Area Header update
+            const panelHeader = document.getElementById('panelHeader');
+            if(panelHeader) {
+                panelHeader.innerHTML = `
+                    <h1 style="text-transform: uppercase; letter-spacing: 3px;">${moduleName}</h1>
+                    <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
+                `;
+            }
+
+            // 4. Firebase Logic check
+            if (moduleName === 'Firebase') {
+                renderFirebaseManager();
+                return;
+            }
+
+            // 5. Default Display for other modules
+            document.getElementById('mainDisplay').innerHTML = `
+                <div class="placeholder-card">
+                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                    [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
+                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH DATABASE.</small>
+                </div>
+            `;
+        }
+
 
             // IKKADA TITLE UPDATE AVTHUNDI
             const panelHeader = document.getElementById('panelHeader');
@@ -302,7 +335,16 @@
             console.log("Firebase Config Saved:", config.projectName);
         }
 
-
+        // Refresh chesinappudu patha module ni auto-load chesthundhi
+        window.onload = function() {
+            const lastModule = localStorage.getItem('activeModule');
+            if (lastModule) {
+                loadContent(lastModule);
+            } else {
+                loadContent('Views'); // Default ga Views load avthundi
+            }
+        };
+            
     
     </script>
 </body>
