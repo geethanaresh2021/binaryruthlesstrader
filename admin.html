@@ -115,6 +115,15 @@
             padding: 50px; text-align: center; color: #333;
             font-family: 'Roboto Mono'; border-radius: 8px;
         }
+                .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .bg-green { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .bg-red { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
+        .firebase-card { background: #111; border: 1px solid #222; padding: 15px; margin-top: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .fb-input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .fb-input { background: #000; border: 1px solid #333; color: #00ffcc; padding: 10px; font-family: 'Roboto Mono'; flex: 1; min-width: 200px; }
+
+
+        
     </style>
 </head>
 <body>
@@ -180,6 +189,11 @@
                 function loadContent(moduleName) {
             // Memory lo save chesthunnam
             localStorage.setItem('activeModule', moduleName);
+                    
+                    if (moduleName === 'Firebase') {
+            renderFirebaseManager();
+            return;
+                    }
 
             // Update Active Class
             const buttons = document.querySelectorAll('.nav-btn');
@@ -199,12 +213,10 @@
 
             // Display Placeholder
             document.getElementById('mainDisplay').innerHTML = `
-                <div class="placeholder-card">
-                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
-                    [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH FIREBASE DATABASE.</small>
-                </div>
-            `;
+            <div class="placeholder-card">
+                [ ${moduleName.toUpperCase()} MODULE LOADED ]
+            </div>
+        `;
         }
 
             // Refresh chesinappudu patha module ni load chesthundhi
@@ -214,7 +226,56 @@
                 loadContent(lastModule);
             }
         };
+        let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
 
+        function renderFirebaseManager() {
+            let listHtml = firebaseList.map((fb, index) => `
+                <div class="firebase-card">
+                    <div>
+                        <span class="status-dot ${fb.connected ? 'bg-green' : 'bg-red'}"></span>
+                        <span style="font-size: 12px;">${fb.name}</span>
+                    </div>
+                    <div style="font-size: 10px; color: ${fb.connected ? '#00ff00' : '#ff0000'}">
+                        ${fb.connected ? 'CONNECTED' : 'NOT CONNECTED'}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('mainDisplay').innerHTML = `
+                <div class="panel-header">
+                    <h2 style="font-size: 18px; color: var(--red);">FIREBASE CONFIGURATION</h2>
+                </div>
+                <div class="fb-input-group">
+                    <input type="text" id="fbName" class="fb-input" placeholder="Firebase Name (e.g. Project-01)">
+                    <input type="text" id="fbKey" class="fb-input" placeholder="API Key / URL">
+                    <button class="join-btn" onclick="addNewFirebase()" style="height: 40px;">CONNECT NEW</button>
+                </div>
+                <div id="fbListContainer">
+                    <h3 style="font-size: 12px; margin-bottom: 10px; color: #444;">STORED CONNECTIONS</h3>
+                    ${firebaseList.length ? listHtml : '<p style="color:#333; font-size:11px;">NO FIREBASE ADDED YET.</p>'}
+                </div>
+            `;
+        }
+
+        function addNewFirebase() {
+            const name = document.getElementById('fbName').value;
+            const key = document.getElementById('fbKey').value;
+
+            if (name && key) {
+                const newFb = {
+                    name: name,
+                    key: key,
+                    connected: true // Automatically connecting for now
+                };
+                firebaseList.push(newFb);
+                localStorage.setItem('fb_configs', JSON.stringify(firebaseList));
+                renderFirebaseManager();
+            } else {
+                alert("Please enter both Name and Key");
+            }
+        }
+
+    
     </script>
 </body>
 </html>
