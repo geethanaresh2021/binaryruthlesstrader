@@ -52,28 +52,28 @@
         .admin-wrapper { display: flex; flex: 1; overflow: hidden; }
 
         /* --- Sidebar Navigation --- */
-        /* 1. Sidebar background mariyu border mathrame maintain chestundi */
-.sidebar {
-    width: 260px;
-    background: var(--sidebar-bg);
-    border-right: 1px solid #1a1a1a;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Buttons bayataki raakunda block chestundi */
-}
+        .sidebar {
+            width: 260px; background: var(--sidebar-bg); border-right: 1px solid #1a1a1a;
+            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: auto;
+        }
 
-/* 2. Idi kotha container - deeni valle buttons scroll avthayi */
-.nav-scroll-container {
-    flex: 1;
-    overflow-y: auto; /* Vertical scrolling enable chestundi */
-    padding: 15px 10px;
-    scrollbar-width: none; /* Firefox lo scrollbar kanipinchadu */
-}
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--red); }
 
-/* Chrome/Safari lo scrollbar kanipinchakunda (Clean look kosam) */
-.nav-scroll-container::-webkit-scrollbar {
-    display: none;
-}
+        .nav-group-label {
+            font-size: 10px; color: #444; margin: 20px 0 10px 10px;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
+        }
+
+        .nav-btn {
+            background: #0f0f0f; border: 1px solid #1a1a1a; color: #888;
+            padding: 12px 15px; margin-bottom: 6px; text-align: left;
+            font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase;
+            cursor: pointer; transition: var(--transition); display: flex;
+            align-items: center; gap: 12px; border-radius: 4px; position: relative;
+        }
+
+        .nav-btn i { width: 18px; color: var(--red); font-size: 14px; text-align: center; transition: var(--transition); }
 
         /* White Accent for Analytics Group Icons */
         .nav-btn.white-accent i { color: var(--white); }
@@ -145,17 +145,6 @@
             <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
             <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
             <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
-            <nav class="sidebar">
-    <div class="nav-scroll-container">
-        <div class="nav-group-label">Analytics</div>
-        <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
-        <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
-
-        <div class="nav-group-label">Management</div>
-        <button class="nav-btn" onclick="loadContent('ST Resize')"><i class="fas fa-expand-arrows-alt"></i> ST Resize</button>
-        <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
-    </div>
-</nav>
         </nav>
 
         <main class="content-area">
