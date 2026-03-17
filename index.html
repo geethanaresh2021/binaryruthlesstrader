@@ -40,34 +40,15 @@
             display: flex; 
             align-items: center;
             justify-content: space-between;
-            position: relative;
         }
 
         .brand-img { width: 280px; filter: drop-shadow(0 0 10px var(--red)); }
 
-        .header-right-group { 
-            display: flex; 
-            align-items: center; 
-            gap: 25px; 
-        }
+        .header-right-group { display: flex; align-items: center; gap: 25px; }
 
-        .social-group { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-        }
-
-        .social-group a { 
-            color: #fff; 
-            font-size: 18px; 
-            transition: var(--transition); 
-        }
-        
-        .social-group a:hover { 
-            color: var(--red); 
-            transform: translateY(-3px) scale(1.2); 
-            text-shadow: 0 0 10px var(--red);
-        }
+        .social-group { display: flex; align-items: center; gap: 15px; }
+        .social-group a { color: #fff; font-size: 18px; transition: var(--transition); }
+        .social-group a:hover { color: var(--red); transform: translateY(-3px) scale(1.2); }
 
         .join-btn {
             background: var(--red);
@@ -80,14 +61,9 @@
             cursor: pointer;
             border-radius: 4px;
             transition: var(--transition);
-            box-shadow: 0 0 5px var(--red);
+            box-shadow: 0 0 10px var(--red);
         }
-
-        .join-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--red);
-            background: #cc0000;
-        }
+        .join-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--red); }
 
         .admin-trigger { 
             background: transparent; 
@@ -100,94 +76,37 @@
             border-radius: 4px; 
             transition: var(--transition);
         }
-        .admin-trigger:hover { border-color: var(--red); color: var(--red); box-shadow: 0 0 8px rgba(255, 0, 0, 0.3); }
+        .admin-trigger:hover { border-color: var(--red); color: var(--red); }
 
-        /* --- Horizontal Info Bars --- */
-        .info-bar {
-            width: 100%;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Roboto Mono';
-            font-size: 12px;
-            text-transform: uppercase;
-        }
+        /* --- Info Bars --- */
+        .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; }
         .warning-bar { background: rgba(255, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 0, 0, 0.3); color: var(--red); }
         .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
 
-        /* --- Main Content --- */
+        /* --- Content --- */
         .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
-
-        .widget-container {
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; width: 100%; }
-
-        /* --- Custom Styled Select --- */
-        .select-wrapper { position: relative; width: 100%; }
+        .widget-container { display: flex; gap: 20px; width: 100%; max-width: 1100px; margin-top: 20px; }
+        .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
         .ruthless-select {
-            width: 100%;
-            padding: 15px;
-            background: var(--panel);
-            border: 1px solid #222;
-            color: var(--white);
-            font-family: 'Roboto Mono';
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            appearance: none;
+            width: 100%; padding: 15px; background: var(--panel); border: 1px solid #222; 
+            color: var(--white); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
+            cursor: pointer; transition: var(--transition); appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
+            background-repeat: no-repeat; background-position: right 15px center;
         }
-
-        .ruthless-select:hover { 
-            border-color: var(--red); 
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); 
-        }
-
-        .ruthless-select option {
-            background: #000;
-            color: #fff;
-        }
+        .ruthless-select:hover { border-color: var(--red); }
 
         .display-box { 
-            width: 100%; height: 400px; 
-            background: #000; 
-            border: 2px solid var(--red); 
-            box-shadow: var(--neon); 
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
+            width: 100%; height: 400px; background: #000; border: 2px solid var(--red); 
+            box-shadow: var(--neon); border-radius: 8px; overflow-y: auto; position: relative;
         }
 
-        .footer {
-            width: 100%;
-            height: 40px;
-            background: #000;
-            border-top: 1px solid #111;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            font-family: 'Roboto Mono';
-            font-size: 10px;
-            color: #444;
-        }
+        .footer { width: 100%; height: 40px; background: #000; border-top: 1px solid #111; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; font-family: 'Roboto Mono'; font-size: 10px; color: #444; }
 
         @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 15px; padding: 20px; }
+            .header { flex-direction: column; gap: 15px; text-align: center; }
             .widget-container { flex-direction: column; }
-            .brand-img { width: 220px; }
         }
     </style>
 </head>
@@ -195,7 +114,6 @@
 
     <header class="header">
         <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-        
         <div class="header-right-group">
             <div class="social-group">
                 <a href="#"><i class="fab fa-telegram"></i></a>
@@ -208,10 +126,7 @@
     </header>
 
     <div class="info-bar warning-bar">
-        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
-    </div>
-    <div class="info-bar winner-bar">
-        <marquee scrollamount="4"><i class="fas fa-trophy"></i> GIVEAWAY WINNER: @USER_TRADER_01 --- NEXT DRAW IN 24 HOURS.</marquee>
+        <marquee scrollamount="5">WARNING: TRADING INVOLVES RISK. USE AT YOUR OWN RISK. STAY RUTHLESS.</marquee>
     </div>
 
     <div class="page-content">
@@ -219,11 +134,11 @@
             <div class="widget">
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
-                    <option>QUOTEX SURESHOT</option>
-                    <option>TOXA EXPERT</option>
+                    <option value="QUOTEX">QUOTEX SURESHOT</option>
+                    <option value="TOXA">TOXA EXPERT</option>
                 </select>
                 <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SIGNAL DATA...</div>
+                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING MT5 DATA...</div>
                 </div>
             </div>
 
@@ -240,30 +155,64 @@
 
     <footer class="footer">
         <div>© 2026 BINARY RUTHLESS TRADER</div>
-        <div style="display: flex; gap: 20px;">
-            <a href="#" style="color: #666; text-decoration: none;">CONTACT</a>
-            <a href="#" style="color: #666; text-decoration: none;">TERMS</a>
-        </div>
+        <div style="display: flex; gap: 20px;"><a href="#" style="color:#444; text-decoration:none;">CONTACT</a><a href="#" style="color:#444; text-decoration:none;">TERMS</a></div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // --- Signal Routing Logic ---
+        const sigSelect = document.getElementById('sigSelect');
+        const sigScreen = document.getElementById('sigScreen');
+
+        // Storage for Webhook Signals
+        let signalHub = { "QUOTEX": [], "TOXA": [] };
+
+        function renderSignals() {
+            const selected = sigSelect.value;
+            if(!selected) {
+                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">SELECT A PROVIDER</div>`;
+                return;
+            }
+
+            const data = signalHub[selected] || [];
+            if(data.length === 0) {
+                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px;">NO ACTIVE ${selected} SIGNALS</div>`;
+                return;
+            }
+
+            let html = `<div style="padding:15px;">`;
+            data.slice().reverse().forEach(sig => {
+                const isCall = sig.direction.toUpperCase() === 'CALL';
+                const color = isCall ? '#ffffff' : '#ff0000';
+                html += `
+                    <div style="background:#0a0a0a; border:1px solid #1a1a1a; margin-bottom:10px; padding:15px; border-radius:4px; border-left:4px solid ${color};">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="color:#666; font-size:10px;">${sig.time}</div>
+                                <div style="font-size:18px; color:#fff; font-weight:bold;">${sig.pair}</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="color:${color}; font-size:22px; font-weight:900; text-shadow: 0 0 10px ${color};">${sig.direction}</div>
+                                <div style="color:#333; font-size:9px;">RUTHLESS AUTO</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            html += `</div>`;
+            sigScreen.innerHTML = html;
+        }
+
+        // Dropdown Event
+        sigSelect.addEventListener('change', renderSignals);
+
+        // Admin Login
         function adminLogin() {
             Swal.fire({
-                title: 'ACCESS KEY',
-                input: 'password',
-                showCancelButton: true,
-                confirmButtonText: 'LOGIN',
-                confirmButtonColor: '#ff0000',
-                background: '#0a0a0a',
-                color: '#fff'
-            }).then((result) => {
-                if (result.isConfirmed && result.value === "0000") {
-                    window.location.href = "admin.html";
-                } else if (result.isConfirmed) {
-                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000' });
-                }
-            })
+                title: 'ACCESS KEY', input: 'password', confirmButtonColor: '#ff0000', background: '#0a0a0a', color: '#fff'
+            }).then((res) => {
+                if(res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
+                else if(res.isConfirmed) Swal.fire({icon:'error', title:'DENIED', confirmButtonColor:'#ff0000'});
+            });
         }
     </script>
 </body>
