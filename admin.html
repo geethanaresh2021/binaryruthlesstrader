@@ -186,16 +186,11 @@
     </div>
 
     <script>
-                function loadContent(moduleName) {
-            // Memory lo save chesthunnam
+                        function loadContent(moduleName) {
+            // Memory lo save cheyyadam (Refresh chesina marakunda)
             localStorage.setItem('activeModule', moduleName);
-                    
-                    if (moduleName === 'Firebase') {
-            renderFirebaseManager();
-            return;
-                    }
 
-            // Update Active Class
+            // Sidebar Buttons update (Active color kosam)
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
                 if(btn.innerText.trim() === moduleName) {
@@ -205,28 +200,28 @@
                 }
             });
 
-            // Update Header
+            // Ikkada Header update avthundi - "Admin Dashboard" badulu moduleName vasthundi
             document.getElementById('panelHeader').innerHTML = `
-                <h1>${moduleName}</h1>
+                <h1 style="text-transform: uppercase; letter-spacing: 3px;">${moduleName}</h1>
                 <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
             `;
 
-            // Display Placeholder
+            // Firebase module ayithe special UI chupinchali
+            if (moduleName === 'Firebase') {
+                renderFirebaseManager();
+                return;
+            }
+
+            // Migatha modules kosam default placeholder
             document.getElementById('mainDisplay').innerHTML = `
-            <div class="placeholder-card">
-                [ ${moduleName.toUpperCase()} MODULE LOADED ]
-            </div>
-        `;
+                <div class="placeholder-card">
+                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                    [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
+                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH DATABASE.</small>
+                </div>
+            `;
         }
 
-            // Refresh chesinappudu patha module ni load chesthundhi
-        window.onload = function() {
-            const lastModule = localStorage.getItem('activeModule');
-            if (lastModule) {
-                loadContent(lastModule);
-            }
-        };
-        let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
 
         function renderFirebaseManager() {
                 function renderFirebaseManager() {
