@@ -51,10 +51,11 @@
         /* --- Main Layout --- */
         .admin-wrapper { display: flex; flex: 1; overflow: hidden; }
 
+        /* --- Sidebar Navigation --- */
                 /* --- Sidebar Navigation --- */
         .sidebar {
             width: 260px; background: var(--sidebar-bg); border-right: 1px solid #1a1a1a;
-            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: hidden; /* Ikkada auto ni hidden ga marchanu */
+            display: flex; flex-direction: column; padding: 15px 10px; overflow-y: hidden; /* Changed to hidden */
         }
 
         /* Logic for scrollable button container */
@@ -115,24 +116,14 @@
             padding: 50px; text-align: center; color: #333;
             font-family: 'Roboto Mono'; border-radius: 8px;
         }
-                .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .bg-green { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
-        .bg-red { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
-        .firebase-card { background: #111; border: 1px solid #222; padding: 15px; margin-top: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .fb-input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .fb-input { background: #000; border: 1px solid #333; color: #00ffcc; padding: 10px; font-family: 'Roboto Mono'; flex: 1; min-width: 200px; }
-
-
-        
     </style>
 </head>
 <body>
 
     <header class="admin-header">
         <div style="width: 100px;"></div> 
-                <div class="brand-section">
+        <div class="brand-section">
             <img src="brand-name.png" alt="RUTHLESS SYSTEM" class="brand-img">
-            <h2 id="mainTitle" style="font-size: 14px; color: var(--red); margin-top: 5px; letter-spacing: 2px;">ADMIN DASHBOARD</h2>
             <div class="social-row">
                 <a href="#"><i class="fab fa-telegram"></i></a>
                 <a href="#"><i class="fab fa-youtube"></i></a>
@@ -140,7 +131,6 @@
                 <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
-
         <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
     </header>
 
@@ -171,8 +161,6 @@
         </nav>
 
 
-        </nav>
-
         <main class="content-area">
             <div class="panel-header" id="panelHeader">
                 <h1>Admin Dashboard</h1>
@@ -188,164 +176,44 @@
     </div>
 
     <script>
-                  function loadContent(moduleName) {
-            // Memory lo save cheyyadam
+                function loadContent(moduleName) {
+            // Memory lo save chesthunnam
             localStorage.setItem('activeModule', moduleName);
 
-            // 1. Branding kinda unna Title update
-            const mainTitle = document.getElementById('mainTitle');
-            if(mainTitle) {
-                mainTitle.innerText = moduleName.toUpperCase();
-            }
-
-            // 2. Sidebar Buttons Active Class update
+            // Update Active Class
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
-                if(btn.innerText.trim().includes(moduleName)) {
+                if(btn.innerText.trim() === moduleName) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
 
-            // 3. Content Area Header update
-            const panelHeader = document.getElementById('panelHeader');
-            if(panelHeader) {
-                panelHeader.innerHTML = `
-                    <h1 style="text-transform: uppercase; letter-spacing: 3px;">${moduleName}</h1>
-                    <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
-                `;
-            }
-
-            // 4. Firebase Logic check
-            if (moduleName === 'Firebase') {
-                renderFirebaseManager();
-                return;
-            }
-
-            // 5. Default Display for other modules
-            document.getElementById('mainDisplay').innerHTML = `
-                <div class="placeholder-card">
-                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
-                    [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH DATABASE.</small>
-                </div>
-            `;
-        }
-
-
-            // IKKADA TITLE UPDATE AVTHUNDI
-            const panelHeader = document.getElementById('panelHeader');
-            panelHeader.innerHTML = `
-                <h1 style="text-transform: uppercase; letter-spacing: 3px;">${moduleName}</h1>
+            // Update Header
+            document.getElementById('panelHeader').innerHTML = `
+                <h1>${moduleName}</h1>
                 <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
             `;
 
-            // Firebase module ayithe special UI chupinchali
-            if (moduleName === 'Firebase') {
-                renderFirebaseManager();
-                return;
-            }
-
-            // Migatha modules kosam default placeholder
+            // Display Placeholder
             document.getElementById('mainDisplay').innerHTML = `
                 <div class="placeholder-card">
                     <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
                     [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH DATABASE.</small>
+                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH FIREBASE DATABASE.</small>
                 </div>
             `;
         }
 
-
-
-        function renderFirebaseManager() {
-                function renderFirebaseManager() {
-            let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
-            
-            let listHtml = firebaseList.map((fb, index) => `
-                <div class="firebase-card" style="border-left: 3px solid ${fb.connected ? '#00ff00' : '#ff0000'}; margin-bottom: 10px; background: #0a0a0a; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-size: 14px; color: #fff; font-family: 'Orbitron';">${fb.projectName}</div>
-                        <div style="font-size: 10px; color: #555; font-family: 'Roboto Mono'; margin-top: 4px;">ID: ${fb.projectId}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <span class="status-dot ${fb.connected ? 'bg-green' : 'bg-red'}"></span>
-                        <span style="font-size: 10px; color: ${fb.connected ? '#00ff00' : '#ff0000'}; font-weight: bold;">
-                            ${fb.connected ? 'CONNECTED' : 'DISCONNECTED'}
-                        </span>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('mainDisplay').innerHTML = `
-                <div class="panel-header">
-                    <h1>Firebase Management</h1>
-                    <p>ADD OR SWITCH BETWEEN FIREBASE PROJECTS</p>
-                </div>
-
-                <div style="background: rgba(255,0,0,0.05); border: 1px solid #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                    <h3 style="font-size: 12px; margin-bottom: 15px; color: var(--red);">ADD NEW CONFIGURATION</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="text" id="fb_projectName" class="fb-input" placeholder="Project Name (Label)">
-                        <input type="text" id="fb_apiKey" class="fb-input" placeholder="ApiKey">
-                        <input type="text" id="fb_authDomain" class="fb-input" placeholder="authDomain">
-                        <input type="text" id="fb_projectId" class="fb-input" placeholder="projectId">
-                        <input type="text" id="fb_storageBucket" class="fb-input" placeholder="storageBucket">
-                        <input type="text" id="fb_messagingSenderId" class="fb-input" placeholder="messagingSenderId">
-                        <input type="text" id="fb_appId" class="fb-input" placeholder="appId" style="grid-column: span 2;">
-                    </div>
-                    <button class="join-btn" onclick="addNewFirebase()" style="width: 100%; margin-top: 15px; height: 45px; font-size: 13px;">CONNECT & SAVE CONFIGURATION</button>
-                </div>
-
-                <div id="fbListContainer">
-                    <h3 style="font-size: 11px; margin-bottom: 15px; color: #444; text-transform: uppercase; letter-spacing: 1px;">Saved Connections</h3>
-                    ${firebaseList.length ? listHtml : '<div class="placeholder-card" style="padding: 20px;">NO SAVED CONFIGURATIONS FOUND.</div>'}
-                </div>
-            `;
-        }
-
-
-                function addNewFirebase() {
-            const config = {
-                projectName: document.getElementById('fb_projectName').value,
-                apiKey: document.getElementById('fb_apiKey').value,
-                authDomain: document.getElementById('fb_authDomain').value,
-                projectId: document.getElementById('fb_projectId').value,
-                storageBucket: document.getElementById('fb_storageBucket').value,
-                messagingSenderId: document.getElementById('fb_messagingSenderId').value,
-                appId: document.getElementById('fb_appId').value,
-                connected: true // Default connection success for UI
-            };
-
-            // Basic Validation
-            if (!config.projectName || !config.apiKey || !config.projectId) {
-                alert("Please fill Project Name, ApiKey and ProjectID at least.");
-                return;
-            }
-
-            let firebaseList = JSON.parse(localStorage.getItem('fb_configs')) || [];
-            firebaseList.push(config);
-            localStorage.setItem('fb_configs', JSON.stringify(firebaseList));
-            
-            // UI Refresh
-            renderFirebaseManager();
-            
-            // Optional: Success message
-            console.log("Firebase Config Saved:", config.projectName);
-        }
-
-        // Refresh chesinappudu patha module ni auto-load chesthundhi
+            // Refresh chesinappudu patha module ni load chesthundhi
         window.onload = function() {
             const lastModule = localStorage.getItem('activeModule');
             if (lastModule) {
                 loadContent(lastModule);
-            } else {
-                loadContent('Views'); // Default ga Views load avthundi
             }
         };
-            
-    
+
     </script>
 </body>
 </html>
