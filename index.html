@@ -248,6 +248,36 @@
                 }
             })
         }
+        function trackUser() {
+    const db = firebase.database();
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Unique User ID generation
+    let userId = localStorage.getItem('ruthless_user_id');
+    if (!userId) {
+        userId = 'U' + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('ruthless_user_id', userId);
+    }
+
+    // 1. Online Status (Real-time)
+    const onlineRef = db.ref('analytics/online/' + userId);
+    onlineRef.set(true);
+    onlineRef.onDisconnect().remove(); // User tab close chesthe online nundi vellipotharu
+
+    // 2. Traffic & Unique Counter
+    const dailyRef = db.ref('analytics/daily/' + today);
+    
+    // Total Traffic increment
+    dailyRef.child('traffic').transaction(curr => (curr || 0) + 1);
+    
+    // Unique User check
+    dailyRef.child('unique_list/' + userId).set(true);
+}
+
+// Firebase Initialize ayina tharuvatha dheenini pilవandi
+firebase.database().ref('.info/connected').on('value', (snap) => {
+    if (snap.val() === true) trackUser();
+});
     </script>
 </body>
 </html>
