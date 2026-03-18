@@ -205,6 +205,14 @@ function loadContent(moduleName) {
         case 'Firebase':
             renderFirebaseModule();
             break;
+                    case 'Firebase':
+            renderFirebaseModule();
+            break;
+            
+        // --- Ee Case ni ikkada Add Cheyandi ---
+        case 'Warning Note':
+            renderWarningNoteModule();
+            break;
             
         // Ikkada future lo vere modules (Signal Connection, VPS, etc.) logic add cheసుకోవచ్చు
         default:
@@ -317,7 +325,65 @@ window.onload = function() {
     loadContent(lastModule);
 };
 
-     
+     // --- Warning Note Module Logic ---
+function renderWarningNoteModule() {
+    const savedNote = localStorage.getItem('warning_note_html') || '⚠️ WARNING: RISK & MONEY MANAGEMENT TOOL IS ACTIVE.';
+    const isScrollEnabled = localStorage.getItem('warning_scroll_status') === 'true';
+
+    const mainDisplay = document.getElementById('mainDisplay');
+    mainDisplay.innerHTML = `
+        <style>
+            .warn-container { background: #000; border: 1px solid #1a1a1a; padding: 25px; border-radius: 8px; }
+            .edit-area { 
+                width: 100%; height: 120px; background: #080808; border: 1px solid #222; 
+                color: #fff; font-family: 'Roboto Mono'; padding: 15px; margin-top: 15px; border-radius: 4px;
+            }
+            .live-preview-box { 
+                background: #0a0a0a; border: 1px solid #333; min-height: 60px; 
+                display: flex; align-items: center; margin-bottom: 20px; overflow: hidden;
+            }
+            .scroll-wrap { width: 100%; display: flex; justify-content: center; align-items: center; }
+            .scrolling-text { white-space: nowrap; animation: smoothScroll 12s linear infinite; width: 100%; }
+            @keyframes smoothScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        </style>
+
+        <div class="warn-container">
+            <p style="font-size: 10px; color: #444; margin-bottom: 10px; text-transform: uppercase;">Live Preview (User Side)</p>
+            <div class="live-preview-box">
+                <div class="${isScrollEnabled ? 'scrolling-text' : 'scroll-wrap'}">
+                    ${savedNote}
+                </div>
+            </div>
+
+            <h2 style="font-size: 14px; color: var(--red); letter-spacing: 2px;">EDIT WARNING NOTE</h2>
+            <textarea id="noteEditor" class="edit-area">${savedNote.replace(/<[^>]*>/g, '')}</textarea>
+            
+            <div style="display: flex; gap: 20px; margin-top: 20px; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="scrollToggle" ${isScrollEnabled ? 'checked' : ''}>
+                    <span style="font-size:12px; font-family:'Roboto Mono';">ENABLE SMOOTH SCROLL</span>
+                </label>
+                <button class="join-btn" onclick="saveWarningNote()" style="padding: 10px 30px;">SAVE & PUBLISH</button>
+            </div>
+        </div>
+    `;
+}
+
+function saveWarningNote() {
+    let text = document.getElementById('noteEditor').value;
+    const scrollStatus = document.getElementById('scrollToggle').checked;
+
+    // "Risk" and "Money Management Tool" ni Red color loki marchadam
+    let highlightedText = text.replace(/Risk/gi, '<span style="color:red; font-weight:bold;">Risk</span>');
+    highlightedText = highlightedText.replace(/Money Management Tool/gi, '<span style="color:red; font-weight:bold;">Money Management Tool</span>');
+
+    localStorage.setItem('warning_note_html', highlightedText);
+    localStorage.setItem('warning_scroll_status', scrollStatus);
+
+    alert("Warning Note Saved Successfully!");
+    renderWarningNoteModule(); 
+}
+
                
     </script>
 </body>
