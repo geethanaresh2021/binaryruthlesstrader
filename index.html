@@ -201,6 +201,26 @@
                 }
             })
         }
+        function applyWarningUpdate() {
+    const warningBar = document.querySelector('.warning-bar');
+    if (!warningBar) return;
+
+    const htmlContent = localStorage.getItem('warning_note_html') || 'WARNING: RISK & MONEY MANAGEMENT TOOL';
+    const scrollOn = localStorage.getItem('warning_scroll_status') === 'true';
+
+    if (scrollOn) {
+        warningBar.innerHTML = `<marquee scrollamount="6" style="width:100%;">${htmlContent}</marquee>`;
+    } else {
+        warningBar.innerHTML = `<div style="width:100%; text-align:center; display:flex; justify-content:center; align-items:center;">${htmlContent}</div>`;
+    }
+}
+
+// Page load ayyinappudu ventane data update avvali
+applyWarningUpdate();
+
+// LocalStorage change ayithe data update avvadaniki (Admin lo save kottagane update avthundi)
+window.addEventListener('storage', applyWarningUpdate);
+
     </script>
 </body>
 </html>
