@@ -70,12 +70,14 @@
         .warning-bar { 
     background: rgba(255, 0, 0, 0.1); 
     border-bottom: 1px solid rgba(255, 0, 0, 0.3); 
-    color: var(--white); /* Default color white unchali, so span apply avthundi */
+    color: var(--white); 
     font-family: 'Roboto Mono';
-    display: flex;
-    align-items: center;
-    overflow: hidden; /* Marquee smooth ga velladaniki idi avasaram */
+    height: 35px; /* Fixed height */
+    line-height: 35px; /* Vertical centering */
+    overflow: hidden;
+    white-space: nowrap;
 }
+
 
         .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
 
@@ -233,24 +235,24 @@ window.addEventListener('storage', applyWarningUpdate);
     const warningBar = document.querySelector('.warning-bar');
     if (!warningBar) return;
 
-    // Admin nundi vacche data
     const htmlContent = localStorage.getItem('warning_note_html') || 'WARNING: RISK & MONEY MANAGEMENT TOOL IS ACTIVE.';
     const scrollOn = localStorage.getItem('warning_scroll_status') === 'true';
 
     if (scrollOn) {
-        // Scroll enable unte marquee tag use chesthunnam
-        // HINT: direction="left" smooth ga right to left ki velladaniki
-        warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="width:100%; color:white;">${htmlContent}</marquee>`;
+        // Scroll enable unte marquee block la undali
+        warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="display: block; width: 100%;">${htmlContent}</marquee>`;
     } else {
-        // Scroll off unte center lo fix chesthunnam
-        warningBar.innerHTML = `<div style="width:100%; text-align:center; color:white;">${htmlContent}</div>`;
+        // Scroll off unte flex logic tho center cheyalasi untundi
+        warningBar.style.display = "flex";
+        warningBar.style.justifyContent = "center";
+        warningBar.innerHTML = `<span>${htmlContent}</span>`;
     }
 }
 
-// Page load lo run avvali
+// Ventane run avvali
 applyWarningUpdate();
 
-// Admin page lo Save kottina ventane ikkada update avvadaniki
+// Storage change detection
 window.addEventListener('storage', (e) => {
     if (e.key === 'warning_note_html' || e.key === 'warning_scroll_status') {
         applyWarningUpdate();
