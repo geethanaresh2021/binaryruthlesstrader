@@ -373,15 +373,29 @@ function saveWarningNote() {
     let text = document.getElementById('noteEditor').value;
     const scrollStatus = document.getElementById('scrollToggle').checked;
 
-    // "Risk" and "Money Management Tool" ni Red color loki marchadam
+    // Red Highlight Logic
     let highlightedText = text.replace(/Risk/gi, '<span style="color:red; font-weight:bold;">Risk</span>');
     highlightedText = highlightedText.replace(/Money Management Tool/gi, '<span style="color:red; font-weight:bold;">Money Management Tool</span>');
 
-    localStorage.setItem('warning_note_html', highlightedText);
-    localStorage.setItem('warning_scroll_status', scrollStatus);
-
-    alert("Warning Note Saved Successfully!");
-    renderWarningNoteModule(); 
+    // Firebase Realtime Database ki Update pampadam
+    // 'warningSettings' ane node lo data save avthundi
+    firebase.database().ref('warningSettings').set({
+        htmlContent: highlightedText,
+        isScroll: scrollStatus
+    }).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'PUBLISHED',
+            text: 'Warning Note Updated Live!',
+            confirmButtonColor: '#ff0000',
+            background: '#0a0a0a',
+            color: '#fff'
+        });
+        renderWarningNoteModule(); 
+    }).catch((error) => {
+        console.error("Firebase Error:", error);
+        alert("Firebase Connection Error!");
+    });
 }
 
                
