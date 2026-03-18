@@ -235,28 +235,29 @@ window.addEventListener('storage', applyWarningUpdate);
     const warningBar = document.querySelector('.warning-bar');
     if (!warningBar) return;
 
+    // Data ni read chesthunnam
     const htmlContent = localStorage.getItem('warning_note_html') || 'WARNING: RISK & MONEY MANAGEMENT TOOL IS ACTIVE.';
     const scrollOn = localStorage.getItem('warning_scroll_status') === 'true';
 
-    if (scrollOn) {
-        // Scroll enable unte marquee block la undali
-        warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="display: block; width: 100%;">${htmlContent}</marquee>`;
+    if (scrollOn === true) {
+        // Scroll enable unte: display block chesi marquee isthunnam
+        warningBar.style.display = "block"; 
+        warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="width: 100%; height: 35px; line-height: 35px; display: block;">${htmlContent}</marquee>`;
     } else {
-        // Scroll off unte flex logic tho center cheyalasi untundi
+        // Scroll off unte: flex chesi center ki testhunnam
         warningBar.style.display = "flex";
         warningBar.style.justifyContent = "center";
-        warningBar.innerHTML = `<span>${htmlContent}</span>`;
+        warningBar.style.alignItems = "center";
+        warningBar.innerHTML = `<div style="color:white;">${htmlContent}</div>`;
     }
 }
 
-// Ventane run avvali
+// Page load avvagane call avvali
 applyWarningUpdate();
 
-// Storage change detection
+// Admin lo save kottagane auto-update avvadaniki idi chala mukhyam
 window.addEventListener('storage', (e) => {
-    if (e.key === 'warning_note_html' || e.key === 'warning_scroll_status') {
-        applyWarningUpdate();
-    }
+    applyWarningUpdate();
 });
 
 
