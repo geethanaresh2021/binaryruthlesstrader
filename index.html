@@ -231,33 +231,28 @@ applyWarningUpdate();
 
 // LocalStorage change ayithe data update avvadaniki (Admin lo save kottagane update avthundi)
 window.addEventListener('storage', applyWarningUpdate);
-        function applyWarningUpdate() {
+        // Firebase nundi data ni Live ga monitor cheyadam
+firebase.database().ref('warningSettings').on('value', (snapshot) => {
+    const data = snapshot.val();
     const warningBar = document.querySelector('.warning-bar');
-    if (!warningBar) return;
+    
+    if (data && warningBar) {
+        const htmlContent = data.htmlContent;
+        const isScroll = data.isScroll;
 
-    // Data ni read chesthunnam
-    const htmlContent = localStorage.getItem('warning_note_html') || 'WARNING: RISK & MONEY MANAGEMENT TOOL IS ACTIVE.';
-    const scrollOn = localStorage.getItem('warning_scroll_status') === 'true';
-
-    if (scrollOn === true) {
-        // Scroll enable unte: display block chesi marquee isthunnam
-        warningBar.style.display = "block"; 
-        warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="width: 100%; height: 35px; line-height: 35px; display: block;">${htmlContent}</marquee>`;
-    } else {
-        // Scroll off unte: flex chesi center ki testhunnam
-        warningBar.style.display = "flex";
-        warningBar.style.justifyContent = "center";
-        warningBar.style.alignItems = "center";
-        warningBar.innerHTML = `<div style="color:white;">${htmlContent}</div>`;
+        if (isScroll) {
+            // Scroll enable unte: display block and marquee
+            warningBar.style.display = "block";
+            warningBar.style.lineHeight = "35px";
+            warningBar.innerHTML = `<marquee scrollamount="6" direction="left" style="width: 100%; display: block;">${htmlContent}</marquee>`;
+        } else {
+            // Scroll disable unte: flex center
+            warningBar.style.display = "flex";
+            warningBar.style.justifyContent = "center";
+            warningBar.style.alignItems = "center";
+            warningBar.innerHTML = `<div style="color:white; font-weight:bold;">${htmlContent}</div>`;
+        }
     }
-}
-
-// Page load avvagane call avvali
-applyWarningUpdate();
-
-// Admin lo save kottagane auto-update avvadaniki idi chala mukhyam
-window.addEventListener('storage', (e) => {
-    applyWarningUpdate();
 });
 
 
