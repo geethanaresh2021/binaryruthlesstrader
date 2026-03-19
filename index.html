@@ -9,6 +9,8 @@
     <title>Binary Ruthless Trader | Official System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
         :root { 
@@ -141,8 +143,7 @@
     <div class="info-bar warning-bar">
         <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
     </div>
-    <div class="info-bar winner-bar">
-        <marquee scrollamount="4" id="winnerMarquee"><i class="fas fa-trophy"></i> AWAITING TODAY'S GIVEAWAY WINNER...</marquee>
+    <div id="giveaway-container" class="info-bar winner-bar" style="display: none;">
     </div>
 
     <div class="page-content">
@@ -181,49 +182,63 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script type="module">
-        import { database } from './firebase-logic.js';
+    import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
+    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 1. Live Warning Note Sync
-        database.ref('site_settings/warning_note').on('value', (snapshot) => {
-            const data = snapshot.val();
-            const warningBar = document.querySelector('.warning-bar');
-            if (data && warningBar) {
-                if (data.scroll) {
-                    warningBar.style.display = "block";
-                    warningBar.innerHTML = `<marquee scrollamount="6" style="width:100%; height:35px; line-height:35px; display:block;">${data.content}</marquee>`;
-                } else {
-                    warningBar.style.display = "flex";
-                    warningBar.style.justifyContent = "center";
-                    warningBar.style.alignItems = "center";
-                    warningBar.innerHTML = `<div style="color:white; font-weight:bold;">${data.content}</div>`;
-                }
+    // --- 1. LIVE SIGNALS SYNC ---
+    const sigSelect = document.getElementById('sigSelect');
+    const sigScreen = document.getElementById('sigScreen');
+
+    // Quotex & Toxa రెండింటినీ విడివిడిగా మానిటర్ చేస్తుంది
+    syncSignals("QUOTEX", (data) => { if(sigSelect.value === "QUOTEX") renderUI(data); });
+    syncSignals("TOXA", (data) => { if(sigSelect.value === "TOXA") renderUI(data); });
+
+    function renderUI(signals) {
+        if (!signals || signals.length === 0) {
+            sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444; font-family:'Roboto Mono'; font-size:11px;">AWAITING SIGNALS...</div>`;
+            return;
+        }
+        sigScreen.innerHTML = signals.map(sig => `
+            <div style="padding:15px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:var(--red); font-weight:bold; font-size:14px;">${sig.pair || 'BTC/USD'}</span>
+                <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action || 'ITM'}</span>
+            </div>
+        `).join('');
+    }
+
+    // --- 2. LIVE GIVEAWAY SYNC (Speed 0 = Center) ---
+    syncGiveaway((data) => {
+        const container = document.getElementById('giveaway-container');
+        if (data && data.status === true) {
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.minHeight = '35px';
+
+            if (data.speed === 0) {
+                // Speed 0 అయితే సెంటర్ లో ఫిక్స్ అవుతుంది
+                container.style.justifyContent = 'center';
+                container.innerHTML = `<div style="font-weight:bold; color:white; font-family:'Roboto Mono';">${data.content}</div>`;
+            } else {
+                // Speed 1-5 అయితే స్క్రోల్ అవుతుంది
+                container.style.display = 'block';
+                container.innerHTML = `<marquee scrollamount="${data.speed}" style="width:100%; line-height:35px; color:white; font-family:'Roboto Mono';">${data.content}</marquee>`;
             }
-        });
+        } else {
+            container.style.display = 'none';
+        }
+    });
 
-        // 2. Live Winner Sync
-        database.ref('site_settings/giveaway').on('value', (snapshot) => {
-            const data = snapshot.val();
-            const winnerMarquee = document.getElementById('winnerMarquee');
-            if (data && winnerMarquee) {
-                winnerMarquee.innerHTML = `<i class="fas fa-trophy"></i> TODAY'S GIVEAWAY WINNER: ${data.winner} --- CONGRATULATIONS! --- NEXT DRAW IN 24 HOURS.`;
-            }
-        });
+    // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
+    // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
+    onSnapshot(doc(db, "settings", "warning"), (snap) => {
+        const data = snap.data();
+        const warningBar = document.querySelector('.warning-bar');
+        if (data && warningBar) {
+            warningBar.innerHTML = `<marquee scrollamount="6">${data.content}</marquee>`;
+        }
+    });
 
-        // 3. Live Join Button Sync
-        database.ref('site_settings/join').on('value', (snapshot) => {
-            const data = snapshot.val();
-            const joinBtn = document.getElementById('joinBtn');
-            if (data && joinBtn) joinBtn.innerText = data.text;
-        });
-
-        // 4. Live Brand Sync
-        database.ref('site_settings/brand').on('value', (snapshot) => {
-            const data = snapshot.val();
-            const footerCopy = document.getElementById('footerCopy');
-            if (data && footerCopy) footerCopy.innerText = `© 2026 ${data.title} | ALL RIGHTS RESERVED`;
-        });
-    </script>
-
+</script>
     <script>
         // --- Signal Handling Logic ---
         const sigSelect = document.getElementById('sigSelect');
@@ -260,5 +275,6 @@
             })
         }
     </script>
+    
 </body>
 </html>
