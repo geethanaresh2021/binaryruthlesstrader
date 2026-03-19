@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -72,16 +71,15 @@
 
         /* --- Info Bars --- */
         .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
-        .warning-bar { 
-            background: rgba(255, 0, 0, 0.1); 
-            border-bottom: 1px solid rgba(255, 0, 0, 0.3); 
-            color: var(--white); 
-            font-family: 'Roboto Mono';
-            height: 35px;
-            line-height: 35px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
+        .winner-bar { 
+    background: rgba(255, 255, 255, 0.05); 
+    border-bottom: 1px solid #111; 
+    color: var(--white);
+    min-height: 35px; /* Height ఫిక్స్డ్ గా ఉండాలి */
+    display: none;    /* మొదట హైడ్ చేసి ఉంచుతాము */
+    align-items: center;
+    font-family: 'Roboto Mono', monospace;
+}
 
         .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
 
@@ -206,27 +204,28 @@
         `).join('');
     }
 
-    // --- 2. LIVE GIVEAWAY SYNC (Speed 0 = Center) ---
-    syncGiveaway((data) => {
-        const container = document.getElementById('giveaway-container');
-        if (data && data.status === true) {
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
-            container.style.minHeight = '35px';
+    // --- 2. LIVE GIVEAWAY SYNC ---
+syncGiveaway((data) => {
+    const container = document.getElementById('giveaway-container');
+    if (data && (data.status === true || data.status === "VISIBLE")) {
+        container.style.display = 'flex';
+        
+        // Content ని సెట్ చేయడం (Neon Green effect తో)
+        const contentHtml = `<span style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-weight: bold;">${data.content}</span>`;
 
-            if (data.speed === 0) {
-                // Speed 0 అయితే సెంటర్ లో ఫిక్స్ అవుతుంది
-                container.style.justifyContent = 'center';
-                container.innerHTML = `<div style="font-weight:bold; color:white; font-family:'Roboto Mono';">${data.content}</div>`;
-            } else {
-                // Speed 1-5 అయితే స్క్రోల్ అవుతుంది
-                container.style.display = 'block';
-                container.innerHTML = `<marquee scrollamount="${data.speed}" style="width:100%; line-height:35px; color:white; font-family:'Roboto Mono';">${data.content}</marquee>`;
-            }
+        if (parseInt(data.speed) === 0) {
+            // Speed 0 అయితే సెంటర్ లో ఉంటుంది
+            container.style.justifyContent = 'center';
+            container.innerHTML = contentHtml;
         } else {
-            container.style.display = 'none';
+            // Speed 1-5 అయితే స్క్రోల్ అవుతుంది
+            container.style.display = 'block';
+            container.innerHTML = `<marquee scrollamount="${data.speed}" style="width:100%; line-height:35px;">${contentHtml}</marquee>`;
         }
-    });
+    } else {
+        container.style.display = 'none';
+    }
+});
 
     // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
     // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
