@@ -230,6 +230,60 @@
             // Future Signal Logic ikkada add chesukovachu
             sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--red);">FETCHING ${selected} LIVE...</div>`;
         });
+        // --- Dropdown Persistence Logic ---
+
+const sigSelect = document.getElementById('sigSelect');
+const toolSelect = document.getElementById('toolSelect');
+
+// 1. Signal Select chesinappudu save cheyyadam
+sigSelect.addEventListener('change', function() {
+    const val = this.value;
+    localStorage.setItem('userSelectedSignal', val);
+    updateSignalDisplay(val);
+});
+
+// 2. Tool Select chesinappudu save cheyyadam
+toolSelect.addEventListener('change', function() {
+    const val = this.value;
+    localStorage.setItem('userSelectedTool', val);
+    updateToolDisplay(val);
+});
+
+// 3. Page Refresh ayinappudu thirigi load cheyadam
+window.addEventListener('DOMContentLoaded', () => {
+    // Load Signal
+    const lastSig = localStorage.getItem('userSelectedSignal');
+    if(lastSig) {
+        sigSelect.value = lastSig;
+        updateSignalDisplay(lastSig);
+    }
+
+    // Load Tool
+    const lastTool = localStorage.getItem('userSelectedTool');
+    if(lastTool) {
+        toolSelect.value = lastTool;
+        updateToolDisplay(lastTool);
+    }
+});
+
+// Helper Functions (Mee display update kosam)
+function updateSignalDisplay(selected) {
+    const sigScreen = document.getElementById('sigScreen');
+    if(!selected) {
+        sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">AWAITING SIGNAL...</div>`;
+    } else {
+        sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--red);">FETCHING ${selected} LIVE...</div>`;
+    }
+}
+
+function updateToolDisplay(selected) {
+    const toolScreen = document.getElementById('toolScreen');
+    if(!selected) {
+        toolScreen.innerHTML = "";
+    } else {
+        toolScreen.innerHTML = `<div style="padding:20px; color:#fff;">${selected} MODULE ACTIVE</div>`;
+    }
+}
     </script>
 </body>
 </html>
