@@ -371,27 +371,46 @@
         };
 
         function saveGiveawayToCloud() {
-            const winnerText = document.getElementById('winnerName').value;
-            const speedValue = parseInt(document.getElementById('selectedSpeed').value);
-            const isVisible = document.getElementById('hideBtn').innerText.includes('HIDE');
+    // 1. Inputs నుండి డేటా తీసుకోవడం
+    const winnerText = document.getElementById('winnerName').value;
+    const rawSpeed = document.getElementById('selectedSpeed').value;
+    const speedValue = parseInt(rawSpeed) || 0; // ఖచ్చితంగా నంబర్ అయ్యేలా చేస్తుంది
+    
+    // బటన్ టెక్స్ట్ ని బట్టి స్టేటస్ నిర్ణయించడం
+    const isVisible = document.getElementById('hideBtn').innerText.includes('HIDE');
 
-            const giveawayData = {
-                content: winnerText,
-                speed: speedValue,
-                status: isVisible,
-                timestamp: new Date().getTime()
-            };
+    // 2. పంపాల్సిన డేటా స్ట్రక్చర్
+    const giveawayData = {
+        content: winnerText,
+        speed: speedValue,  // (Example: 2, 3, 5)
+        status: isVisible,  // (true లేదా false)
+        timestamp: new Date().getTime()
+    };
 
-            // 1. Local Memory Save
-            localStorage.setItem('giveawayData', JSON.stringify({winner: winnerText, speed: speedValue, status: isVisible ? 'VISIBLE' : 'HIDDEN'}));
+    // 3. Local Storage లో దాచుకోవడం (Backup కోసం)
+    localStorage.setItem('giveawayData', JSON.stringify({
+        winner: winnerText, 
+        speed: speedValue, 
+        status: isVisible ? 'VISIBLE' : 'HIDDEN'
+    }));
 
-            // 2. Firebase Cloud Sync
-            if (window.updateCloudConfig) {
-                window.updateCloudConfig('site_settings/giveaway', giveawayData);
-            }
-
-            saveLogic(); // Success alert చూపిస్తుంది
-        }
+    // 4. Firebase కి పంపడం (Cloud Sync)
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/giveaway', giveawayData);
+        
+        // సక్సెస్ మెసేజ్
+        Swal.fire({
+            icon: 'success',
+            title: 'LIVE PUBLISHED',
+            text: `Speed set to: ${speedValue}`,
+            background: '#0a0a0a',
+            color: '#fff',
+            confirmButtonColor: '#ff0000'
+        });
+    } else {
+        alert("Firebase connection missing!");
+    }
+}
         // --- CORE LOGIC FUNCTIONS ---
         function addNewFirebaseConfig() {
             const config = {
@@ -521,18 +540,12 @@
         }
 
         function saveLogic() {
-            Swal.fire({
-                icon: 'success',
-                title: 'PUBLISHED',
-                text: 'Cloud sync successful!',
-                confirmButtonColor: '#ff0000',
-                background: '#0a0a0a',
-                color: '#fff'
-            });
+            Swal.fire({ icon: 'success', title: 'UPDATED', background: '#0a0a0a', color: '#fff' });
         }
 
         window.onload = () => {
-            loadContent(localStorage.getItem('activeModule') || 'Views');
+            const lastModule = localStorage.getItem('activeModule') || 'Views';
+            loadContent(lastModule);
         };
     </script>
 </body>
