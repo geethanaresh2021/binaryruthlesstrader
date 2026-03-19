@@ -204,32 +204,26 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
 
     // --- Module Routing ---
-    switch (moduleName) {
-        case 'Firebase':
-            renderFirebaseModule();
-            break;
-                    case 'Firebase':
-            renderFirebaseModule();
-            break;
-            
-        // --- Ee Case ni ikkada Add Cheyandi ---
-        case 'Warning Note':
-            renderWarningNoteModule();
-            break;
-          // Ee case ni ethiki replace cheyandi
-case 'Signal Connection':
-    renderSignalConnectionModule();
-    break;  
-        // Ikkada future lo vere modules (Signal Connection, VPS, etc.) logic add cheసుకోవచ్చు
-        default:
-            mainDisplay.innerHTML = `
-                <div class="placeholder-card">
-                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
-                    [ ${moduleName.toUpperCase()} MODULE LOADED ]<br>
-                    <small style="color:#555; margin-top:10px; display:block;">READY TO SYNC WITH FIREBASE DATABASE.</small>
-                </div>
-            `;
-    }
+switch (moduleName) {
+    case 'Firebase':
+        renderFirebaseModule();
+        break;
+
+    case 'Signal Connection': // Ikkada changes cheyyali
+        renderSignalConnectionModule();
+        break;
+
+    case 'Warning Note':
+        renderWarningNoteModule();
+        break;
+        
+    default:
+        mainDisplay.innerHTML = `
+            <div class="placeholder-card">
+                <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                [ ${moduleName.toUpperCase()} MODULE LOADED ]
+            </div>
+        `;
 }
 
 // --- Firebase Specific Logic ---
