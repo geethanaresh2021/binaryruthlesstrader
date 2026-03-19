@@ -220,7 +220,7 @@
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Button Text</label><input type="text" id="joinText" class="input-box" value="JOIN PREMIUM"><button class="action-btn" onclick="saveJoinSection()">UPDATE SECTION</button></div>`;
                     break;
                 case 'Giveaway Winner':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Winner Username</label><input type="text" class="input-box" placeholder="@trader_name"><button class="action-btn" onclick="saveLogic()">PUBLISH WINNER</button></div>`;
+                    renderGiveawayModule();
                     break;
                 case 'Firebase':
                     renderFirebaseModule(); // Your existing logic
@@ -285,6 +285,99 @@
                     </div>
                 </div>
             `;
+        }
+        // --- GIVEAWAY WINNER MODULE (LIVE PREVIEW & CLOUD SYNC) ---
+        function renderGiveawayModule() {
+            const mainDisplay = document.getElementById('mainDisplay');
+            // Fetch existing settings (optional: from localStorage or Cloud)
+            const savedData = JSON.parse(localStorage.getItem('giveawayData') || '{"winner":"@User_Name", "scroll":true, "status":"VISIBLE"}');
+
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">LIVE PREVIEW</h2>
+                    
+                    <div id="giveawayPreview" style="background:#0a0a0a; border:1px solid var(--red); height:60px; display:flex; align-items:center; overflow:hidden; position:relative; margin-bottom:25px; border-radius:4px;">
+                        <div style="background:var(--red); color:#fff; height:100%; padding:0 15px; display:flex; align-items:center; font-size:12px; font-weight:900; z-index:2; position:absolute; left:0; box-shadow:10px 0 20px #000;">GIVEAWAY WINNER</div>
+                        <div id="scrollWrapper" style="white-space:nowrap; padding-left:160px; color:#00ffcc; font-family:'Roboto Mono'; font-weight:bold; font-size:16px; ${savedData.scroll ? 'animation: scrollText 10s linear infinite;' : ''}">
+                            CONGRATULATIONS TO <span id="previewName">${savedData.winner}</span> FOR WINNING THE PREMIUM GIVEAWAY!
+                        </div>
+                    </div>
+
+                    <style>
+                        @keyframes scrollText {
+                            0% { transform: translateX(100%); }
+                            100% { transform: translateX(-150%); }
+                        }
+                    </style>
+
+                    <h2 style="font-size:12px; color:#fff; margin-bottom:15px;">ENTER DETAILS</h2>
+                    <div style="display:flex; flex-direction:column; gap:15px;">
+                        <div>
+                            <label class="input-label">Winner Username / Text</label>
+                            <input type="text" id="winnerName" class="input-box" value="${savedData.winner}" oninput="document.getElementById('previewName').innerText = this.value" placeholder="@username">
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:10px; background:#080808; padding:10px; border:1px solid #111;">
+                            <input type="checkbox" id="scrollCheck" ${savedData.scroll ? 'checked' : ''} onchange="togglePreviewScroll(this.checked)">
+                            <label class="input-label" style="margin:0; cursor:pointer;">ENABLE SMOOTH SCROLL (RIGHT TO LEFT)</label>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+                            <button class="action-btn" style="background:#333; box-shadow:none;" onclick="document.getElementById('winnerName').focus()">EDIT</button>
+                            <button class="action-btn" id="hideBtn" style="background:${savedData.status === 'HIDDEN' ? '#444' : '#660000'}; box-shadow:none;" onclick="toggleGiveawayVisibility()">${savedData.status === 'HIDDEN' ? 'SHOW' : 'HIDE'}</button>
+                            <button class="action-btn" onclick="saveGiveawayToCloud()">SAVE & PUBLISH</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- GIVEAWAY LOGIC HELPERS ---
+        function togglePreviewScroll(isScrolling) {
+            const wrapper = document.getElementById('scrollWrapper');
+            wrapper.style.animation = isScrolling ? 'scrollText 10s linear infinite' : 'none';
+        }
+
+        function toggleGiveawayVisibility() {
+            const btn = document.getElementById('hideBtn');
+            if (btn.innerText === 'HIDE') {
+                btn.innerText = 'SHOW';
+                btn.style.background = '#444';
+            } else {
+                btn.innerText = 'HIDE';
+                btn.style.background = '#660000';
+            }
+        }
+
+        function saveGiveawayToCloud() {
+            const winnerText = document.getElementById('winnerName').value;
+            const isScrolling = document.getElementById('scrollCheck').checked;
+            const currentStatus = document.getElementById('hideBtn').innerText === 'HIDE' ? 'VISIBLE' : 'HIDDEN';
+
+            const giveawayData = {
+                winner: winnerText,
+                scroll: isScrolling,
+                status: currentStatus,
+                timestamp: new Date().getTime()
+            };
+
+            // 1. Save to Local Memory
+            localStorage.setItem('giveawayData', JSON.stringify(giveawayData));
+
+            // 2. Sync to Firebase Cloud
+            if (window.updateCloudConfig) {
+                window.updateCloudConfig('site_settings/giveaway', giveawayData);
+            }
+
+            // Success Alert
+            Swal.fire({
+                icon: 'success',
+                title: 'PUBLISHED TO HOME',
+                text: 'Winner details are now live on the home page.',
+                confirmButtonColor: '#ff0000',
+                background: '#0a0a0a',
+                color: '#fff'
+            });
         }
 
         // --- CORE LOGIC FUNCTIONS ---
