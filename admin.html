@@ -195,38 +195,59 @@
 
 
         // UI Content Loader (Switching between Modules)
-        function loadContent(moduleName) {
-    // 1. Browser memory lo save chestundi
+       // --- 1. Content Loader (Reload persistence logic tho) ---
+function loadContent(moduleName) {
+    console.log("Loading Module:", moduleName); // Debugging kosam
+
+    // Browser memory lo current module ni save chestundi
     localStorage.setItem('activeModule', moduleName);
 
-    // 2. Button highlight logic
+    // Sidebar Buttons ki 'active' class add cheyadam (Glow ravalante idi mukhyam)
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Button text matching ayithe 'active' class add chestundi
-        if(btn.innerText.trim() === moduleName) {
+        // Button text ni module name tho match chestundi
+        // .trim() valla extra spaces unna problem radu
+        if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
         }
     });
 
-    // 3. Header title update
+    // Panel Header update
     document.getElementById('panelHeader').innerHTML = `
         <h1>${moduleName}</h1>
-        <p>MANAGING ${moduleName.toUpperCase()} MODULE.</p>
+        <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS.</p>
     `;
 
-    // 4. Content Switch Logic (Firebase/Warning Note etc.)
-    if(moduleName === 'Firebase') {
-        renderFirebaseModule();
-    } else if(moduleName === 'Warning Note') {
-        renderWarningNoteModule();
-    } else {
-        document.getElementById('mainDisplay').innerHTML = `
-            <div class="placeholder-card">[ ${moduleName.toUpperCase()} MODULE LOADED ]</div>
-        `;
+    // --- Module Routing (Ide main part) ---
+    // Meeru reload chesinappudu ee switch case correct ga vundali
+    const display = document.getElementById('mainDisplay');
+    
+    switch (moduleName) {
+        case 'Firebase':
+            renderFirebaseModule();
+            break;
+        case 'Warning Note':
+            renderWarningNoteModule();
+            break;
+        // Inka vere options (ST Resize, Tools etc.) ki ikkada Logic add cheyyali
+        default:
+            display.innerHTML = `
+                <div class="placeholder-card">
+                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                    [ ${moduleName.toUpperCase()} MODULE LOADED ]
+                </div>`;
     }
 }
+
+// --- 2. Page Load Initializer ---
+// Page refresh avvagane ventane panichestundi
+window.addEventListener('DOMContentLoaded', (event) => {
+    // Memory lo module unte adi load chestundi, lekapothe default ga 'Views' load chestundi
+    const savedModule = localStorage.getItem('activeModule') || 'Views';
+    loadContent(savedModule);
+});
 
         // --- FIREBASE STORAGE LOGIC (Rendering Module) ---
         function renderFirebaseModule() {
