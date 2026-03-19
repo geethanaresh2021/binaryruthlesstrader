@@ -133,9 +133,10 @@
         </div>
     </header>
 
-    <div class="info-bar warning-bar">
-        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
-    </div>
+    <div id="warning-wrapper" class="info-bar warning-bar" style="display: none;">
+    <div id="live-warning-text">
+        </div>
+</div>
     <div id="giveaway-bar" class="info-bar winner-bar" style="display: none; background: #000 !important; border-bottom: 2px solid #ff0000 !important; height: 35px; overflow: hidden; width: 100%;"></div>
     
     
@@ -240,13 +241,28 @@ syncGiveaway((data) => {
 });
     // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
     // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
-    onSnapshot(doc(db, "settings", "warning"), (snap) => {
-        const data = snap.data();
-        const warningBar = document.querySelector('.warning-bar');
-        if (data && warningBar) {
-            warningBar.innerHTML = `<marquee scrollamount="6">${data.content}</marquee>`;
+    // పాత కోడ్ తీసేసి, ఈ కొత్త లాజిక్ ని ఉపయోగించండి
+onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
+    const data = snap.data();
+    const wrapper = document.getElementById('warning-wrapper');
+    const textArea = document.getElementById('live-warning-text');
+
+    if (data && wrapper && textArea) {
+        // 1. అడ్మిన్ లో SHOW/HIDE చెక్ చేయడం
+        if (data.status === true) {
+            wrapper.style.display = 'block';
+            
+            // 2. స్పీడ్ 0 ఉంటే ఆగుతుంది, లేదంటే అడ్మిన్ లో ఇచ్చిన స్పీడ్ తో తిరుగుతుంది
+            if (data.speed === 0) {
+                textArea.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</div>`;
+            } else {
+                textArea.innerHTML = `<marquee scrollamount="${data.speed}"><i class="fas fa-exclamation-triangle"></i> ${data.text}</marquee>`;
+            }
+        } else {
+            wrapper.style.display = 'none'; // అడ్మిన్ లో OFF చేస్తే ఇక్కడ హైడ్ అవుతుంది
         }
-    });
+    }
+});
 
 </script>
     <script>
