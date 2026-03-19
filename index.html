@@ -136,8 +136,10 @@
     <div class="info-bar warning-bar">
         <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
     </div>
-    <div id="giveaway-container" class="info-bar winner-bar" style="display: none;">
-    </div>
+    <div id="giveaway-bar" class="info-bar winner-bar" style="display: none; background: #000 !important; border-bottom: 2px solid #ff0000 !important; height: 35px; overflow: hidden;">
+    <marquee id="giveaway-scroll" scrollamount="5" behavior="scroll" direction="left" style="width:100%; line-height:35px; display: none;"></marquee>
+    <div id="giveaway-static" style="display:none; width:100%; height:100%; justify-content:center; align-items:center;"></div>
+</div>
 
     <div class="page-content">
         <div class="widget-container">
@@ -199,38 +201,36 @@
         `).join('');
     }
 
-    // --- 2. LIVE GIVEAWAY SYNC (Black Background & Red Accents) ---
+    // --- 2. LIVE GIVEAWAY SYNC (Black Background & Red Glow) ---
 syncGiveaway((data) => {
-    const container = document.getElementById('giveaway-container');
-    if (data && (data.status === true || data.status === "VISIBLE")) {
-        
-        // Background Black & Border Red
-        container.style.background = '#000000'; 
-        container.style.borderBottom = '2px solid #ff0000'; 
-        container.style.height = '35px';
-        container.style.lineHeight = '35px';
-        
-        // Text: White with Red Shadow (Ruthless Style)
-        const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; font-size: 14px; text-shadow: 0 0 5px #ff0000;`;
-        const contentHtml = `<span style="${textStyle}">${data.content}</span>`;
-        
-        const scrollSpeed = parseInt(data.speed) || 0;
+    const bar = document.getElementById('giveaway-bar');
+    const scrollElem = document.getElementById('giveaway-scroll');
+    const staticElem = document.getElementById('giveaway-static');
 
-        if (scrollSpeed === 0) {
-            container.style.display = 'flex'; 
-            container.style.justifyContent = 'center';
-            container.style.alignItems = 'center';
-            container.innerHTML = contentHtml;
+    if (data && (data.status === true || data.status === "VISIBLE")) {
+        bar.style.display = 'flex';
+        
+        // Ruthless Style: White Text with Red Neon Glow
+        const contentHtml = `<span style="color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;">${data.content}</span>`;
+        
+        const speed = parseInt(data.speed) || 0;
+
+        if (speed === 0) {
+            // Speed 0 అయితే సెంటర్ లో ఆగి ఉంటుంది
+            scrollElem.style.display = 'none';
+            staticElem.style.display = 'flex';
+            staticElem.innerHTML = contentHtml;
         } else {
-            // స్క్రోలింగ్ వర్క్ అవ్వాలంటే ఇక్కడ display: block ఉండాలి
-            container.style.display = 'block'; 
-            container.innerHTML = `<marquee scrollamount="${scrollSpeed}" behavior="scroll" direction="left" style="width:100%; display:block; height:35px; line-height:35px;">${contentHtml}</marquee>`;
+            // Speed 1-10 అయితే స్క్రోల్ అవుతుంది
+            staticElem.style.display = 'none';
+            scrollElem.style.display = 'block';
+            scrollElem.setAttribute('scrollamount', speed); // Dynamic Speed అప్‌డేట్
+            scrollElem.innerHTML = contentHtml;
         }
     } else {
-        container.style.display = 'none';
+        bar.style.display = 'none';
     }
 });
-
     // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
     // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
     onSnapshot(doc(db, "settings", "warning"), (snap) => {
