@@ -72,16 +72,13 @@
         /* --- Info Bars --- */
         .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
         .winner-bar { 
-    background: rgba(255, 255, 255, 0.05); 
-    border-bottom: 1px solid #111; 
-    color: var(--white);
-    min-height: 35px; /* Height ఫిక్స్డ్ గా ఉండాలి */
-    display: none;    /* మొదట హైడ్ చేసి ఉంచుతాము */
-    align-items: center;
-    font-family: 'Roboto Mono', monospace;
+    width: 100% !important; 
+    padding: 0 !important; 
+    margin: 0 !important;
+    overflow: hidden; 
+    background: #ff0000 !important; /* ఎరుపు రంగు */
+    color: #ffffff !important;      /* తెలుపు రంగు */
 }
-
-        .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
 
         /* --- Main Content --- */
         .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -204,23 +201,30 @@
         `).join('');
     }
 
-    // --- 2. LIVE GIVEAWAY SYNC ---
+    // --- 2. LIVE GIVEAWAY SYNC (Updated Scroll & Color) ---
 syncGiveaway((data) => {
     const container = document.getElementById('giveaway-container');
     if (data && (data.status === true || data.status === "VISIBLE")) {
-        container.style.display = 'flex';
         
-        // Content ని సెట్ చేయడం (Neon Green effect తో)
-        const contentHtml = `<span style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-weight: bold;">${data.content}</span>`;
+        // ముఖ్యమైన స్టైల్స్ ఇక్కడే ఫిక్స్ చేస్తున్నాను
+        container.style.background = '#ff0000'; // Pure Red
+        container.style.borderBottom = '2px solid #ffffff'; // White Border
+        container.style.height = '35px';
+        container.style.lineHeight = '35px';
+        
+        const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; font-size: 14px;`;
+        const contentHtml = `<span style="${textStyle}">${data.content}</span>`;
+        const scrollSpeed = parseInt(data.speed) || 0;
 
-        if (parseInt(data.speed) === 0) {
-            // Speed 0 అయితే సెంటర్ లో ఉంటుంది
+        if (scrollSpeed === 0) {
+            container.style.display = 'flex'; // సెంటర్ లో ఉండటానికి flex
             container.style.justifyContent = 'center';
+            container.style.alignItems = 'center';
             container.innerHTML = contentHtml;
         } else {
-            // Speed 1-5 అయితే స్క్రోల్ అవుతుంది
-            container.style.display = 'block';
-            container.innerHTML = `<marquee scrollamount="${data.speed}" style="width:100%; line-height:35px;">${contentHtml}</marquee>`;
+            container.style.display = 'block'; // స్క్రోలింగ్ కోసం block ఖచ్చితంగా ఉండాలి
+            // Marquee behavior ని రిఫ్రెష్ చేస్తున్నాము
+            container.innerHTML = `<marquee scrollamount="${scrollSpeed}" behavior="scroll" direction="left" style="width:100%; display:block;">${contentHtml}</marquee>`;
         }
     } else {
         container.style.display = 'none';
