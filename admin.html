@@ -159,6 +159,12 @@
         </main>
     </div>
 
+    <script type="module">
+        import { updateCloudConfig, saveFirebaseSettings } from './firebase-logic.js';
+        window.updateCloudConfig = updateCloudConfig;
+        window.saveFirebaseSettings = saveFirebaseSettings;
+    </script>
+
     <script>
         let database;
 
@@ -184,25 +190,25 @@
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Estimated Revenue (INR)</label><h1 style="color:#00ffcc; font-size:40px;">₹ 15,240.00</h1><button class="action-btn" style="margin-top:20px;">SYNC WITH ADS</button></div>`;
                     break;
                 case 'ST Resize':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Main Container Width (px)</label><input type="text" class="input-box" value="1280"><label class="input-label">Disable Zoom (0/1)</label><input type="number" class="input-box" value="1"><button class="action-btn" onclick="saveLogic()">APPLY LAYOUT</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Main Container Width (px)</label><input type="text" id="screenWidth" class="input-box" value="1280"><label class="input-label">Disable Zoom (0/1)</label><input type="number" id="zoomDisable" class="input-box" value="1"><button class="action-btn" onclick="saveSTResize()">APPLY LAYOUT</button></div>`;
                     break;
                 case 'Tools Manager':
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Active Tool ID</label><input type="text" class="input-box" placeholder="Tool Name"><label class="input-label">Visibility</label><select class="input-box"><option>VISIBLE</option><option>HIDDEN</option></select><button class="action-btn" onclick="saveLogic()">SAVE TOOLS</button></div>`;
                     break;
                 case 'Signal Connection':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Signal Source URL</label><input type="text" class="input-box" placeholder="https://api.signals.com"><label class="input-label">Platform</label><input type="text" class="input-box" value="QUOTEX"><button class="action-btn" onclick="saveLogic()">CONNECT LIVE</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Signal Source URL</label><input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com"><label class="input-label">Platform</label><input type="text" id="sigPlat" class="input-box" value="QUOTEX"><button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button></div>`;
                     break;
                 case 'Ads Network':
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Network API Key</label><input type="text" class="input-box" placeholder="ADS-XXXX-XXXX"><button class="action-btn" onclick="saveLogic()">VERIFY NETWORK</button></div>`;
                     break;
                 case 'Ads Containers':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Refresh Interval (Seconds)</label><input type="number" class="input-box" value="30"><label class="input-label">Ad Unit Script</label><textarea class="input-box" rows="4"></textarea><button class="action-btn" onclick="saveLogic()">UPDATE ADS</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Refresh Interval (Seconds)</label><input type="number" id="adRefresh" class="input-box" value="30"><label class="input-label">Ad Unit Script</label><textarea id="adScript" class="input-box" rows="4"></textarea><button class="action-btn" onclick="saveAdsConfig()">UPDATE ADS</button></div>`;
                     break;
                 case 'Social Media':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Telegram URL</label><input type="text" class="input-box" placeholder="t.me/yourlink"><label class="input-label">YouTube URL</label><input type="text" class="input-box" placeholder="youtube.com/c/..."><button class="action-btn" onclick="saveLogic()">UPDATE SOCIALS</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Telegram URL</label><input type="text" id="tgUrl" class="input-box" placeholder="t.me/yourlink"><label class="input-label">YouTube URL</label><input type="text" id="ytUrl" class="input-box" placeholder="youtube.com/c/..."><button class="action-btn" onclick="saveSocialLinks()">UPDATE SOCIALS</button></div>`;
                     break;
                 case 'Brand Name':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Header Title</label><input type="text" class="input-box" value="BINARY RUTHLESS TRADER"><button class="action-btn" onclick="saveLogic()">UPDATE BRAND</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Header Title</label><input type="text" id="brandTitle" class="input-box" value="BINARY RUTHLESS TRADER"><button class="action-btn" onclick="saveBrandName()">UPDATE BRAND</button></div>`;
                     break;
                 case 'Affiliate':
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Affiliate ID</label><input type="text" class="input-box" placeholder="RUTHLESS-001"><button class="action-btn" onclick="saveLogic()">SAVE AFFILIATE</button></div>`;
@@ -211,7 +217,7 @@
                     renderWarningNoteModule(); 
                     break;
                 case 'Join Section':
-                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Button Text</label><input type="text" class="input-box" value="JOIN PREMIUM"><button class="action-btn" onclick="saveLogic()">UPDATE SECTION</button></div>`;
+                    mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Button Text</label><input type="text" id="joinText" class="input-box" value="JOIN PREMIUM"><button class="action-btn" onclick="saveJoinSection()">UPDATE SECTION</button></div>`;
                     break;
                 case 'Giveaway Winner':
                     mainDisplay.innerHTML = `<div class="module-card"><label class="input-label">Winner Username</label><input type="text" class="input-box" placeholder="@trader_name"><button class="action-btn" onclick="saveLogic()">PUBLISH WINNER</button></div>`;
@@ -230,47 +236,39 @@
 
         // --- FIREBASE MODULE (YOUR ORIGINAL LOGIC) ---
         function renderFirebaseModule() {
-            const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-            const activeIndex = localStorage.getItem('fb_active_index');
+            const config = JSON.parse(localStorage.getItem('firebaseConfig') || '{}');
             const mainDisplay = document.getElementById('mainDisplay');
-
-            let listHtml = savedConfigs.map((cfg, index) => `
-                <div style="background:#0a0a0a; padding:10px; border:1px solid #111; margin-bottom:5px; border-left:4px solid ${activeIndex == index ? 'red' : '#333'}; display:flex; justify-content:space-between;">
-                    <span style="font-size:10px; font-family:Roboto Mono;">${cfg.projectId}</span>
-                    <span style="font-size:8px; color:${activeIndex == index ? '#00ff00' : '#444'};">${activeIndex == index ? 'CONNECTED' : 'STANDBY'}</span>
-                </div>
-            `).join('');
 
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <h2 style="font-size:12px; color:var(--red); margin-bottom:15px;">ADD FIREBASE CONFIG</h2>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <input type="text" id="apiKey" class="input-box" placeholder="apiKey">
-                        <input type="text" id="authDomain" class="input-box" placeholder="authDomain">
-                        <input type="text" id="projectId" class="input-box" placeholder="projectId">
-                        <input type="text" id="appId" class="input-box" placeholder="appId">
+                        <input type="text" id="apiKey" class="input-box" placeholder="apiKey" value="${config.apiKey || ''}">
+                        <input type="text" id="authDomain" class="input-box" placeholder="authDomain" value="${config.authDomain || ''}">
+                        <input type="text" id="projectId" class="input-box" placeholder="projectId" value="${config.projectId || ''}">
+                        <input type="text" id="appId" class="input-box" placeholder="appId" value="${config.appId || ''}">
                     </div>
-                    <button class="action-btn" onclick="saveFirebaseConfig()">CONNECT DATABASE</button>
+                    <button class="action-btn" onclick="handleFirebaseConfig()">CONNECT DATABASE</button>
                     <hr style="border:0.5px solid #111; margin:20px 0;">
-                    <h2 style="font-size:12px; color:#fff; margin-bottom:10px;">SAVED NODES</h2>
-                    ${listHtml || '<p style="color:#222; font-size:10px;">EMPTY</p>'}
+                    <h2 style="font-size:12px; color:#fff; margin-bottom:10px;">STATUS</h2>
+                    <div style="background:#0a0a0a; padding:10px; border:1px solid #111; border-left:4px solid red;">
+                         <span style="font-size:10px; font-family:Roboto Mono;">${config.projectId || 'NOT CONNECTED'}</span>
+                    </div>
                 </div>
             `;
         }
 
-        function saveFirebaseConfig() {
+        function handleFirebaseConfig() {
             const config = {
                 apiKey: document.getElementById('apiKey').value,
                 authDomain: document.getElementById('authDomain').value,
                 projectId: document.getElementById('projectId').value,
-                appId: document.getElementById('appId').value
+                appId: document.getElementById('appId').value,
+                databaseURL: `https://${document.getElementById('projectId').value}-default-rtdb.firebaseio.com`
             };
-            let configs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-            configs.push(config);
-            localStorage.setItem('fb_configs', JSON.stringify(configs));
-            localStorage.setItem('fb_active_index', configs.length - 1);
-            renderFirebaseModule();
+            window.saveFirebaseSettings(config);
             Swal.fire({icon: 'success', title: 'CONNECTED', background: '#0a0a0a', color: '#fff'});
+            renderFirebaseModule();
         }
 
         // --- WARNING NOTE MODULE ---
@@ -280,10 +278,48 @@
                 <div class="module-card">
                     <label class="input-label">WARNING TEXT</label>
                     <textarea id="noteEditor" class="input-box" rows="4">Warning: Trading has risk...</textarea>
-                    <label class="input-label"><input type="checkbox" id="scrollToggle"> ENABLE SMOOTH SCROLL</label>
-                    <button class="action-btn" onclick="saveLogic()">PUBLISH TO CLOUD</button>
+                    <label class="input-label"><input type="checkbox" id="scrollToggle" checked> ENABLE SMOOTH SCROLL</label>
+                    <button class="action-btn" onclick="saveWarningNote()">PUBLISH TO CLOUD</button>
                 </div>
             `;
+        }
+
+        // --- CLOUD SYNC HELPERS ---
+        function saveWarningNote() {
+            const data = { content: document.getElementById('noteEditor').value, scroll: document.getElementById('scrollToggle').checked };
+            window.updateCloudConfig('site_settings/warning_note', data);
+            saveLogic();
+        }
+
+        function saveSTResize() {
+            const data = { width: document.getElementById('screenWidth').value, noZoom: document.getElementById('zoomDisable').value };
+            window.updateCloudConfig('site_settings/layout', data);
+            saveLogic();
+        }
+
+        function saveBrandName() {
+            window.updateCloudConfig('site_settings/brand', { title: document.getElementById('brandTitle').value });
+            saveLogic();
+        }
+
+        function saveSocialLinks() {
+            window.updateCloudConfig('site_settings/socials', { telegram: document.getElementById('tgUrl').value, youtube: document.getElementById('ytUrl').value });
+            saveLogic();
+        }
+
+        function saveAdsConfig() {
+            window.updateCloudConfig('site_settings/ads', { refresh: document.getElementById('adRefresh').value, script: document.getElementById('adScript').value });
+            saveLogic();
+        }
+
+        function saveSignalConn() {
+            window.updateCloudConfig('site_settings/signals', { url: document.getElementById('sigUrl').value, platform: document.getElementById('sigPlat').value });
+            saveLogic();
+        }
+
+        function saveJoinSection() {
+            window.updateCloudConfig('site_settings/join', { text: document.getElementById('joinText').value });
+            saveLogic();
         }
 
         function saveLogic() {
