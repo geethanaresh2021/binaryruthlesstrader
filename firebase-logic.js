@@ -1,95 +1,58 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-    getFirestore, collection, query, orderBy, limit, onSnapshot, 
-    doc, setDoc, getDocs, writeBatch 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+<script type="module">
+    import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
+    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// --- 1. FIREBASE CONFIGURATION ---
-const firebaseConfig = {
-  apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-  authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-  databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
-  projectId: "binary-ruthless-trader-26654",
-  storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-  messagingSenderId: "533209261799",
-  appId: "1:533209261799:web:a398ab21b0f913683ea442",
-  measurementId: "G-WQCXCMV5PR"
-};
+    // --- 1. SIGNALS ---
+    const sigSelect = document.getElementById('sigSelect');
+    const sigScreen = document.getElementById('sigScreen');
+    let currentSub = null;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// --- 2. AUTHENTICATION (For Mobile/Guest Users) ---
-// మొబైల్ యూజర్లకి డేటా కనెక్షన్ రావాలంటే ఇది తప్పనిసరి
-signInAnonymously(auth).catch((error) => {
-    console.error("Firebase Auth Error:", error.message);
-});
-
-// --- 3. CLOUD UPDATE FUNCTIONS (Admin.html కోసం) ---
-export async function updateCloudConfig(path, data) {
-    if (!db) return;
-    try {
-        const [col, documentName] = path.split('/');
-        await setDoc(doc(db, col, documentName), data, { merge: true });
-        console.log(`[CLOUD] Successfully Updated: ${path}`);
-    } catch (e) {
-        console.error("Update Error:", e);
-    }
-}
-
-// --- 4. LIVE GIVEAWAY SYNC (Index.html కోసం) ---
-export function syncGiveaway(updateUI) {
-    if (!db) return;
-    const docRef = doc(db, "site_settings", "giveaway");
-    return onSnapshot(docRef, (snap) => {
-        if (snap.exists()) {
-            updateUI(snap.data());
-        }
-    });
-}
-
-// --- 5. SIGNALS SYNC (50 LIMIT) ---
-export function syncSignals(platform, updateUI) {
-    if (!db) return;
-    const q = query(
-        collection(db, platform), 
-        orderBy("timestamp", "desc"), 
-        limit(50) 
-    );
-
-    return onSnapshot(q, (snapshot) => {
-        const signals = [];
-        snapshot.forEach((doc) => {
-            signals.push({ id: doc.id, ...doc.data() });
+    sigSelect.addEventListener('change', (e) => {
+        if (currentSub) currentSub(); // పాత కనెక్షన్ ఆపేయడానికి
+        sigScreen.innerHTML = '<div style="text-align:center; padding-top:180px; color:#444;">LOADING...</div>';
+        
+        currentSub = syncSignals(e.target.value, (signals) => {
+            if (!signals.length) {
+                sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444;">NO SIGNALS</div>`;
+                return;
+            }
+            sigScreen.innerHTML = signals.map(sig => `
+                <div style="padding:15px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:red; font-weight:bold;">${sig.pair || '---'}</span>
+                    <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action || 'ITM'}</span>
+                </div>
+            `).join('');
         });
-        updateUI(signals); 
-        // ఆటోమేటిక్ క్లీనప్ 
-        processStorageCleanup(platform);
     });
-}
 
-// --- 6. STORAGE CLEANUP (Data 500 దాటితే పాతవి డిలీట్ అవుతాయి) ---
-async function processStorageCleanup(platform) {
-    try {
-        const colRef = collection(db, platform);
-        const q = query(colRef, orderBy("timestamp", "desc"));
-        const snapshot = await getDocs(q);
+    // --- 2. GIVEAWAY ---
+    syncGiveaway((data) => {
+        const bar = document.getElementById('giveaway-bar');
+        if (data && (data.status === true || data.statustrue === true || data.status === "VISIBLE")) {
+            bar.style.display = 'block';
+            const speed = parseInt(data.speed) || 0;
+            const content = data.Content || data.content || "WINNER PENDING...";
+            const style = "color:#fff; font-weight:900; font-family:'Roboto Mono'; text-transform:uppercase; text-shadow:0 0 10px red; font-size:14px;";
 
-        if (snapshot.size >= 500) {
-            const batch = writeBatch(db);
-            const oldDocs = snapshot.docs.slice(100); 
-            oldDocs.forEach((oldDoc) => {
-                batch.delete(doc(db, platform, oldDoc.id));
-            });
-            await batch.commit();
-            console.log(`[RUTHLESS PURGE] Cleaned up ${platform}`);
+            if (speed === 0) {
+                bar.innerHTML = `<div style="text-align:center; width:100%; line-height:35px; ${style}">${content}</div>`;
+            } else {
+                bar.innerHTML = `<marquee scrollamount="${speed}" style="line-height:35px; width:100%; display:block;"><span style="${style}">${content}</span></marquee>`;
+            }
+        } else { bar.style.display = 'none'; }
+    });
+
+    // --- 3. WARNING NOTE ---
+    onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
+        const wrapper = document.getElementById('warning-wrapper');
+        const textArea = document.getElementById('live-warning-text');
+        if (snap.exists()) {
+            const data = snap.data();
+            if (data.status === true) {
+                wrapper.style.display = 'block';
+                const msg = data.text || "RUTHLESS SIGNALS LIVE!";
+                textArea.innerHTML = `<marquee scrollamount="${data.speed || 5}" style="line-height:35px;">⚠️ ${msg}</marquee>`;
+            } else { wrapper.style.display = 'none'; }
         }
-    } catch (error) {
-        console.error("Cleanup Fail:", error);
-    }
-}
-
-export { db, auth };
+    });
+</script>
