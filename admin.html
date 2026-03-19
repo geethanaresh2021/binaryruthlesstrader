@@ -72,7 +72,14 @@
         }
         .nav-btn i { width: 18px; color: var(--red); font-size: 14px; text-align: center; }
         .nav-btn.white-accent i { color: var(--white); }
-        .nav-btn:hover { background: #1a0000; color: #fff; border-color: var(--red); padding-left: 20px; box-shadow: inset 4px 0 0 var(--red); }
+        .nav-btn:hover {
+    background: #1a0000; 
+    color: #fff; 
+    border-color: var(--red); 
+    padding-left: 25px; 
+    transform: scale(1.05); /* Zoom effect */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Neon Glow */
+}
         .nav-btn.active { background: var(--red); color: #fff !important; border-color: var(--red); box-shadow: var(--neon-glow); }
 
         /* Main Content Area Styles */
@@ -189,37 +196,37 @@
 
         // UI Content Loader (Switching between Modules)
         function loadContent(moduleName) {
-            localStorage.setItem('activeModule', moduleName);
+    // 1. Browser memory lo save chestundi
+    localStorage.setItem('activeModule', moduleName);
 
-            // Button Active State Update
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.trim() === moduleName);
-            });
-
-            // Header Update
-            document.getElementById('panelHeader').innerHTML = `
-                <h1>${moduleName}</h1>
-                <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
-            `;
-
-            // Routing Logic (Choose which module to show)
-            switch (moduleName) {
-                case 'Firebase':
-                    renderFirebaseModule();
-                    break;
-                case 'Warning Note':
-                    renderWarningNoteModule();
-                    break;
-                default:
-                    document.getElementById('mainDisplay').innerHTML = `
-                        <div class="placeholder-card">
-                            <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
-                            [ ${moduleName.toUpperCase()} MODULE LOADED ]
-                        </div>`;
-            }
+    // 2. Button highlight logic
+    const buttons = document.querySelectorAll('.nav-btn');
+    buttons.forEach(btn => {
+        // Button text matching ayithe 'active' class add chestundi
+        if(btn.innerText.trim() === moduleName) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
         }
+    });
 
+    // 3. Header title update
+    document.getElementById('panelHeader').innerHTML = `
+        <h1>${moduleName}</h1>
+        <p>MANAGING ${moduleName.toUpperCase()} MODULE.</p>
+    `;
+
+    // 4. Content Switch Logic (Firebase/Warning Note etc.)
+    if(moduleName === 'Firebase') {
+        renderFirebaseModule();
+    } else if(moduleName === 'Warning Note') {
+        renderWarningNoteModule();
+    } else {
+        document.getElementById('mainDisplay').innerHTML = `
+            <div class="placeholder-card">[ ${moduleName.toUpperCase()} MODULE LOADED ]</div>
+        `;
+    }
+}
 
         // --- FIREBASE STORAGE LOGIC (Rendering Module) ---
         function renderFirebaseModule() {
@@ -319,11 +326,11 @@
         }
 
 
-        // --- APP INITIALIZATION (On Page Load) ---
-        window.onload = function() {
-            const lastModule = localStorage.getItem('activeModule') || 'Views';
-            loadContent(lastModule);
-        };
+        // Page refresh avvagaane memory nundi patha option ni pilustundi
+window.onload = function() {
+    const lastSaved = localStorage.getItem('activeModule') || 'Views';
+    loadContent(lastSaved);
+};
     </script>
 </body>
 </html>
