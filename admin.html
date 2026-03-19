@@ -197,16 +197,16 @@ database = firebase.database();
 
 
 /* ============================================================
-   2. CONTENT LOADER (Fixed Persistence for Tools)
-   ============================================================ */
+   1. CONTENT LOADER (Fixed Routing & Memory Logic)
+   =========================================================== */
 function loadContent(moduleName) {
-    // 1. Memory lo save chestundi
+    // 1. Exact ga memory lo save chestundi
     localStorage.setItem('adminActiveModule', moduleName);
 
-    // 2. Sidebar Buttons Highlight
+    // 2. Sidebar Buttons Highlight (Glow Effect)
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Trim chesi match chustundi
+        // Button text ni match chestundi (Trim mukhyam)
         if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
@@ -214,33 +214,55 @@ function loadContent(moduleName) {
         }
     });
 
-    // 3. Header Update
-    document.getElementById('panelHeader').innerHTML = `<h1>${moduleName}</h1>`;
+    // 3. Header Title Update
+    const panelHeader = document.getElementById('panelHeader');
+    if (panelHeader) {
+        panelHeader.innerHTML = `<h1>${moduleName}</h1><p>MANAGING ${moduleName.toUpperCase()} MODULE.</p>`;
+    }
 
-    // 4. FIXED ROUTING (Ikkada logic add chesam)
+    // 4. MODULE ROUTING (Ikkada logic ni check cheyyandi)
     const display = document.getElementById('mainDisplay');
-
-    if (moduleName === 'Firebase') {
-        renderFirebaseModule();
-    } else if (moduleName === 'Warning Note') {
-        renderWarningNoteModule();
-    } else if (moduleName === 'Tools Manager') { // <--- Mee Sidebar lo name check cheyyandi
-        // Tools Manager kosam logic ikkada rayali
-        display.innerHTML = `
-            <div class="placeholder-card">
-                <i class="fas fa-tools" style="color:var(--red); font-size:30px; margin-bottom:15px;"></i><br>
-                TOOLS MANAGER DASHBOARD READY.
-            </div>`;
-    } else {
-        // Migatha anni options (ST Resize, Views etc.) ki idi load avthundi
-        display.innerHTML = `
-            <div class="placeholder-card">
-                <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
-                [ ${moduleName.toUpperCase()} MODULE LOADED ]
-            </div>`;
+    
+    // Switch case vadatam valla refresh tharvatha correct module load avthundi
+    switch (moduleName) {
+        case 'Firebase':
+            renderFirebaseModule();
+            break;
+        case 'Warning Note':
+            renderWarningNoteModule();
+            break;
+        case 'Tools Manager':
+            // Tools Manager UI ikkada vastundi
+            display.innerHTML = `<div class="placeholder-card"><i class="fas fa-tools" style="color:var(--red); font-size:30px;"></i><br>TOOLS MANAGER ACTIVE</div>`;
+            break;
+        default:
+            // Vere ey option ayina (Views, ST Resize etc.) deentlo load avthundi
+            display.innerHTML = `
+                <div class="placeholder-card">
+                    <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                    [ ${moduleName.toUpperCase()} MODULE LOADED ]
+                </div>`;
     }
 }
 
+
+/* ============================================================
+   2. PAGE INITIALIZER (Refresh kottina same page ravalante idi FIX)
+   =========================================================== */
+// 'load' event vadatam valla DOM motham load ayyaka memory check chestundi
+window.addEventListener('load', () => {
+    // LocalStorage check chestundi
+    let savedModule = localStorage.getItem('adminActiveModule');
+
+    // Okavela memory lo 'Admin Dashboard' ani unna, leka emi lekapoyina...
+    // Default ga 'Views' (leka meeru anukune first option) load chestundi
+    if (!savedModule || savedModule === "Admin Dashboard") {
+        savedModule = "Views"; 
+    }
+
+    console.log("Restoring Module:", savedModule); // Browser console lo check cheyachu
+    loadContent(savedModule);
+});
 /* ============================================================
    3. FIREBASE CONFIGURATION MODULE
    ============================================================ */
