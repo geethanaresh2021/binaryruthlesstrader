@@ -161,116 +161,92 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // --- Firebase Configuration ---
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASEURL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        
-        // Initialize Firebase if not already done
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+       /* ============================================================
+   1. CONFIGURATION & INITIALIZATION (Data Storage Setup)
+   ============================================================ */
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASEURL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+// Firebase initialize chesi database reference create chestundi
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
+
+/* ============================================================
+   2. UI DYNAMIC UPDATES (Realtime Firebase Sync)
+   ============================================================ */
+// Admin lo Warning Note marchినప్పుడు ventane index lo update avthundi
+database.ref('site_settings/warning_note').on('value', (snapshot) => {
+    const data = snapshot.val();
+    const warningBar = document.getElementById('warningBar');
+    
+    if (data && warningBar) {
+        if (data.scroll) {
+            warningBar.style.display = "block";
+            warningBar.innerHTML = `<marquee scrollamount="6" style="width:100%; height:35px; line-height:35px;">${data.content}</marquee>`;
+        } else {
+            warningBar.style.display = "flex";
+            warningBar.style.justifyContent = "center";
+            warningBar.style.alignItems = "center";
+            warningBar.innerHTML = `<div style="color:white; font-weight:bold;">${data.content}</div>`;
         }
-        const database = firebase.database();
+    }
+});
 
-        // --- REALTIME DATA SYNC (Warning Note Update) ---
-        // Ikkada duplicates theesesi single 'on' listener unchanu. 
-        // Admin lo Publish kottagane index lo ventane update avthundi.
-        database.ref('site_settings/warning_note').on('value', (snapshot) => {
-            const data = snapshot.val();
-            const warningBar = document.getElementById('warningBar');
-            
-            if (data && warningBar) {
-                if (data.scroll) {
-                    warningBar.style.display = "block";
-                    warningBar.innerHTML = `<marquee scrollamount="6" style="width:100%; height:35px; line-height:35px;">${data.content}</marquee>`;
-                } else {
-                    warningBar.style.display = "flex";
-                    warningBar.style.justifyContent = "center";
-                    warningBar.style.alignItems = "center";
-                    warningBar.innerHTML = `<div style="color:white; font-weight:bold;">${data.content}</div>`;
-                }
-            }
-        });
 
-        // --- ADMIN LOGIN LOGIC ---
-        function adminLogin() {
-            Swal.fire({
-                title: 'ACCESS KEY', 
-                input: 'password', 
-                showCancelButton: true,
-                confirmButtonText: 'LOGIN', 
-                confirmButtonColor: '#ff0000', 
-                background: '#0a0a0a',
-                color: '#fff'
-            }).then((result) => {
-                if (result.isConfirmed && result.value === "0000") {
-                    window.location.href = "admin.html";
-                } else if (result.isConfirmed) {
-                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000', background: '#0a0a0a', color: '#fff' });
-                }
-            })
-        }
-
-        // --- SIGNAL HANDLING LOGIC ---
-        const sigSelect = document.getElementById('sigSelect');
-        const sigScreen = document.getElementById('sigScreen');
-
-        sigSelect.addEventListener('change', function() {
-            const selected = this.value;
-            if(!selected) {
-                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">SELECT A PROVIDER</div>`;
-                return;
-            }
-            // Future Signal Logic ikkada add chesukovachu
-            sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--red);">FETCHING ${selected} LIVE...</div>`;
-        });
-        // --- Dropdown Persistence Logic ---
-
+/* ============================================================
+   3. PERSISTENCE LOGIC (Refresh chesina marakunda)
+   ============================================================ */
 const sigSelect = document.getElementById('sigSelect');
 const toolSelect = document.getElementById('toolSelect');
 
-// 1. Signal Select chesinappudu save cheyyadam
-sigSelect.addEventListener('change', function() {
-    const val = this.value;
-    localStorage.setItem('userSelectedSignal', val);
-    updateSignalDisplay(val);
-});
-
-// 2. Tool Select chesinappudu save cheyyadam
-toolSelect.addEventListener('change', function() {
-    const val = this.value;
-    localStorage.setItem('userSelectedTool', val);
-    updateToolDisplay(val);
-});
-
-// 3. Page Refresh ayinappudu thirigi load cheyadam
+// Page Refresh ayinappudu thirigi patha values load chestundi
 window.addEventListener('DOMContentLoaded', () => {
-    // Load Signal
+    // Memory nundi data teeskuntundi
     const lastSig = localStorage.getItem('userSelectedSignal');
+    const lastTool = localStorage.getItem('userSelectedTool');
+
     if(lastSig) {
         sigSelect.value = lastSig;
         updateSignalDisplay(lastSig);
     }
 
-    // Load Tool
-    const lastTool = localStorage.getItem('userSelectedTool');
     if(lastTool) {
         toolSelect.value = lastTool;
         updateToolDisplay(lastTool);
     }
 });
 
-// Helper Functions (Mee display update kosam)
+// Dropdowns change chesinappudu memory lo save chestundi
+sigSelect.addEventListener('change', function() {
+    const val = this.value;
+    localStorage.setItem('userSelectedSignal', val);
+    updateSignalDisplay(val);
+});
+
+toolSelect.addEventListener('change', function() {
+    const val = this.value;
+    localStorage.setItem('userSelectedTool', val);
+    updateToolDisplay(val);
+});
+
+
+/* ============================================================
+   4. HELPER FUNCTIONS (UI Rendering logic)
+   ============================================================ */
 function updateSignalDisplay(selected) {
     const sigScreen = document.getElementById('sigScreen');
     if(!selected) {
-        sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">AWAITING SIGNAL...</div>`;
+        sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">SELECT A PROVIDER</div>`;
     } else {
         sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: var(--red);">FETCHING ${selected} LIVE...</div>`;
     }
@@ -281,8 +257,39 @@ function updateToolDisplay(selected) {
     if(!selected) {
         toolScreen.innerHTML = "";
     } else {
-        toolScreen.innerHTML = `<div style="padding:20px; color:#fff;">${selected} MODULE ACTIVE</div>`;
+        toolScreen.innerHTML = `<div style="padding:20px; color:#fff; font-family:'Roboto Mono';">
+                                    <i class="fas fa-check-circle" style="color:var(--red);"></i> ${selected} MODULE ACTIVE
+                                </div>`;
     }
+}
+
+
+/* ============================================================
+   5. SECURITY LOGIC (Admin Login)
+   ============================================================ */
+function adminLogin() {
+    Swal.fire({
+        title: 'ACCESS KEY', 
+        input: 'password', 
+        showCancelButton: true,
+        confirmButtonText: 'LOGIN', 
+        confirmButtonColor: '#ff0000', 
+        background: '#0a0a0a',
+        color: '#fff'
+    }).then((result) => {
+        if (result.isConfirmed && result.value === "0000") {
+            window.location.href = "admin.html";
+        } else if (result.isConfirmed) {
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'DENIED', 
+                text: 'Invalid Credentials',
+                confirmButtonColor: '#ff0000', 
+                background: '#0a0a0a', 
+                color: '#fff' 
+            });
+        }
+    })
 }
     </script>
 </body>
