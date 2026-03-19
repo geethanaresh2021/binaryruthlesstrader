@@ -289,43 +289,47 @@
         // --- GIVEAWAY WINNER MODULE (LIVE PREVIEW & CLOUD SYNC) ---
         function renderGiveawayModule() {
             const mainDisplay = document.getElementById('mainDisplay');
-            // Fetch existing settings (optional: from localStorage or Cloud)
-            const savedData = JSON.parse(localStorage.getItem('giveawayData') || '{"winner":"@User_Name", "scroll":true, "status":"VISIBLE"}');
+            // LocalStorage నుండి పాత డేటా తెచ్చుకోవడం
+            const savedData = JSON.parse(localStorage.getItem('giveawayData') || '{"winner":"@User_Name", "speed":2, "status":"VISIBLE"}');
 
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">LIVE PREVIEW</h2>
                     
                     <div id="giveawayPreview" style="background:#0a0a0a; border:1px solid var(--red); height:60px; display:flex; align-items:center; overflow:hidden; position:relative; margin-bottom:25px; border-radius:4px;">
-                        <div style="background:var(--red); color:#fff; height:100%; padding:0 15px; display:flex; align-items:center; font-size:12px; font-weight:900; z-index:2; position:absolute; left:0; box-shadow:10px 0 20px #000;">GIVEAWAY WINNER</div>
-                        <div id="scrollWrapper" style="white-space:nowrap; padding-left:160px; color:#00ffcc; font-family:'Roboto Mono'; font-weight:bold; font-size:16px; ${savedData.scroll ? 'animation: scrollText 10s linear infinite;' : ''}">
-                            CONGRATULATIONS TO <span id="previewName">${savedData.winner}</span> FOR WINNING THE PREMIUM GIVEAWAY!
+                        <div style="background:var(--red); color:#fff; height:100%; padding:0 15px; display:flex; align-items:center; font-size:12px; font-weight:900; z-index:2; position:absolute; left:0; box-shadow:10px 0 20px #000;">GIVEAWAY</div>
+                        <div id="previewContent" style="width:100%; color:#00ffcc; font-family:'Roboto Mono'; font-weight:bold; font-size:16px; padding-left:140px;">
+                            ${savedData.speed === 0 
+                                ? `<div style="display:flex; justify-content:center; width:100%;">${savedData.winner}</div>` 
+                                : `<marquee scrollamount="${savedData.speed}">${savedData.winner}</marquee>`}
                         </div>
                     </div>
 
-                    <style>
-                        @keyframes scrollText {
-                            0% { transform: translateX(100%); }
-                            100% { transform: translateX(-150%); }
-                        }
-                    </style>
-
-                    <h2 style="font-size:12px; color:#fff; margin-bottom:15px;">ENTER DETAILS</h2>
+                    <h2 style="font-size:12px; color:#fff; margin-bottom:15px;">GIVEAWAY SETTINGS</h2>
                     <div style="display:flex; flex-direction:column; gap:15px;">
                         <div>
-                            <label class="input-label">Winner Username / Text</label>
-                            <input type="text" id="winnerName" class="input-box" value="${savedData.winner}" oninput="document.getElementById('previewName').innerText = this.value" placeholder="@username">
+                            <label class="input-label">Winner Text / Announcement</label>
+                            <input type="text" id="winnerName" class="input-box" value="${savedData.winner}" placeholder="Ex: @TRADER_01 WON 5000 INR!">
                         </div>
 
-                        <div style="display:flex; align-items:center; gap:10px; background:#080808; padding:10px; border:1px solid #111;">
-                            <input type="checkbox" id="scrollCheck" ${savedData.scroll ? 'checked' : ''} onchange="togglePreviewScroll(this.checked)">
-                            <label class="input-label" style="margin:0; cursor:pointer;">ENABLE SMOOTH SCROLL (RIGHT TO LEFT)</label>
+                        <div>
+                            <label class="input-label">SCROLL SPEED (0 = CENTER / 1-5 = FAST)</label>
+                            <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:5px; margin-top:5px;">
+                                ${[0,1,2,3,4,5].map(s => `
+                                    <button onclick="setGiveawaySpeed(${s})" id="speedBtn${s}" 
+                                        class="action-btn" style="background:${savedData.speed === s ? 'var(--red)' : '#111'}; box-shadow:none; padding:10px;">
+                                        ${s === 0 ? 'OFF' : s}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <input type="hidden" id="selectedSpeed" value="${savedData.speed}">
                         </div>
 
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
-                            <button class="action-btn" style="background:#333; box-shadow:none;" onclick="document.getElementById('winnerName').focus()">EDIT</button>
-                            <button class="action-btn" id="hideBtn" style="background:${savedData.status === 'HIDDEN' ? '#444' : '#660000'}; box-shadow:none;" onclick="toggleGiveawayVisibility()">${savedData.status === 'HIDDEN' ? 'SHOW' : 'HIDE'}</button>
-                            <button class="action-btn" onclick="saveGiveawayToCloud()">SAVE & PUBLISH</button>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                            <button class="action-btn" id="hideBtn" style="background:${savedData.status === 'HIDDEN' ? '#444' : '#660000'}; box-shadow:none;" onclick="toggleGiveawayVisibility()">
+                                ${savedData.status === 'HIDDEN' ? 'SHOW ON SITE' : 'HIDE FROM SITE'}
+                            </button>
+                            <button class="action-btn" onclick="saveGiveawayToCloud()">SAVE & PUBLISH LIVE</button>
                         </div>
                     </div>
                 </div>
@@ -348,38 +352,46 @@
                 btn.style.background = '#660000';
             }
         }
+        // Speed బటన్ క్లిక్ చేసినప్పుడు UI అప్‌డేట్ అవ్వడానికి
+        window.setGiveawaySpeed = function(speed) {
+            document.getElementById('selectedSpeed').value = speed;
+            // బటన్ కలర్స్ మార్చడం
+            for(let i=0; i<=5; i++) {
+                document.getElementById(`speedBtn${i}`).style.background = (i === speed) ? 'var(--red)' : '#111';
+            }
+            
+            // Preview ని వెంటనే మార్చడం
+            const winnerText = document.getElementById('winnerName').value;
+            const preview = document.getElementById('previewContent');
+            if(speed === 0) {
+                preview.innerHTML = `<div style="display:flex; justify-content:center; width:100%;">${winnerText}</div>`;
+            } else {
+                preview.innerHTML = `<marquee scrollamount="${speed}">${winnerText}</marquee>`;
+            }
+        };
 
         function saveGiveawayToCloud() {
             const winnerText = document.getElementById('winnerName').value;
-            const isScrolling = document.getElementById('scrollCheck').checked;
-            const currentStatus = document.getElementById('hideBtn').innerText === 'HIDE' ? 'VISIBLE' : 'HIDDEN';
+            const speedValue = parseInt(document.getElementById('selectedSpeed').value);
+            const isVisible = document.getElementById('hideBtn').innerText.includes('HIDE');
 
             const giveawayData = {
-                winner: winnerText,
-                scroll: isScrolling,
-                status: currentStatus,
+                content: winnerText,
+                speed: speedValue,
+                status: isVisible,
                 timestamp: new Date().getTime()
             };
 
-            // 1. Save to Local Memory
-            localStorage.setItem('giveawayData', JSON.stringify(giveawayData));
+            // 1. Local Memory Save
+            localStorage.setItem('giveawayData', JSON.stringify({winner: winnerText, speed: speedValue, status: isVisible ? 'VISIBLE' : 'HIDDEN'}));
 
-            // 2. Sync to Firebase Cloud
+            // 2. Firebase Cloud Sync
             if (window.updateCloudConfig) {
                 window.updateCloudConfig('site_settings/giveaway', giveawayData);
             }
 
-            // Success Alert
-            Swal.fire({
-                icon: 'success',
-                title: 'PUBLISHED TO HOME',
-                text: 'Winner details are now live on the home page.',
-                confirmButtonColor: '#ff0000',
-                background: '#0a0a0a',
-                color: '#fff'
-            });
+            saveLogic(); // Success alert చూపిస్తుంది
         }
-
         // --- CORE LOGIC FUNCTIONS ---
         function addNewFirebaseConfig() {
             const config = {
