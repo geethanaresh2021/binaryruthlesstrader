@@ -539,11 +539,32 @@
 }
 
         // --- CLOUD SYNC HELPERS ---
-        function saveWarningNote() {
-            const data = { content: document.getElementById('noteEditor').value, scroll: document.getElementById('scrollToggle').checked };
-            window.updateCloudConfig('site_settings/warning_note', data);
-            saveLogic();
-        }
+        function saveWarningNoteToCloud() {
+    // 1. అడ్మిన్ ప్యానెల్ లో ఉన్న ఇన్‌పుట్స్ నుండి డేటా తీసుకోవడం
+    const noteText = document.getElementById('noteText').value; // టెక్స్ట్ బాక్స్
+    const selectedSpeed = parseInt(document.getElementById('selectedNoteSpeed').value) || 0; // స్పీడ్ (0-5)
+    
+    // 2. బటన్ టెక్స్ట్ లో 'HIDE' అని ఉంటే అది సైట్ లో కనిపించాలని అర్థం (true)
+    const isVisible = document.getElementById('noteStatusBtn').innerText.includes('HIDE');
+
+    // 3. Firebase కి పంపాల్సిన డేటా స్ట్రక్చర్
+    const noteData = { 
+        text: noteText, 
+        speed: selectedSpeed, 
+        status: isVisible,
+        updatedAt: new Date().getTime() 
+    };
+
+    // 4. క్లౌడ్ కి సేవ్ చేయడం
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/warning_note', noteData);
+        
+        // సక్సెస్ మెసేజ్ (మీరు అడిగిన saveLogic() ని ఇక్కడ వాడుతున్నాం)
+        saveLogic(); 
+    } else {
+        console.error("Firebase updateCloudConfig function not found!");
+    }
+}
 
         function saveSTResize() {
             const data = { width: document.getElementById('screenWidth').value, noZoom: document.getElementById('zoomDisable').value };
