@@ -174,37 +174,39 @@
 
 
     <script>
-        // Global Database Variable
-        let database;
+       /* ============================================================
+   1. INITIALIZATION & DATABASE SETUP
+   ============================================================ */
+let database;
 
-        // Firebase Initialization Logic
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASEURL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASEURL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        database = firebase.database();
+// Firebase initialize chesi database connection ready chestundi
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+database = firebase.database();
 
 
-        // UI Content Loader (Switching between Modules)
-       // --- 1. Content Loader (Reload persistence logic tho) ---
-// --- 1. Content Loader Logic ---
+/* ============================================================
+   2. CONTENT LOADER (With Persistence & UI Glow)
+   ============================================================ */
 function loadContent(moduleName) {
-    // Memory lo module name ni save chestundi
+    // Memory lo module ni save chestundi (Refresh persistence kosam)
     localStorage.setItem('adminActiveModule', moduleName);
 
-    // Active button highlight (Red Glow)
+    // Sidebar Buttons Highlight & Glow Logic
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Button text matching (Icon tho paatu check chestundi)
+        // Icon unna kuda text mathrame match ayyela trim/includes vadutunnam
         if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
@@ -212,133 +214,136 @@ function loadContent(moduleName) {
         }
     });
 
-    // Content Display update
+    // Panel Header Update
     document.getElementById('panelHeader').innerHTML = `
         <h1>${moduleName}</h1>
-        <p>MANAGING ${moduleName.toUpperCase()} MODULE.</p>
+        <p>AUTHENTICATED SESSION: MANAGING ${moduleName.toUpperCase()} MODULE.</p>
     `;
 
-    // Routing Logic
-    if(moduleName === 'Warning Note') {
+    // --- MODULE ROUTING ---
+    const display = document.getElementById('mainDisplay');
+    if (moduleName === 'Warning Note') {
         renderWarningNoteModule();
-    } else if(moduleName === 'Firebase') {
+    } else if (moduleName === 'Firebase') {
         renderFirebaseModule();
     } else {
-        document.getElementById('mainDisplay').innerHTML = `
-            <div class="placeholder-card">[ ${moduleName.toUpperCase()} MODULE LOADED ]</div>
-        `;
+        display.innerHTML = `
+            <div class="placeholder-card">
+                <i class="fas fa-tools" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                [ ${moduleName.toUpperCase()} MODULE LOADED ]
+            </div>`;
     }
 }
 
-// --- 2. Page Load Initializer ---
-window.addEventListener('DOMContentLoaded', () => {
-    // Refresh ayinappudu patha module ni ethukuntundi
-    const savedModule = localStorage.getItem('adminActiveModule') || 'Views';
-    loadContent(savedModule);
-});
-        // --- FIREBASE STORAGE LOGIC (Rendering Module) ---
-        function renderFirebaseModule() {
-            const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-            const activeIndex = localStorage.getItem('fb_active_index');
 
-            let listHtml = savedConfigs.map((cfg, index) => `
-                <div class="fb-list-item ${activeIndex == index ? 'active-item' : ''}">
-                    <div>
-                        <div style="font-size: 12px; color: #fff;">${cfg.projectId}</div>
-                        <div style="font-size: 10px; color: #444;">${cfg.authDomain}</div>
-                    </div>
-                    <div class="status-btn ${activeIndex == index ? 'status-online' : 'status-offline'}">
-                        ${activeIndex == index ? '● CONNECTED' : '○ NOT CONNECTED'}
-                    </div>
+/* ============================================================
+   3. FIREBASE CONFIGURATION MODULE
+   ============================================================ */
+function renderFirebaseModule() {
+    const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
+    const activeIndex = localStorage.getItem('fb_active_index');
+
+    let listHtml = savedConfigs.map((cfg, index) => `
+        <div class="fb-list-item ${activeIndex == index ? 'active-item' : ''}">
+            <div>
+                <div style="font-size: 12px; color: #fff;">${cfg.projectId}</div>
+                <div style="font-size: 10px; color: #444;">${cfg.authDomain}</div>
+            </div>
+            <div class="status-btn ${activeIndex == index ? 'status-online' : 'status-offline'}">
+                ${activeIndex == index ? '● CONNECTED' : '○ NOT CONNECTED'}
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('mainDisplay').innerHTML = `
+        <div class="fb-container">
+            <div class="fb-card">
+                <h2 style="font-size: 14px; color: var(--red); margin-bottom: 20px;">ADD NEW FIREBASE CONFIG</h2>
+                <div class="fb-grid">
+                    <input type="text" id="apiKey" class="fb-input" placeholder="apiKey">
+                    <input type="text" id="authDomain" class="fb-input" placeholder="authDomain">
+                    <input type="text" id="projectId" class="fb-input" placeholder="projectId">
+                    <input type="text" id="storageBucket" class="fb-input" placeholder="storageBucket">
+                    <input type="text" id="messagingSenderId" class="fb-input" placeholder="messagingSenderId">
+                    <input type="text" id="appId" class="fb-input" placeholder="appId">
                 </div>
-            `).join('');
+                <button onclick="saveFirebaseConfig()" style="width:100%; height:45px; background:var(--red); color:#fff; border:none; font-family:'Orbitron'; cursor:pointer; font-weight:bold;">CONNECT & SAVE</button>
+            </div>
+            <div class="fb-card">
+                <h2 style="font-size: 14px; color: #fff; margin-bottom: 15px;">SAVED CONNECTIONS</h2>
+                <div id="fbList">${listHtml || '<p style="color:#222; text-align:center;">NO DATABASE CONNECTED</p>'}</div>
+            </div>
+        </div>`;
+}
 
-            document.getElementById('mainDisplay').innerHTML = `
-                <div class="fb-container">
-                    <div class="fb-card">
-                        <h2 style="font-size: 14px; color: var(--red); margin-bottom: 20px;">ADD NEW FIREBASE CONFIG</h2>
-                        <div class="fb-grid">
-                            <input type="text" id="apiKey" class="fb-input" placeholder="apiKey">
-                            <input type="text" id="authDomain" class="fb-input" placeholder="authDomain">
-                            <input type="text" id="projectId" class="fb-input" placeholder="projectId">
-                            <input type="text" id="storageBucket" class="fb-input" placeholder="storageBucket">
-                            <input type="text" id="messagingSenderId" class="fb-input" placeholder="messagingSenderId">
-                            <input type="text" id="appId" class="fb-input" placeholder="appId">
-                        </div>
-                        <button onclick="saveFirebaseConfig()" style="width:100%; height:45px; background:var(--red); color:#fff; border:none; font-family:'Orbitron'; cursor:pointer;">CONNECT & SAVE</button>
-                    </div>
-                    <div class="fb-card">
-                        <h2 style="font-size: 14px; color: #fff; margin-bottom: 15px;">SAVED CONNECTIONS</h2>
-                        <div id="fbList">${listHtml || '<p style="color:#222; text-align:center;">NO DATABASE CONNECTED</p>'}</div>
-                    </div>
-                </div>`;
-        }
+function saveFirebaseConfig() {
+    const fields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+    const config = {};
+    let isComplete = true;
 
+    fields.forEach(f => {
+        const val = document.getElementById(f).value;
+        if (!val) isComplete = false;
+        config[f] = val;
+    });
 
-        // --- DATA SAVING LOGIC (Firebase Config) ---
-        function saveFirebaseConfig() {
-            const fields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
-            const config = {};
-            let isComplete = true;
+    if (!isComplete) { alert("Fill all fields!"); return; }
 
-            fields.forEach(f => {
-                const val = document.getElementById(f).value;
-                if(!val) isComplete = false;
-                config[f] = val;
-            });
-
-            if (!isComplete) { alert("Fill all fields!"); return; }
-
-            let configs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-            configs.push(config);
-            localStorage.setItem('fb_configs', JSON.stringify(configs));
-            localStorage.setItem('fb_active_index', configs.length - 1);
-            renderFirebaseModule();
-        }
+    let configs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
+    configs.push(config);
+    localStorage.setItem('fb_configs', JSON.stringify(configs));
+    localStorage.setItem('fb_active_index', configs.length - 1);
+    renderFirebaseModule();
+}
 
 
-        // --- WARNING NOTE MODULE (Cloud Update Logic) ---
-        function renderWarningNoteModule() {
-            database.ref('site_settings/warning_note').once('value').then((snapshot) => {
-                const data = snapshot.val() || { content: '', scroll: false };
-                document.getElementById('mainDisplay').innerHTML = `
-                    <div class="fb-card">
-                        <h2 style="font-size: 14px; color: var(--red);">EDIT WARNING NOTE (FIREBASE LIVE)</h2>
-                        <textarea id="noteEditor" style="width:100%; height:150px; background:#080808; color:#00ffcc; border:1px solid #222; margin-top:15px; padding:15px;">${data.content.replace(/<[^>]*>/g, '')}</textarea>
-                        <div style="display: flex; gap: 20px; margin-top: 20px; align-items: center;">
-                            <label style="cursor: pointer; font-size:12px;"><input type="checkbox" id="scrollToggle" ${data.scroll ? 'checked' : ''}> ENABLE SCROLL</label>
-                            <button onclick="saveWarningNote()" style="padding:10px 30px; background:var(--red); color:#fff; border:none; cursor:pointer;">PUBLISH TO CLOUD</button>
-                        </div>
-                    </div>`;
-            });
-        }
+/* ============================================================
+   4. WARNING NOTE MODULE (Firebase Data Push)
+   ============================================================ */
+function renderWarningNoteModule() {
+    database.ref('site_settings/warning_note').once('value').then((snapshot) => {
+        const data = snapshot.val() || { content: '', scroll: false };
+        document.getElementById('mainDisplay').innerHTML = `
+            <div class="fb-card">
+                <h2 style="font-size: 14px; color: var(--red);">EDIT WARNING NOTE (FIREBASE LIVE)</h2>
+                <textarea id="noteEditor" style="width:100%; height:150px; background:#080808; color:#00ffcc; border:1px solid #222; margin-top:15px; padding:15px; font-family:'Roboto Mono'; font-weight:bold;">${data.content.replace(/<[^>]*>/g, '')}</textarea>
+                <div style="display: flex; gap: 20px; margin-top: 20px; align-items: center;">
+                    <label style="cursor: pointer; font-size:12px; font-family:'Roboto Mono'; color:#888;">
+                        <input type="checkbox" id="scrollToggle" ${data.scroll ? 'checked' : ''}> ENABLE SCROLL
+                    </label>
+                    <button onclick="saveWarningNote()" style="padding:10px 30px; background:var(--red); color:#fff; border:none; cursor:pointer; font-family:'Orbitron'; font-weight:bold;">PUBLISH TO CLOUD</button>
+                </div>
+            </div>`;
+    });
+}
+
+function saveWarningNote() {
+    const text = document.getElementById('noteEditor').value;
+    const scrollStatus = document.getElementById('scrollToggle').checked;
+
+    // Highlight keywords in red automatically
+    let highlightedText = text.replace(/Risk/gi, '<span style="color:red; font-weight:bold;">Risk</span>');
+    highlightedText = highlightedText.replace(/Money Management Tool/gi, '<span style="color:red; font-weight:bold;">Money Management Tool</span>');
+
+    database.ref('site_settings/warning_note').set({
+        content: highlightedText,
+        scroll: scrollStatus,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        alert("LIVE UPDATE SUCCESSFUL!");
+        renderWarningNoteModule();
+    });
+}
 
 
-        // --- DATA PUBLISH LOGIC (To Firebase) ---
-        function saveWarningNote() {
-            const text = document.getElementById('noteEditor').value;
-            const scrollStatus = document.getElementById('scrollToggle').checked;
-
-            // Highlight Logic
-            let highlightedText = text.replace(/Risk/gi, '<span style="color:red; font-weight:bold;">Risk</span>');
-            highlightedText = highlightedText.replace(/Money Management Tool/gi, '<span style="color:red; font-weight:bold;">Money Management Tool</span>');
-
-            database.ref('site_settings/warning_note').set({
-                content: highlightedText,
-                scroll: scrollStatus,
-                updatedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                alert("FIREBASE UPDATED LIVE!");
-                renderWarningNoteModule();
-            });
-        }
-
-
-        // Page refresh avvagaane memory nundi patha option ni pilustundi
-window.onload = function() {
-    const lastSaved = localStorage.getItem('activeModule') || 'Views';
+/* ============================================================
+   5. PAGE LOAD INITIALIZER (Crucial for Refresh)
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+    // Memory nundi patha module load chestundi, lekapothe default ga 'Views'
+    const lastSaved = localStorage.getItem('adminActiveModule') || 'Views';
     loadContent(lastSaved);
-};
+});
     </script>
 </body>
 </html>
