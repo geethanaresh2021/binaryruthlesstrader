@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader | Official System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
         :root { 
@@ -31,7 +29,6 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
-        /* --- Header & Branding --- */
         .header { 
             width: 100%; padding: 20px; background: #000; 
             border-bottom: 2px solid var(--red); display: flex; 
@@ -44,74 +41,51 @@
         }
 
         .brand-img { width: 320px; filter: drop-shadow(0 0 10px var(--red)); transition: var(--transition); }
-        .brand-img:hover { transform: scale(1.02); }
 
-        .social-login-group { display: flex; align-items: center; gap: 20px; }
-        
         .social-icons { display: flex; gap: 15px; align-items: center; }
-        .social-icons a { color: #fff; font-size: 18px; transition: var(--transition); display: inline-block; }
-        .social-icons a:hover { color: var(--red); transform: translateY(-3px) scale(1.2); text-shadow: 0 0 10px var(--red); }
-        .social-icons a:active { transform: scale(0.9); }
+        .social-icons a { color: #fff; font-size: 18px; transition: var(--transition); }
+        .social-icons a:hover { color: var(--red); transform: scale(1.2); text-shadow: 0 0 10px var(--red); }
 
         .join-btn {
             background: var(--red); color: white; border: none; padding: 8px 20px;
             font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
-            cursor: pointer; border-radius: 4px; transition: var(--transition);
-            box-shadow: 0 0 10px var(--red);
+            cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px var(--red);
         }
-        .join-btn:hover { box-shadow: 0 0 20px var(--red); transform: scale(1.05); }
-        .join-btn:active { transform: scale(0.95); }
 
         .admin-trigger { 
             background: transparent; border: 1px solid #333; color: #444; 
             padding: 5px 12px; cursor: pointer; font-family: 'Roboto Mono'; 
-            font-size: 11px; border-radius: 4px; transition: var(--transition);
+            font-size: 11px; border-radius: 4px;
         }
-        .admin-trigger:hover { border-color: var(--red); color: var(--red); }
 
         /* --- Info Bars --- */
-        .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
+        .info-bar { width: 100%; height: 35px; overflow: hidden; white-space: nowrap; }
         .winner-bar { 
-    width: 100% !important;
-    background: #000000 !important;
-    overflow: hidden !important;
-    border-bottom: 2px solid #ff0000;
-}
+            background: #000000 !important;
+            border-bottom: 2px solid #ff0000;
+        }
 
-        /* --- Main Content --- */
         .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         .widget-container { display: flex; gap: 20px; width: 100%; max-width: 1100px; justify-content: center; margin-top: 20px; }
         .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
-        /* --- Theme Matched Dropdown --- */
         .ruthless-select {
             width: 100%; padding: 15px; background: var(--panel); border: 1px solid #222; 
             color: var(--white); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
-            cursor: pointer; transition: var(--transition); appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 15px center;
         }
-        .ruthless-select:hover { border-color: var(--red); box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
-        .ruthless-select option { background: #0a0a0a; color: #fff; padding: 10px; }
 
         .display-box { 
             width: 100%; height: 400px; background: #000; border: 2px solid var(--red); 
-            box-shadow: var(--neon); border-radius: 8px; position: relative; overflow-y: auto;
+            box-shadow: var(--neon); border-radius: 8px; overflow-y: auto;
         }
 
-        /* --- Footer --- */
         .footer { width: 100%; height: 40px; background: #000; border-top: 1px solid #111; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; font-family: 'Roboto Mono'; font-size: 10px; color: #444; }
-        .footer a { color: #666; text-decoration: none; transition: var(--transition); }
-        .footer a:hover { color: var(--red); }
-
-        /* Login Popup */
-        .swal2-popup { background: var(--panel) !important; border: 1px solid var(--red) !important; color: #fff !important; font-family: 'Orbitron' !important; border-radius: 0 !important; }
-        .swal2-input { border: 1px solid #222 !important; background: #000 !important; color: var(--white) !important; font-family: 'Roboto Mono' !important; }
 
         @media (max-width: 768px) {
             .brand-wrapper { flex-direction: column; gap: 15px; }
             .widget-container { flex-direction: column; }
-            .brand-img { width: 260px; }
         }
     </style>
 </head>
@@ -120,26 +94,20 @@
     <header class="header">
         <div class="brand-wrapper">
             <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            <div class="social-login-group">
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <button class="join-btn" id="joinBtn">JOIN</button>
-                </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <button class="join-btn">JOIN</button>
                 <button class="admin-trigger" onclick="adminLogin()">ADMIN</button>
             </div>
         </div>
     </header>
 
-    <div class="info-bar warning-bar">
-        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
+    <div class="info-bar warning-bar" style="background: #111; border-bottom: 1px solid #222;">
+        <marquee scrollamount="5" style="line-height:35px; color:#ffcc00;"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
     </div>
-    <div id="giveaway-bar" class="info-bar winner-bar" style="display: none; background: #000 !important; border-bottom: 2px solid #ff0000 !important; height: 35px; overflow: hidden; width: 100%;"></div>
-    
-    
-</div>
+
+    <div id="giveaway-bar" class="info-bar winner-bar" style="display: none;"></div>
 
     <div class="page-content">
         <div class="widget-container">
@@ -150,7 +118,7 @@
                     <option value="TOXA">TOXA EXPERT</option>
                 </select>
                 <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SIGNAL DATA...</div>
+                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #444;">AWAITING SIGNAL DATA...</div>
                 </div>
             </div>
 
@@ -166,125 +134,70 @@
     </div>
 
     <footer class="footer">
-        <div id="footerCopy">© 2026 BINARY RUTHLESS TRADER | ALL RIGHTS RESERVED</div>
+        <div>© 2026 BINARY RUTHLESS TRADER</div>
         <div style="display: flex; gap: 20px;">
-            <a href="#">CONTACT US</a>
-            <a href="#">TERMS</a>
-            <a href="#">PRIVACY</a>
+            <a href="#" style="color:#444; text-decoration:none;">CONTACT</a>
+            <a href="#" style="color:#444; text-decoration:none;">PRIVACY</a>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script type="module">
-    import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
-    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
 
-    // --- 1. LIVE SIGNALS SYNC ---
-    const sigSelect = document.getElementById('sigSelect');
-    const sigScreen = document.getElementById('sigScreen');
-
-    // Quotex & Toxa రెండింటినీ విడివిడిగా మానిటర్ చేస్తుంది
-    syncSignals("QUOTEX", (data) => { if(sigSelect.value === "QUOTEX") renderUI(data); });
-    syncSignals("TOXA", (data) => { if(sigSelect.value === "TOXA") renderUI(data); });
-
-    function renderUI(signals) {
-        if (!signals || signals.length === 0) {
-            sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444; font-family:'Roboto Mono'; font-size:11px;">AWAITING SIGNALS...</div>`;
-            return;
-        }
-        sigScreen.innerHTML = signals.map(sig => `
-            <div style="padding:15px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
-                <span style="color:var(--red); font-weight:bold; font-size:14px;">${sig.pair || 'BTC/USD'}</span>
-                <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action || 'ITM'}</span>
-            </div>
-        `).join('');
-    }
-
-    // --- 2. LIVE GIVEAWAY SYNC (Fixed Scrolling Logic) ---
-syncGiveaway((data) => {
-    const bar = document.getElementById('giveaway-bar');
-    if (!bar) return;
-
-    if (data && (data.status === true || data.status === "VISIBLE")) {
-        bar.style.display = 'block'; 
-        
-        const speed = parseInt(data.speed) || 0;
-        const content = data.content || "AWAITING RUTHLESS WINNER...";
-        const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;`;
-
-        if (speed === 0) {
-            // స్పీడ్ 0 ఉంటే టెక్స్ట్ సెంటర్ లో ఆగి ఉంటుంది
-            bar.style.display = 'flex';
-            bar.style.justifyContent = 'center';
-            bar.style.alignItems = 'center';
-            bar.innerHTML = `<span style="${textStyle}">${content}</span>`;
-        } else {
-            // స్పీడ్ ఉంటే కొత్త Marquee క్రియేట్ అవుతుంది (దీనివల్ల స్క్రోలింగ్ ఆగదు)
-            bar.style.display = 'block';
-            bar.innerHTML = `
-                <marquee scrollamount="${speed}" 
-                         behavior="scroll" 
-                         direction="left" 
-                         style="width:100%; height:35px; line-height:35px; display:block;">
-                    <span style="${textStyle}">${content}</span>
-                </marquee>`;
-            
-            // బ్రౌజర్ లో స్క్రోలింగ్ వెంటనే స్టార్ట్ అవ్వడానికి
-            const mq = bar.querySelector('marquee');
-            if(mq) mq.start();
-        }
-    } else {
-        bar.style.display = 'none';
-    }
-});
-    // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
-    // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
-    onSnapshot(doc(db, "settings", "warning"), (snap) => {
-        const data = snap.data();
-        const warningBar = document.querySelector('.warning-bar');
-        if (data && warningBar) {
-            warningBar.innerHTML = `<marquee scrollamount="6">${data.content}</marquee>`;
-        }
-    });
-
-</script>
-    <script>
-        // --- Signal Handling Logic ---
         const sigSelect = document.getElementById('sigSelect');
         const sigScreen = document.getElementById('sigScreen');
-        let signalHub = { "QUOTEX": [], "TOXA": [] };
 
-        sigSelect.addEventListener('change', function() {
-            renderSignals(this.value);
-        });
+        syncSignals("QUOTEX", (data) => { if(sigSelect.value === "QUOTEX") renderUI(data); });
+        syncSignals("TOXA", (data) => { if(sigSelect.value === "TOXA") renderUI(data); });
 
-        function renderSignals(selected) {
-            if(!selected) {
-                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">SELECT A PROVIDER</div>`;
+        function renderUI(signals) {
+            if (!signals || signals.length === 0) {
+                sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444;">NO ACTIVE SIGNALS</div>`;
                 return;
             }
-            const data = signalHub[selected] || [];
-            if(data.length === 0) {
-                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px;">NO ACTIVE ${selected} SIGNALS</div>`;
-                return;
-            }
+            sigScreen.innerHTML = signals.map(sig => `
+                <div style="padding:20px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#ff0000; font-weight:bold; font-size:18px;">${sig.pair}</span>
+                    <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action}</span>
+                </div>
+            `).join('');
         }
 
+        syncGiveaway((data) => {
+            const bar = document.getElementById('giveaway-bar');
+            if (!bar) return;
+            if (data && (data.status === true || data.status === "VISIBLE")) {
+                bar.style.display = 'block';
+                const speed = parseInt(data.speed) || 0;
+                const content = data.content || "WINNER ANNOUNCING...";
+                const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;`;
+                if (speed === 0) {
+                    bar.style.display = 'flex';
+                    bar.style.justifyContent = 'center';
+                    bar.style.alignItems = 'center';
+                    bar.innerHTML = `<span style="${textStyle}">${content}</span>`;
+                } else {
+                    bar.style.display = 'block';
+                    bar.innerHTML = `<marquee scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; height:35px; line-height:35px; display:block;"><span style="${textStyle}">${content}</span></marquee>`;
+                    const mq = bar.querySelector('marquee');
+                    if(mq) mq.start();
+                }
+            } else {
+                bar.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
         function adminLogin() {
             Swal.fire({
-                title: 'ACCESS KEY', input: 'password', showCancelButton: true,
-                confirmButtonText: 'LOGIN', confirmButtonColor: '#ff0000', background: '#0a0a0a',
-                color: '#fff'
+                title: 'ACCESS KEY', input: 'password', confirmButtonColor: '#ff0000', background: '#0a0a0a', color: '#fff'
             }).then((result) => {
-                if (result.isConfirmed && result.value === "0000") {
-                    window.location.href = "admin.html";
-                } else if (result.isConfirmed) {
-                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000', background: '#0a0a0a', color: '#fff' });
-                }
-            })
+                if (result.value === "0000") window.location.href = "admin.html";
+            });
         }
     </script>
-    
 </body>
 </html>
