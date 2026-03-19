@@ -6,7 +6,7 @@ import {
 
 // --- 1. ADMIN CONFIG SYNC ---
 const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-const activeIndex = localStorage.getItem('fb_active_index') || 0;
+const activeIndex = localStorage.getItem('fb_active_index');
 const activeConfig = savedConfigs[activeIndex];
 
 let db = null;
@@ -14,10 +14,13 @@ let db = null;
 if (activeConfig) {
     const app = initializeApp(activeConfig);
     db = getFirestore(app);
-    console.log(`[RUTHLESS] Connected to: ${activeConfig.projectId}`);
+    console.log(`[RUTHLESS] Connected to Admin Storage: ${activeConfig.projectId}`);
 }
 
-/** * --- 2. DISPLAY LOGIC (50 LIMIT) --- */
+/** * --- 2. DISPLAY LOGIC (50 LIMIT) ---
+ * వెబ్‌సైట్ స్క్రీన్ మీద కేవలం లేటెస్ట్ 50 మాత్రమే కనిపిస్తాయి.
+ * 51వ పోస్ట్ రాగానే పాతది ఆటోమేటిక్‌గా రిమూవ్ అవుతుంది.
+ */
 export function syncSignals(platform, updateUI) {
     if (!db) return;
 
@@ -37,7 +40,9 @@ export function syncSignals(platform, updateUI) {
     });
 }
 
-/** * --- 3. STORAGE CLEANUP (500 -> DELETE 400) --- */
+/** * --- 3. STORAGE CLEANUP (500 -> DELETE 400) ---
+ * డేటాబేస్ 500 కి చేరగానే పాత 400 ని పర్మనెంట్ గా డిలీట్ చేస్తుంది.
+ */
 async function processStorageCleanup(platform) {
     if (!db) return;
     try {
