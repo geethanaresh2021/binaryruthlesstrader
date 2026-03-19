@@ -1,26 +1,57 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getFirestore, collection, query, orderBy, limit, onSnapshot, 
-    getDocs, doc, writeBatch 
+    getDocs, doc, writeBatch, setDoc 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// --- 1. ADMIN CONFIG SYNC ---
-const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-const activeIndex = localStorage.getItem('fb_active_index');
-const activeConfig = savedConfigs[activeIndex];
-
+// --- 1. CONFIG INITIALIZATION ---
+// Admin లో మనం సేవ్ చేస్తున్న LocalStorage కీస్ తో మ్యాచ్ అవ్వాలి
+const activeConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
 let db = null;
 
 if (activeConfig) {
-    const app = initializeApp(activeConfig);
-    db = getFirestore(app);
-    console.log(`[RUTHLESS] Connected to Admin Storage: ${activeConfig.projectId}`);
+    try {
+        const app = initializeApp(activeConfig);
+        db = getFirestore(app);
+        console.log(`[RUTHLESS] Connected to: ${activeConfig.projectId}`);
+    } catch (e) {
+        console.error("Firebase Init Error:", e);
+    }
 }
 
-/** * --- 2. DISPLAY LOGIC (50 LIMIT) ---
- * వెబ్‌సైట్ స్క్రీన్ మీద కేవలం లేటెస్ట్ 50 మాత్రమే కనిపిస్తాయి.
- * 51వ పోస్ట్ రాగానే పాతది ఆటోమేటిక్‌గా రిమూవ్ అవుతుంది.
- */
+// --- 2. CLOUD UPDATE FUNCTIONS (For Admin.html) ---
+
+// ఏదైనా సెట్టింగ్‌ని Firestore లో సేవ్ చేయడానికి
+export async function updateCloudConfig(path, data) {
+    if (!db) return console.error("Database not connected!");
+    try {
+        // path: "site_settings/giveaway" -> collection: "site_settings", document: "giveaway"
+        const [col, document] = path.split('/');
+        await setDoc(doc(db, col, document), data, { merge: true });
+        console.log(`[CLOUD] Updated: ${path}`);
+    } catch (e) {
+        console.error("Cloud Update Error:", e);
+    }
+}
+
+// Firebase కనెక్షన్ అప్డేట్ చేయడానికి (Admin.html calls this)
+export function saveFirebaseSettings(config) {
+    localStorage.setItem('firebaseConfig', JSON.stringify(config));
+    window.location.reload(); // కొత్త డేటాబేస్ తో కనెక్ట్ అవ్వడానికి రీలోడ్
+}
+
+// --- 3. LIVE GIVEAWAY SYNC (For Index.html) ---
+export function syncGiveaway(updateUI) {
+    if (!db) return;
+    const docRef = doc(db, "site_settings", "giveaway");
+    return onSnapshot(docRef, (snap) => {
+        if (snap.exists()) {
+            updateUI(snap.data());
+        }
+    });
+}
+
+// --- 4. SIGNALS LOGIC (50 LIMIT) ---
 export function syncSignals(platform, updateUI) {
     if (!db) return;
 
@@ -40,9 +71,7 @@ export function syncSignals(platform, updateUI) {
     });
 }
 
-/** * --- 3. STORAGE CLEANUP (500 -> DELETE 400) ---
- * డేటాబేస్ 500 కి చేరగానే పాత 400 ని పర్మనెంట్ గా డిలీట్ చేస్తుంది.
- */
+// --- 5. STORAGE CLEANUP (500 -> DELETE 400) ---
 async function processStorageCleanup(platform) {
     if (!db) return;
     try {
@@ -53,7 +82,8 @@ async function processStorageCleanup(platform) {
         if (snapshot.size >= 500) {
             console.log(`[PURGE] ${platform} limit reached. Deleting 400 old posts...`);
             const batch = writeBatch(db);
-            const oldDocs = snapshot.docs.slice(-400); 
+            // Firestore లో చివరి 400 డాక్యుమెంట్లను తీసుకుంటుంది
+            const oldDocs = snapshot.docs.slice(100); 
             oldDocs.forEach((oldDoc) => {
                 batch.delete(doc(db, platform, oldDoc.id));
             });
