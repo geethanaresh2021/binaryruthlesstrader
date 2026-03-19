@@ -216,6 +216,11 @@ function loadContent(moduleName) {
         case 'Warning Note':
             renderWarningNoteModule();
             break;
+
+            // Ee case ni ethiki replace cheyandi
+case 'Signal Connection':
+    renderSignalConnectionModule();
+    break;
             
         // Ikkada future lo vere modules (Signal Connection, VPS, etc.) logic add cheసుకోవచ్చు
         default:
@@ -430,7 +435,120 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 database = firebase.database();
+        // 1. SIGNAL MODULE UI DESIGN
+function renderSignalConnectionModule() {
+    const mainDisplay = document.getElementById('mainDisplay');
+    
+    // Firebase nundi data theesukuntunnam
+    firebase.database().ref('signals').once('value').then((snapshot) => {
+        const signals = snapshot.val() || {};
+        let signalOptions = '<option value="">-- SELECT SIGNAL --</option>';
         
+        for (let id in signals) {
+            signalOptions += `<option value="${id}">${signals[id].name}</option>`;
+        }
+
+        mainDisplay.innerHTML = `
+            <style>
+                .sig-card { background: #000; border: 1px solid #1a1a1a; padding: 25px; border-radius: 8px; }
+                .sig-input { 
+                    width: 100%; background: #080808; border: 1px solid #222; padding: 12px; 
+                    color: #00ffcc; font-family: 'Roboto Mono'; font-weight: bold; margin-bottom: 15px;
+                }
+                .radio-group { display: flex; gap: 20px; margin: 10px 0; font-family: 'Roboto Mono'; font-size: 13px; }
+                .radio-group input { accent-color: var(--red); cursor: pointer; }
+                .add-new-btn { 
+                    margin-top: 20px; background: transparent; border: 1px dashed var(--red); 
+                    color: var(--red); width: 100%; padding: 10px; cursor: pointer; font-family: 'Orbitron';
+                }
+            </style>
+
+            <div class="sig-card">
+                <h2 style="font-size: 14px; color: var(--red); margin-bottom: 20px;">SIGNAL CONNECTION MANAGER</h2>
+                
+                <select id="signalSelector" class="sig-input" onchange="loadSignalDetails(this.value)">
+                    ${signalOptions}
+                </select>
+
+                <div id="signalEditor" style="display:none; margin-top:20px; border-top: 1px solid #1a1a1a; padding-top: 20px;">
+                    <input type="hidden" id="currentSignalId">
+                    <label style="font-size:10px; color:#555;">EDIT NAME</label>
+                    <input type="text" id="sigName" class="sig-input" placeholder="Example: Quotex">
+                    
+                    <label style="font-size:10px; color:#555;">ENTER URL</label>
+                    <input type="text" id="sigUrl" class="sig-input" placeholder="websiteurl/quotex">
+
+                    <div class="radio-group">
+                        <label><input type="radio" name="sigStatus" value="visible" id="statusVisible"> VISIBLE</label>
+                        <label><input type="radio" name="sigStatus" value="hide" id="statusHide"> HIDE</label>
+                    </div>
+
+                    <button class="join-btn" onclick="saveSignal()" style="width: 100%; height: 45px; margin-top:10px;">SAVE CHANGES</button>
+                </div>
+
+                <button class="add-new-btn" onclick="prepareAddNew()">+ ADD NEW SIGNAL</button>
+            </div>
+        `;
+    });
+}
+
+// 2. DATA LOAD LOGIC
+function loadSignalDetails(id) {
+    if(!id) {
+        document.getElementById('signalEditor').style.display = 'none';
+        return;
+    }
+    firebase.database().ref('signals/' + id).once('value').then((snapshot) => {
+        const data = snapshot.val();
+        document.getElementById('currentSignalId').value = id;
+        document.getElementById('sigName').value = data.name;
+        document.getElementById('sigUrl').value = data.url;
+        if(data.status === 'visible') document.getElementById('statusVisible').checked = true;
+        else document.getElementById('statusHide').checked = true;
+        
+        document.getElementById('signalEditor').style.display = 'block';
+    });
+}
+
+// 3. PREPARE ADD NEW
+function prepareAddNew() {
+    document.getElementById('signalSelector').value = "";
+    document.getElementById('currentSignalId').value = "sig_" + Date.now();
+    document.getElementById('sigName').value = "";
+    document.getElementById('sigUrl').value = "";
+    document.getElementById('statusVisible').checked = true;
+    document.getElementById('signalEditor').style.display = 'block';
+}
+
+// 4. FIREBASE SAVE LOGIC
+function saveSignal() {
+    const id = document.getElementById('currentSignalId').value;
+    const name = document.getElementById('sigName').value;
+    const url = document.getElementById('sigUrl').value;
+    const statusRadio = document.querySelector('input[name="sigStatus"]:checked');
+    const status = statusRadio ? statusRadio.value : 'visible';
+
+    if(!name || !url) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    firebase.database().ref('signals/' + id).set({
+        name: name,
+        url: url,
+        status: status,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'SIGNAL UPDATED',
+            background: '#0a0a0a',
+            color: '#fff',
+            confirmButtonColor: '#ff0000'
+        });
+        renderSignalConnectionModule(); // Refresh list
+    });
+}
                
     </script>
 </body>
