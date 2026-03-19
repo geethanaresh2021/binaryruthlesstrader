@@ -197,16 +197,16 @@ database = firebase.database();
 
 
 /* ============================================================
-   2. CONTENT LOADER (With Persistence & UI Glow)
+   2. CONTENT LOADER (Fixed Persistence for Tools)
    ============================================================ */
 function loadContent(moduleName) {
-    // Memory lo module ni save chestundi (Refresh persistence kosam)
+    // 1. Memory lo save chestundi
     localStorage.setItem('adminActiveModule', moduleName);
 
-    // Sidebar Buttons Highlight & Glow Logic
+    // 2. Sidebar Buttons Highlight
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Icon unna kuda text mathrame match ayyela trim/includes vadutunnam
+        // Trim chesi match chustundi
         if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
@@ -214,27 +214,32 @@ function loadContent(moduleName) {
         }
     });
 
-    // Panel Header Update
-    document.getElementById('panelHeader').innerHTML = `
-        <h1>${moduleName}</h1>
-        <p>AUTHENTICATED SESSION: MANAGING ${moduleName.toUpperCase()} MODULE.</p>
-    `;
+    // 3. Header Update
+    document.getElementById('panelHeader').innerHTML = `<h1>${moduleName}</h1>`;
 
-    // --- MODULE ROUTING ---
+    // 4. FIXED ROUTING (Ikkada logic add chesam)
     const display = document.getElementById('mainDisplay');
-    if (moduleName === 'Warning Note') {
-        renderWarningNoteModule();
-    } else if (moduleName === 'Firebase') {
+
+    if (moduleName === 'Firebase') {
         renderFirebaseModule();
-    } else {
+    } else if (moduleName === 'Warning Note') {
+        renderWarningNoteModule();
+    } else if (moduleName === 'Tools Manager') { // <--- Mee Sidebar lo name check cheyyandi
+        // Tools Manager kosam logic ikkada rayali
         display.innerHTML = `
             <div class="placeholder-card">
-                <i class="fas fa-tools" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
+                <i class="fas fa-tools" style="color:var(--red); font-size:30px; margin-bottom:15px;"></i><br>
+                TOOLS MANAGER DASHBOARD READY.
+            </div>`;
+    } else {
+        // Migatha anni options (ST Resize, Views etc.) ki idi load avthundi
+        display.innerHTML = `
+            <div class="placeholder-card">
+                <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
                 [ ${moduleName.toUpperCase()} MODULE LOADED ]
             </div>`;
     }
 }
-
 
 /* ============================================================
    3. FIREBASE CONFIGURATION MODULE
