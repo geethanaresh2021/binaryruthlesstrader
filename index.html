@@ -203,6 +203,7 @@
     }
 
     // --- 2. LIVE GIVEAWAY SYNC (Fixed Scrolling Logic) ---
+// --- 2. LIVE GIVEAWAY SYNC (Fixed Scrolling) ---
 syncGiveaway((data) => {
     const bar = document.getElementById('giveaway-bar');
     if (!bar) return;
@@ -215,51 +216,52 @@ syncGiveaway((data) => {
         const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;`;
 
         if (speed === 0) {
-            // స్పీడ్ 0 ఉంటే టెక్స్ట్ సెంటర్ లో ఆగి ఉంటుంది
             bar.style.display = 'flex';
             bar.style.justifyContent = 'center';
             bar.style.alignItems = 'center';
             bar.innerHTML = `<span style="${textStyle}">${content}</span>`;
         } else {
-            // స్పీడ్ ఉంటే కొత్త Marquee క్రియేట్ అవుతుంది (దీనివల్ల స్క్రోలింగ్ ఆగదు)
             bar.style.display = 'block';
+            // ఇక్కడ marquee కి ID ఇస్తున్నాం, దాని వల్ల మనం ఫోర్స్ గా స్టార్ట్ చేయొచ్చు
             bar.innerHTML = `
-                <marquee scrollamount="${speed}" 
-                         behavior="scroll" 
-                         direction="left" 
-                         style="width:100%; height:35px; line-height:35px; display:block;">
+                <marquee id="giveaway-mq" scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; height:35px; line-height:35px; display:block;">
                     <span style="${textStyle}">${content}</span>
                 </marquee>`;
             
-            // బ్రౌజర్ లో స్క్రోలింగ్ వెంటనే స్టార్ట్ అవ్వడానికి
-            const mq = bar.querySelector('marquee');
-            if(mq) mq.start();
+            // బ్రౌజర్ లో స్క్రోలింగ్ ఫోర్స్ గా స్టార్ట్ చేయడానికి
+            setTimeout(() => {
+                const mq = document.getElementById('giveaway-mq');
+                if(mq) mq.start();
+            }, 150);
         }
     } else {
         bar.style.display = 'none';
     }
 });
-    // --- 3. OTHER LIVE SETTINGS (Brand, Warning etc.) ---
-    // ఒకవేళ మీరు Warning Note ని కూడా Firestore లో పెడితే ఈ కింద కోడ్ వాడండి
-    // పాత కోడ్ తీసేసి, ఈ కొత్త లాజిక్ ని ఉపయోగించండి
+    /// --- 3. WARNING NOTE SYNC (Fixed Scrolling) ---
 onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
     const data = snap.data();
     const wrapper = document.getElementById('warning-wrapper');
     const textArea = document.getElementById('live-warning-text');
 
     if (data && wrapper && textArea) {
-        // 1. అడ్మిన్ లో SHOW/HIDE చెక్ చేయడం
         if (data.status === true) {
             wrapper.style.display = 'block';
             
-            // 2. స్పీడ్ 0 ఉంటే ఆగుతుంది, లేదంటే అడ్మిన్ లో ఇచ్చిన స్పీడ్ తో తిరుగుతుంది
             if (data.speed === 0) {
                 textArea.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</div>`;
             } else {
-                textArea.innerHTML = `<marquee scrollamount="${data.speed}"><i class="fas fa-exclamation-triangle"></i> ${data.text}</marquee>`;
+                // ఇక్కడ కూడా ID యాడ్ చేశాను
+                textArea.innerHTML = `<marquee id="warning-mq" scrollamount="${data.speed}" style="display:block; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</marquee>`;
+                
+                // ఫోర్స్ స్టార్ట్
+                setTimeout(() => {
+                    const wmq = document.getElementById('warning-mq');
+                    if(wmq) wmq.start();
+                }, 150);
             }
         } else {
-            wrapper.style.display = 'none'; // అడ్మిన్ లో OFF చేస్తే ఇక్కడ హైడ్ అవుతుంది
+            wrapper.style.display = 'none';
         }
     }
 });
