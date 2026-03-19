@@ -189,24 +189,23 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID"
 };
 
-// Firebase initialize chesi database connection ready chestundi
+// Firebase initialize
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 database = firebase.database();
 
-
 /* ============================================================
-   1. CONTENT LOADER (Fixed Routing & Memory Logic)
-   =========================================================== */
+   2. CONTENT LOADER (Fixed Routing & Memory Persistence)
+   ============================================================ */
 function loadContent(moduleName) {
-    // 1. Exact ga memory lo save chestundi
+    // 1. Memory lo save chestundi - Refresh Persistence FIX
     localStorage.setItem('adminActiveModule', moduleName);
 
-    // 2. Sidebar Buttons Highlight (Glow Effect)
+    // 2. Sidebar Buttons Highlight
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        // Button text ni match chestundi (Trim mukhyam)
+        // Includes vadatam valla icon unna lekapoyina match avthundi
         if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
@@ -220,10 +219,9 @@ function loadContent(moduleName) {
         panelHeader.innerHTML = `<h1>${moduleName}</h1><p>MANAGING ${moduleName.toUpperCase()} MODULE.</p>`;
     }
 
-    // 4. MODULE ROUTING (Ikkada logic ni check cheyyandi)
+    // 4. MODULE ROUTING (Ikkada logic ni fixed ga switch case lo petta)
     const display = document.getElementById('mainDisplay');
     
-    // Switch case vadatam valla refresh tharvatha correct module load avthundi
     switch (moduleName) {
         case 'Firebase':
             renderFirebaseModule();
@@ -232,11 +230,15 @@ function loadContent(moduleName) {
             renderWarningNoteModule();
             break;
         case 'Tools Manager':
-            // Tools Manager UI ikkada vastundi
-            display.innerHTML = `<div class="placeholder-card"><i class="fas fa-tools" style="color:var(--red); font-size:30px;"></i><br>TOOLS MANAGER ACTIVE</div>`;
+            // Tools Manager UI
+            display.innerHTML = `
+                <div class="placeholder-card">
+                    <i class="fas fa-tools" style="color:var(--red); font-size:40px; margin-bottom:15px;"></i><br>
+                    TOOLS MANAGER DASHBOARD ACTIVE.
+                </div>`;
             break;
         default:
-            // Vere ey option ayina (Views, ST Resize etc.) deentlo load avthundi
+            // Anni vere options (Views, Revenue, VPS etc.) ki default view
             display.innerHTML = `
                 <div class="placeholder-card">
                     <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
@@ -245,24 +247,6 @@ function loadContent(moduleName) {
     }
 }
 
-
-/* ============================================================
-   2. PAGE INITIALIZER (Refresh kottina same page ravalante idi FIX)
-   =========================================================== */
-// 'load' event vadatam valla DOM motham load ayyaka memory check chestundi
-window.addEventListener('load', () => {
-    // LocalStorage check chestundi
-    let savedModule = localStorage.getItem('adminActiveModule');
-
-    // Okavela memory lo 'Admin Dashboard' ani unna, leka emi lekapoyina...
-    // Default ga 'Views' (leka meeru anukune first option) load chestundi
-    if (!savedModule || savedModule === "Admin Dashboard") {
-        savedModule = "Views"; 
-    }
-
-    console.log("Restoring Module:", savedModule); // Browser console lo check cheyachu
-    loadContent(savedModule);
-});
 /* ============================================================
    3. FIREBASE CONFIGURATION MODULE
    ============================================================ */
@@ -323,7 +307,6 @@ function saveFirebaseConfig() {
     renderFirebaseModule();
 }
 
-
 /* ============================================================
    4. WARNING NOTE MODULE (Firebase Data Push)
    ============================================================ */
@@ -348,7 +331,6 @@ function saveWarningNote() {
     const text = document.getElementById('noteEditor').value;
     const scrollStatus = document.getElementById('scrollToggle').checked;
 
-    // Highlight keywords in red automatically
     let highlightedText = text.replace(/Risk/gi, '<span style="color:red; font-weight:bold;">Risk</span>');
     highlightedText = highlightedText.replace(/Money Management Tool/gi, '<span style="color:red; font-weight:bold;">Money Management Tool</span>');
 
@@ -362,14 +344,20 @@ function saveWarningNote() {
     });
 }
 
-
 /* ============================================================
    5. PAGE LOAD INITIALIZER (Crucial for Refresh)
    ============================================================ */
-window.addEventListener('DOMContentLoaded', () => {
-    // Memory nundi patha module load chestundi, lekapothe default ga 'Views'
-    const lastSaved = localStorage.getItem('adminActiveModule') || 'Views';
-    loadContent(lastSaved);
+// 'load' event motham sync chestundi
+window.addEventListener('load', () => {
+    let saved = localStorage.getItem('adminActiveModule');
+    
+    // Default ga Views load chestundi kani 'Admin Dashboard' ani reset avvanivvadu
+    if (!saved || saved === "Admin Dashboard") {
+        saved = "Views";
+    }
+    
+    console.log("Restoring Module after refresh:", saved);
+    loadContent(saved);
 });
     </script>
 </body>
