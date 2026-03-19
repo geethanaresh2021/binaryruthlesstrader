@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader | Official System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
         :root { 
@@ -72,11 +70,11 @@
         /* --- Info Bars --- */
         .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
         .winner-bar { 
-    width: 100% !important;
-    background: #000000 !important;
-    overflow: hidden !important;
-    border-bottom: 2px solid #ff0000;
-}
+            width: 100% !important;
+            background: #000000 !important;
+            overflow: hidden !important;
+            border-bottom: 2px solid #ff0000;
+        }
 
         /* --- Main Content --- */
         .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -134,13 +132,10 @@
     </header>
 
     <div id="warning-wrapper" class="info-bar warning-bar" style="display: none;">
-    <div id="live-warning-text">
-        </div>
-</div>
+        <div id="live-warning-text"></div>
+    </div>
+
     <div id="giveaway-bar" class="info-bar winner-bar" style="display: none; background: #000 !important; border-bottom: 2px solid #ff0000 !important; height: 35px; overflow: hidden; width: 100%;"></div>
-    
-    
-</div>
 
     <div class="page-content">
         <div class="widget-container">
@@ -178,116 +173,76 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script type="module">
-    import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
-    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { syncSignals, syncGiveaway, db } from './firebase-logic.js';
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // --- 1. LIVE SIGNALS SYNC ---
-    const sigSelect = document.getElementById('sigSelect');
-    const sigScreen = document.getElementById('sigScreen');
-
-    // Quotex & Toxa రెండింటినీ విడివిడిగా మానిటర్ చేస్తుంది
-    syncSignals("QUOTEX", (data) => { if(sigSelect.value === "QUOTEX") renderUI(data); });
-    syncSignals("TOXA", (data) => { if(sigSelect.value === "TOXA") renderUI(data); });
-
-    function renderUI(signals) {
-        if (!signals || signals.length === 0) {
-            sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444; font-family:'Roboto Mono'; font-size:11px;">AWAITING SIGNALS...</div>`;
-            return;
-        }
-        sigScreen.innerHTML = signals.map(sig => `
-            <div style="padding:15px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
-                <span style="color:var(--red); font-weight:bold; font-size:14px;">${sig.pair || 'BTC/USD'}</span>
-                <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action || 'ITM'}</span>
-            </div>
-        `).join('');
-    }
-
-    // --- 2. LIVE GIVEAWAY SYNC (Fixed Scrolling Logic) ---
-// --- 2. LIVE GIVEAWAY SYNC (Fixed Scrolling) ---
-syncGiveaway((data) => {
-    const bar = document.getElementById('giveaway-bar');
-    if (!bar) return;
-
-    if (data && (data.status === true || data.status === "VISIBLE")) {
-        bar.style.display = 'block'; 
-        
-        const speed = parseInt(data.speed) || 0;
-        const content = data.content || "AWAITING RUTHLESS WINNER...";
-        const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;`;
-
-        if (speed === 0) {
-            bar.style.display = 'flex';
-            bar.style.justifyContent = 'center';
-            bar.style.alignItems = 'center';
-            bar.innerHTML = `<span style="${textStyle}">${content}</span>`;
-        } else {
-            bar.style.display = 'block';
-            // ఇక్కడ marquee కి ID ఇస్తున్నాం, దాని వల్ల మనం ఫోర్స్ గా స్టార్ట్ చేయొచ్చు
-            bar.innerHTML = `
-                <marquee id="giveaway-mq" scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; height:35px; line-height:35px; display:block;">
-                    <span style="${textStyle}">${content}</span>
-                </marquee>`;
-            
-            // బ్రౌజర్ లో స్క్రోలింగ్ ఫోర్స్ గా స్టార్ట్ చేయడానికి
-            setTimeout(() => {
-                const mq = document.getElementById('giveaway-mq');
-                if(mq) mq.start();
-            }, 150);
-        }
-    } else {
-        bar.style.display = 'none';
-    }
-});
-    /// --- 3. WARNING NOTE SYNC (Fixed Scrolling) ---
-onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
-    const data = snap.data();
-    const wrapper = document.getElementById('warning-wrapper');
-    const textArea = document.getElementById('live-warning-text');
-
-    if (data && wrapper && textArea) {
-        if (data.status === true) {
-            wrapper.style.display = 'block';
-            
-            if (data.speed === 0) {
-                textArea.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</div>`;
-            } else {
-                // ఇక్కడ కూడా ID యాడ్ చేశాను
-                textArea.innerHTML = `<marquee id="warning-mq" scrollamount="${data.speed}" style="display:block; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</marquee>`;
-                
-                // ఫోర్స్ స్టార్ట్
-                setTimeout(() => {
-                    const wmq = document.getElementById('warning-mq');
-                    if(wmq) wmq.start();
-                }, 150);
-            }
-        } else {
-            wrapper.style.display = 'none';
-        }
-    }
-});
-
-</script>
-    <script>
-        // --- Signal Handling Logic ---
+        // --- 1. LIVE SIGNALS SYNC ---
         const sigSelect = document.getElementById('sigSelect');
         const sigScreen = document.getElementById('sigScreen');
-        let signalHub = { "QUOTEX": [], "TOXA": [] };
 
-        sigSelect.addEventListener('change', function() {
-            renderSignals(this.value);
+        syncSignals("QUOTEX", (data) => { if(sigSelect.value === "QUOTEX") renderUI(data); });
+        syncSignals("TOXA", (data) => { if(sigSelect.value === "TOXA") renderUI(data); });
+
+        function renderUI(signals) {
+            if (!signals || signals.length === 0) {
+                sigScreen.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; color:#444; font-family:'Roboto Mono'; font-size:11px;">AWAITING SIGNALS...</div>`;
+                return;
+            }
+            sigScreen.innerHTML = signals.map(sig => `
+                <div style="padding:15px; border-bottom:1px solid #111; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:var(--red); font-weight:bold; font-size:14px;">${sig.pair || 'BTC/USD'}</span>
+                    <span style="font-family:'Roboto Mono'; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">${sig.action || 'ITM'}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- 2. LIVE GIVEAWAY SYNC ---
+        syncGiveaway((data) => {
+            const bar = document.getElementById('giveaway-bar');
+            if (!bar) return;
+
+            if (data && (data.status === true || data.status === "VISIBLE")) {
+                bar.style.display = 'block'; 
+                const speed = parseInt(data.speed) || 0;
+                const content = data.content || "AWAITING RUTHLESS WINNER...";
+                const textStyle = `color: #ffffff; font-weight: 900; font-family: 'Roboto Mono'; text-transform: uppercase; text-shadow: 0 0 10px #ff0000; font-size: 14px;`;
+
+                if (speed === 0) {
+                    bar.style.display = 'flex';
+                    bar.style.justifyContent = 'center';
+                    bar.style.alignItems = 'center';
+                    bar.innerHTML = `<span style="${textStyle}">${content}</span>`;
+                } else {
+                    bar.style.display = 'block';
+                    bar.innerHTML = `<marquee id="giveaway-mq" scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; height:35px; line-height:35px; display:block;"><span style="${textStyle}">${content}</span></marquee>`;
+                    setTimeout(() => { const mq = document.getElementById('giveaway-mq'); if(mq) mq.start(); }, 150);
+                }
+            } else { bar.style.display = 'none'; }
         });
 
-        function renderSignals(selected) {
-            if(!selected) {
-                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">SELECT A PROVIDER</div>`;
-                return;
+        // --- 3. WARNING NOTE SYNC ---
+        onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
+            const data = snap.data();
+            const wrapper = document.getElementById('warning-wrapper');
+            const textArea = document.getElementById('live-warning-text');
+
+            if (data && wrapper && textArea) {
+                if (data.status === true) {
+                    wrapper.style.display = 'block';
+                    if (data.speed === 0) {
+                        textArea.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</div>`;
+                    } else {
+                        textArea.innerHTML = `<marquee id="warning-mq" scrollamount="${data.speed}" style="display:block; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${data.text}</marquee>`;
+                        setTimeout(() => { const wmq = document.getElementById('warning-mq'); if(wmq) wmq.start(); }, 150);
+                    }
+                } else { wrapper.style.display = 'none'; }
             }
-            const data = signalHub[selected] || [];
-            if(data.length === 0) {
-                sigScreen.innerHTML = `<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #444; font-family: 'Roboto Mono'; font-size: 11px;">NO ACTIVE ${selected} SIGNALS</div>`;
-                return;
-            }
-        }
+        });
+    </script>
+
+    <script>
+        const sigSelect = document.getElementById('sigSelect');
+        const sigScreen = document.getElementById('sigScreen');
 
         function adminLogin() {
             Swal.fire({
@@ -303,6 +258,5 @@ onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
             })
         }
     </script>
-    
 </body>
 </html>
