@@ -490,16 +490,53 @@
 
         // --- WARNING NOTE MODULE ---
         function renderWarningNoteModule() {
-            const mainDisplay = document.getElementById('mainDisplay');
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">WARNING TEXT</label>
-                    <textarea id="noteEditor" class="input-box" rows="4">Warning: Trading has risk...</textarea>
-                    <label class="input-label"><input type="checkbox" id="scrollToggle" checked> ENABLE SMOOTH SCROLL</label>
-                    <button class="action-btn" onclick="saveWarningNote()">PUBLISH TO CLOUD</button>
+    const mainDisplay = document.getElementById('mainDisplay');
+    // గతంలో సేవ్ చేసిన డేటాను లోకల్ స్టోరేజ్ నుండి తెచ్చుకోవడం
+    const savedNote = JSON.parse(localStorage.getItem('warningNoteData') || '{"text":"Warning: Trading involves risk.", "speed":2, "status":true}');
+
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">LIVE PREVIEW</h2>
+            
+            <div id="warningPreview" style="background:#0a0a0a; border:1px solid #ffaa00; height:50px; display:flex; align-items:center; overflow:hidden; margin-bottom:25px; border-radius:4px;">
+                <div style="background:#ffaa00; color:#000; height:100%; padding:0 15px; display:flex; align-items:center; font-size:11px; font-weight:900; z-index:2; white-space:nowrap;">WARNING</div>
+                <div id="notePreviewText" style="width:100%; color:#fff; font-family:'Roboto Mono'; font-size:14px;">
+                    ${savedNote.speed === 0 
+                        ? `<div style="text-align:center; width:100%;">${savedNote.text}</div>` 
+                        : `<marquee scrollamount="${savedNote.speed}">${savedNote.text}</marquee>`}
                 </div>
-            `;
-        }
+            </div>
+
+            <h2 style="font-size:12px; color:#fff; margin-bottom:15px;">EDIT WARNING NOTE</h2>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <div>
+                    <label class="input-label">Warning Message</label>
+                    <textarea id="noteText" class="input-box" rows="3" oninput="updateNotePreview()">${savedNote.text}</textarea>
+                </div>
+
+                <div>
+                    <label class="input-label">SCROLL SPEED (0 = OFF / 1-5 = FAST)</label>
+                    <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:5px; margin-top:5px;">
+                        ${[0,1,2,3,4,5].map(s => `
+                            <button onclick="setNoteSpeed(${s})" id="noteSpeedBtn${s}" 
+                                class="action-btn" style="background:${savedNote.speed === s ? 'var(--red)' : '#111'}; box-shadow:none; padding:10px;">
+                                ${s === 0 ? 'OFF' : s}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <input type="hidden" id="selectedNoteSpeed" value="${savedNote.speed}">
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                    <button class="action-btn" id="noteStatusBtn" style="background:${savedNote.status ? '#660000' : '#444'}; box-shadow:none;" onclick="toggleNoteVisibility()">
+                        ${savedNote.status ? 'HIDE FROM SITE' : 'SHOW ON SITE'}
+                    </button>
+                    <button class="action-btn" onclick="saveWarningNoteToCloud()">SAVE & PUBLISH LIVE</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
         // --- CLOUD SYNC HELPERS ---
         function saveWarningNote() {
@@ -547,6 +584,67 @@
             const lastModule = localStorage.getItem('activeModule') || 'Views';
             loadContent(lastModule);
         };
+    // Preview ని వెంటనే అప్‌డేట్ చేయడానికి
+window.updateNotePreview = function() {
+    const text = document.getElementById('noteText').value;
+    const speed = parseInt(document.getElementById('selectedNoteSpeed').value);
+    const preview = document.getElementById('notePreviewText');
+    
+    if(speed === 0) {
+        preview.innerHTML = `<div style="text-align:center; width:100%;">${text}</div>`;
+    } else {
+        preview.innerHTML = `<marquee scrollamount="${speed}">${text}</marquee>`;
+    }
+};
+
+// స్పీడ్ బటన్ క్లిక్ చేసినప్పుడు
+window.setNoteSpeed = function(speed) {
+    document.getElementById('selectedNoteNoteSpeed' ? 'selectedNoteSpeed' : 'selectedNoteSpeed').value = speed;
+    for(let i=0; i<=5; i++) {
+        document.getElementById(`noteSpeedBtn${i}`).style.background = (i === speed) ? 'var(--red)' : '#111';
+    }
+    updateNotePreview();
+};
+
+// Hide/Show టోగుల్
+window.toggleNoteVisibility = function() {
+    const btn = document.getElementById('noteStatusBtn');
+    const isHidden = btn.innerText.includes('HIDE');
+    btn.innerText = isHidden ? 'SHOW ON SITE' : 'HIDE FROM SITE';
+    btn.style.background = isHidden ? '#444' : '#660000';
+};
+
+// ఫైనల్ సేవ్ ఫంక్షన్
+window.saveWarningNoteToCloud = function() {
+    const text = document.getElementById('noteText').value;
+    const speed = parseInt(document.getElementById('selectedNoteSpeed').value);
+    const status = document.getElementById('noteStatusBtn').innerText.includes('HIDE');
+
+    const noteData = {
+        text: text,
+        speed: speed,
+        status: status,
+        updatedAt: new Date().getTime()
+    };
+
+    // 1. Local Backup
+    localStorage.setItem('warningNoteData', JSON.stringify(noteData));
+
+    // 2. Firebase Sync
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/warning_note', noteData);
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'WARNING UPDATED',
+            text: 'Warning note is now live!',
+            background: '#0a0a0a',
+            color: '#fff',
+            confirmButtonColor: '#ff0000'
+        });
+    }
+};
+    
     </script>
 </body>
 </html>
