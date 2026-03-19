@@ -234,41 +234,134 @@
             }
         }
 
-        // --- FIREBASE MODULE (YOUR ORIGINAL LOGIC) ---
+        // --- FIREBASE MODULE (ADVANCED 8-FIELD VERSION) ---
         function renderFirebaseModule() {
-            const config = JSON.parse(localStorage.getItem('firebaseConfig') || '{}');
+            const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+            const activeConfigId = localStorage.getItem('activeFirebaseId');
             const mainDisplay = document.getElementById('mainDisplay');
 
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px;">ADD FIREBASE CONFIG</h2>
+                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">FIREBASE SETUP (8-FIELDS)</h2>
+                    
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <input type="text" id="apiKey" class="input-box" placeholder="apiKey" value="${config.apiKey || ''}">
-                        <input type="text" id="authDomain" class="input-box" placeholder="authDomain" value="${config.authDomain || ''}">
-                        <input type="text" id="projectId" class="input-box" placeholder="projectId" value="${config.projectId || ''}">
-                        <input type="text" id="appId" class="input-box" placeholder="appId" value="${config.appId || ''}">
+                        <div><label class="input-label">API Key</label><input type="text" id="apiKey" class="input-box" placeholder="apiKey"></div>
+                        <div><label class="input-label">Auth Domain</label><input type="text" id="authDomain" class="input-box" placeholder="authDomain"></div>
+                        <div><label class="input-label">Database URL</label><input type="text" id="databaseURL" class="input-box" placeholder="https://..."></div>
+                        <div><label class="input-label">Project ID</label><input type="text" id="projectId" class="input-box" placeholder="projectId"></div>
+                        <div><label class="input-label">Storage Bucket</label><input type="text" id="storageBucket" class="input-box" placeholder="storageBucket"></div>
+                        <div><label class="input-label">Messaging Sender ID</label><input type="text" id="messagingSenderId" class="input-box" placeholder="senderId"></div>
+                        <div><label class="input-label">App ID</label><input type="text" id="appId" class="input-box" placeholder="appId"></div>
+                        <div><label class="input-label">Measurement ID</label><input type="text" id="measurementId" class="input-box" placeholder="G-XXXXXX"></div>
                     </div>
-                    <button class="action-btn" onclick="handleFirebaseConfig()">CONNECT DATABASE</button>
-                    <hr style="border:0.5px solid #111; margin:20px 0;">
-                    <h2 style="font-size:12px; color:#fff; margin-bottom:10px;">STATUS</h2>
-                    <div style="background:#0a0a0a; padding:10px; border:1px solid #111; border-left:4px solid red;">
-                         <span style="font-size:10px; font-family:Roboto Mono;">${config.projectId || 'NOT CONNECTED'}</span>
+
+                    <button class="action-btn" onclick="addNewFirebaseConfig()" style="margin-top:10px;">CONNECT DATABASE</button>
+                    
+                    <div style="margin-top:20px; padding:15px; background:#0a0a0a; border:1px solid #111; border-radius:4px;">
+                        <label class="input-label">CONNECTION STATUS</label>
+                        <div id="connectionStatus" style="font-family:'Roboto Mono'; font-size:14px; font-weight:bold; display:flex; align-items:center; gap:10px; color:${activeConfigId ? '#00ffcc' : '#ff0000'};">
+                            <span style="height:10px; width:10px; border-radius:50%; background:${activeConfigId ? '#00ffcc' : '#ff0000'}; box-shadow: 0 0 10px ${activeConfigId ? '#00ffcc' : '#ff0000'};"></span>
+                            ${activeConfigId ? 'CONNECTED: ' + activeConfigId : 'NOT CONNECTED'}
+                        </div>
+                    </div>
+
+                    <hr style="border:0.5px solid #1a1a1a; margin:25px 0;">
+                    
+                    <h2 style="font-size:12px; color:#fff; margin-bottom:12px; letter-spacing:1px;">SAVED DATABASES</h2>
+                    <div id="configList" style="display:flex; flex-direction:column; gap:10px;">
+                        ${configs.length === 0 ? '<p style="color:#444; font-size:11px;">No databases saved yet.</p>' : ''}
+                        ${configs.map(cfg => `
+                            <div style="background:#080808; padding:12px; border:1px solid #1a1a1a; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid ${activeConfigId === cfg.projectId ? '#00ffcc' : '#333'};">
+                                <div>
+                                    <div style="font-family:'Roboto Mono'; font-size:12px; color:#eee;">${cfg.projectId}</div>
+                                    <div style="font-size:9px; color:#555;">${cfg.databaseURL.substring(0, 30)}...</div>
+                                </div>
+                                <div style="display:flex; gap:8px;">
+                                    <button onclick="activateConfig('${cfg.projectId}')" style="background:transparent; color:#00ffcc; border:1px solid #00ffcc; padding:6px 10px; font-size:10px; font-family:'Roboto Mono'; cursor:pointer; border-radius:3px;">CONNECT</button>
+                                    <button onclick="deleteConfig('${cfg.projectId}')" style="background:transparent; color:#ff0000; border:1px solid #ff0000; padding:6px 10px; font-size:10px; font-family:'Roboto Mono'; cursor:pointer; border-radius:3px;">DELETE</button>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
         }
 
-        function handleFirebaseConfig() {
+        // --- CORE LOGIC FUNCTIONS ---
+        function addNewFirebaseConfig() {
             const config = {
                 apiKey: document.getElementById('apiKey').value,
                 authDomain: document.getElementById('authDomain').value,
+                databaseURL: document.getElementById('databaseURL').value,
                 projectId: document.getElementById('projectId').value,
+                storageBucket: document.getElementById('storageBucket').value,
+                messagingSenderId: document.getElementById('messagingSenderId').value,
                 appId: document.getElementById('appId').value,
-                databaseURL: `https://${document.getElementById('projectId').value}-default-rtdb.firebaseio.com`
+                measurementId: document.getElementById('measurementId').value
             };
-            window.saveFirebaseSettings(config);
-            Swal.fire({icon: 'success', title: 'CONNECTED', background: '#0a0a0a', color: '#fff'});
-            renderFirebaseModule();
+
+            if(!config.projectId || !config.apiKey || !config.databaseURL) {
+                Swal.fire({ icon: 'error', title: 'MISSING DATA', text: 'Please fill Project ID, API Key, and Database URL.', background: '#0a0a0a', color: '#fff' });
+                return;
+            }
+
+            let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+            // Remove if duplicate exists
+            configs = configs.filter(c => c.projectId !== config.projectId);
+            configs.push(config);
+            
+            localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+            activateConfig(config.projectId);
+        }
+
+        function activateConfig(pid) {
+            const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+            const target = configs.find(c => c.projectId === pid);
+            
+            if(target) {
+                localStorage.setItem('activeFirebaseId', pid);
+                localStorage.setItem('firebaseConfig', JSON.stringify(target));
+                
+                // logic.js లో ఉన్న కనెక్షన్ ఫంక్షన్ ని పిలుస్తుంది
+                if (window.saveFirebaseSettings) {
+                    window.saveFirebaseSettings(target);
+                }
+                
+                Swal.fire({
+                    icon: 'success', 
+                    title: 'SYSTEM ONLINE', 
+                    text: `Connected to: ${pid}`,
+                    background: '#0a0a0a', 
+                    color: '#fff',
+                    confirmButtonColor: '#ff0000'
+                });
+                renderFirebaseModule();
+            }
+        }
+
+        function deleteConfig(pid) {
+            Swal.fire({
+                title: 'DELETE DATABASE?',
+                text: "Credentials will be removed from local memory.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff0000',
+                cancelButtonColor: '#333',
+                background: '#050505',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+                    configs = configs.filter(c => c.projectId !== pid);
+                    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+                    
+                    if(localStorage.getItem('activeFirebaseId') === pid) {
+                        localStorage.removeItem('activeFirebaseId');
+                        localStorage.removeItem('firebaseConfig');
+                    }
+                    renderFirebaseModule();
+                }
+            });
         }
 
         // --- WARNING NOTE MODULE ---
