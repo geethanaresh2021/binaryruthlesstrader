@@ -6,7 +6,9 @@ import {
     onSnapshot, setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+    getAuth, signInAnonymously
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // ================= CONFIG =================
 const firebaseConfig = {
@@ -21,24 +23,28 @@ const firebaseConfig = {
 // ================= INIT =================
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
+// ✅ AUTH FIX (IMPORTANT)
 export const auth = getAuth(app);
 
-// ================= ADMIN SAVE =================
+// auto login
+signInAnonymously(auth).catch(err => {
+    console.error("❌ Auth Error:", err);
+});
+
+// ================= ADMIN SAVE (CRITICAL FIX) =================
+// 👉 ఇప్పుడు ఇది site_settings కి direct save అవుతుంది (index sync correct)
 window.updateCloudConfig = async function (path, data) {
     try {
-        await setDoc(doc(db, "site_settings", path), {
+        await setDoc(doc(db, path.split('/')[0], path.split('/')[1]), {
             ...data,
             updatedAt: serverTimestamp()
         });
-        console.log("✅ Saved:", path);
+
+        console.log("✅ Saved to:", path);
     } catch (error) {
         console.error("❌ Save Error:", error);
     }
-};
-
-// ================= ADMIN CONNECT =================
-window.saveFirebaseSettings = function(config){
-    console.log("🔥 Active Firebase:", config.projectId);
 };
 
 // ================= AUTO CLEANUP =================
@@ -49,6 +55,8 @@ export async function ruthlessAutoCleanup(platform) {
         const snapshot = await getDocs(q);
 
         if (snapshot.size >= 500) {
+            console.log(`⚠ Cleanup Triggered: ${platform}`);
+
             const batch = writeBatch(db);
             const docsToDelete = snapshot.docs.slice(0, 400);
 
@@ -57,7 +65,7 @@ export async function ruthlessAutoCleanup(platform) {
             });
 
             await batch.commit();
-            console.log("🧹 Cleanup done");
+            console.log("🔥 400 old signals deleted");
         }
     } catch (error) {
         console.error("Cleanup Error:", error);
@@ -81,7 +89,7 @@ export async function postSignal(platform, pair, action) {
     }
 }
 
-// ================= LIVE SIGNAL SYNC =================
+// ================= LIVE SYNC =================
 export function syncSignals(platform, callback) {
     const q = query(
         collection(db, platform),
