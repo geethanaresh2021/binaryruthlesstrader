@@ -111,14 +111,7 @@ function loadContent(moduleName) {
             break;
 
         case 'Social Media':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Telegram URL</label>
-                    <input type="text" id="tgUrl" class="input-box" placeholder="t.me/yourlink">
-                    <label class="input-label">YouTube URL</label>
-                    <input type="text" id="ytUrl" class="input-box" placeholder="youtube.com/c/...">
-                    <button class="action-btn" onclick="saveSocialLinks()">UPDATE SOCIALS</button>
-                </div>`;
+            renderSocialMediaModule();
             break;
 
         case 'Brand Name':
@@ -391,3 +384,85 @@ function saveGiveawayToCloud() {
 function addNewFirebaseConfig() { saveLogic(); renderFirebaseModule(); }
 function activateConfig(pid) { localStorage.setItem('activeFirebaseId', pid); renderFirebaseModule(); }
 function deleteConfig(pid) { renderFirebaseModule(); }
+// --- SOCIAL MEDIA MODULE RENDERING ---
+function renderSocialMediaModule() {
+    const platforms = ['Telegram', 'YouTube', 'Facebook', 'Instagram'];
+    const savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
+    const mainDisplay = document.getElementById('mainDisplay');
+
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">SOCIAL MEDIA MANAGEMENT</h2>
+            <div id="socialList" style="display:flex; flex-direction:column; gap:12px;">
+                ${platforms.map(plt => `
+                    <div style="background:#080808; border:1px solid #1a1a1a; border-radius:4px; overflow:hidden;">
+                        <div onclick="toggleSocialEdit('${plt}')" style="padding:15px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-left:3px solid var(--red);">
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <i class="fab fa-${plt.toLowerCase()}" style="color:var(--red); font-size:18px; width:20px; text-align:center;"></i>
+                                <span style="font-size:13px; font-weight:bold; letter-spacing:1px;">${plt.toUpperCase()}</span>
+                            </div>
+                            <i class="fas fa-chevron-down" style="font-size:12px; color:#444;"></i>
+                        </div>
+                        
+                        <div id="edit-${plt}" style="display:none; padding:15px; background:#050505; border-top:1px solid #111;">
+                            <label class="input-label">${plt} Profile/Channel Link</label>
+                            <input type="text" id="link-${plt}" class="input-box" placeholder="https://..." value="${savedLinks[plt] || ''}">
+                            <button class="action-btn" style="padding:10px; font-size:11px;" onclick="saveSocialLink('${plt}')">SAVE ${plt.toUpperCase()} LINK</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// --- TOGGLE ACCORDION ---
+function toggleSocialEdit(plt) {
+    const el = document.getElementById(`edit-${plt}`);
+    const all = document.querySelectorAll('[id^="edit-"]');
+    all.forEach(item => { if(item.id !== `edit-${plt}`) item.style.display = 'none'; }); // Close others
+    el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+}
+
+// --- SAVE & SYNC LOGIC ---
+function saveSocialLink(plt) {
+    const linkVal = document.getElementById(`link-${plt}`).value.trim();
+    if(!linkVal) {
+        Swal.fire({ icon: 'warning', title: 'EMPTY LINK', text: 'Please enter a valid URL', background: '#0a0a0a', color: '#fff' });
+        return;
+    }
+
+    let savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
+    savedLinks[plt] = linkVal;
+    localStorage.setItem('socialLinks', JSON.stringify(savedLinks));
+
+    // Update Header Links Immediately (Admin Page)
+    syncHeaderLinks();
+
+    // Cloud Sync (Firebase update if connected)
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/socials', savedLinks);
+    }
+
+    Swal.fire({ icon: 'success', title: 'SAVED', text: `${plt} link updated successfully!`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+}
+
+// --- SYNC HEADER LINKS ---
+function syncHeaderLinks() {
+    const links = JSON.parse(localStorage.getItem('socialLinks') || '{}');
+    const headerIcons = document.querySelectorAll('.social-row a');
+    
+    headerIcons.forEach(a => {
+        const icon = a.querySelector('i');
+        if(icon.classList.contains('fa-telegram')) a.href = links['Telegram'] || '#';
+        if(icon.classList.contains('fa-youtube')) a.href = links['YouTube'] || '#';
+        if(icon.classList.contains('fa-facebook')) a.href = links['Facebook'] || '#';
+        if(icon.classList.contains('fa-instagram')) a.href = links['Instagram'] || '#';
+        
+        // Target blank so it opens in new tab
+        a.setAttribute('target', '_blank');
+    });
+}
+
+// Update header on page load
+window.addEventListener('DOMContentLoaded', syncHeaderLinks);
