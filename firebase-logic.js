@@ -1,74 +1,78 @@
-// Firebase SDK Imports (Compatibility Version)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, query, onSnapshot, orderBy, limit, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { 
+    getFirestore, collection, query, orderBy, limit, onSnapshot, 
+    getDocs, deleteDoc, doc, setDoc, writeBatch, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. DEFAULT CONFIG (Leda localStorage nundi load avthundi)
-// Meeru Admin panel lo "Connect" kottినప్పుడు ee details automatic ga update avthayi.
-const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-const activeIndex = localStorage.getItem('fb_active_index') || 0;
-
-const firebaseConfig = savedConfigs.length > 0 ? savedConfigs[activeIndex] : {
+// --- STEP 1: Firebase Configuration ---
+// Mee Firebase Console nundi vachina details ni ikkada update cheyyandi
+const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
     projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
     messagingSenderId: "YOUR_SENDER_ID",
     appId: "YOUR_APP_ID"
 };
 
-// 2. Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const db = getFirestore(app);
 
-// --- 3. SYNC SIGNALS FUNCTION ---
-// Meeru select chesina platform (QUOTEX/TOXA) batti signals testundi
-export function syncSignals(platform, callback) {
+/** * LOGIC 1: Real-time Signal Sync (Latest 50 only)
+ * Index page lo display kosam idi vaadutham.
+ */
+export function syncSignals(platform, updateUI) {
+    if (!db) return;
+
     const q = query(
         collection(db, "signals"), 
         orderBy("timestamp", "desc"), 
-        limit(10)
+        limit(50) 
     );
 
     return onSnapshot(q, (snapshot) => {
-        const allSignals = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        const signals = [];
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            // User select chesina platform (Quotex/Toxa) signals mathrame filter chestham
+            if(data.platform === platform) {
+                signals.push({ id: doc.id, ...data });
+            }
+        });
+        updateUI(signals); 
         
-        // Platform batti filter chesthunnam (Quotex/Toxa)
-        const filtered = allSignals.filter(s => s.platform === platform);
-        callback(filtered);
-    }, (error) => {
-        console.error("Signal Sync Error:", error);
+        // Data ekkuva avvakunda background cleanup trigger chestham
+        processStorageCleanup("signals");
     });
 }
 
-// --- 4. SYNC GIVEAWAY FUNCTION ---
-// Giveaway winner details and speed sync chestundi
-export function syncGiveaway(callback) {
-    const giveawayDoc = doc(db, "site_settings", "giveaway");
-    
-    return onSnapshot(giveawayDoc, (snap) => {
-        if (snap.exists()) {
-            callback(snap.data());
-        } else {
-            callback(null);
+/** * LOGIC 2: Ruthless Storage Cleanup (500 -> 100)
+ * Database lo 500 records daatithe, paatha 400 ni okke saari delete chesthundhi.
+ */
+async function processStorageCleanup(collectionName) {
+    try {
+        const q = query(collection(db, collectionName), orderBy("timestamp", "desc"));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.size >= 500) {
+            console.log(`[RUTHLESS CLEANUP] Limit 500 reached. Purging 400 old records...`);
+            
+            const batch = writeBatch(db);
+            // Slice the last 400 (oldest ones)
+            const docsToDelete = snapshot.docs.slice(-400); 
+            
+            docsToDelete.forEach((oldDoc) => {
+                batch.delete(oldDoc.ref);
+            });
+
+            await batch.commit();
+            console.log(`[SUCCESS] Database optimized. 400 records purged.`);
         }
-    }, (error) => {
-        console.error("Giveaway Sync Error:", error);
-    });
+    } catch (error) {
+        console.error("Cleanup Error: ", error);
+    }
 }
 
-// --- 5. SYNC WARNING NOTE ---
-// Warning message visibility and text sync chestundi
-export function syncWarning(callback) {
-    const warningDoc = doc(db, "site_settings", "warning_note");
-    
-    return onSnapshot(warningDoc, (snap) => {
-        if (snap.exists()) {
-            callback(snap.data());
-        } else {
-            callback(null);
-        }
-    });
-}
+// Admin and Index scripts ki kavalsina tools ni export chesthunnam
+export { db, serverTimestamp, doc, setDoc };
