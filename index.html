@@ -226,5 +226,58 @@
         }
     </script>
     <script type="module" src="index-script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<script>
+    // 1. Firebase Config - Meeru Admin page Firebase Module lo ichina details ikkada ivvandi
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID",
+        measurementId: "YOUR_MEASUREMENT_ID"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // 2. Variables for Tracking
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const statsRef = db.ref(`stats/${today}`);
+    
+    // 3. Online Presence Logic
+    const myStatusRef = db.ref('presence').push();
+    myStatusRef.set({ online: true });
+    myStatusRef.onDisconnect().remove(); // User tab close chesthe automatic ga remove avtundi
+
+    // 4. Unique User & Visit Logic (Reload Proof)
+    window.addEventListener('load', () => {
+        // UNIQUE USER: 1 count per day per browser
+        if (localStorage.getItem('last_visit') !== today) {
+            statsRef.child('unique').transaction(c => (c || 0) + 1);
+            localStorage.setItem('last_visit', today);
+        }
+
+        // WEBSITE VISIT: 1 count per session (Reload proof)
+        if (!sessionStorage.getItem('active_session')) {
+            statsRef.child('visits').transaction(c => (c || 0) + 1);
+            sessionStorage.setItem('active_session', 'true');
+        }
+    });
+
+    // 5. Global Function to Count Posts (Signals)
+    // Admin page nundi signal post chesetappudu deeni call chestamu
+    window.updatePostCount = function(type) {
+        // type: 'quotex' or 'toxa'
+        statsRef.child(type).transaction(c => (c || 0) + 1);
+    };
+</script>
 </body>
 </html>
