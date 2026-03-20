@@ -1,75 +1,74 @@
-<style>.module-section{display:none;}</style>
+<style>
+.module-section{display:none;}
+</style>
 
-<div id="Views" class="module-section"><h2>Views: 24850</h2></div>
-<div id="Revenue" class="module-section"><h2>Revenue: ₹15240</h2></div>
+<div id="Views" class="module-section"><h1>Views</h1></div>
+<div id="Revenue" class="module-section"><h1>Revenue</h1></div>
 
 <div id="STResize" class="module-section">
-<input id="screenWidth" placeholder="Width">
-<input id="zoomDisable" placeholder="Zoom 0/1">
+<input id="screenWidth" class="input-box" placeholder="Width">
+<input id="zoomDisable" class="input-box" placeholder="Disable Zoom">
 <button onclick="saveSTResize()">Save</button>
 </div>
 
 <div id="ToolsManager" class="module-section">
-<input id="toolName" placeholder="Tool Name">
-<button onclick="saveLogic()">Save</button>
+<input class="input-box" placeholder="Tool Name"><button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="SignalConnection" class="module-section">
-<input id="sigUrl" placeholder="URL">
-<input id="sigPlat" placeholder="Platform">
+<input id="sigUrl" class="input-box" placeholder="Signal URL">
+<input id="sigPlat" class="input-box" placeholder="Platform">
 <button onclick="saveSignalConn()">Connect</button>
 </div>
 
 <div id="AdsNetwork" class="module-section">
-<input placeholder="API Key">
-<button onclick="saveLogic()">Verify</button>
+<input class="input-box" placeholder="Ads Network"><button onclick="saveLogic()">Verify</button>
 </div>
 
 <div id="AdsContainers" class="module-section">
-<input id="adRefresh" placeholder="Refresh">
-<textarea id="adScript"></textarea>
+<input id="adRefresh" class="input-box" placeholder="Refresh Rate">
+<textarea id="adScript" class="input-box" placeholder="Script"></textarea>
 <button onclick="saveAdsConfig()">Save</button>
 </div>
 
 <div id="SocialMedia" class="module-section">
-<input id="tgUrl" placeholder="Telegram">
-<input id="ytUrl" placeholder="YouTube">
+<input id="tgUrl" class="input-box" placeholder="Telegram URL">
+<input id="ytUrl" class="input-box" placeholder="YouTube URL">
 <button onclick="saveSocialLinks()">Save</button>
 </div>
 
 <div id="BrandName" class="module-section">
-<input id="brandTitle">
+<input id="brandTitle" class="input-box" placeholder="Brand Title">
 <button onclick="saveBrandName()">Save</button>
 </div>
 
 <div id="Affiliate" class="module-section">
-<input>
-<button onclick="saveLogic()">Save</button>
+<input class="input-box" placeholder="Affiliate ID"><button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="WarningNote" class="module-section">
-<textarea id="noteText"></textarea>
-<input id="selectedNoteSpeed" value="2">
+<textarea id="noteText" class="input-box" placeholder="Warning Message"></textarea>
+<input id="selectedNoteSpeed" type="hidden" value="2">
 <button onclick="saveWarningNoteToCloud()">Save</button>
 </div>
 
 <div id="JoinSection" class="module-section">
-<input id="joinText">
+<input id="joinText" class="input-box" placeholder="Join Text">
 <button onclick="saveJoinSection()">Save</button>
 </div>
 
 <div id="Giveaway" class="module-section">
-<input id="winnerName">
-<input id="selectedSpeed" value="2">
-<button id="hideBtn" onclick="toggleGiveawayVisibility()">HIDE</button>
+<input id="winnerName" class="input-box" placeholder="Winner Name">
+<input id="selectedSpeed" type="hidden" value="2">
+<button id="hideBtn">HIDE</button>
 <button onclick="saveGiveawayToCloud()">Publish</button>
 </div>
 
 <div id="Firebase" class="module-section">
-<input id="apiKey" placeholder="API">
-<input id="authDomain" placeholder="Auth">
-<input id="databaseURL" placeholder="DB URL">
-<input id="projectId" placeholder="Project">
+<input id="apiKey" class="input-box" placeholder="API Key">
+<input id="authDomain" class="input-box" placeholder="Auth Domain">
+<input id="databaseURL" class="input-box" placeholder="Database URL">
+<input id="projectId" class="input-box" placeholder="Project ID">
 <button onclick="addNewFirebaseConfig()">Connect</button>
 </div>
 
@@ -78,6 +77,6 @@
 </div>
 
 <div id="Security" class="module-section">
-<input type="password">
+<input type="password" class="input-box" placeholder="Password">
 <button onclick="saveLogic()">Update</button>
 </div>
