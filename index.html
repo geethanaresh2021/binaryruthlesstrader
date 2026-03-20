@@ -23,66 +23,43 @@
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
         }
 
-        /* --- Ads Styling --- */
+        /* --- Ads Styling (Fixed 320x50) --- */
         .ad-slot {
             width: 320px; height: 50px; background: #000; 
             border: 1px dashed #222; margin: 5px auto;
             display: flex; align-items: center; justify-content: center;
             font-family: 'Roboto Mono'; font-size: 10px; color: #222;
         }
-        .ad-wrapper { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+        .ad-wrapper { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; width: 100%; }
 
-        /* --- Scrollbar --- */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
-
-        /* --- Header & Branding --- */
+        /* --- Header --- */
         .header { 
             width: 100%; padding: 20px; background: #000; 
             border-bottom: 2px solid var(--red); display: flex; 
             flex-direction: column; align-items: center;
         }
-
         .brand-wrapper {
             display: flex; align-items: center; justify-content: space-between;
             width: 100%; max-width: 1200px;
         }
+        .brand-img { width: 320px; filter: drop-shadow(0 0 10px var(--red)); }
 
-        .brand-img { width: 320px; filter: drop-shadow(0 0 10px var(--red)); transition: var(--transition); }
-        .brand-img:hover { transform: scale(1.02); }
-
-        .social-login-group { display: flex; align-items: center; gap: 20px; }
+        /* --- Main Content Layout --- */
+        .page-content { padding: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         
-        .social-icons { display: flex; gap: 15px; align-items: center; }
-        .social-icons a { color: #fff; font-size: 18px; transition: var(--transition); display: inline-block; }
-        .social-icons a:hover { color: var(--red); transform: translateY(-3px) scale(1.2); text-shadow: 0 0 10px var(--red); }
-        
-        .join-btn {
-            background: var(--red); color: white; border: none; padding: 8px 20px;
-            font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
-            cursor: pointer; border-radius: 4px; transition: var(--transition);
-            box-shadow: 0 0 10px var(--red);
+        .widget-container { 
+            display: flex; gap: 30px; width: 100%; max-width: 1200px; 
+            justify-content: center; margin-top: 15px; 
         }
 
-        .admin-trigger { 
-            background: transparent; border: 1px solid #333; color: #444; 
-            padding: 5px 12px; cursor: pointer; font-family: 'Roboto Mono'; 
-            font-size: 11px; border-radius: 4px; transition: var(--transition);
+        .widget { 
+            flex: 1; display: flex; flex-direction: column; gap: 10px; 
+            align-items: center; width: 100%; 
         }
 
-        /* --- Info Bars --- */
-        .info-bar { width: 100%; height: 35px; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
-        .warning-bar { background: rgba(255, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 0, 0, 0.3); color: var(--red); }
-        .winner-bar { background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid #111; color: var(--white); }
-
-        /* --- Main Content --- */
-        .page-content { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .widget-container { display: flex; gap: 20px; width: 100%; max-width: 1100px; justify-content: center; margin-top: 20px; }
-        .widget { flex: 1; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-
-        /* --- Theme Matched Dropdown --- */
+        /* --- Dropdowns & Displays --- */
         .ruthless-select {
-            width: 100%; max-width: 400px; padding: 15px; background: var(--panel); border: 1px solid #222; 
+            width: 100%; padding: 15px; background: var(--panel); border: 1px solid #222; 
             color: var(--white); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
             cursor: pointer; transition: var(--transition); appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -90,18 +67,38 @@
         }
 
         .display-box { 
-            width: 100%; max-width: 400px; height: 400px; background: #000; border: 2px solid var(--red); 
+            width: 100%; height: 400px; background: #000; border: 2px solid var(--red); 
             box-shadow: var(--neon); border-radius: 8px; position: relative; overflow-y: auto;
         }
 
-        /* --- Footer --- */
-        .footer { width: 100%; height: 40px; background: #000; border-top: 1px solid #111; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; font-family: 'Roboto Mono'; font-size: 10px; color: #444; }
+        /* --- Social & Buttons --- */
+        .social-icons { display: flex; gap: 15px; align-items: center; }
+        .social-icons a { color: #fff; font-size: 18px; }
+        .join-btn { background: var(--red); color: white; border: none; padding: 8px 20px; font-family: 'Orbitron'; font-weight: 900; border-radius: 4px; }
 
+        /* --- Mobile Specific Fixes --- */
         @media (max-width: 768px) {
             .brand-wrapper { flex-direction: column; gap: 15px; }
-            .widget-container { flex-direction: column; align-items: center; }
             .brand-img { width: 260px; }
+            
+            .widget-container { 
+                flex-direction: column; 
+                padding: 0 5px; /* Side gaps minimized for mobile */
+            }
+            
+            .widget { 
+                width: 100%; /* Forces full width on mobile */
+                max-width: none; 
+                margin-bottom: 20px;
+            }
+
+            .display-box, .ruthless-select {
+                width: 100%; /* Matches screen width */
+            }
         }
+
+        /* --- Footer --- */
+        .footer { width: 100%; padding: 15px; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-between; font-family: 'Roboto Mono'; font-size: 10px; color: #444; }
     </style>
 </head>
 <body>
@@ -109,33 +106,24 @@
     <header class="header">
         <div class="brand-wrapper">
             <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            <div class="social-login-group">
+            <div class="social-login-group" style="display: flex; gap: 15px; align-items: center;">
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
                     <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <button class="join-btn">JOIN</button>
                 </div>
-                <button class="admin-trigger" onclick="adminLogin()">ADMIN</button>
+                <button class="join-btn">JOIN</button>
+                <button onclick="adminLogin()" style="background:none; border:1px solid #333; color:#444; padding:5px; font-size:10px;">ADMIN</button>
             </div>
         </div>
     </header>
-
-    <div class="info-bar warning-bar">
-        <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>
-    </div>
-    <div class="info-bar winner-bar">
-        <marquee scrollamount="4"><i class="fas fa-trophy"></i> TODAY'S GIVEAWAY WINNER: @USER_TRADER_01</marquee>
-    </div>
 
     <div class="page-content">
         <div class="widget-container">
             
             <div class="widget">
                 <div class="ad-wrapper">
-                    <div id="ad-1" class="ad-slot">AD SLOT 1 (320x50)</div>
-                    <div id="ad-2" class="ad-slot">AD SLOT 2 (320x50)</div>
+                    <div id="ad-1" class="ad-slot">AD SLOT 1</div>
+                    <div id="ad-2" class="ad-slot">AD SLOT 2</div>
                 </div>
 
                 <select class="ruthless-select" id="sigSelect">
@@ -145,19 +133,19 @@
                 </select>
                 
                 <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SIGNAL DATA...</div>
+                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">AWAITING SIGNAL...</div>
                 </div>
 
                 <div class="ad-wrapper">
-                    <div id="ad-3" class="ad-slot">AD SLOT 3 (320x50)</div>
-                    <div id="ad-4" class="ad-slot">AD SLOT 4 (320x50)</div>
+                    <div id="ad-3" class="ad-slot">AD SLOT 3</div>
+                    <div id="ad-4" class="ad-slot">AD SLOT 4</div>
                 </div>
             </div>
 
             <div class="widget">
                 <div class="ad-wrapper">
-                    <div id="ad-extra-1" class="ad-slot">AD SLOT 7 (320x50)</div>
-                    <div id="ad-extra-2" class="ad-slot">AD SLOT 8 (320x50)</div>
+                    <div id="ad-extra-1" class="ad-slot">AD SLOT 7</div>
+                    <div id="ad-extra-2" class="ad-slot">AD SLOT 8</div>
                 </div>
 
                 <select class="ruthless-select" id="toolSelect">
@@ -169,8 +157,8 @@
                 <div class="display-box" id="toolScreen"></div>
 
                 <div class="ad-wrapper">
-                    <div id="ad-5" class="ad-slot">AD SLOT 5 (320x50)</div>
-                    <div id="ad-6" class="ad-slot">AD SLOT 6 (320x50)</div>
+                    <div id="ad-5" class="ad-slot">AD SLOT 5</div>
+                    <div id="ad-6" class="ad-slot">AD SLOT 6</div>
                 </div>
             </div>
 
@@ -178,28 +166,10 @@
     </div>
 
     <footer class="footer">
-        <div>© 2026 BINARY RUTHLESS TRADER | ALL RIGHTS RESERVED</div>
-        <div style="display: flex; gap: 20px;">
-            <a href="#">CONTACT US</a>
-            <a href="#">TERMS</a>
-        </div>
+        <div>© 2026 BINARY RUTHLESS TRADER</div>
+        <div>TERMS | PRIVACY</div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="index-script.js"></script>
-    <script>
-        function adminLogin() {
-            Swal.fire({
-                title: 'ACCESS KEY', input: 'password', showCancelButton: true,
-                confirmButtonText: 'LOGIN', confirmButtonColor: '#ff0000', background: '#0a0a0a',
-            }).then((result) => {
-                if (result.isConfirmed && result.value === "0000") {
-                    window.location.href = "admin.html";
-                } else if (result.isConfirmed) {
-                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000' });
-                }
-            })
-        }
-    </script>
 </body>
 </html>
