@@ -258,21 +258,44 @@ function validateAndSaveFirebase() {
 }
 
 // --- 3. CONNECTION LOGIC (PERSISTENT) ---
+// Global variable to hold database instance
+let db; 
+
 function activateFirebase(pid) {
     const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
     const target = configs.find(c => c.projectId === pid);
 
     if (target) {
+        // 1. Initialize Firebase for this session
+        if (!firebase.apps.length) {
+            firebase.initializeApp(target);
+        } else {
+            // Delete old app and re-init if switching databases
+            firebase.app().delete().then(() => {
+                firebase.initializeApp(target);
+            });
+        }
+        
+        // 2. Assign to global 'db' variable
+        db = firebase.database();
+
+        // 3. Save to LocalStorage for Persistence
         localStorage.setItem('activeFirebaseId', pid);
         localStorage.setItem('firebaseConfig', JSON.stringify(target));
         
-        // SweetAlert Success
-        Swal.fire({ icon: 'success', title: 'CONNECTED', text: `System linked to: ${pid}`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#00ffcc' });
+        Swal.fire({ 
+            icon: 'success', 
+            title: 'CONNECTED', 
+            text: `System linked to: ${pid}`, 
+            background: '#0a0a0a', 
+            color: '#fff', 
+            confirmButtonColor: '#00ffcc' 
+        });
         
-        // Refresh UI
         renderFirebaseModule();
     }
 }
+
 
 // --- 4. MANAGE OPTIONS (EDIT/DELETE) ---
 function showManageOptions(pid) {
@@ -526,3 +549,15 @@ window.listenToLiveStats = function() {
         if(document.getElementById('count-toxa')) document.getElementById('count-toxa').innerText = data.toxa || 0;
     });
 };
+// Page refresh ayina ventane database ni re-connect chestundi
+window.addEventListener('DOMContentLoaded', () => {
+    const savedConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
+    if (savedConfig) {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(savedConfig);
+        }
+        db = firebase.database();
+        console.log("Firebase Auto-Reconnected");
+    }
+});
+
