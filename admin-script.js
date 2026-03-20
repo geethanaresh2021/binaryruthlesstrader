@@ -37,12 +37,9 @@ function loadContent(moduleName) {
     // 4. Module Switching Logic (All 16 Modules)
     switch (moduleName) {
         case 'Views':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Live Traffic</label>
-                    <h1 style="color:var(--red); font-size:40px; font-family:'Roboto Mono'; font-weight:bold;">24,850</h1>
-                    <p style="color:#555;">Real-time User Count Active</p>
-                </div>`;
+            renderViewsModule();
+            // Start real-time listener for counts
+            if(window.listenToLiveStats) window.listenToLiveStats();
             break;
 
         case 'Revenue':
@@ -466,3 +463,73 @@ function syncHeaderLinks() {
 
 // Update header on page load
 window.addEventListener('DOMContentLoaded', syncHeaderLinks);
+// --- VIEWS MODULE RENDERING ---
+function renderViewsModule() {
+    const mainDisplay = document.getElementById('mainDisplay');
+    
+    // Stats structure with Ruthless aesthetic
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">REAL-TIME ANALYTICS</h2>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+                <div style="background:#080808; padding:20px; border:1px solid #1a1a1a; border-top:3px solid #00ffcc; text-align:center;">
+                    <label class="input-label" style="color:#00ffcc;">LIVE ONLINE</label>
+                    <h1 id="count-online" style="color:#00ffcc; font-size:42px; margin:10px 0;">0</h1>
+                    <p style="font-size:9px; color:#444;">ACTIVE USERS RIGHT NOW</p>
+                </div>
+
+                <div style="background:#080808; padding:20px; border:1px solid #1a1a1a; border-top:3px solid var(--red); text-align:center;">
+                    <label class="input-label">UNIQUE USERS</label>
+                    <h1 id="count-unique" style="color:var(--text-main); font-size:42px; margin:10px 0;">0</h1>
+                    <p style="font-size:9px; color:#444;">SINGLE USERS TODAY</p>
+                </div>
+
+                <div style="background:#080808; padding:20px; border:1px solid #1a1a1a; border-top:3px solid #fff; text-align:center;">
+                    <label class="input-label">WEBSITE VISITS</label>
+                    <h1 id="count-visits" style="color:#fff; font-size:42px; margin:10px 0;">0</h1>
+                    <p style="font-size:9px; color:#444;">TOTAL SESSIONS TODAY</p>
+                </div>
+            </div>
+
+            <div style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div style="background:#0a0a0a; padding:15px; border:1px solid #1a1a1a; border-left:4px solid #00ffcc;">
+                    <label class="input-label">QUOTEX POSTS</label>
+                    <h2 id="count-quotex" style="font-family:'Roboto Mono'; font-size:24px; color:#00ffcc;">0</h2>
+                </div>
+                <div style="background:#0a0a0a; padding:15px; border:1px solid #1a1a1a; border-left:4px solid var(--red);">
+                    <label class="input-label">TOXA POSTS</label>
+                    <h2 id="count-toxa" style="font-family:'Roboto Mono'; font-size:24px; color:var(--red);">0</h2>
+                </div>
+            </div>
+
+            <p style="margin-top:20px; font-size:10px; color:#555; text-align:center; font-family:'Roboto Mono';">
+                <i class="fas fa-history"></i> ALL STATS RESET AUTOMATICALLY AT 12:00 AM IST
+            </p>
+        </div>
+    `;
+}
+
+// --- REAL-TIME DATA LISTENER (FIREBASE) ---
+window.listenToLiveStats = function() {
+    // Note: Deeniki Firebase properly connect ayi undali
+    if(typeof db === 'undefined') return;
+
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format for daily tracking
+
+    // Listen to Online Count
+    db.ref('presence').on('value', (snap) => {
+        const count = snap.numChildren() || 0;
+        const el = document.getElementById('count-online');
+        if(el) el.innerText = count;
+    });
+
+    // Listen to Daily Stats
+    db.ref(`stats/${today}`).on('value', (snap) => {
+        const data = snap.val() || { unique: 0, visits: 0, quotex: 0, toxa: 0 };
+        if(document.getElementById('count-unique')) document.getElementById('count-unique').innerText = data.unique || 0;
+        if(document.getElementById('count-visits')) document.getElementById('count-visits').innerText = data.visits || 0;
+        if(document.getElementById('count-quotex')) document.getElementById('count-quotex').innerText = data.quotex || 0;
+        if(document.getElementById('count-toxa')) document.getElementById('count-toxa').innerText = data.toxa || 0;
+    });
+};
