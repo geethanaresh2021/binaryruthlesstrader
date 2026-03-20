@@ -1,7 +1,9 @@
 // ================= IMPORT FIREBASE =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-    getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, writeBatch, serverTimestamp, onSnapshot, setDoc
+import {
+    getFirestore, collection, addDoc, getDocs, query,
+    orderBy, limit, doc, writeBatch, serverTimestamp,
+    onSnapshot, setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
@@ -19,37 +21,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
-signInAnonymously(auth).catch(err => console.error("Auth Failed:", err));
 
-// ================= ADMIN SAVE (IMPORTANT) =================
+// ================= ANONYMOUS AUTH =================
+signInAnonymously(auth).catch(err => console.error("Firebase Auth Error:", err));
+
+// ================= ADMIN SAVE (SITE SETTINGS) =================
 window.updateCloudConfig = async function(path, data) {
     try {
         await setDoc(doc(db, "site_settings", path), {
             ...data,
             updatedAt: serverTimestamp()
         });
-        console.log(`✅ Admin Config Saved: ${path}`);
-    } catch(err) {
-        console.error("❌ Admin Save Error:", err);
+        console.log("✅ Site Setting Saved:", path);
+    } catch (error) {
+        console.error("❌ Save Error:", error);
     }
 };
 
-// ================= AUTO CLEANUP =================
+// ================= AUTO CLEANUP (SIGNALS) =================
 export async function ruthlessAutoCleanup(platform) {
     try {
         const colRef = collection(db, platform);
         const q = query(colRef, orderBy("timestamp", "asc"));
         const snapshot = await getDocs(q);
 
-        if(snapshot.size >= 500){
+        if (snapshot.size >= 500) {
+            console.log(`Cleanup Triggered: ${platform}`);
             const batch = writeBatch(db);
-            const docsToDelete = snapshot.docs.slice(0,400);
+            const docsToDelete = snapshot.docs.slice(0, 400);
             docsToDelete.forEach(d => batch.delete(doc(db, platform, d.id)));
             await batch.commit();
-            console.log(`🔥 400 old ${platform} signals deleted`);
+            console.log("🔥 400 old signals deleted");
         }
-    } catch(err) {
-        console.error("Cleanup Error:", err);
+    } catch (error) {
+        console.error("Cleanup Error:", error);
     }
 }
 
@@ -61,33 +66,35 @@ export async function postSignal(platform, pair, action) {
             action: action,
             timestamp: serverTimestamp()
         });
-        ruthlessAutoCleanup(platform);
+        ruthlessAutoCleanup(platform); // auto cleanup after post
         return true;
-    } catch(err) {
-        console.error("Post Error:", err);
+    } catch (error) {
+        console.error("Post Signal Error:", error);
         return false;
     }
 }
 
-// ================= LIVE SYNC =================
-export function syncSignals(platform, callback) {
-    const q = query(collection(db, platform), orderBy("timestamp","desc"), limit(20));
+// ================= LIVE SIGNAL SYNC =================
+export function syncSignals(platform, callback, limitNum = 20) {
+    const q = query(collection(db, platform), orderBy("timestamp", "desc"), limit(limitNum));
     return onSnapshot(q, snapshot => {
         const signals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         callback(signals);
     });
 }
 
-// ================= LIVE SYNC: GIVEAWAY =================
-export function syncGiveaway(callback) {
-    return onSnapshot(doc(db, "site_settings","giveaway"), snap => {
-        if(snap.exists()) callback(snap.data());
+// ================= WARNING NOTE SYNC =================
+export function syncWarningNote(callback) {
+    return onSnapshot(doc(db, "site_settings", "warning_note"), snap => {
+        if (snap.exists()) callback(snap.data());
+        else callback(null);
     });
 }
 
-// ================= LIVE SYNC: WARNING NOTE =================
-export function syncWarningNote(callback) {
-    return onSnapshot(doc(db, "site_settings","warning_note"), snap => {
-        if(snap.exists()) callback(snap.data());
+// ================= GIVEAWAY SYNC =================
+export function syncGiveaway(callback) {
+    return onSnapshot(doc(db, "site_settings", "giveaway"), snap => {
+        if (snap.exists()) callback(snap.data());
+        else callback(null);
     });
 }
