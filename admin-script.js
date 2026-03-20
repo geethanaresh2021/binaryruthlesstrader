@@ -424,28 +424,17 @@ function toggleSocialEdit(plt) {
 // --- SAVE & SYNC LOGIC ---
 function saveSocialLink(plt) {
     const linkVal = document.getElementById(`link-${plt}`).value.trim();
-    if(!linkVal) {
-        Swal.fire({ icon: 'warning', title: 'EMPTY LINK', text: 'Please enter a URL', background: '#0a0a0a', color: '#fff' });
-        return;
-    }
+    if(!linkVal) return;
 
-    // A. LocalStorage lo save (Backup kosam)
-    let savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
-    savedLinks[plt] = linkVal;
-    localStorage.setItem('socialLinks', JSON.stringify(savedLinks));
-
-    // B. FIREBASE LO SAVE (Main Storage)
-    // Deenivalla Incognito lo kuda pani chestundi
+    // Firebase ki pampistunnam (Cloud Storage)
     if (typeof db !== 'undefined') {
         db.ref('site_settings/socials').child(plt).set(linkVal)
         .then(() => {
-            Swal.fire({ icon: 'success', title: 'SAVED TO CLOUD', text: `${plt} link updated everywhere!`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-            syncHeaderLinks(); // Admin header refresh
+            Swal.fire({ icon: 'success', title: 'CLOUD SAVED', background: '#0a0a0a', color: '#fff' });
         });
-    } else {
-        Swal.fire({ icon: 'error', title: 'FIREBASE NOT CONNECTED', text: 'Please connect Firebase first!', background: '#0a0a0a', color: '#fff' });
     }
 }
+
 
 
 // --- SYNC HEADER LINKS ---
