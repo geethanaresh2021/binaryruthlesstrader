@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel</title>
-
 <style>
 body { display:flex; margin:0; background:#050505; color:#fff; font-family:Arial; }
-.sidebar { width:220px; background:#0a0a0a; padding:10px; overflow:auto; }
+.sidebar { width:220px; background:#0a0a0a; padding:10px; }
 button { width:100%; margin:5px 0; padding:10px; background:#111; color:#fff; border:none; cursor:pointer; }
 button:hover { background:red; }
 .content { flex:1; padding:20px; }
 .module-section { display:none; }
+.input-box,textarea { width:100%; margin-bottom:10px; padding:8px; border-radius:4px; background:#111; color:#fff; border:none; font-family:'Roboto Mono'; }
 </style>
 </head>
-
 <body>
 
 <div class="sidebar">
@@ -35,18 +35,29 @@ button:hover { background:red; }
 <button onclick="loadContent('Security')">Security</button>
 </div>
 
-<div class="content" id="mainDisplay"></div>
+<div class="content" id="mainDisplay">
+<!-- Modules will load here -->
+</div>
 
 <script>
 fetch('modules.html')
 .then(res => res.text())
-.then(data => {
-    document.getElementById('mainDisplay').innerHTML = data;
-});
+.then(data => { document.getElementById('mainDisplay').innerHTML = data; });
+
+function loadContent(moduleId){
+    const modules = document.querySelectorAll('.module-section');
+    modules.forEach(m=>m.style.display='none');
+    const target = document.getElementById(moduleId);
+    if(target) target.style.display='block';
+    localStorage.setItem('activeModule',moduleId);
+}
+window.onload = () => {
+    const last = localStorage.getItem('activeModule')||'Views';
+    loadContent(last);
+};
 </script>
 
 <script src="logic.js"></script>
 <script type="module" src="firebase-logic.js"></script>
-
 </body>
 </html>
