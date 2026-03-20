@@ -1,9 +1,8 @@
 <style>
-.module-section{display:none;margin-bottom:20px;}
-.module-section h1{color:#ff0000;font-family:'Orbitron';margin-bottom:10px;}
-.module-section input, .module-section textarea{width:100%;margin:5px 0;padding:8px;border:1px solid #222;background:#111;color:#fff;border-radius:4px;font-family:'Roboto Mono';}
-.module-section button{width:100%;margin:5px 0;padding:10px;background:#111;color:#fff;border:none;cursor:pointer;border-radius:4px;}
-.module-section button:hover{background:red;}
+.module-section{display:none;}
+.module-section input, .module-section textarea{width:90%;margin:5px 0;padding:8px;background:#111;color:#fff;border:1px solid #333;border-radius:4px;}
+.module-section button{margin:5px 0;padding:10px;width:95%;background:var(--red);color:#fff;border:none;border-radius:4px;cursor:pointer;}
+.module-section button:hover{background:#ff5555;}
 </style>
 
 <div id="Views" class="module-section"><h1>Views</h1></div>
@@ -17,23 +16,23 @@
 </div>
 
 <div id="ToolsManager" class="module-section">
-<input placeholder="Tool Config">
+<input placeholder="Tool Name">
 <button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="SignalConnection" class="module-section">
 <input id="sigUrl" placeholder="Signal URL">
-<input id="sigPlat" placeholder="Signal Platform">
+<input id="sigPlat" placeholder="Platform">
 <button onclick="saveSignalConn()">Connect</button>
 </div>
 
 <div id="AdsNetwork" class="module-section">
-<input placeholder="Ads Network Key">
+<input placeholder="Network Name">
 <button onclick="saveLogic()">Verify</button>
 </div>
 
 <div id="AdsContainers" class="module-section">
-<input id="adRefresh" placeholder="Ad Refresh Rate">
+<input id="adRefresh" placeholder="Refresh Rate">
 <textarea id="adScript" placeholder="Ad Script"></textarea>
 <button onclick="saveAdsConfig()">Save</button>
 </div>
@@ -50,13 +49,13 @@
 </div>
 
 <div id="Affiliate" class="module-section">
-<input placeholder="Affiliate Settings">
+<input placeholder="Affiliate Link">
 <button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="WarningNote" class="module-section">
-<textarea id="noteText" placeholder="Warning Text"></textarea>
-<input id="selectedNoteSpeed" value="2" placeholder="Speed">
+<textarea id="noteText" placeholder="Warning Note"></textarea>
+<input id="selectedNoteSpeed" value="2" placeholder="Scroll Speed">
 <button onclick="saveWarningNoteToCloud()">Save</button>
 </div>
 
@@ -67,8 +66,8 @@
 
 <div id="Giveaway" class="module-section">
 <input id="winnerName" placeholder="Winner Name">
-<input id="selectedSpeed" value="2" placeholder="Speed">
-<button id="hideBtn">HIDE</button>
+<input id="selectedSpeed" value="2" placeholder="Scroll Speed">
+<button id="hideBtn" onclick="hideGiveaway()">HIDE</button>
 <button onclick="saveGiveawayToCloud()">Publish</button>
 </div>
 
@@ -81,10 +80,10 @@
 </div>
 
 <div id="VPS" class="module-section">
-<button onclick="saveLogic()">Restart</button>
+<button onclick="saveLogic()">Restart VPS</button>
 </div>
 
 <div id="Security" class="module-section">
-<input type="password" placeholder="Security Key">
-<button onclick="saveLogic()">Update</button>
+<input type="password" placeholder="New Password">
+<button onclick="saveLogic()">Update Security</button>
 </div>
