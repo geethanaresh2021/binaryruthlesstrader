@@ -3,17 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
+<title>Binary Ruthless Trader | Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-body { display:flex; margin:0; background:#050505; color:#fff; font-family:Arial; }
-.sidebar { width:220px; background:#0a0a0a; padding:10px; }
-button { width:100%; margin:5px 0; padding:10px; background:#111; color:#fff; border:none; cursor:pointer; }
-button:hover { background:red; }
-.content { flex:1; padding:20px; }
-.module-section { display:none; }
-.input-box,textarea { width:100%; margin-bottom:10px; padding:8px; border-radius:4px; background:#111; color:#fff; border:none; font-family:'Roboto Mono'; }
+body { display:flex; margin:0; background:#050505; color:#fff; font-family:'Roboto Mono'; }
+.sidebar { width:220px; background:#0a0a0a; padding:10px; display:flex; flex-direction:column; gap:5px; }
+.sidebar button { width:100%; padding:10px; background:#111; border:none; color:#fff; cursor:pointer; font-size:12px; text-align:left; }
+.sidebar button:hover { background:red; }
+.content { flex:1; padding:20px; overflow-y:auto; }
+.module-section { display:none; margin-bottom:20px; }
+.module-section input, .module-section textarea, .module-section select { width:100%; margin:5px 0; padding:8px; background:#0a0a0a; border:1px solid #222; color:#fff; font-family:'Roboto Mono'; font-size:12px; }
+.module-section button { margin-top:5px; background:red; border:none; padding:8px 12px; color:#fff; cursor:pointer; font-size:12px; }
 </style>
 </head>
+
 <body>
 
 <div class="sidebar">
@@ -35,29 +39,102 @@ button:hover { background:red; }
 <button onclick="loadContent('Security')">Security</button>
 </div>
 
-<div class="content" id="mainDisplay">
-<!-- Modules will load here -->
+<div class="content" id="mainDisplay"></div>
+
+<!-- Modules HTML -->
+<div id="Views" class="module-section"><h2>Views</h2></div>
+<div id="Revenue" class="module-section"><h2>Revenue</h2></div>
+
+<div id="STResize" class="module-section">
+<input id="screenWidth" placeholder="Screen Width">
+<input id="zoomDisable" placeholder="Disable Zoom? (yes/no)">
+<button onclick="saveSTResize()">Save</button>
 </div>
 
-<script>
-fetch('modules.html')
-.then(res => res.text())
-.then(data => { document.getElementById('mainDisplay').innerHTML = data; });
+<div id="ToolsManager" class="module-section">
+<input placeholder="Tool Name">
+<button onclick="saveLogic()">Save</button>
+</div>
 
-function loadContent(moduleId){
-    const modules = document.querySelectorAll('.module-section');
-    modules.forEach(m=>m.style.display='none');
-    const target = document.getElementById(moduleId);
-    if(target) target.style.display='block';
-    localStorage.setItem('activeModule',moduleId);
-}
-window.onload = () => {
-    const last = localStorage.getItem('activeModule')||'Views';
-    loadContent(last);
-};
-</script>
+<div id="SignalConnection" class="module-section">
+<input id="sigUrl" placeholder="Signal URL">
+<input id="sigPlat" placeholder="Platform Name">
+<button onclick="saveSignalConn()">Connect</button>
+</div>
+
+<div id="AdsNetwork" class="module-section">
+<input placeholder="Ads Network">
+<button onclick="saveLogic()">Verify</button>
+</div>
+
+<div id="AdsContainers" class="module-section">
+<input id="adRefresh" placeholder="Refresh Interval">
+<textarea id="adScript" placeholder="Ad Script"></textarea>
+<button onclick="saveAdsConfig()">Save</button>
+</div>
+
+<div id="SocialMedia" class="module-section">
+<input id="tgUrl" placeholder="Telegram URL">
+<input id="ytUrl" placeholder="Youtube URL">
+<button onclick="saveSocialLinks()">Save</button>
+</div>
+
+<div id="BrandName" class="module-section">
+<input id="brandTitle" placeholder="Brand Title">
+<button onclick="saveBrandName()">Save</button>
+</div>
+
+<div id="Affiliate" class="module-section">
+<input placeholder="Affiliate Details">
+<button onclick="saveLogic()">Save</button>
+</div>
+
+<div id="WarningNote" class="module-section">
+<textarea id="noteText" placeholder="Warning Message"></textarea>
+<input id="selectedNoteSpeed" type="hidden" value="2">
+<button onclick="saveWarningNoteToCloud()">Save & Publish Live</button>
+</div>
+
+<div id="JoinSection" class="module-section">
+<input id="joinText" placeholder="Join Section Text">
+<button onclick="saveJoinSection()">Save</button>
+</div>
+
+<div id="Giveaway" class="module-section">
+<input id="winnerName" placeholder="Winner Name">
+<input id="selectedSpeed" type="hidden" value="2">
+<button id="hideBtn" onclick="toggleGiveaway()">HIDE/SHOW</button>
+<button onclick="saveGiveawayToCloud()">Publish</button>
+</div>
+
+<div id="Firebase" class="module-section">
+<input id="apiKey" placeholder="API Key">
+<input id="authDomain" placeholder="Auth Domain">
+<input id="databaseURL" placeholder="Database URL">
+<input id="projectId" placeholder="Project ID">
+<button onclick="addNewFirebaseConfig()">Connect</button>
+</div>
+
+<div id="VPS" class="module-section">
+<button onclick="saveLogic()">Restart VPS</button>
+</div>
+
+<div id="Security" class="module-section">
+<input type="password" placeholder="Password">
+<button onclick="saveLogic()">Update Security</button>
+</div>
 
 <script src="logic.js"></script>
 <script type="module" src="firebase-logic.js"></script>
+
+<script>
+// ===== MODULE SWITCH =====
+function loadContent(moduleId) {
+    document.querySelectorAll('.module-section').forEach(m => m.style.display = 'none');
+    const el = document.getElementById(moduleId);
+    if(el) el.style.display = 'block';
+}
+</script>
+
 </body>
 </html>
