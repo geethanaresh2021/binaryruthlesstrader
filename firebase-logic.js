@@ -1,100 +1,74 @@
-// ================= IMPORT FIREBASE =================
+// Firebase SDK Imports (Compatibility Version)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import {
-    getFirestore, collection, addDoc, getDocs, query,
-    orderBy, limit, doc, writeBatch, serverTimestamp,
-    onSnapshot, setDoc
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, query, onSnapshot, orderBy, limit, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ================= CONFIG =================
-const firebaseConfig = {
-    apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-    authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-    projectId: "binary-ruthless-trader-26654",
-    storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-    messagingSenderId: "533209261799",
-    appId: "1:533209261799:web:a398ab21b0f913683ea442"
+// 1. DEFAULT CONFIG (Leda localStorage nundi load avthundi)
+// Meeru Admin panel lo "Connect" kottినప్పుడు ee details automatic ga update avthayi.
+const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
+const activeIndex = localStorage.getItem('fb_active_index') || 0;
+
+const firebaseConfig = savedConfigs.length > 0 ? savedConfigs[activeIndex] : {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
-// ================= INIT =================
+// 2. Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app);
 
-// ================= ANONYMOUS AUTH =================
-signInAnonymously(auth).catch(err => console.error("Firebase Auth Error:", err));
+// --- 3. SYNC SIGNALS FUNCTION ---
+// Meeru select chesina platform (QUOTEX/TOXA) batti signals testundi
+export function syncSignals(platform, callback) {
+    const q = query(
+        collection(db, "signals"), 
+        orderBy("timestamp", "desc"), 
+        limit(10)
+    );
 
-// ================= ADMIN SAVE (SITE SETTINGS) =================
-window.updateCloudConfig = async function(path, data) {
-    try {
-        await setDoc(doc(db, "site_settings", path), {
-            ...data,
-            updatedAt: serverTimestamp()
-        });
-        console.log("✅ Site Setting Saved:", path);
-    } catch (error) {
-        console.error("❌ Save Error:", error);
-    }
-};
-
-// ================= AUTO CLEANUP (SIGNALS) =================
-export async function ruthlessAutoCleanup(platform) {
-    try {
-        const colRef = collection(db, platform);
-        const q = query(colRef, orderBy("timestamp", "asc"));
-        const snapshot = await getDocs(q);
-
-        if (snapshot.size >= 500) {
-            console.log(`Cleanup Triggered: ${platform}`);
-            const batch = writeBatch(db);
-            const docsToDelete = snapshot.docs.slice(0, 400);
-            docsToDelete.forEach(d => batch.delete(doc(db, platform, d.id)));
-            await batch.commit();
-            console.log("🔥 400 old signals deleted");
-        }
-    } catch (error) {
-        console.error("Cleanup Error:", error);
-    }
-}
-
-// ================= POST SIGNAL =================
-export async function postSignal(platform, pair, action) {
-    try {
-        await addDoc(collection(db, platform), {
-            pair: pair.toUpperCase(),
-            action: action,
-            timestamp: serverTimestamp()
-        });
-        ruthlessAutoCleanup(platform); // auto cleanup after post
-        return true;
-    } catch (error) {
-        console.error("Post Signal Error:", error);
-        return false;
-    }
-}
-
-// ================= LIVE SIGNAL SYNC =================
-export function syncSignals(platform, callback, limitNum = 20) {
-    const q = query(collection(db, platform), orderBy("timestamp", "desc"), limit(limitNum));
-    return onSnapshot(q, snapshot => {
-        const signals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        callback(signals);
+    return onSnapshot(q, (snapshot) => {
+        const allSignals = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        
+        // Platform batti filter chesthunnam (Quotex/Toxa)
+        const filtered = allSignals.filter(s => s.platform === platform);
+        callback(filtered);
+    }, (error) => {
+        console.error("Signal Sync Error:", error);
     });
 }
 
-// ================= WARNING NOTE SYNC =================
-export function syncWarningNote(callback) {
-    return onSnapshot(doc(db, "site_settings", "warning_note"), snap => {
-        if (snap.exists()) callback(snap.data());
-        else callback(null);
-    });
-}
-
-// ================= GIVEAWAY SYNC =================
+// --- 4. SYNC GIVEAWAY FUNCTION ---
+// Giveaway winner details and speed sync chestundi
 export function syncGiveaway(callback) {
-    return onSnapshot(doc(db, "site_settings", "giveaway"), snap => {
-        if (snap.exists()) callback(snap.data());
-        else callback(null);
+    const giveawayDoc = doc(db, "site_settings", "giveaway");
+    
+    return onSnapshot(giveawayDoc, (snap) => {
+        if (snap.exists()) {
+            callback(snap.data());
+        } else {
+            callback(null);
+        }
+    }, (error) => {
+        console.error("Giveaway Sync Error:", error);
+    });
+}
+
+// --- 5. SYNC WARNING NOTE ---
+// Warning message visibility and text sync chestundi
+export function syncWarning(callback) {
+    const warningDoc = doc(db, "site_settings", "warning_note");
+    
+    return onSnapshot(warningDoc, (snap) => {
+        if (snap.exists()) {
+            callback(snap.data());
+        } else {
+            callback(null);
+        }
     });
 }
