@@ -1,137 +1,152 @@
-// ================= ADMIN LOGIC =================
-
-// Helper to get input by id
-function getVal(id){ return document.getElementById(id)?.value || ""; }
-
-// ================= VIEWS & REVENUE =================
-function saveLogic(moduleName){
-    console.log(`Saving module: ${moduleName}`);
-    // Placeholder: Add specific logic if needed
+// --- SAVE LOGIC HELPER ---
+function showSuccess(msg = 'Updated!') {
+    Swal.fire({
+        icon: 'success',
+        title: msg,
+        background: '#0a0a0a',
+        color: '#fff',
+        confirmButtonColor: '#ff0000'
+    });
 }
 
-// ================= ST RESIZE =================
-function saveSTResize(){
-    const width = getVal('screenWidth');
-    const zoom = getVal('zoomDisable');
-    window.updateCloudConfig('st_resize', { width, zoom });
-    alert("✅ Screen & zoom saved!");
-}
+// --- SAVE FUNCTIONS ---
+window.saveSTResize = function() {
+    const data = { 
+        width: document.getElementById('screenWidth').value,
+        noZoom: document.getElementById('zoomDisable').value
+    };
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/layout', data);
+    showSuccess('ST Resize Saved');
+};
 
-// ================= TOOLS MANAGER =================
-function saveToolsManager(){
-    const val = getVal('toolsManagerInput');
-    window.updateCloudConfig('tools_manager', { val });
-    alert("✅ Tools saved!");
-}
+window.saveBrandName = function() {
+    const title = document.getElementById('brandTitle').value;
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/brand', { title });
+    showSuccess('Brand Name Saved');
+};
 
-// ================= SIGNAL CONNECTION =================
-function saveSignalConn(){
-    const url = getVal('sigUrl');
-    const platform = getVal('sigPlat');
-    window.updateCloudConfig('signal_connection', { url, platform });
-    alert("✅ Signal connection saved!");
-}
+window.saveSocialLinks = function() {
+    const data = {
+        telegram: document.getElementById('tgUrl').value,
+        youtube: document.getElementById('ytUrl').value
+    };
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/socials', data);
+    showSuccess('Social Links Saved');
+};
 
-// ================= ADS NETWORK =================
-function saveAdsNetwork(){
-    const val = getVal('adsNetworkInput');
-    window.updateCloudConfig('ads_network', { val });
-    alert("✅ Ads network saved!");
-}
+window.saveAdsConfig = function() {
+    const data = {
+        refresh: document.getElementById('adRefresh').value,
+        script: document.getElementById('adScript').value
+    };
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/ads', data);
+    showSuccess('Ads Config Saved');
+};
 
-// ================= ADS CONTAINERS =================
-function saveAdsConfig(){
-    const refresh = getVal('adRefresh');
-    const script = getVal('adScript');
-    window.updateCloudConfig('ads_containers', { refresh, script });
-    alert("✅ Ads container saved!");
-}
+window.saveSignalConn = function() {
+    const data = {
+        url: document.getElementById('sigUrl').value,
+        platform: document.getElementById('sigPlat').value
+    };
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/signals', data);
+    showSuccess('Signal Connection Saved');
+};
 
-// ================= SOCIAL LINKS =================
-function saveSocialLinks(){
-    const tg = getVal('tgUrl');
-    const yt = getVal('ytUrl');
-    window.updateCloudConfig('social_links', { telegram: tg, youtube: yt });
-    alert("✅ Social links saved!");
-}
+window.saveJoinSection = function() {
+    const text = document.getElementById('joinText').value;
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/join', { text });
+    showSuccess('Join Section Saved');
+};
 
-// ================= BRAND NAME =================
-function saveBrandName(){
-    const brand = getVal('brandTitle');
-    window.updateCloudConfig('brand_name', { brand });
-    alert("✅ Brand name saved!");
-}
+window.saveWarningNoteToCloud = function() {
+    const text = document.getElementById('noteText').value;
+    const speed = parseInt(document.getElementById('selectedNoteSpeed').value);
+    const status = true; // Always show on site for admin save
+    const noteData = { text, speed, status, updatedAt: new Date().getTime() };
 
-// ================= AFFILIATE =================
-function saveAffiliate(){
-    const val = getVal('affiliateInput');
-    window.updateCloudConfig('affiliate', { val });
-    alert("✅ Affiliate saved!");
-}
+    localStorage.setItem('warningNoteData', JSON.stringify(noteData));
 
-// ================= WARNING NOTE =================
-function saveWarningNoteToCloud(){
-    const text = getVal('noteText');
-    const speed = getVal('selectedNoteSpeed');
-    window.updateCloudConfig('warning_note', { text, speed, status:true });
-    alert("✅ Warning note saved!");
-}
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/warning_note', noteData);
+    showSuccess('Warning Note Saved');
+};
 
-// ================= JOIN SECTION =================
-function saveJoinSection(){
-    const text = getVal('joinText');
-    window.updateCloudConfig('join_section', { text });
-    alert("✅ Join section saved!");
-}
+window.saveGiveawayToCloud = function() {
+    const winner = document.getElementById('winnerName').value;
+    const speed = parseInt(document.getElementById('selectedSpeed').value) || 0;
+    const status = document.getElementById('hideBtn').innerText === 'SHOW';
 
-// ================= GIVEAWAY =================
-function saveGiveawayToCloud(){
-    const winner = getVal('winnerName');
-    const speed = getVal('selectedSpeed');
-    window.updateCloudConfig('giveaway', { content: winner, speed, status:true });
-    alert("✅ Giveaway published!");
-}
-document.getElementById('hideBtn')?.addEventListener('click', ()=>{
-    window.updateCloudConfig('giveaway', { status:false });
-    alert("❌ Giveaway hidden!");
+    const data = { Content: winner, speed, status, updatedAt: new Date().getTime() };
+    if(window.updateCloudConfig) window.updateCloudConfig('site_settings/giveaway', data);
+    showSuccess('Giveaway Updated');
+};
+
+document.getElementById('hideBtn')?.addEventListener('click', () => {
+    const btn = document.getElementById('hideBtn');
+    btn.innerText = btn.innerText === 'HIDE' ? 'SHOW' : 'HIDE';
 });
 
-// ================= FIREBASE CONNECTION =================
-function addNewFirebaseConfig(){
-    const apiKey = getVal('apiKey');
-    const authDomain = getVal('authDomain');
-    const databaseURL = getVal('databaseURL');
-    const projectId = getVal('projectId');
+// --- GENERIC SAVE FOR OTHER MODULES ---
+window.saveLogic = function(msg = 'Updated!') { showSuccess(msg); };
 
-    window.updateCloudConfig('firebase_config', { apiKey, authDomain, databaseURL, projectId });
-    alert("✅ Firebase config saved!");
-}
+// --- FIREBASE CONFIG ---
+window.addNewFirebaseConfig = function() {
+    const config = {
+        apiKey: document.getElementById('apiKey').value,
+        authDomain: document.getElementById('authDomain').value,
+        databaseURL: document.getElementById('databaseURL').value,
+        projectId: document.getElementById('projectId').value
+    };
 
-// ================= VPS =================
-function restartVPS(){
-    saveLogic('VPS');
-    alert("✅ VPS Restart triggered!");
-}
+    if(!config.projectId || !config.apiKey || !config.databaseURL) {
+        Swal.fire({ icon: 'error', title: 'MISSING DATA', text: 'ProjectID, APIKey, DatabaseURL required.', background:'#0a0a0a', color:'#fff'});
+        return;
+    }
 
-// ================= SECURITY =================
-function updateSecurity(){
-    const pwd = getVal('securityInput');
-    window.updateCloudConfig('security', { password: pwd });
-    alert("✅ Security updated!");
-}
+    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList')||'[]');
+    configs = configs.filter(c=>c.projectId!==config.projectId);
+    configs.push(config);
 
-// ================= EXPORT FUNCTIONS =================
-window.saveSTResize = saveSTResize;
-window.saveToolsManager = saveToolsManager;
-window.saveSignalConn = saveSignalConn;
-window.saveAdsNetwork = saveAdsNetwork;
-window.saveAdsConfig = saveAdsConfig;
-window.saveSocialLinks = saveSocialLinks;
-window.saveBrandName = saveBrandName;
-window.saveAffiliate = saveAffiliate;
-window.saveWarningNoteToCloud = saveWarningNoteToCloud;
-window.saveJoinSection = saveJoinSection;
-window.saveGiveawayToCloud = saveGiveawayToCloud;
-window.addNewFirebaseConfig = addNewFirebaseConfig;
-window.restartVPS = restartVPS;
-window.updateSecurity = updateSecurity;
+    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+    activateConfig(config.projectId);
+};
+
+window.activateConfig = function(pid) {
+    const configs = JSON.parse(localStorage.getItem('firebaseConfigsList')||'[]');
+    const target = configs.find(c=>c.projectId===pid);
+
+    if(target) {
+        localStorage.setItem('activeFirebaseId', pid);
+        localStorage.setItem('firebaseConfig', JSON.stringify(target));
+        if(window.saveFirebaseSettings) window.saveFirebaseSettings(target);
+
+        Swal.fire({
+            icon:'success',
+            title:'SYSTEM ONLINE',
+            text:`Connected to ${pid}`,
+            background:'#0a0a0a',
+            color:'#fff',
+            confirmButtonColor:'#ff0000'
+        });
+    }
+};
+
+window.deleteConfig = function(pid){
+    Swal.fire({
+        title:'DELETE DATABASE?',
+        text:"Credentials will be removed",
+        icon:'warning', showCancelButton:true,
+        confirmButtonColor:'#ff0000', cancelButtonColor:'#333',
+        background:'#050505', color:'#fff'
+    }).then(res=>{
+        if(res.isConfirmed){
+            let configs = JSON.parse(localStorage.getItem('firebaseConfigsList')||'[]');
+            configs = configs.filter(c=>c.projectId!==pid);
+            localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+            if(localStorage.getItem('activeFirebaseId')===pid){
+                localStorage.removeItem('activeFirebaseId');
+                localStorage.removeItem('firebaseConfig');
+            }
+            showSuccess('Firebase Config Deleted');
+        }
+    });
+};
