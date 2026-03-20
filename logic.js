@@ -1,272 +1,256 @@
-// ================= GLOBAL LOAD =================
-window.onload = () => {
-    const lastModule = localStorage.getItem('activeModule') || 'Views';
-    loadContent(lastModule);
-};
-
-// ================= NAVIGATION =================
-function loadContent(moduleName) {
-    localStorage.setItem('activeModule', moduleName);
-
-    document.querySelectorAll('.module-section').forEach(sec => {
-        sec.style.display = 'none';
+// ================= GLOBAL =================
+function showModule(id) {
+    document.querySelectorAll('.module-section').forEach(el => {
+        el.style.display = 'none';
     });
-
-    const target = document.getElementById(moduleName.replace(/\s/g,''));
-    if(target) target.style.display = 'block';
+    document.getElementById(id).style.display = 'block';
 }
 
-// ================= BASIC SUCCESS =================
+// Sidebar loader
+function loadContent(moduleName) {
+    showModule(moduleName);
+    localStorage.setItem('activeModule', moduleName);
+}
+
+// ================= INIT =================
+window.onload = () => {
+    const last = localStorage.getItem('activeModule') || 'Views';
+    showModule(last);
+};
+
+// ================= SIMPLE ALERT =================
 function saveLogic() {
-    Swal.fire({
-        icon: 'success',
-        title: 'UPDATED',
-        background: '#0a0a0a',
-        color: '#fff'
-    });
+    alert("UPDATED SUCCESSFULLY");
 }
 
 // ================= ST RESIZE =================
 function saveSTResize() {
     const data = {
         width: document.getElementById('screenWidth').value,
-        noZoom: document.getElementById('zoomDisable').value
+        zoom: document.getElementById('zoomDisable').value
     };
-    updateCloudConfigSafe('site_settings/layout', data);
+
+    localStorage.setItem('stResize', JSON.stringify(data));
+
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/layout', data);
+    }
+
+    saveLogic();
 }
 
-// ================= BRAND =================
-function saveBrandName() {
-    updateCloudConfigSafe('site_settings/brand', {
-        title: document.getElementById('brandTitle').value
-    });
-}
+// ================= SIGNAL CONNECTION =================
+function saveSignalConn() {
+    const data = {
+        url: document.getElementById('sigUrl').value,
+        platform: document.getElementById('sigPlat').value
+    };
 
-// ================= SOCIAL =================
-function saveSocialLinks() {
-    updateCloudConfigSafe('site_settings/socials', {
-        telegram: document.getElementById('tgUrl').value,
-        youtube: document.getElementById('ytUrl').value
-    });
+    localStorage.setItem('signalConn', JSON.stringify(data));
+
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/signals', data);
+    }
+
+    saveLogic();
 }
 
 // ================= ADS =================
 function saveAdsConfig() {
-    updateCloudConfigSafe('site_settings/ads', {
+    const data = {
         refresh: document.getElementById('adRefresh').value,
         script: document.getElementById('adScript').value
-    });
+    };
+
+    localStorage.setItem('adsConfig', JSON.stringify(data));
+
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/ads', data);
+    }
+
+    saveLogic();
 }
 
-// ================= SIGNAL =================
-function saveSignalConn() {
-    updateCloudConfigSafe('site_settings/signals', {
-        url: document.getElementById('sigUrl').value,
-        platform: document.getElementById('sigPlat').value
-    });
+// ================= SOCIAL =================
+function saveSocialLinks() {
+    const data = {
+        telegram: document.getElementById('tgUrl').value,
+        youtube: document.getElementById('ytUrl').value
+    };
+
+    localStorage.setItem('socialLinks', JSON.stringify(data));
+
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/socials', data);
+    }
+
+    saveLogic();
+}
+
+// ================= BRAND =================
+function saveBrandName() {
+    const data = {
+        title: document.getElementById('brandTitle').value
+    };
+
+    localStorage.setItem('brandName', JSON.stringify(data));
+
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/brand', data);
+    }
+
+    saveLogic();
 }
 
 // ================= JOIN =================
 function saveJoinSection() {
-    updateCloudConfigSafe('site_settings/join', {
+    const data = {
         text: document.getElementById('joinText').value
-    });
-}
+    };
 
-// ================= COMMON CLOUD HELPER =================
-function updateCloudConfigSafe(path, data) {
+    localStorage.setItem('joinSection', JSON.stringify(data));
+
     if (window.updateCloudConfig) {
-        window.updateCloudConfig(path, data);
-        saveLogic();
-    } else {
-        alert("Firebase not connected!");
+        window.updateCloudConfig('site_settings/join', data);
     }
+
+    saveLogic();
 }
 
 // ================= GIVEAWAY =================
-
-// speed select
-window.setGiveawaySpeed = function(speed) {
-    document.getElementById('selectedSpeed').value = speed;
-
-    for(let i=0;i<=5;i++){
-        const btn = document.getElementById(`speedBtn${i}`);
-        if(btn) btn.style.background = (i===speed)?'var(--red)':'#111';
-    }
-
-    updateGiveawayPreview();
-};
-
-// preview update
-function updateGiveawayPreview() {
-    const text = document.getElementById('winnerName').value;
-    const speed = parseInt(document.getElementById('selectedSpeed')?.value || 0);
-    const preview = document.getElementById('previewContent');
-
-    if(!preview) return;
-
-    if(speed === 0){
-        preview.innerHTML = `<div style="text-align:center">${text}</div>`;
-    } else {
-        preview.innerHTML = `<marquee scrollamount="${speed}">${text}</marquee>`;
-    }
-}
-
-// toggle visibility
-function toggleGiveawayVisibility() {
-    const btn = document.getElementById('hideBtn');
-    const isHide = btn.innerText.includes('HIDE');
-
-    btn.innerText = isHide ? 'SHOW ON SITE' : 'HIDE FROM SITE';
-    btn.style.background = isHide ? '#444' : '#660000';
-}
-
-// save
 function saveGiveawayToCloud() {
-    const winnerText = document.getElementById('winnerName').value;
-    const speed = parseInt(document.getElementById('selectedSpeed')?.value || 0);
-    const status = document.getElementById('hideBtn')?.innerText.includes('HIDE');
+
+    const text = document.getElementById('winnerName').value;
+    const speed = parseInt(document.getElementById('selectedSpeed').value) || 0;
+
+    const isVisible = document.getElementById('hideBtn').innerText.includes('HIDE');
 
     const data = {
-        content: winnerText,
+        content: text,
         speed: speed,
-        status: status,
-        timestamp: new Date().getTime()
+        status: isVisible,
+        timestamp: Date.now()
     };
 
+    // local backup
     localStorage.setItem('giveawayData', JSON.stringify(data));
 
-    updateCloudConfigSafe('site_settings/giveaway', data);
+    // cloud
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/giveaway', data);
+    }
 
-    Swal.fire({
-        icon:'success',
-        title:'LIVE PUBLISHED',
-        text:`Speed: ${speed}`,
-        background:'#0a0a0a',
-        color:'#fff'
-    });
+    saveLogic();
 }
 
 // ================= WARNING NOTE =================
+function saveWarningNoteToCloud() {
 
-// preview
-window.updateNotePreview = function() {
     const text = document.getElementById('noteText').value;
-    const speed = parseInt(document.getElementById('selectedNoteSpeed').value);
-    const preview = document.getElementById('notePreviewText');
+    const speed = parseInt(document.getElementById('selectedNoteSpeed').value) || 0;
 
-    if(!preview) return;
-
-    if(speed === 0){
-        preview.innerHTML = `<div style="text-align:center">${text}</div>`;
-    } else {
-        preview.innerHTML = `<marquee scrollamount="${speed}">${text}</marquee>`;
-    }
-};
-
-// speed
-window.setNoteSpeed = function(speed) {
-    document.getElementById('selectedNoteSpeed').value = speed;
-
-    for(let i=0;i<=5;i++){
-        const btn = document.getElementById(`noteSpeedBtn${i}`);
-        if(btn) btn.style.background = (i===speed)?'var(--red)':'#111';
-    }
-
-    updateNotePreview();
-};
-
-// toggle
-window.toggleNoteVisibility = function() {
-    const btn = document.getElementById('noteStatusBtn');
-    const isHidden = btn.innerText.includes('HIDE');
-
-    btn.innerText = isHidden ? 'SHOW ON SITE' : 'HIDE FROM SITE';
-    btn.style.background = isHidden ? '#444' : '#660000';
-};
-
-// save
-window.saveWarningNoteToCloud = function() {
-    const text = document.getElementById('noteText').value;
-    const speed = parseInt(document.getElementById('selectedNoteSpeed').value);
-    const status = document.getElementById('noteStatusBtn').innerText.includes('HIDE');
+    const status = true; // always visible unless hidden later
 
     const data = {
         text: text,
         speed: speed,
         status: status,
-        updatedAt: new Date().getTime()
+        updatedAt: Date.now()
     };
 
     localStorage.setItem('warningNoteData', JSON.stringify(data));
 
-    updateCloudConfigSafe('site_settings/warning_note', data);
+    if (window.updateCloudConfig) {
+        window.updateCloudConfig('site_settings/warning_note', data);
+    }
 
-    Swal.fire({
-        icon:'success',
-        title:'WARNING UPDATED',
-        background:'#0a0a0a',
-        color:'#fff'
-    });
-};
+    saveLogic();
+}
 
-// ================= FIREBASE =================
-
-// add config
+// ================= FIREBASE CONFIG =================
 function addNewFirebaseConfig() {
+
     const config = {
         apiKey: document.getElementById('apiKey').value,
         authDomain: document.getElementById('authDomain').value,
         databaseURL: document.getElementById('databaseURL').value,
-        projectId: document.getElementById('projectId').value,
-        storageBucket: document.getElementById('storageBucket')?.value,
-        messagingSenderId: document.getElementById('messagingSenderId')?.value,
-        appId: document.getElementById('appId')?.value,
-        measurementId: document.getElementById('measurementId')?.value
+        projectId: document.getElementById('projectId').value
     };
 
-    if(!config.projectId || !config.apiKey || !config.databaseURL){
-        Swal.fire({icon:'error',title:'Missing Data'});
+    if (!config.projectId || !config.apiKey || !config.databaseURL) {
+        alert("Fill required fields");
         return;
     }
 
-    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-    configs = configs.filter(c=>c.projectId!==config.projectId);
-    configs.push(config);
+    let list = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
 
-    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+    list = list.filter(c => c.projectId !== config.projectId);
+    list.push(config);
+
+    localStorage.setItem('firebaseConfigsList', JSON.stringify(list));
 
     activateConfig(config.projectId);
 }
 
-// activate
+// ================= ACTIVATE FIREBASE =================
 function activateConfig(pid) {
-    const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-    const target = configs.find(c=>c.projectId===pid);
 
-    if(target){
+    const list = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+    const target = list.find(c => c.projectId === pid);
+
+    if (target) {
         localStorage.setItem('activeFirebaseId', pid);
         localStorage.setItem('firebaseConfig', JSON.stringify(target));
 
-        Swal.fire({
-            icon:'success',
-            title:'SYSTEM ONLINE',
-            text:`Connected: ${pid}`
-        });
+        if (window.saveFirebaseSettings) {
+            window.saveFirebaseSettings(target);
+        }
+
+        alert("CONNECTED: " + pid);
     }
 }
 
-// delete
+// ================= DELETE CONFIG =================
 function deleteConfig(pid) {
-    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-    configs = configs.filter(c=>c.projectId!==pid);
 
-    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+    let list = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+    list = list.filter(c => c.projectId !== pid);
 
-    if(localStorage.getItem('activeFirebaseId')===pid){
+    localStorage.setItem('firebaseConfigsList', JSON.stringify(list));
+
+    if (localStorage.getItem('activeFirebaseId') === pid) {
         localStorage.removeItem('activeFirebaseId');
         localStorage.removeItem('firebaseConfig');
     }
 
     saveLogic();
+}
+
+// ================= BUTTON HELPERS =================
+function setGiveawaySpeed(speed) {
+    document.getElementById('selectedSpeed').value = speed;
+}
+
+function toggleGiveawayVisibility() {
+    const btn = document.getElementById('hideBtn');
+
+    if (btn.innerText === 'HIDE') {
+        btn.innerText = 'SHOW';
+    } else {
+        btn.innerText = 'HIDE';
+    }
+}
+
+function setNoteSpeed(speed) {
+    document.getElementById('selectedNoteSpeed').value = speed;
+}
+
+function toggleNoteVisibility() {
+    const btn = document.getElementById('noteStatusBtn');
+
+    if (btn.innerText.includes('HIDE')) {
+        btn.innerText = 'SHOW ON SITE';
+    } else {
+        btn.innerText = 'HIDE FROM SITE';
+    }
 }
