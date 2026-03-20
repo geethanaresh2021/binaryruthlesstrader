@@ -2,144 +2,49 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard</title>
+<title>Admin Panel</title>
 
 <style>
-body {
-    display: flex;
-    margin: 0;
-    background: #050505;
-    color: #fff;
-    font-family: Arial;
-}
-
-/* SIDEBAR */
-.sidebar {
-    width: 230px;
-    background: #0a0a0a;
-    padding: 10px;
-    border-right: 1px solid #111;
-}
-
-/* BUTTONS */
-button {
-    width: 100%;
-    margin: 5px 0;
-    padding: 10px;
-    background: #111;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: red;
-}
-
-/* ACTIVE BUTTON */
-button.active {
-    background: red;
-}
-
-/* CONTENT */
-.content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-}
-
-/* MODULE */
-.module-section {
-    display: none;
-}
+body { display:flex; margin:0; background:#050505; color:#fff; font-family:Arial; }
+.sidebar { width:220px; background:#0a0a0a; padding:10px; overflow:auto; }
+button { width:100%; margin:5px 0; padding:10px; background:#111; color:#fff; border:none; cursor:pointer; }
+button:hover { background:red; }
+.content { flex:1; padding:20px; }
+.module-section { display:none; }
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-
-<button onclick="loadContent('Views', this)">Views</button>
-<button onclick="loadContent('Revenue', this)">Revenue</button>
-
-<button onclick="loadContent('STResize', this)">ST Resize</button>
-<button onclick="loadContent('ToolsManager', this)">Tools Manager</button>
-<button onclick="loadContent('SignalConnection', this)">Signal Connection</button>
-
-<button onclick="loadContent('AdsNetwork', this)">Ads Network</button>
-<button onclick="loadContent('AdsContainers', this)">Ads Containers</button>
-
-<button onclick="loadContent('SocialMedia', this)">Social Media</button>
-<button onclick="loadContent('BrandName', this)">Brand Name</button>
-<button onclick="loadContent('Affiliate', this)">Affiliate</button>
-
-<button onclick="loadContent('WarningNote', this)">Warning Note</button>
-<button onclick="loadContent('JoinSection', this)">Join Section</button>
-<button onclick="loadContent('Giveaway', this)">Giveaway</button>
-
-<button onclick="loadContent('Firebase', this)">Firebase</button>
-<button onclick="loadContent('VPS', this)">VPS</button>
-<button onclick="loadContent('Security', this)">Security</button>
-
+<button onclick="loadContent('Views')">Views</button>
+<button onclick="loadContent('Revenue')">Revenue</button>
+<button onclick="loadContent('STResize')">ST Resize</button>
+<button onclick="loadContent('ToolsManager')">Tools Manager</button>
+<button onclick="loadContent('SignalConnection')">Signal</button>
+<button onclick="loadContent('AdsNetwork')">Ads Network</button>
+<button onclick="loadContent('AdsContainers')">Ads Containers</button>
+<button onclick="loadContent('SocialMedia')">Social</button>
+<button onclick="loadContent('BrandName')">Brand</button>
+<button onclick="loadContent('Affiliate')">Affiliate</button>
+<button onclick="loadContent('WarningNote')">Warning</button>
+<button onclick="loadContent('JoinSection')">Join</button>
+<button onclick="loadContent('Giveaway')">Giveaway</button>
+<button onclick="loadContent('Firebase')">Firebase</button>
+<button onclick="loadContent('VPS')">VPS</button>
+<button onclick="loadContent('Security')">Security</button>
 </div>
 
-<!-- CONTENT -->
-<div class="content" id="mainDisplay">
-    <!-- modules.html will load here -->
-</div>
+<div class="content" id="mainDisplay"></div>
 
-<!-- LOAD MODULES -->
 <script>
 fetch('modules.html')
 .then(res => res.text())
 .then(data => {
     document.getElementById('mainDisplay').innerHTML = data;
-
-    // load last module after modules loaded
-    const last = localStorage.getItem('activeModule') || 'Views';
-    setTimeout(() => loadContent(last), 100);
 });
 </script>
 
-<!-- MAIN LOGIC -->
-<script>
-function loadContent(moduleName, btn) {
-
-    // hide all modules
-    document.querySelectorAll('.module-section').forEach(sec => {
-        sec.style.display = 'none';
-    });
-
-    // show selected module
-    const target = document.getElementById(moduleName);
-    if (target) {
-        target.style.display = 'block';
-    } else {
-        console.warn("Module not found:", moduleName);
-    }
-
-    // active button highlight
-    document.querySelectorAll('.sidebar button').forEach(b => {
-        b.classList.remove('active');
-    });
-
-    if (btn) btn.classList.add('active');
-
-    // save state
-    localStorage.setItem('activeModule', moduleName);
-}
-
-// reload same module
-window.onload = () => {
-    const last = localStorage.getItem('activeModule') || 'Views';
-    loadContent(last);
-};
-</script>
-
-<!-- EXTERNAL FILES -->
 <script src="logic.js"></script>
 <script type="module" src="firebase-logic.js"></script>
 
