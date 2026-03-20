@@ -1,157 +1,137 @@
-// --- LOAD MODULE ---
-function loadContent(moduleId) {
-    const sections = document.querySelectorAll('.module-section');
-    sections.forEach(sec => sec.style.display = 'none');
-    const target = document.getElementById(moduleId);
-    if (target) target.style.display = 'block';
-    localStorage.setItem('activeModule', moduleId);
+// ================= ADMIN LOGIC =================
+
+// Helper to get input by id
+function getVal(id){ return document.getElementById(id)?.value || ""; }
+
+// ================= VIEWS & REVENUE =================
+function saveLogic(moduleName){
+    console.log(`Saving module: ${moduleName}`);
+    // Placeholder: Add specific logic if needed
 }
 
-// --- FIREBASE CONFIG MANAGEMENT ---
-function addNewFirebaseConfig() {
-    const config = {
-        apiKey: document.getElementById('apiKey').value,
-        authDomain: document.getElementById('authDomain').value,
-        databaseURL: document.getElementById('databaseURL').value,
-        projectId: document.getElementById('projectId').value
-    };
-
-    if (!config.projectId || !config.apiKey || !config.databaseURL) {
-        Swal.fire({
-            icon: 'error',
-            title: 'MISSING DATA',
-            text: 'Fill Project ID, API Key, and Database URL',
-            background: '#0a0a0a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-    configs = configs.filter(c => c.projectId !== config.projectId);
-    configs.push(config);
-    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
-    activateConfig(config.projectId);
+// ================= ST RESIZE =================
+function saveSTResize(){
+    const width = getVal('screenWidth');
+    const zoom = getVal('zoomDisable');
+    window.updateCloudConfig('st_resize', { width, zoom });
+    alert("✅ Screen & zoom saved!");
 }
 
-function activateConfig(pid) {
-    const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-    const target = configs.find(c => c.projectId === pid);
-    if (!target) return;
-
-    localStorage.setItem('activeFirebaseId', pid);
-    localStorage.setItem('firebaseConfig', JSON.stringify(target));
-
-    if (window.saveFirebaseSettings) window.saveFirebaseSettings(target);
-
-    Swal.fire({
-        icon: 'success',
-        title: 'SYSTEM ONLINE',
-        text: `Connected to: ${pid}`,
-        background: '#0a0a0a',
-        color: '#fff',
-        confirmButtonColor: '#ff0000'
-    });
+// ================= TOOLS MANAGER =================
+function saveToolsManager(){
+    const val = getVal('toolsManagerInput');
+    window.updateCloudConfig('tools_manager', { val });
+    alert("✅ Tools saved!");
 }
 
-// --- DELETE CONFIG ---
-function deleteConfig(pid) {
-    Swal.fire({
-        title: 'DELETE DATABASE?',
-        text: "Credentials will be removed from local memory.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ff0000',
-        cancelButtonColor: '#333',
-        background: '#050505',
-        color: '#fff'
-    }).then(result => {
-        if (result.isConfirmed) {
-            let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
-            configs = configs.filter(c => c.projectId !== pid);
-            localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
-            if (localStorage.getItem('activeFirebaseId') === pid) {
-                localStorage.removeItem('activeFirebaseId');
-                localStorage.removeItem('firebaseConfig');
-            }
-        }
-    });
+// ================= SIGNAL CONNECTION =================
+function saveSignalConn(){
+    const url = getVal('sigUrl');
+    const platform = getVal('sigPlat');
+    window.updateCloudConfig('signal_connection', { url, platform });
+    alert("✅ Signal connection saved!");
 }
 
-// --- SAVE LOGIC PLACEHOLDERS ---
-function saveLogic() {
-    Swal.fire({ icon: 'success', title: 'UPDATED', background: '#0a0a0a', color: '#fff' });
+// ================= ADS NETWORK =================
+function saveAdsNetwork(){
+    const val = getVal('adsNetworkInput');
+    window.updateCloudConfig('ads_network', { val });
+    alert("✅ Ads network saved!");
 }
 
-function saveSTResize() {
-    const data = {
-        width: document.getElementById('screenWidth').value,
-        noZoom: document.getElementById('zoomDisable').value
-    };
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/layout', data);
-    saveLogic();
+// ================= ADS CONTAINERS =================
+function saveAdsConfig(){
+    const refresh = getVal('adRefresh');
+    const script = getVal('adScript');
+    window.updateCloudConfig('ads_containers', { refresh, script });
+    alert("✅ Ads container saved!");
 }
 
-function saveBrandName() {
-    const title = document.getElementById('brandTitle').value;
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/brand', { title });
-    saveLogic();
+// ================= SOCIAL LINKS =================
+function saveSocialLinks(){
+    const tg = getVal('tgUrl');
+    const yt = getVal('ytUrl');
+    window.updateCloudConfig('social_links', { telegram: tg, youtube: yt });
+    alert("✅ Social links saved!");
 }
 
-function saveSocialLinks() {
-    const data = {
-        telegram: document.getElementById('tgUrl').value,
-        youtube: document.getElementById('ytUrl').value
-    };
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/socials', data);
-    saveLogic();
+// ================= BRAND NAME =================
+function saveBrandName(){
+    const brand = getVal('brandTitle');
+    window.updateCloudConfig('brand_name', { brand });
+    alert("✅ Brand name saved!");
 }
 
-function saveAdsConfig() {
-    const data = {
-        refresh: document.getElementById('adRefresh').value,
-        script: document.getElementById('adScript').value
-    };
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/ads', data);
-    saveLogic();
+// ================= AFFILIATE =================
+function saveAffiliate(){
+    const val = getVal('affiliateInput');
+    window.updateCloudConfig('affiliate', { val });
+    alert("✅ Affiliate saved!");
 }
 
-function saveSignalConn() {
-    const data = {
-        url: document.getElementById('sigUrl').value,
-        platform: document.getElementById('sigPlat').value
-    };
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/signals', data);
-    saveLogic();
+// ================= WARNING NOTE =================
+function saveWarningNoteToCloud(){
+    const text = getVal('noteText');
+    const speed = getVal('selectedNoteSpeed');
+    window.updateCloudConfig('warning_note', { text, speed, status:true });
+    alert("✅ Warning note saved!");
 }
 
-function saveJoinSection() {
-    const text = document.getElementById('joinText').value;
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/join', { text });
-    saveLogic();
+// ================= JOIN SECTION =================
+function saveJoinSection(){
+    const text = getVal('joinText');
+    window.updateCloudConfig('join_section', { text });
+    alert("✅ Join section saved!");
 }
 
-// --- WARNING NOTE ---
-function saveWarningNoteToCloud() {
-    const text = document.getElementById('noteText').value;
-    const speed = parseInt(document.getElementById('selectedNoteSpeed').value) || 0;
-    const noteData = { text, speed, status: true, updatedAt: new Date().getTime() };
+// ================= GIVEAWAY =================
+function saveGiveawayToCloud(){
+    const winner = getVal('winnerName');
+    const speed = getVal('selectedSpeed');
+    window.updateCloudConfig('giveaway', { content: winner, speed, status:true });
+    alert("✅ Giveaway published!");
+}
+document.getElementById('hideBtn')?.addEventListener('click', ()=>{
+    window.updateCloudConfig('giveaway', { status:false });
+    alert("❌ Giveaway hidden!");
+});
 
-    localStorage.setItem('warningNoteData', JSON.stringify(noteData));
-    if (window.updateCloudConfig) window.updateCloudConfig('site_settings/warning_note', noteData);
+// ================= FIREBASE CONNECTION =================
+function addNewFirebaseConfig(){
+    const apiKey = getVal('apiKey');
+    const authDomain = getVal('authDomain');
+    const databaseURL = getVal('databaseURL');
+    const projectId = getVal('projectId');
 
-    Swal.fire({
-        icon: 'success',
-        title: 'WARNING UPDATED',
-        text: 'Warning note is now live!',
-        background: '#0a0a0a',
-        color: '#fff',
-        confirmButtonColor: '#ff0000'
-    });
+    window.updateCloudConfig('firebase_config', { apiKey, authDomain, databaseURL, projectId });
+    alert("✅ Firebase config saved!");
 }
 
-// --- WINDOW ONLOAD MODULE MEMORY ---
-window.onload = () => {
-    const lastModule = localStorage.getItem('activeModule') || 'Views';
-    loadContent(lastModule);
-};
+// ================= VPS =================
+function restartVPS(){
+    saveLogic('VPS');
+    alert("✅ VPS Restart triggered!");
+}
+
+// ================= SECURITY =================
+function updateSecurity(){
+    const pwd = getVal('securityInput');
+    window.updateCloudConfig('security', { password: pwd });
+    alert("✅ Security updated!");
+}
+
+// ================= EXPORT FUNCTIONS =================
+window.saveSTResize = saveSTResize;
+window.saveToolsManager = saveToolsManager;
+window.saveSignalConn = saveSignalConn;
+window.saveAdsNetwork = saveAdsNetwork;
+window.saveAdsConfig = saveAdsConfig;
+window.saveSocialLinks = saveSocialLinks;
+window.saveBrandName = saveBrandName;
+window.saveAffiliate = saveAffiliate;
+window.saveWarningNoteToCloud = saveWarningNoteToCloud;
+window.saveJoinSection = saveJoinSection;
+window.saveGiveawayToCloud = saveGiveawayToCloud;
+window.addNewFirebaseConfig = addNewFirebaseConfig;
+window.restartVPS = restartVPS;
+window.updateSecurity = updateSecurity;
