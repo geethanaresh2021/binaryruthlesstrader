@@ -2,19 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | Binary Ruthless Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
-body{display:flex;margin:0;background:#050505;color:#fff;font-family:Arial;}
-.sidebar{width:220px;background:#0a0a0a;padding:10px;overflow-y:auto; height:100vh;}
-button{width:100%;margin:5px 0;padding:10px;background:#111;color:#fff;border:none;cursor:pointer;}
-button:hover{background:red;}
+body{margin:0;font-family:'Roboto Mono',monospace;color:#fff;background:#050505;display:flex;min-height:100vh;overflow:hidden;}
+.sidebar{width:220px;background:#0a0a0a;padding:10px;overflow-y:auto;flex-shrink:0;}
+.sidebar button{width:100%;margin:5px 0;padding:10px;background:#111;color:#fff;border:none;cursor:pointer;text-align:left;border-radius:4px;transition:all 0.2s;}
+.sidebar button:hover{background:red;}
 .content{flex:1;padding:20px;overflow-y:auto;}
-.module-section{display:none;}
+.module-section{display:none;background:#111;padding:15px;border-radius:8px;border:1px solid #222;margin-bottom:15px;}
+.module-section input, .module-section textarea{width:100%;padding:8px;margin:5px 0;border:1px solid #333;border-radius:4px;background:#000;color:#fff;}
+.module-section button{padding:8px 15px;margin-top:10px;border:none;background:var(--red);color:#fff;border-radius:4px;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
 <button onclick="loadContent('Views')">Views</button>
 <button onclick="loadContent('Revenue')">Revenue</button>
 <button onclick="loadContent('STResize')">ST Resize</button>
@@ -35,15 +39,57 @@ button:hover{background:red;}
 
 <div class="content" id="mainDisplay"></div>
 
+<!-- MODULES -->
 <script>
-fetch('modules.html').then(res=>res.text()).then(data=>{
-document.getElementById('mainDisplay').innerHTML=data;
-});
+const modules = {
+Views:`<div class="module-section"><h2>Views Module</h2></div>`,
+Revenue:`<div class="module-section"><h2>Revenue Module</h2></div>`,
+STResize:`<div class="module-section">
+<label>Screen Width:</label><input id="screenWidth"><br>
+<label>Zoom Disable:</label><input id="zoomDisable"><br>
+<button onclick="saveSTResize()">Save</button></div>`,
+ToolsManager:`<div class="module-section"><input placeholder="Tool Name"><button onclick="saveLogic()">Save</button></div>`,
+SignalConnection:`<div class="module-section">
+<label>Signal URL:</label><input id="sigUrl"><br>
+<label>Platform:</label><input id="sigPlat"><br>
+<button onclick="saveSignalConn()">Connect</button></div>`,
+AdsNetwork:`<div class="module-section"><input placeholder="Network"><button onclick="saveLogic()">Verify</button></div>`,
+AdsContainers:`<div class="module-section">
+<label>Refresh Rate:</label><input id="adRefresh"><br>
+<label>Script:</label><textarea id="adScript"></textarea><br>
+<button onclick="saveAdsConfig()">Save</button></div>`,
+SocialMedia:`<div class="module-section">
+<label>Telegram URL:</label><input id="tgUrl"><br>
+<label>YouTube URL:</label><input id="ytUrl"><br>
+<button onclick="saveSocialLinks()">Save</button></div>`,
+BrandName:`<div class="module-section">
+<label>Brand Name:</label><input id="brandTitle"><br>
+<button onclick="saveBrandName()">Save</button></div>`,
+Affiliate:`<div class="module-section"><input placeholder="Affiliate"><button onclick="saveLogic()">Save</button></div>`,
+WarningNote:`<div class="module-section">
+<label>Note:</label><textarea id="noteText"></textarea><br>
+<label>Speed:</label><input id="selectedNoteSpeed" value="2"><br>
+<button onclick="saveWarningNoteToCloud()">Save</button></div>`,
+JoinSection:`<div class="module-section">
+<label>Join Text:</label><input id="joinText"><br>
+<button onclick="saveJoinSection()">Save</button></div>`,
+Giveaway:`<div class="module-section">
+<label>Winner Name:</label><input id="winnerName"><br>
+<label>Speed:</label><input id="selectedSpeed" value="2"><br>
+<button id="hideBtn">HIDE</button>
+<button onclick="saveGiveawayToCloud()">Publish</button></div>`,
+Firebase:`<div class="module-section">
+<label>API Key:</label><input id="apiKey"><br>
+<label>Auth Domain:</label><input id="authDomain"><br>
+<label>Database URL:</label><input id="databaseURL"><br>
+<label>Project ID:</label><input id="projectId"><br>
+<button onclick="addNewFirebaseConfig()">Connect</button></div>`,
+VPS:`<div class="module-section"><button onclick="saveLogic()">Restart</button></div>`,
+Security:`<div class="module-section"><input type="password" placeholder="New Password"><button onclick="saveLogic()">Update</button></div>`
+};
 
-function loadContent(id){
-document.querySelectorAll('.module-section').forEach(el=>el.style.display='none');
-const el=document.getElementById(id);
-if(el) el.style.display='block';
+function loadContent(name){
+document.getElementById('mainDisplay').innerHTML=modules[name]||'<div class="module-section">Not Found</div>';
 }
 </script>
 
