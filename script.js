@@ -25,6 +25,13 @@ function loadContent(moduleName) {
         case 'Firebase':
             renderFirebaseModule();
             break;
+            case 'Warning Note':
+            renderWarningModule();
+            break;
+
+        case 'Giveaway Winner':
+            renderGiveawayModule();
+            break;
             
         default:
             mainDisplay.innerHTML = `
@@ -133,4 +140,73 @@ function saveFirebaseConfig() {
 window.onload = function() {
     const lastModule = localStorage.getItem('activeModule') || 'Views';
     loadContent(lastModule);
+    // --- WARNING NOTE UI ---
+function renderWarningModule() {
+    document.getElementById('mainDisplay').innerHTML = `
+        <div class="fb-card">
+            <h2 style="color:var(--red); margin-bottom:20px; font-size:14px;">WARNING NOTE CONFIG</h2>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <input type="text" id="warnText" class="fb-input" placeholder="Enter Warning Message...">
+                <input type="number" id="warnSpeed" class="fb-input" placeholder="Speed (0=Fixed, 5=Scroll)">
+                <select id="warnStatus" class="fb-input" style="background:#000;">
+                    <option value="true">VISIBLE</option>
+                    <option value="false">HIDDEN</option>
+                </select>
+                <button class="join-btn" onclick="updateWarning()">UPDATE WARNING LIVE</button>
+            </div>
+        </div>
+    `;
+}
+
+// --- GIVEAWAY WINNER UI ---
+function renderGiveawayModule() {
+    document.getElementById('mainDisplay').innerHTML = `
+        <div class="fb-card">
+            <h2 style="color:var(--red); margin-bottom:20px; font-size:14px;">GIVEAWAY WINNER CONFIG</h2>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <textarea id="giveContent" class="fb-input" style="height:80px;" placeholder="Winner Name & Prize Details..."></textarea>
+                <input type="number" id="giveSpeed" class="fb-input" placeholder="Scroll Speed (e.g. 7)">
+                <select id="giveStatus" class="fb-input" style="background:#000;">
+                    <option value="true">VISIBLE</option>
+                    <option value="false">HIDDEN</option>
+                </select>
+                <button class="join-btn" onclick="updateGiveaway()">UPDATE GIVEAWAY LIVE</button>
+            </div>
+        </div>
+    `;
+}
+    // --- FIREBASE UPDATE LOGIC ---
+
+window.updateWarning = async function() {
+    const text = document.getElementById('warnText').value;
+    const speed = parseInt(document.getElementById('warnSpeed').value) || 0;
+    const status = document.getElementById('warnStatus').value === "true";
+
+    try {
+        await setDoc(doc(db, "site_settings", "warning_note"), {
+            text: text,
+            speed: speed,
+            status: status,
+            timestamp: serverTimestamp()
+        });
+        alert("Warning Note Updated!");
+    } catch (e) { alert("Error: " + e.message); }
+}
+
+window.updateGiveaway = async function() {
+    const content = document.getElementById('giveContent').value;
+    const speed = parseInt(document.getElementById('giveSpeed').value) || 0;
+    const status = document.getElementById('giveStatus').value === "true";
+
+    try {
+        await setDoc(doc(db, "site_settings", "giveaway"), {
+            content: content,
+            speed: speed,
+            status: status,
+            timestamp: serverTimestamp()
+        });
+        alert("Giveaway Updated!");
+    } catch (e) { alert("Error: " + e.message); }
+}
+
 };
