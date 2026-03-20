@@ -1,35 +1,42 @@
 <style>
-.module-section{display:none;}
+.module-section { display:none; }
 </style>
 
 <div id="Views" class="module-section"><h1>Views</h1></div>
+
 <div id="Revenue" class="module-section"><h1>Revenue</h1></div>
 
 <div id="STResize" class="module-section">
-<input id="screenWidth"><input id="zoomDisable">
+<input id="screenWidth" placeholder="Width">
+<input id="zoomDisable" placeholder="Zoom">
 <button onclick="saveSTResize()">Save</button>
 </div>
 
 <div id="ToolsManager" class="module-section">
-<input><button onclick="saveLogic()">Save</button>
+<input placeholder="Tool Name">
+<button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="SignalConnection" class="module-section">
-<input id="sigUrl"><input id="sigPlat">
+<input id="sigUrl" placeholder="URL">
+<input id="sigPlat" placeholder="Platform">
 <button onclick="saveSignalConn()">Connect</button>
 </div>
 
 <div id="AdsNetwork" class="module-section">
-<input><button onclick="saveLogic()">Verify</button>
+<input placeholder="API KEY">
+<button onclick="saveLogic()">Verify</button>
 </div>
 
 <div id="AdsContainers" class="module-section">
-<input id="adRefresh"><textarea id="adScript"></textarea>
+<input id="adRefresh" placeholder="Refresh">
+<textarea id="adScript"></textarea>
 <button onclick="saveAdsConfig()">Save</button>
 </div>
 
 <div id="SocialMedia" class="module-section">
-<input id="tgUrl"><input id="ytUrl">
+<input id="tgUrl" placeholder="Telegram">
+<input id="ytUrl" placeholder="YouTube">
 <button onclick="saveSocialLinks()">Save</button>
 </div>
 
@@ -39,7 +46,8 @@
 </div>
 
 <div id="Affiliate" class="module-section">
-<input><button onclick="saveLogic()">Save</button>
+<input>
+<button onclick="saveLogic()">Save</button>
 </div>
 
 <div id="WarningNote" class="module-section">
@@ -65,6 +73,10 @@
 <input id="authDomain">
 <input id="databaseURL">
 <input id="projectId">
+<input id="storageBucket">
+<input id="messagingSenderId">
+<input id="appId">
+<input id="measurementId">
 <button onclick="addNewFirebaseConfig()">Connect</button>
 </div>
 
