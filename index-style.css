@@ -1,48 +1,102 @@
-/* --- UI/Theme Logic --- */
-:root { 
-    --red: #ff0000; 
-    --bg: #050505; 
-    --panel: #0a0a0a;
+:root {
+    --red: #ff0000;
+    --red-glow: rgba(255, 0, 0, 0.5);
+    --bg-dark: #020202;
+    --card-bg: rgba(10, 10, 10, 0.8);
+    --neon-green: #00ffcc;
 }
 
-body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; min-height: 100vh; overflow-x: hidden; }
-
-/* --- Ad Container Styling (Fixed 320x50) --- */
-.ad-group { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 10px 0; }
-.ruthless-ad { 
-    width: 320px; height: 50px; background: #000; border: 1px dashed #222; 
-    display: flex; align-items: center; justify-content: center;
-    color: #222; font-size: 10px; font-family: 'Roboto Mono';
+/* --- Cyberpunk Background Animation --- */
+body {
+    background: var(--bg-dark);
+    background-image: 
+        linear-gradient(rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* --- Layout Engine --- */
-.widget-container { 
-    display: flex; gap: 30px; width: 100%; max-width: 1100px; 
-    justify-content: center; margin-top: 20px; padding: 10px;
+/* --- Header Transformation --- */
+.header {
+    background: linear-gradient(180deg, #000 0%, transparent 100%);
+    border-bottom: 2px solid var(--red);
+    box-shadow: 0 5px 20px var(--red-glow);
+    padding: 25px;
 }
-.widget { flex: 1; display: flex; flex-direction: column; gap: 10px; max-width: 450px; }
 
-/* Desktop Specifics */
+.brand-img {
+    filter: drop-shadow(0 0 15px var(--red));
+    max-width: 350px;
+}
+
+/* --- Info Bars (Neon Style) --- */
+.info-bar {
+    font-family: 'Roboto Mono';
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #1a1a1a;
+}
+.warning-bar { background: #600000; color: #fff; }
+.winner-bar { background: #000; color: var(--neon-green); border-top: 1px solid var(--neon-green); }
+
+/* --- Glassmorphism Widgets --- */
+.widget {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,1);
+    transition: 0.3s ease;
+}
+.widget:hover {
+    border-color: var(--red);
+    box-shadow: 0 0 20px var(--red-glow);
+}
+
+/* --- 32px Neon Signal Styling --- */
+.display-box {
+    background: #000 !important;
+    border: 1px solid #1a1a1a !important;
+    border-radius: 4px;
+}
+
+.sig-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #111;
+    background: linear-gradient(90deg, rgba(255,0,0,0.05) 0%, transparent 100%);
+}
+
+.sig-action {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+    font-family: 'Roboto Mono';
+}
+
+/* --- Ad Slots (Clean Look) --- */
+.ruthless-ad {
+    border: 1px solid #1a1a1a !important;
+    background: #050505 !important;
+    border-radius: 4px;
+    color: #333 !important;
+    font-weight: bold;
+}
+
+/* --- Desktop vs Mobile Logic --- */
 @media (min-width: 769px) {
-    .desktop-only-ads { display: flex; }
+    .widget-container { gap: 40px; }
 }
 
-/* Mobile Specifics */
 @media (max-width: 768px) {
-    .widget-container { flex-direction: column; align-items: center; }
-    .widget { width: 100%; max-width: 350px; }
-    .desktop-only-ads { display: none; } /* Mobile lo tool dropdown paina ads avasaram ledu annaru */
-}
-
-/* --- Display Boxes --- */
-.display-box { 
-    width: 100%; height: 400px; background: #000; border: 2px solid var(--red); 
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); border-radius: 8px; overflow-y: auto;
-}
-
-/* 32px Neon Signal Styling */
-.sig-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #111; align-items: center; }
-.sig-action { 
-    font-family: 'Roboto Mono'; font-size: 32px; font-weight: bold; 
-    color: #00ffcc; text-shadow: 0 0 10px #00ffcc; 
+    .brand-img { width: 280px; }
+    .widget { width: 95%; margin: 10px auto; }
 }
