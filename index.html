@@ -14,42 +14,33 @@
             --bg: #050505; 
             --panel: #0a0a0a;
             --neon: 0 0 15px var(--red); 
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; 
-            min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
 
-        /* --- Ads Styling (Fixed 320x50) --- */
+        /* --- AD CONTAINERS: AUTO-ADJUST LOGIC --- */
+        .ad-wrapper { 
+            display: flex; flex-direction: column; gap: 8px; 
+            margin: 10px 0; width: 100%; align-items: center; 
+        }
+        
         .ad-slot {
-            width: 320px; height: 50px; background: #000; 
-            border: 1px dashed #222; margin: 5px auto;
+            width: 100%; /* Mobile lo screen width ki match avthundi */
+            max-width: 400px; /* Tablet/Desktop lo limit chesthundhi */
+            height: 60px; /* Standard height for mobile ads */
+            background: #000; border: 1px dashed #222;
             display: flex; align-items: center; justify-content: center;
-            font-family: 'Roboto Mono'; font-size: 10px; color: #222;
+            font-family: 'Roboto Mono'; font-size: 10px; color: #333;
+            border-radius: 4px;
         }
-        .ad-wrapper { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; width: 100%; }
 
-        /* --- Header --- */
-        .header { 
-            width: 100%; padding: 20px; background: #000; 
-            border-bottom: 2px solid var(--red); display: flex; 
-            flex-direction: column; align-items: center;
-        }
-        .brand-wrapper {
-            display: flex; align-items: center; justify-content: space-between;
-            width: 100%; max-width: 1200px;
-        }
-        .brand-img { width: 320px; filter: drop-shadow(0 0 10px var(--red)); }
-
-        /* --- Main Content Layout --- */
-        .page-content { padding: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        /* --- Main Layout --- */
+        .page-content { padding: 10px; display: flex; flex-direction: column; align-items: center; }
         
         .widget-container { 
-            display: flex; gap: 30px; width: 100%; max-width: 1200px; 
-            justify-content: center; margin-top: 15px; 
+            display: flex; gap: 25px; width: 100%; max-width: 1200px; 
+            justify-content: center; margin-top: 10px; 
         }
 
         .widget { 
@@ -57,64 +48,41 @@
             align-items: center; width: 100%; 
         }
 
-        /* --- Dropdowns & Displays --- */
+        /* --- UI Elements --- */
         .ruthless-select {
             width: 100%; padding: 15px; background: var(--panel); border: 1px solid #222; 
-            color: var(--white); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
-            cursor: pointer; transition: var(--transition); appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 15px center;
+            color: var(--white); font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px;
         }
 
         .display-box { 
             width: 100%; height: 400px; background: #000; border: 2px solid var(--red); 
-            box-shadow: var(--neon); border-radius: 8px; position: relative; overflow-y: auto;
+            box-shadow: var(--neon); border-radius: 8px; overflow-y: auto;
         }
 
-        /* --- Social & Buttons --- */
-        .social-icons { display: flex; gap: 15px; align-items: center; }
-        .social-icons a { color: #fff; font-size: 18px; }
-        .join-btn { background: var(--red); color: white; border: none; padding: 8px 20px; font-family: 'Orbitron'; font-weight: 900; border-radius: 4px; }
-
-        /* --- Mobile Specific Fixes --- */
+        /* --- RESPONSIVE FIXES --- */
         @media (max-width: 768px) {
-            .brand-wrapper { flex-direction: column; gap: 15px; }
-            .brand-img { width: 260px; }
+            .widget-container { flex-direction: column; padding: 0; }
             
-            .widget-container { 
-                flex-direction: column; 
-                padding: 0 5px; /* Side gaps minimized for mobile */
-            }
-            
-            .widget { 
-                width: 100%; /* Forces full width on mobile */
-                max-width: none; 
-                margin-bottom: 20px;
+            /* Containers & Ads fully match mobile width */
+            .widget, .display-box, .ruthless-select, .ad-slot {
+                width: 100% !important;
+                max-width: none; /* Mobile lo constraints teeyali */
             }
 
-            .display-box, .ruthless-select {
-                width: 100%; /* Matches screen width */
-            }
+            .page-content { padding: 8px; }
+            .header { padding: 15px 10px; }
+            .brand-img { width: 240px; }
         }
 
-        /* --- Footer --- */
-        .footer { width: 100%; padding: 15px; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-between; font-family: 'Roboto Mono'; font-size: 10px; color: #444; }
+        /* Standard Header/Footer */
+        .header { width: 100%; border-bottom: 2px solid var(--red); padding: 20px; background: #000; text-align: center; }
+        .footer { width: 100%; padding: 15px; background: #000; text-align: center; font-size: 10px; color: #444; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="brand-wrapper">
-            <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            <div class="social-login-group" style="display: flex; gap: 15px; align-items: center;">
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-                <button class="join-btn">JOIN</button>
-                <button onclick="adminLogin()" style="background:none; border:1px solid #333; color:#444; padding:5px; font-size:10px;">ADMIN</button>
-            </div>
-        </div>
+        <img src="brand-name.png" alt="RUTHLESS TRADER" class="brand-img" style="width: 280px;">
     </header>
 
     <div class="page-content">
@@ -122,8 +90,8 @@
             
             <div class="widget">
                 <div class="ad-wrapper">
-                    <div id="ad-1" class="ad-slot">AD SLOT 1</div>
-                    <div id="ad-2" class="ad-slot">AD SLOT 2</div>
+                    <div id="ad-1" class="ad-slot">AD SLOT 1 (AUTO-WIDTH)</div>
+                    <div id="ad-2" class="ad-slot">AD SLOT 2 (AUTO-WIDTH)</div>
                 </div>
 
                 <select class="ruthless-select" id="sigSelect">
@@ -132,33 +100,30 @@
                     <option value="TOXA">TOXA EXPERT</option>
                 </select>
                 
-                <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222;">AWAITING SIGNAL...</div>
-                </div>
+                <div class="display-box" id="sigScreen"></div>
 
                 <div class="ad-wrapper">
-                    <div id="ad-3" class="ad-slot">AD SLOT 3</div>
-                    <div id="ad-4" class="ad-slot">AD SLOT 4</div>
+                    <div id="ad-3" class="ad-slot">AD SLOT 3 (AUTO-WIDTH)</div>
+                    <div id="ad-4" class="ad-slot">AD SLOT 4 (AUTO-WIDTH)</div>
                 </div>
             </div>
 
             <div class="widget">
                 <div class="ad-wrapper">
-                    <div id="ad-extra-1" class="ad-slot">AD SLOT 7</div>
-                    <div id="ad-extra-2" class="ad-slot">AD SLOT 8</div>
+                    <div id="ad-extra-1" class="ad-slot">AD SLOT 7 (AUTO-WIDTH)</div>
+                    <div id="ad-extra-2" class="ad-slot">AD SLOT 8 (AUTO-WIDTH)</div>
                 </div>
 
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
-                    <option>PROBABILITY CALCULATOR</option>
-                    <option>CANDLE ANALYZER</option>
+                    <option>CALCULATOR</option>
                 </select>
                 
                 <div class="display-box" id="toolScreen"></div>
 
                 <div class="ad-wrapper">
-                    <div id="ad-5" class="ad-slot">AD SLOT 5</div>
-                    <div id="ad-6" class="ad-slot">AD SLOT 6</div>
+                    <div id="ad-5" class="ad-slot">AD SLOT 5 (AUTO-WIDTH)</div>
+                    <div id="ad-6" class="ad-slot">AD SLOT 6 (AUTO-WIDTH)</div>
                 </div>
             </div>
 
@@ -166,8 +131,7 @@
     </div>
 
     <footer class="footer">
-        <div>© 2026 BINARY RUTHLESS TRADER</div>
-        <div>TERMS | PRIVACY</div>
+        © 2026 BINARY RUTHLESS TRADER
     </footer>
 
     <script type="module" src="index-script.js"></script>
