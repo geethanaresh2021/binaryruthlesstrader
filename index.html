@@ -1,223 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Binary Ruthless Trader</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-    --red:#ff0000;
-    --bg:#050505;
-}
-
-body{
-    margin:0;
-    background:var(--bg);
-    color:#fff;
-    font-family:'Orbitron';
-}
-
-/* HEADER */
-.header{
-    background:#000;
-    padding:20px;
-    border-bottom:2px solid var(--red);
-    text-align:center;
-}
-
-/* BARS */
-.info-bar{
-    display:none;
-    height:35px;
-    align-items:center;
-    justify-content:center;
-    font-family:'Roboto Mono';
-}
-
-#warning-wrapper{
-    background:#000;
-    border-bottom:1px solid #222;
-    color:red;
-}
-
-#giveaway-bar{
-    background:#000;
-    border-bottom:2px solid red;
-}
-
-/* MAIN */
-.container{
-    padding:20px;
-    display:flex;
-    gap:20px;
-}
-
-.box{
-    flex:1;
-    border:2px solid red;
-    height:400px;
-    overflow:auto;
-}
-
-/* SELECT */
-select{
-    width:100%;
-    padding:10px;
-    background:#111;
-    color:#00ffcc;
-    border:none;
-    margin-bottom:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-    <h2>BINARY RUTHLESS TRADER</h2>
-</div>
-
-<div id="warning-wrapper" class="info-bar">
-    <div id="live-warning-text"></div>
-</div>
-
-<div id="giveaway-bar" class="info-bar"></div>
-
-<div class="container">
-
-    <!-- SIGNALS -->
-    <div style="flex:1;">
-        <select id="sigSelect">
-            <option value="">SELECT SIGNAL</option>
-            <option value="QUOTEX">QUOTEX</option>
-            <option value="TOXA">TOXA</option>
-        </select>
-
-        <div id="sigScreen" class="box">
-            AWAITING SIGNAL DATA...
-        </div>
-    </div>
-
-    <!-- TOOLS -->
-    <div style="flex:1;">
-        <select id="toolSelect">
-            <option value="">SELECT TOOL</option>
-            <option value="CALC">CALCULATOR</option>
-            <option value="ANLYZ">ANALYZER</option>
-        </select>
-
-        <div id="toolScreen" class="box">
-            AWAITING TOOL...
-        </div>
-    </div>
-
-</div>
-
 <script type="module">
 import { db, auth } from './firebase-logic.js';
 import { doc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// AUTH
-signInAnonymously(auth).catch(console.error);
+signInAnonymously(auth);
 
-// ===== SIGNALS =====
-const sigSelect = document.getElementById('sigSelect');
-const sigScreen = document.getElementById('sigScreen');
-let unsub = null;
+// SIGNALS
+sigSelect.onchange = e=>{
+const q=query(collection(db,e.target.value),orderBy("timestamp","desc"),limit(20));
+onSnapshot(q,snap=>{
+sigScreen.innerHTML=snap.docs.map(d=>d.data().pair+" "+d.data().action).join("<br>");
+});
+};
 
-sigSelect.addEventListener('change', (e)=>{
-    const platform = e.target.value;
-
-    if(unsub) unsub();
-
-    if(!platform){
-        sigScreen.innerHTML = "AWAITING SIGNAL DATA...";
-        return;
-    }
-
-    sigScreen.innerHTML = "LOADING...";
-
-    const q = query(collection(db, platform), orderBy("timestamp","desc"), limit(50));
-
-    unsub = onSnapshot(q, snap=>{
-        const data = snap.docs.map(d=>d.data());
-
-        if(!data.length){
-            sigScreen.innerHTML = "NO SIGNALS";
-            return;
-        }
-
-        sigScreen.innerHTML = data.map(s=>`
-        <div style="padding:15px;border-bottom:1px solid #111;display:flex;justify-content:space-between;">
-            <span>${s.pair || "---"}</span>
-            <span style="color:#00ffcc">${s.action || "ITM"}</span>
-        </div>`).join("");
-    });
+// GIVEAWAY
+onSnapshot(doc(db,"site_settings","giveaway"),snap=>{
+if(snap.exists()){
+let d=snap.data();
+giveaway-bar.innerHTML=d.content;
+}
 });
 
-// ===== TOOLS =====
-const toolSelect = document.getElementById('toolSelect');
-const toolScreen = document.getElementById('toolScreen');
-
-toolSelect.addEventListener('change', (e)=>{
-    const val = e.target.value;
-
-    if(val === "CALC"){
-        toolScreen.innerHTML = "<h1 style='color:#00ffcc;text-align:center;'>94%</h1>";
-    }
-    else if(val === "ANLYZ"){
-        toolScreen.innerHTML = "<p style='text-align:center;'>Analyzing...</p>";
-    }
-    else{
-        toolScreen.innerHTML = "AWAITING TOOL...";
-    }
-});
-
-// ===== GIVEAWAY =====
-onSnapshot(doc(db,"site_settings","giveaway"), snap=>{
-    const bar = document.getElementById('giveaway-bar');
-
-    if(!snap.exists()) return;
-
-    const d = snap.data();
-
-    if(d.status === true){
-        bar.style.display = "flex";
-
-        bar.innerHTML = d.speed == 0
-        ? `<span>${d.content}</span>`
-        : `<marquee scrollamount="${d.speed}">${d.content}</marquee>`;
-    }
-    else{
-        bar.style.display = "none";
-    }
-});
-
-// ===== WARNING =====
-onSnapshot(doc(db,"site_settings","warning_note"), snap=>{
-    const wrap = document.getElementById('warning-wrapper');
-    const text = document.getElementById('live-warning-text');
-
-    if(!snap.exists()) return;
-
-    const d = snap.data();
-
-    if(d.status === true){
-        wrap.style.display = "flex";
-
-        text.innerHTML = `<marquee scrollamount="${d.speed || 3}">
-        ⚠ ${d.text}
-        </marquee>`;
-    }
-    else{
-        wrap.style.display = "none";
-    }
+// WARNING
+onSnapshot(doc(db,"site_settings","warning_note"),snap=>{
+if(snap.exists()){
+live-warning-text.innerHTML=snap.data().text;
+}
 });
 </script>
-
-</body>
-</html>
