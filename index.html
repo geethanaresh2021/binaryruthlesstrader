@@ -270,6 +270,48 @@
     } else {
         console.error("No Firebase Config found! Please connect from Admin Page first.");
     }
+    // --- SOCIAL MEDIA SYNC LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. LocalStorage nundi links techukuntundi
+    const savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
+    
+    // 2. Icons ni vetiki vatiki links thagilistundi
+    // Telegram
+    if (savedLinks['Telegram']) {
+        const tgIcon = document.querySelector('.fa-telegram');
+        if (tgIcon && tgIcon.parentElement) {
+            tgIcon.parentElement.href = savedLinks['Telegram'];
+            tgIcon.parentElement.setAttribute('target', '_blank');
+        }
+    }
+    
+    // YouTube
+    if (savedLinks['YouTube']) {
+        const ytIcon = document.querySelector('.fa-youtube');
+        if (ytIcon && ytIcon.parentElement) {
+            ytIcon.parentElement.href = savedLinks['YouTube'];
+            ytIcon.parentElement.setAttribute('target', '_blank');
+        }
+    }
+
+    // Facebook & Instagram kuda ade vidhanga...
+    if (savedLinks['Facebook']) {
+        const fbIcon = document.querySelector('.fa-facebook');
+        if (fbIcon && fbIcon.parentElement) {
+            fbIcon.parentElement.href = savedLinks['Facebook'];
+            fbIcon.parentElement.setAttribute('target', '_blank');
+        }
+    }
+
+    if (savedLinks['Instagram']) {
+        const igIcon = document.querySelector('.fa-instagram');
+        if (igIcon && igIcon.parentElement) {
+            igIcon.parentElement.href = savedLinks['Instagram'];
+            igIcon.parentElement.setAttribute('target', '_blank');
+        }
+    }
+});
+
 </script>
 </body>
 </html>
