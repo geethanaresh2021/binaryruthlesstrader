@@ -248,10 +248,6 @@ function activateConfig(pid) {
         localStorage.setItem('activeFirebaseId', pid);
         localStorage.setItem('firebaseConfig', JSON.stringify(target));
 
-        if(window.saveFirebaseSettings){
-            window.saveFirebaseSettings(target);
-        }
-
         Swal.fire({
             icon:'success',
             title:'SYSTEM ONLINE',
