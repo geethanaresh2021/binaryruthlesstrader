@@ -1,0 +1,78 @@
+<style>
+.module-section{display:none;}
+</style>
+
+<div id="Views" class="module-section"><h1>Views</h1></div>
+<div id="Revenue" class="module-section"><h1>Revenue</h1></div>
+
+<div id="STResize" class="module-section">
+<input id="screenWidth"><input id="zoomDisable">
+<button onclick="saveSTResize()">Save</button>
+</div>
+
+<div id="ToolsManager" class="module-section">
+<input><button onclick="saveLogic()">Save</button>
+</div>
+
+<div id="SignalConnection" class="module-section">
+<input id="sigUrl"><input id="sigPlat">
+<button onclick="saveSignalConn()">Connect</button>
+</div>
+
+<div id="AdsNetwork" class="module-section">
+<input><button onclick="saveLogic()">Verify</button>
+</div>
+
+<div id="AdsContainers" class="module-section">
+<input id="adRefresh"><textarea id="adScript"></textarea>
+<button onclick="saveAdsConfig()">Save</button>
+</div>
+
+<div id="SocialMedia" class="module-section">
+<input id="tgUrl"><input id="ytUrl">
+<button onclick="saveSocialLinks()">Save</button>
+</div>
+
+<div id="BrandName" class="module-section">
+<input id="brandTitle">
+<button onclick="saveBrandName()">Save</button>
+</div>
+
+<div id="Affiliate" class="module-section">
+<input><button onclick="saveLogic()">Save</button>
+</div>
+
+<div id="WarningNote" class="module-section">
+<textarea id="noteText"></textarea>
+<input id="selectedNoteSpeed" value="2">
+<button onclick="saveWarningNoteToCloud()">Save</button>
+</div>
+
+<div id="JoinSection" class="module-section">
+<input id="joinText">
+<button onclick="saveJoinSection()">Save</button>
+</div>
+
+<div id="Giveaway" class="module-section">
+<input id="winnerName">
+<input id="selectedSpeed" value="2">
+<button id="hideBtn">HIDE</button>
+<button onclick="saveGiveawayToCloud()">Publish</button>
+</div>
+
+<div id="Firebase" class="module-section">
+<input id="apiKey">
+<input id="authDomain">
+<input id="databaseURL">
+<input id="projectId">
+<button onclick="addNewFirebaseConfig()">Connect</button>
+</div>
+
+<div id="VPS" class="module-section">
+<button onclick="saveLogic()">Restart</button>
+</div>
+
+<div id="Security" class="module-section">
+<input type="password">
+<button onclick="saveLogic()">Update</button>
+</div>
