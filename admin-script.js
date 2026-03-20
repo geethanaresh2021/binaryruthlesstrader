@@ -425,24 +425,28 @@ function toggleSocialEdit(plt) {
 function saveSocialLink(plt) {
     const linkVal = document.getElementById(`link-${plt}`).value.trim();
     if(!linkVal) {
-        Swal.fire({ icon: 'warning', title: 'EMPTY LINK', text: 'Please enter a valid URL', background: '#0a0a0a', color: '#fff' });
+        Swal.fire({ icon: 'warning', title: 'EMPTY LINK', text: 'Please enter a URL', background: '#0a0a0a', color: '#fff' });
         return;
     }
 
+    // A. LocalStorage lo save (Backup kosam)
     let savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
     savedLinks[plt] = linkVal;
     localStorage.setItem('socialLinks', JSON.stringify(savedLinks));
 
-    // Update Header Links Immediately (Admin Page)
-    syncHeaderLinks();
-
-    // Cloud Sync (Firebase update if connected)
-    if (window.updateCloudConfig) {
-        window.updateCloudConfig('site_settings/socials', savedLinks);
+    // B. FIREBASE LO SAVE (Main Storage)
+    // Deenivalla Incognito lo kuda pani chestundi
+    if (typeof db !== 'undefined') {
+        db.ref('site_settings/socials').child(plt).set(linkVal)
+        .then(() => {
+            Swal.fire({ icon: 'success', title: 'SAVED TO CLOUD', text: `${plt} link updated everywhere!`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+            syncHeaderLinks(); // Admin header refresh
+        });
+    } else {
+        Swal.fire({ icon: 'error', title: 'FIREBASE NOT CONNECTED', text: 'Please connect Firebase first!', background: '#0a0a0a', color: '#fff' });
     }
-
-    Swal.fire({ icon: 'success', title: 'SAVED', text: `${plt} link updated successfully!`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
 }
+
 
 // --- SYNC HEADER LINKS ---
 function syncHeaderLinks() {
