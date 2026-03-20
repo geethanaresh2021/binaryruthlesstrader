@@ -1,74 +1,135 @@
 import { db } from './firebase-logic.js';
 import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Main Load Function
+// --- GLOBAL MODULE CONFIG ---
+// Indhulo modules ki thaggattu fields ni define chesukovachu
+const moduleConfigs = {
+    "Views": { type: "stats", label: "LIVE NETWORK TRAFFIC", icon: "fa-eye", color: "#00ffcc" },
+    "Revenue": { type: "stats", label: "TOTAL EARNINGS (INR)", icon: "fa-indian-rupee-sign", color: "var(--red)" },
+    "Warning Note": { type: "complex", fields: ["text", "speed", "status"] },
+    "Giveaway Winner": { type: "complex", fields: ["content", "speed", "status"] },
+    "Ads Containers": { type: "textarea", label: "PASTE AD SCRIPT CODE" },
+    "ST Resize": { type: "standard", label: "LAYOUT WIDTH (e.g. 1200px or 100%)" },
+    "Firebase": { type: "standard", label: "PROJECT ID / CONFIG STRING" },
+    "default": { type: "standard", label: "UPDATE CONFIGURATION" }
+};
+
+// --- MAIN CONTROLLER ---
 window.loadContent = function(moduleName) {
-    localStorage.setItem('activeModule', moduleName);
+    // 1. Mobile Friendly Scroll
+    if (window.innerWidth < 768) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     const mainDisplay = document.getElementById('mainDisplay');
+    const config = moduleConfigs[moduleName] || moduleConfigs["default"];
     
-    // Header UI Update
+    // 2. Update Header
     document.getElementById('panelHeader').innerHTML = `
-        <h1>${moduleName} <span style="color:var(--red); font-size:12px;">_SYS</span></h1>
-        <p>ENCRYPTED TERMINAL // RUTHLESS TRADER</p>
+        <h1>${moduleName} <span style="color:var(--red); font-size:12px;">_ONLINE</span></h1>
+        <p>RUTHLESS TERMINAL // MODE: SECURE</p>
     `;
 
-    // Sidebar Active State
+    // 3. Update Active Button State
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.innerText.trim().includes(moduleName));
     });
 
-    // Content Rendering
-    if (moduleName === 'Views' || moduleName === 'Revenue') {
-        renderStats(moduleName);
-    } else if (moduleName === 'Warning Note') {
-        renderWarningUI();
-    } else {
-        renderStandardUI(moduleName);
+    // 4. Render UI based on Module Type
+    renderModuleUI(moduleName, config);
+};
+
+// --- UI RENDERING ENGINE ---
+function renderModuleUI(name, config) {
+    const mainDisplay = document.getElementById('mainDisplay');
+    const docId = name.toLowerCase().replace(/\s+/g, '_');
+
+    let html = `<div class="ruthless-card">`;
+
+    if (config.type === "stats") {
+        html += `
+            <p class="card-label">${config.label}</p>
+            <h2 style="color:${config.color}; font-size:32px; font-family:'Roboto Mono'; font-weight:bold; text-shadow:0 0 15px ${config.color}; margin:15px 0;">
+                ${name === 'Views' ? '1,284' : '₹ 42,500'}
+            </h2>
+            <p style="color:#222; font-size:9px;">SYNCED: JUST NOW</p>
+        `;
+    } 
+    else if (config.type === "complex") {
+        html += `
+            <h3 class="card-label">UPDATE ${name.toUpperCase()}</h3>
+            <input type="text" id="compText" class="ruthless-input" placeholder="Enter content/message...">
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="compSpeed" class="ruthless-input" style="flex:1;" placeholder="Speed (0-10)">
+                <select id="compStatus" class="ruthless-input" style="flex:1;">
+                    <option value="true">ACTIVE</option>
+                    <option value="false">HIDDEN</option>
+                </select>
+            </div>
+            <button class="save-btn" onclick="saveComplexData('${docId}')">DEPLOY UPDATE</button>
+        `;
     }
+    else if (config.type === "textarea") {
+        html += `
+            <h3 class="card-label">${config.label}</h3>
+            <textarea id="stdInput" class="ruthless-input" style="height:150px; font-size:12px;"></textarea>
+            <button class="save-btn" onclick="saveStandardData('${docId}')">SAVE SCRIPT</button>
+        `;
+    }
+    else {
+        html += `
+            <h3 class="card-label">${config.label}</h3>
+            <input type="text" id="stdInput" class="ruthless-input" placeholder="Type here...">
+            <button class="save-btn" onclick="saveStandardData('${docId}')">UPDATE SYSTEM</button>
+        `;
+    }
+
+    html += `</div>`;
+    mainDisplay.innerHTML = html;
 }
 
-function renderStats(type) {
-    const val = type === 'Views' ? '1,284' : '₹ 42,500';
-    const color = type === 'Views' ? '#00ffcc' : 'var(--red)';
-    document.getElementById('mainDisplay').innerHTML = `
-        <div class="ruthless-card">
-            <p style="font-size:11px; color:#444;">TOTAL DATA SCAN</p>
-            <h2 style="color:${color}; font-size:32px; font-family:'Roboto Mono'; text-shadow:0 0 15px ${color}; margin-top:10px;">${val}</h2>
-            <p style="font-size:9px; color:#222; margin-top:15px;">REFRESHED IN REAL-TIME</p>
-        </div>`;
-}
+// --- DATA PERSISTENCE (FIREBASE SYNC) ---
+window.saveStandardData = async (docId) => {
+    const val = document.getElementById('stdInput').value;
+    await pushToFirebase(docId, { value: val });
+};
 
-function renderWarningUI() {
-    document.getElementById('mainDisplay').innerHTML = `
-        <div class="ruthless-card">
-            <h3 style="font-size:14px; margin-bottom:15px;">WARNING OVERRIDE</h3>
-            <input type="text" id="wTxt" class="ruthless-input" placeholder="ALERT MESSAGE...">
-            <input type="number" id="wSpd" class="ruthless-input" placeholder="SCROLL SPEED (0-10)">
-            <button class="save-btn" id="saveBtn">UPDATE SYSTEM</button>
-        </div>`;
-    document.getElementById('saveBtn').onclick = () => pushData('warning_note', {
-        text: document.getElementById('wTxt').value,
-        speed: parseInt(document.getElementById('wSpd').value) || 0,
-        status: true
-    });
-}
+window.saveComplexData = async (docId) => {
+    const data = {
+        text: document.getElementById('compText')?.value || document.getElementById('compText')?.innerText || "",
+        content: document.getElementById('compText')?.value || "", // for giveaway
+        speed: parseInt(document.getElementById('compSpeed').value) || 0,
+        status: document.getElementById('compStatus').value === "true"
+    };
+    await pushToFirebase(docId, data);
+};
 
-function renderStandardUI(title) {
-    const docId = title.toLowerCase().replace(/\s+/g, '_');
-    document.getElementById('mainDisplay').innerHTML = `
-        <div class="ruthless-card">
-            <h3 style="font-size:14px; margin-bottom:15px;">${title} CONFIG</h3>
-            <input type="text" id="univInp" class="ruthless-input" placeholder="ENTER VALUE...">
-            <button class="save-btn" id="saveBtn">SAVE CONFIG</button>
-        </div>`;
-    document.getElementById('saveBtn').onclick = () => pushData(docId, { value: document.getElementById('univInp').value });
-}
-
-async function pushData(docId, data) {
+async function pushToFirebase(docId, data) {
     try {
-        await setDoc(doc(db, "site_settings", docId), { ...data, timestamp: serverTimestamp() });
-        alert("RUTHLESS CORE: DATA SYNCED");
-    } catch (e) { alert("SYNC ERROR: " + e.message); }
+        const btn = event.target;
+        btn.innerText = "EXECUTING...";
+        btn.disabled = true;
+
+        await setDoc(doc(db, "site_settings", docId), {
+            ...data,
+            lastUpdated: serverTimestamp()
+        });
+
+        btn.innerText = "SUCCESS // SYNCED";
+        btn.style.background = "#fff";
+        btn.style.color = "#000";
+
+        setTimeout(() => {
+            btn.innerText = "UPDATE SYSTEM";
+            btn.style.background = "var(--red)";
+            btn.style.color = "#fff";
+            btn.disabled = false;
+        }, 2000);
+
+    } catch (error) {
+        console.error("RUTHLESS ERROR:", error);
+        alert("SYNC FAILED!");
+    }
 }
 
 // Initial Load
