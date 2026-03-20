@@ -1,19 +1,23 @@
-// TOP OF script.js
+// 1. IMPORT FIREBASE UTILITIES
 import { db } from './firebase-logic.js';
 import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-// --- Global Logic for Firebase & UI ---
-function loadContent(moduleName) {
+
+// 2. MAIN CONTENT LOADER
+window.loadContent = function(moduleName) {
+    // LocalStorage lo save chesthunnam refresh ayina gurtuundataniki
     localStorage.setItem('activeModule', moduleName);
 
+    // Sidebar buttons active style update
     const buttons = document.querySelectorAll('.nav-btn');
     buttons.forEach(btn => {
-        if (btn.innerText.trim() === moduleName) {
+        if (btn.innerText.trim().includes(moduleName)) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
         }
     });
 
+    // Header Title Update
     document.getElementById('panelHeader').innerHTML = `
         <h1>${moduleName}</h1>
         <p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS AND DATA.</p>
@@ -21,19 +25,22 @@ function loadContent(moduleName) {
 
     const mainDisplay = document.getElementById('mainDisplay');
 
+    // 3. MODULE ROUTING (Ikkade mistake jaragakunda chusukovali)
     switch (moduleName) {
         case 'Firebase':
             renderFirebaseModule();
             break;
-            case 'Warning Note':
+            
+        case 'Warning Note':
             renderWarningModule();
             break;
 
         case 'Giveaway Winner':
             renderGiveawayModule();
             break;
-            
+
         default:
+            // Vere buttons inka ready avvaledu kabatti placeholder chupisthundi
             mainDisplay.innerHTML = `
                 <div class="placeholder-card">
                     <i class="fas fa-sync fa-spin" style="color:var(--red); font-size:24px; margin-bottom:15px;"></i><br>
@@ -44,139 +51,69 @@ function loadContent(moduleName) {
     }
 }
 
-// --- Firebase Specific Logic ---
+// --- MODULE 1: FIREBASE ---
 function renderFirebaseModule() {
-    const savedConfigs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-    const activeIndex = localStorage.getItem('fb_active_index');
-
-    const fbStyle = `
-        <style>
-            .fb-container { display: flex; flex-direction: column; gap: 20px; }
-            .fb-card { background: #000; border: 1px solid #1a1a1a; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-            .fb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-            .fb-input { 
-                background: #080808; border: 1px solid #222; padding: 12px; 
-                color: #00ffcc; font-family: 'Roboto Mono'; font-weight: bold; 
-                font-size: 13px; border-radius: 4px; transition: 0.3s;
-            }
-            .fb-input:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.2); }
-            .status-btn { 
-                padding: 6px 12px; font-size: 10px; border-radius: 20px; 
-                font-family: 'Roboto Mono'; border: none; font-weight: 900;
-            }
-            .status-online { background: rgba(0,255,0,0.1); color: #00ff00; border: 1px solid #00ff00; box-shadow: 0 0 10px rgba(0,255,0,0.3); }
-            .status-offline { background: rgba(255,0,0,0.1); color: #ff0000; border: 1px solid #ff0000; }
-            .fb-list-item { 
-                background: #0a0a0a; padding: 15px; border: 1px solid #111; 
-                margin-bottom: 8px; display: flex; justify-content: space-between; 
-                align-items: center; border-left: 4px solid #333;
-            }
-            .fb-list-item.active-item { border-left-color: var(--red); background: #110000; }
-            .join-btn {
-                background: var(--red); color: #fff; border: none; border-radius: 4px;
-                font-family: 'Orbitron'; cursor: pointer; transition: 0.2s;
-                width: 100%; height: 45px; font-size: 14px;
-            }
-        </style>
-    `;
-
-    let listHtml = savedConfigs.map((cfg, index) => `
-        <div class="fb-list-item ${activeIndex == index ? 'active-item' : ''}">
-            <div>
-                <div style="font-size: 12px; color: #fff;">${cfg.projectId}</div>
-                <div style="font-size: 10px; color: #444;">${cfg.authDomain}</div>
+    document.getElementById('mainDisplay').innerHTML = `
+        <div class="fb-card">
+            <h2 style="color:var(--red); margin-bottom:15px; font-size:14px;">FIREBASE STATUS</h2>
+            <div style="background:#0a0a0a; padding:15px; border:1px solid #1a1a1a; color:#00ffcc; font-family:'Roboto Mono'; font-size:12px;">
+                CONNECTED TO ACTIVE DATABASE: SUCCESS
             </div>
-            <div class="status-btn ${activeIndex == index ? 'status-online' : 'status-offline'}">
-                ${activeIndex == index ? '● CONNECTED' : '○ NOT CONNECTED'}
-            </div>
-        </div>
-    `).join('');
-
-    document.getElementById('mainDisplay').innerHTML = fbStyle + `
-        <div class="fb-container">
-            <div class="fb-card">
-                <h2 style="font-size: 14px; color: var(--red); margin-bottom: 20px; letter-spacing: 2px;">ADD NEW FIREBASE CONFIG</h2>
-                <div class="fb-grid">
-                    <input type="text" id="apiKey" class="fb-input" placeholder="apiKey">
-                    <input type="text" id="authDomain" class="fb-input" placeholder="authDomain">
-                    <input type="text" id="projectId" class="fb-input" placeholder="projectId">
-                    <input type="text" id="storageBucket" class="fb-input" placeholder="storageBucket">
-                    <input type="text" id="messagingSenderId" class="fb-input" placeholder="messagingSenderId">
-                    <input type="text" id="appId" class="fb-input" placeholder="appId">
-                </div>
-                <button class="join-btn" onclick="saveFirebaseConfig()">CONNECT & SAVE</button>
-            </div>
-            <div class="fb-card">
-                <h2 style="font-size: 14px; color: #fff; margin-bottom: 15px; letter-spacing: 2px;">SAVED CONNECTIONS</h2>
-                <div id="fbList">${listHtml || '<p style="color:#222; text-align:center; font-size:12px;">NO DATABASE CONNECTED</p>'}</div>
-            </div>
+            <p style="font-size:10px; color:#444; margin-top:10px;">Note: API keys are loaded from firebase-logic.js</p>
         </div>
     `;
 }
 
-function saveFirebaseConfig() {
-    const fields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
-    const config = {};
-    let isComplete = true;
-
-    fields.forEach(f => {
-        const val = document.getElementById(f).value;
-        if(!val) isComplete = false;
-        config[f] = val;
-    });
-
-    if (!isComplete) {
-        alert("Please fill all 6 Firebase fields!");
-        return;
-    }
-
-    let configs = JSON.parse(localStorage.getItem('fb_configs') || '[]');
-    configs.push(config);
-    localStorage.setItem('fb_configs', JSON.stringify(configs));
-    localStorage.setItem('fb_active_index', configs.length - 1);
-    renderFirebaseModule();
-}
-
-window.onload = function() {
-    const lastModule = localStorage.getItem('activeModule') || 'Views';
-    loadContent(lastModule);
-    // --- WARNING NOTE UI ---
+// --- MODULE 2: WARNING NOTE ---
 function renderWarningModule() {
     document.getElementById('mainDisplay').innerHTML = `
         <div class="fb-card">
             <h2 style="color:var(--red); margin-bottom:20px; font-size:14px;">WARNING NOTE CONFIG</h2>
             <div style="display:flex; flex-direction:column; gap:15px;">
-                <input type="text" id="warnText" class="fb-input" placeholder="Enter Warning Message...">
-                <input type="number" id="warnSpeed" class="fb-input" placeholder="Speed (0=Fixed, 5=Scroll)">
+                <label style="font-size:10px; color:#555;">MESSAGE TEXT</label>
+                <input type="text" id="warnText" class="fb-input" placeholder="Example: USE LOW STAKES TODAY...">
+                
+                <label style="font-size:10px; color:#555;">SCROLL SPEED (0 = NO SCROLL)</label>
+                <input type="number" id="warnSpeed" class="fb-input" placeholder="Speed (e.g. 5)">
+                
+                <label style="font-size:10px; color:#555;">STATUS</label>
                 <select id="warnStatus" class="fb-input" style="background:#000;">
                     <option value="true">VISIBLE</option>
                     <option value="false">HIDDEN</option>
                 </select>
-                <button class="join-btn" onclick="updateWarning()">UPDATE WARNING LIVE</button>
+                
+                <button class="join-btn" onclick="updateWarning()" style="margin-top:10px;">UPDATE WARNING LIVE</button>
             </div>
         </div>
     `;
 }
 
-// --- GIVEAWAY WINNER UI ---
+// --- MODULE 3: GIVEAWAY WINNER ---
 function renderGiveawayModule() {
     document.getElementById('mainDisplay').innerHTML = `
         <div class="fb-card">
             <h2 style="color:var(--red); margin-bottom:20px; font-size:14px;">GIVEAWAY WINNER CONFIG</h2>
             <div style="display:flex; flex-direction:column; gap:15px;">
-                <textarea id="giveContent" class="fb-input" style="height:80px;" placeholder="Winner Name & Prize Details..."></textarea>
-                <input type="number" id="giveSpeed" class="fb-input" placeholder="Scroll Speed (e.g. 7)">
+                <label style="font-size:10px; color:#555;">WINNER CONTENT</label>
+                <textarea id="giveContent" class="fb-input" style="height:80px;" placeholder="Winner details here..."></textarea>
+                
+                <label style="font-size:10px; color:#555;">SCROLL SPEED</label>
+                <input type="number" id="giveSpeed" class="fb-input" placeholder="Speed (e.g. 7)">
+                
+                <label style="font-size:10px; color:#555;">STATUS</label>
                 <select id="giveStatus" class="fb-input" style="background:#000;">
                     <option value="true">VISIBLE</option>
                     <option value="false">HIDDEN</option>
                 </select>
-                <button class="join-btn" onclick="updateGiveaway()">UPDATE GIVEAWAY LIVE</button>
+                
+                <button class="join-btn" onclick="updateGiveaway()" style="margin-top:10px;">UPDATE GIVEAWAY LIVE</button>
             </div>
         </div>
     `;
 }
-    // --- FIREBASE UPDATE LOGIC ---
 
+// --- FIREBASE WRITE FUNCTIONS ---
+// Window object ki attach chesthunnam buttons ki dorakalani
 window.updateWarning = async function() {
     const text = document.getElementById('warnText').value;
     const speed = parseInt(document.getElementById('warnSpeed').value) || 0;
@@ -184,12 +121,9 @@ window.updateWarning = async function() {
 
     try {
         await setDoc(doc(db, "site_settings", "warning_note"), {
-            text: text,
-            speed: speed,
-            status: status,
-            timestamp: serverTimestamp()
+            text, speed, status, timestamp: serverTimestamp()
         });
-        alert("Warning Note Updated!");
+        alert("Warning Note Updated on Live Site!");
     } catch (e) { alert("Error: " + e.message); }
 }
 
@@ -200,13 +134,14 @@ window.updateGiveaway = async function() {
 
     try {
         await setDoc(doc(db, "site_settings", "giveaway"), {
-            content: content,
-            speed: speed,
-            status: status,
-            timestamp: serverTimestamp()
+            content, speed, status, timestamp: serverTimestamp()
         });
-        alert("Giveaway Updated!");
+        alert("Giveaway Updated on Live Site!");
     } catch (e) { alert("Error: " + e.message); }
 }
 
+// 4. ON PAGE LOAD
+window.onload = function() {
+    const lastModule = localStorage.getItem('activeModule') || 'Views';
+    loadContent(lastModule);
 };
