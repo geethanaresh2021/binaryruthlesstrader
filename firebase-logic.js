@@ -20,29 +20,25 @@ const firebaseConfig = {
 
 // ================= INIT =================
 const app = initializeApp(firebaseConfig);
-
 export const db = getFirestore(app);
-export const auth = getAuth(app); // ⚠️ INDEX కి కావాలి (IMPORTANT)
+export const auth = getAuth(app);
 
 // ================= ADMIN SAVE =================
-// 👉 Admin panel lo use avutundi
 window.updateCloudConfig = async function (path, data) {
     try {
         await setDoc(doc(db, "site_settings", path), {
             ...data,
             updatedAt: serverTimestamp()
         });
-
-        console.log("✅ Saved to:", path);
+        console.log("✅ Saved:", path);
     } catch (error) {
         console.error("❌ Save Error:", error);
     }
 };
 
-// ================= OPTIONAL ADMIN CONNECT =================
-// 👉 admin.html lo call avutundi (error avoid cheyadaniki)
+// ================= ADMIN CONNECT =================
 window.saveFirebaseSettings = function(config){
-    console.log("⚡ Firebase Config Activated:", config.projectId);
+    console.log("🔥 Active Firebase:", config.projectId);
 };
 
 // ================= AUTO CLEANUP =================
@@ -53,8 +49,6 @@ export async function ruthlessAutoCleanup(platform) {
         const snapshot = await getDocs(q);
 
         if (snapshot.size >= 500) {
-            console.log(`🔥 Cleanup Triggered: ${platform}`);
-
             const batch = writeBatch(db);
             const docsToDelete = snapshot.docs.slice(0, 400);
 
@@ -63,10 +57,10 @@ export async function ruthlessAutoCleanup(platform) {
             });
 
             await batch.commit();
-            console.log("✅ 400 old signals deleted");
+            console.log("🧹 Cleanup done");
         }
     } catch (error) {
-        console.error("❌ Cleanup Error:", error);
+        console.error("Cleanup Error:", error);
     }
 }
 
@@ -79,12 +73,10 @@ export async function postSignal(platform, pair, action) {
             timestamp: serverTimestamp()
         });
 
-        // auto cleanup run
         ruthlessAutoCleanup(platform);
-
         return true;
     } catch (error) {
-        console.error("❌ Post Error:", error);
+        console.error("Post Error:", error);
         return false;
     }
 }
