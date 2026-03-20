@@ -184,39 +184,153 @@ function loadContent(moduleName) {
 
 // --- MODULE SPECIFIC RENDERS ---
 
+// --- 1. FIREBASE MODULE RENDERING ---
 function renderFirebaseModule() {
     const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
     const activeConfigId = localStorage.getItem('activeFirebaseId');
-    
-    document.getElementById('mainDisplay').innerHTML = `
+    const mainDisplay = document.getElementById('mainDisplay');
+
+    mainDisplay.innerHTML = `
         <div class="module-card">
-            <h2 style="font-size:12px; color:var(--red); margin-bottom:15px;">FIREBASE CONFIG (CLOUD SYNC)</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">FIREBASE SETUP</h2>
+            <div id="firebaseInputs" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:10px;">
                 <input type="text" id="apiKey" class="input-box" placeholder="API Key">
                 <input type="text" id="authDomain" class="input-box" placeholder="Auth Domain">
                 <input type="text" id="databaseURL" class="input-box" placeholder="Database URL">
                 <input type="text" id="projectId" class="input-box" placeholder="Project ID">
                 <input type="text" id="storageBucket" class="input-box" placeholder="Storage Bucket">
-                <input type="text" id="messagingSenderId" class="input-box" placeholder="Sender ID">
+                <input type="text" id="messagingSenderId" class="input-box" placeholder="Messaging Sender ID">
                 <input type="text" id="appId" class="input-box" placeholder="App ID">
                 <input type="text" id="measurementId" class="input-box" placeholder="Measurement ID">
             </div>
-            <button class="action-btn" onclick="addNewFirebaseConfig()" style="margin-top:10px;">CONNECT DATABASE</button>
-            <div style="margin-top:20px; padding:15px; background:#0a0a0a; border:1px solid #1a1a1a;">
-                <label class="input-label">ACTIVE STATUS: <span style="color:${activeConfigId ? '#00ffcc' : '#ff0000'}">${activeConfigId || 'OFFLINE'}</span></label>
+            
+            <button class="action-btn" id="saveDbBtn" onclick="validateAndSaveFirebase()" style="margin-top:10px;">SAVE DATABASE</button>
+
+            <div style="margin-top:20px; padding:15px; background:#0a0a0a; border:1px solid #1a1a1a; border-radius:4px;">
+                <label class="input-label">CONNECTION STATUS</label>
+                <div id="connectionStatus" style="font-family:'Roboto Mono'; font-size:14px; font-weight:bold; display:flex; align-items:center; gap:10px; color:${activeConfigId ? '#00ffcc' : '#ff0000'};">
+                    <span style="height:10px; width:10px; border-radius:50%; background:${activeConfigId ? '#00ffcc' : '#ff0000'}; box-shadow: 0 0 10px ${activeConfigId ? '#00ffcc' : '#ff0000'};"></span>
+                    ${activeConfigId ? 'CONNECTED: ' + activeConfigId : 'NOT CONNECTED'}
+                </div>
             </div>
-            <div id="configList" style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
+
+            <hr style="border:0.5px solid #1a1a1a; margin:25px 0;">
+            <h2 style="font-size:12px; color:#fff; margin-bottom:15px;">SAVED DATABASES</h2>
+            <div id="configList" style="display:flex; flex-direction:column; gap:12px;">
+                ${configs.length === 0 ? '<p style="color:#444; font-size:11px;">No databases saved yet.</p>' : ''}
                 ${configs.map(cfg => `
-                    <div class="input-box" style="display:flex; justify-content:space-between; align-items:center; margin:0;">
-                        <span style="font-size:12px;">${cfg.projectId}</span>
-                        <div>
-                            <button onclick="activateConfig('${cfg.projectId}')" style="background:none; border:none; color:#00ffcc; cursor:pointer; margin-right:10px;">ACTIVATE</button>
-                            <button onclick="deleteConfig('${cfg.projectId}')" style="background:none; border:none; color:var(--red); cursor:pointer;">DELETE</button>
+                    <div style="background:#080808; padding:15px; border:1px solid #1a1a1a; border-left: 4px solid ${activeConfigId === cfg.projectId ? '#00ffcc' : '#333'};">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-family:'Roboto Mono'; font-size:13px; color:#eee;">${cfg.projectId}</div>
+                                <div style="font-size:10px; color:#555;">${cfg.databaseURL}</div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button onclick="activateFirebase('${cfg.projectId}')" style="background:#111; color:#00ffcc; border:1px solid #00ffcc; padding:6px 12px; font-size:10px; cursor:pointer; border-radius:3px;">CONNECT</button>
+                                <button onclick="showManageOptions('${cfg.projectId}')" style="background:#111; color:#fff; border:1px solid #444; padding:6px 12px; font-size:10px; cursor:pointer; border-radius:3px;">MANAGE</button>
+                            </div>
+                        </div>
+                        <div id="manage-${cfg.projectId}" style="display:none; margin-top:15px; padding-top:15px; border-top:1px dashed #222; gap:10px;">
+                            <button onclick="editFirebase('${cfg.projectId}')" style="flex:1; background:transparent; color:#ffaa00; border:1px solid #ffaa00; padding:8px; font-size:10px; cursor:pointer;">EDIT DETAILS</button>
+                            <button onclick="deleteFirebase('${cfg.projectId}')" style="flex:1; background:transparent; color:#ff0000; border:1px solid #ff0000; padding:8px; font-size:10px; cursor:pointer;">DELETE</button>
                         </div>
                     </div>
                 `).join('')}
             </div>
-        </div>`;
+        </div>
+    `;
+}
+
+// --- 2. VALIDATION & SAVING ---
+function validateAndSaveFirebase() {
+    const fields = ['apiKey', 'authDomain', 'databaseURL', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId'];
+    const config = {};
+    let isComplete = true;
+
+    fields.forEach(f => {
+        config[f] = document.getElementById(f).value.trim();
+        if (!config[f]) isComplete = false;
+    });
+
+    if (!isComplete) {
+        Swal.fire({ icon: 'error', title: 'INVALID DETAILS', text: 'Please enter all correct details!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+        return;
+    }
+
+    // Save to list
+    let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+    configs = configs.filter(c => c.projectId !== config.projectId);
+    configs.push(config);
+    localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+    
+    // Auto Connect after save
+    activateFirebase(config.projectId);
+}
+
+// --- 3. CONNECTION LOGIC (PERSISTENT) ---
+function activateFirebase(pid) {
+    const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+    const target = configs.find(c => c.projectId === pid);
+
+    if (target) {
+        localStorage.setItem('activeFirebaseId', pid);
+        localStorage.setItem('firebaseConfig', JSON.stringify(target));
+        
+        // SweetAlert Success
+        Swal.fire({ icon: 'success', title: 'CONNECTED', text: `System linked to: ${pid}`, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#00ffcc' });
+        
+        // Refresh UI
+        renderFirebaseModule();
+    }
+}
+
+// --- 4. MANAGE OPTIONS (EDIT/DELETE) ---
+function showManageOptions(pid) {
+    const div = document.getElementById(`manage-${pid}`);
+    div.style.display = (div.style.display === 'none' || div.style.display === '') ? 'flex' : 'none';
+}
+
+function editFirebase(pid) {
+    const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+    const cfg = configs.find(c => c.projectId === pid);
+    if (cfg) {
+        document.getElementById('apiKey').value = cfg.apiKey;
+        document.getElementById('authDomain').value = cfg.authDomain;
+        document.getElementById('databaseURL').value = cfg.databaseURL;
+        document.getElementById('projectId').value = cfg.projectId;
+        document.getElementById('storageBucket').value = cfg.storageBucket;
+        document.getElementById('messagingSenderId').value = cfg.messagingSenderId;
+        document.getElementById('appId').value = cfg.appId;
+        document.getElementById('measurementId').value = cfg.measurementId;
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        Swal.fire({ toast: true, position: 'top-end', title: 'Details loaded for edit', background: '#111', color: '#fff', showConfirmButton: false, timer: 2000 });
+    }
+}
+
+function deleteFirebase(pid) {
+    Swal.fire({
+        title: 'DELETE DATABASE?',
+        text: "This action cannot be undone.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff0000',
+        cancelButtonColor: '#333',
+        background: '#050505', 
+        color: '#fff'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
+            configs = configs.filter(c => c.projectId !== pid);
+            localStorage.setItem('firebaseConfigsList', JSON.stringify(configs));
+            
+            if (localStorage.getItem('activeFirebaseId') === pid) {
+                localStorage.removeItem('activeFirebaseId');
+                localStorage.removeItem('firebaseConfig');
+            }
+            renderFirebaseModule();
+        }
+    });
 }
 
 function renderGiveawayModule() {
