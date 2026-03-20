@@ -1,174 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Binary Ruthless Trader</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-body { background:#050505; color:#fff; font-family:'Orbitron'; margin:0; }
-
-.header { padding:20px; background:#000; border-bottom:2px solid red; text-align:center; }
-
-.info-bar { display:none; padding:10px; text-align:center; }
-
-#warning-wrapper { background:#000; color:red; }
-#giveaway-bar { background:#000; border-bottom:2px solid red; }
-
-.container { padding:20px; }
-
-.box { border:2px solid red; padding:20px; margin-top:20px; }
-
-select { width:100%; padding:10px; background:#111; color:#00ffcc; }
-
-</style>
-</head>
-
-<body>
-
-<div class="header">
-<h1 id="brandTitle">BINARY RUTHLESS TRADER</h1>
-<button onclick="adminLogin()">ADMIN</button>
-</div>
-
-<div id="warning-wrapper" class="info-bar">
-<div id="live-warning-text"></div>
-</div>
-
-<div id="giveaway-bar" class="info-bar"></div>
-
-<div class="container">
-
-<select id="sigSelect">
-<option value="">Select Signal</option>
-<option value="QUOTEX">QUOTEX</option>
-<option value="TOXA">TOXA</option>
-</select>
-
-<div class="box" id="sigScreen">Waiting...</div>
-
-<select id="toolSelect">
-<option value="">Select Tool</option>
-<option value="CALC">Calculator</option>
-<option value="ANLYZ">Analyzer</option>
-</select>
-
-<div class="box" id="toolScreen">Waiting...</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- IMPORTANT: Only script part below replace if UI already undi -->
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-projectId: "binary-ruthless-trader-26654",
-storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-messagingSenderId: "533209261799",
-appId: "1:533209261799:web:a398ab21b0f913683ea442"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { db, auth } from './firebase-logic.js';
+import { doc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 signInAnonymously(auth);
 
 // ===== SIGNALS =====
 const sigSelect = document.getElementById('sigSelect');
 const sigScreen = document.getElementById('sigScreen');
-let unsub = null;
+let currentSub = null;
 
-sigSelect.addEventListener('change', e => {
-const platform = e.target.value;
-if(unsub) unsub();
+sigSelect.addEventListener('change', (e) => {
+    const platform = e.target.value;
+    if (currentSub) currentSub();
 
-if(!platform){
-sigScreen.innerHTML = "Waiting...";
-return;
-}
+    if (!platform) {
+        sigScreen.innerHTML = 'AWAITING SIGNAL DATA...';
+        return;
+    }
 
-const q = query(collection(db, platform), orderBy("timestamp","desc"), limit(20));
-unsub = onSnapshot(q, snap => {
-const data = snap.docs.map(d=>d.data());
+    const q = query(collection(db, platform), orderBy("timestamp", "desc"), limit(50));
 
-sigScreen.innerHTML = data.map(s=>`
-<div>
-${s.pair} - ${s.action}
-</div>
-`).join('');
-});
-});
+    currentSub = onSnapshot(q, (snapshot) => {
+        const signals = snapshot.docs.map(d => d.data());
 
-// ===== TOOLS =====
-const toolSelect = document.getElementById('toolSelect');
-const toolScreen = document.getElementById('toolScreen');
-
-toolSelect.addEventListener('change', e=>{
-const val = e.target.value;
-
-if(val==="CALC"){
-toolScreen.innerHTML = "<h2>Win Rate: 94%</h2>";
-}
-else if(val==="ANLYZ"){
-toolScreen.innerHTML = "<h2>Analyzing...</h2>";
-}
-else{
-toolScreen.innerHTML="Waiting...";
-}
+        sigScreen.innerHTML = signals.map(sig => `
+            <div style="padding:20px;border-bottom:1px solid #111;display:flex;justify-content:space-between;">
+                <span>${sig.pair || '---'}</span>
+                <span style="color:#00ffcc">${sig.action || 'ITM'}</span>
+            </div>
+        `).join('');
+    });
 });
 
 // ===== GIVEAWAY =====
-onSnapshot(doc(db,"site_settings","giveaway"), snap=>{
-const bar = document.getElementById('giveaway-bar');
+onSnapshot(doc(db, "site_settings", "giveaway"), (snap) => {
+    const bar = document.getElementById('giveaway-bar');
 
-if(snap.exists()){
-const d = snap.data();
+    if (snap.exists()) {
+        const data = snap.data();
 
-if(d.status){
-bar.style.display="block";
-bar.innerHTML = `<marquee>${d.content}</marquee>`;
-}else{
-bar.style.display="none";
-}
-}
+        if (data.status === true) {
+            bar.style.display = 'flex';
+
+            const speed = parseInt(data.speed) || 0;
+            const msg = data.content || "WINNER PENDING...";
+
+            bar.innerHTML = speed === 0
+                ? `<span>${msg}</span>`
+                : `<marquee scrollamount="${speed}">${msg}</marquee>`;
+        } else {
+            bar.style.display = 'none';
+        }
+    }
 });
 
-// ===== WARNING =====
-onSnapshot(doc(db,"site_settings","warning_note"), snap=>{
-const wrap = document.getElementById('warning-wrapper');
-const text = document.getElementById('live-warning-text');
+// ===== WARNING NOTE =====
+onSnapshot(doc(db, "site_settings", "warning_note"), (snap) => {
+    const wrap = document.getElementById('warning-wrapper');
+    const text = document.getElementById('live-warning-text');
 
-if(snap.exists() && snap.data().status){
-wrap.style.display="block";
-text.innerHTML = `<marquee>${snap.data().text}</marquee>`;
-}else{
-wrap.style.display="none";
-}
+    if (snap.exists()) {
+        const d = snap.data();
+
+        if (d.status === true) {
+            wrap.style.display = 'flex';
+            text.innerHTML = `<marquee scrollamount="${d.speed || 3}">
+            ⚠ ${d.text || ''}
+            </marquee>`;
+        } else {
+            wrap.style.display = 'none';
+        }
+    }
 });
-
 </script>
-
-<script>
-function adminLogin(){
-Swal.fire({
-title:'Enter Password',
-input:'password'
-}).then(res=>{
-if(res.value==="0000"){
-location="admin.html";
-}
-});
-}
-</script>
-
-</body>
-</html>
