@@ -3,89 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader | Official System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    
+    <title>BINARY RUTHLESS TRADER | LIVE TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="index-style.css">
 </head>
 <body>
 
-    <header class="header">
-        <div class="brand-wrapper">
-            <img src="brand-name.png" alt="BINARY RUTHLESS TRADER" class="brand-img">
-            <div class="social-login-group">
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <button class="join-btn" id="joinBtn">JOIN</button>
-                </div>
-                <button class="admin-trigger" onclick="adminLogin()">ADMIN</button>
-            </div>
-        </div>
-    </header>
-
-    <div id="warning-wrapper" class="info-bar warning-bar" style="display: none;">
-        <div id="live-warning-text"></div>
+    <div id="warning-wrapper" class="warning-container" style="display: none;">
+        <div id="live-warning-text" class="warning-content"></div>
     </div>
 
-    <div id="giveaway-bar" class="info-bar winner-bar" style="display: none;"></div>
+    <div id="giveaway-bar" class="giveaway-strip" style="display: none;"></div>
 
-    <div class="page-content">
-        <div class="widget-container">
-            <div class="widget">
-                <select class="ruthless-select" id="sigSelect">
-                    <option value="">-- SELECT SIGNAL --</option>
-                    <option value="QUOTEX">QUOTEX SURESHOT</option>
-                    <option value="TOXA">TOXA EXPERT</option>
-                </select>
-                <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SIGNAL DATA...</div>
-                </div>
+    <div class="terminal-main">
+        <header class="header-section">
+            <div class="brand-info">
+                <h1 id="site-title">BINARY <span class="red-glow">RUTHLESS</span></h1>
+                <p class="server-status"><span class="dot-blink">●</span> SECURE SERVER ONLINE</p>
             </div>
+            <div class="social-box">
+                <a href="#" id="tg-link"><i class="fab fa-telegram"></i></a>
+                <a href="#" id="yt-link"><i class="fab fa-youtube"></i></a>
+            </div>
+        </header>
 
-            <div class="widget">
-                <select class="ruthless-select" id="toolSelect">
-                    <option value="">-- SELECT TOOL --</option>
-                    <option>PROBABILITY CALCULATOR</option>
-                    <option>CANDLE ANALYZER</option>
-                </select>
-                <div class="display-box" id="toolScreen"></div>
-            </div>
+        <div class="ad-row">
+            <div id="ad-1" class="ad-placeholder">AD SLOT #1</div>
+            <div id="ad-2" class="ad-placeholder">AD SLOT #2</div>
         </div>
+
+        <div class="content-layout">
+            <section class="signals-area">
+                <div class="area-header">
+                    <h3><i class="fas fa-bolt"></i> REAL-TIME SIGNALS</h3>
+                    <select id="platformSelect" class="ruthless-select">
+                        <option value="QUOTEX">QUOTEX</option>
+                        <option value="TOXA">TOXA</option>
+                    </select>
+                </div>
+                
+                <div id="sigScreen" class="signal-list-container">
+                    <div class="wait-msg">CONNECTING TO RUTHLESS CORE...</div>
+                </div>
+
+                <div id="ad-3" class="ad-placeholder mid-ad">AD SLOT #3</div>
+            </section>
+
+            <aside class="sidebar-tools">
+                <div class="tool-card">
+                    <h4>PROFIT CALCULATOR</h4>
+                    <div id="calc-ui">READY</div>
+                </div>
+
+                <div id="ad-4" class="ad-placeholder side-ad">AD SLOT #4</div>
+                <div id="ad-5" class="ad-placeholder side-ad">AD SLOT #5</div>
+            </aside>
+        </div>
+
+        <div id="ad-6" class="ad-placeholder footer-ad">AD SLOT #6</div>
+
+        <footer class="footer-note">
+            <p>&copy; 2026 BINARY RUTHLESS TRADER // ALL RIGHTS RESERVED</p>
+        </footer>
     </div>
 
-    <footer class="footer">
-        <div id="footerCopy">© 2026 BINARY RUTHLESS TRADER | ALL RIGHTS RESERVED</div>
-        <div style="display: flex; gap: 20px;">
-            <a href="#">CONTACT US</a>
-            <a href="#">TERMS</a>
-            <a href="#">PRIVACY</a>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="index-script.js"></script>
-    <script>
-        // Non-module script for Admin Login
-        function adminLogin() {
-            Swal.fire({
-                title: 'ACCESS KEY', input: 'password', showCancelButton: true,
-                confirmButtonText: 'LOGIN', confirmButtonColor: '#ff0000', background: '#0a0a0a',
-                color: '#fff'
-            }).then((result) => {
-                if (result.isConfirmed && result.value === "0000") {
-                    window.location.href = "admin.html";
-                } else if (result.isConfirmed) {
-                    Swal.fire({ icon: 'error', title: 'DENIED', confirmButtonColor: '#ff0000', background: '#0a0a0a', color: '#fff' });
-                }
-            })
-        }
-    </script>
 </body>
 </html>
