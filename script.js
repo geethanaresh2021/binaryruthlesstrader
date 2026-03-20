@@ -1,3 +1,6 @@
+// TOP OF script.js
+import { db } from './firebase-logic.js';
+import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 // --- Global Logic for Firebase & UI ---
 function loadContent(moduleName) {
     localStorage.setItem('activeModule', moduleName);
