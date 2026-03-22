@@ -49,26 +49,32 @@
 
         /* --- STRIPS --- */
         .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 0 10px; }
+        
+        /* Updated Strips for Smooth Logic */
         .top-strip { 
-    width: 100%; 
-    height: 40px; 
-    font-family: 'Roboto Mono', monospace; 
-    font-size: 11px; 
-    text-transform: uppercase; 
-    border: 1px solid #111; 
-    border-radius: 4px; 
-    overflow: hidden;
-    white-space: nowrap;
-}
-        .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
-        .announce-strip { 
-    background: transparent; 
-    color: #fff; 
-    border-color: #222; 
-    height: 40px; 
-    line-height: 40px; 
-    overflow: hidden;
-}
+            width: 100%; 
+            height: 44px; /* Slightly taller for bigger text */
+            font-family: 'Roboto Mono', monospace; 
+            border: 1px solid #111; 
+            border-radius: 4px; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-strip { background: transparent; border-color: rgba(255,0,0,0.3); }
+        .announce-strip { background: transparent; border-color: #222; }
+
+        /* Smooth Scroll Keyframes */
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .scroll-item {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+        }
 
         /* --- MAIN CONTENT --- */
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -103,30 +109,7 @@
         /* SWAL POPUP CUSTOM */
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
-        .swal2-input { background: #000 !important; border: 1px solid #222 !important; color: #00ffcc !important; text-align: center !important; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
-
-
-        /* Smooth Scroll Keyframes */
-@keyframes scrollText {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%); /* Half length animation for seamless loop */
-    }
-}
-
-.smooth-scroll-wrapper {
-    will-change: transform;
-    display: flex;
-}
-
-/* Optional: Neon Glow for that Ruthless look */
-#announceStrip span, #warningNoteContainer span {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    text-transform: uppercase;
-}
     </style>
 </head>
 <body>
@@ -143,11 +126,11 @@
         </div>
 
         <div class="strip-container">
-            <div class="top-strip warning-strip" id="warningStrip">
-                <marquee scrollamount="5">INITIALIZING SYSTEM...</marquee>
+            <div class="top-strip warning-strip" id="warningNoteContainer">
+                <div style="width:100%; text-align:center; color:#222; font-size:10px;">INITIALIZING SYSTEM...</div>
             </div>
             <div class="top-strip announce-strip" id="announceStrip">
-                <marquee scrollamount="4">LOADING ANNOUNCEMENTS...</marquee>
+                <div style="width:100%; text-align:center; color:#222; font-size:10px;">LOADING ANNOUNCEMENTS...</div>
             </div>
         </div>
     </header>
@@ -215,73 +198,65 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- 1. CLOUD SETTINGS LISTENER (WARNINGS & ANNOUNCEMENTS) ---
-// --- WARNING NOTE LISTENER ---
+        // 2. SMOOTH SCROLL HANDLER
+        function applySmoothScroll(containerId, text, speed, color) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Firebase Listeners (Giveaway & Warning Note)
-    // Giveaway / Announcement Sync
-    db.ref('site_settings/giveaway').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+            container.innerHTML = "";
+            container.style.color = color;
+            container.style.fontSize = "20px"; // Bigger text
+            container.style.fontWeight = "900";
+            container.style.display = "flex";
+            container.style.overflow = "hidden";
+            container.style.whiteSpace = "nowrap";
+
+            const spd = parseInt(speed) || 0;
+
+            if (spd === 0) {
+                container.style.justifyContent = "center";
+                container.innerHTML = `<span class="scroll-item">${text}</span>`;
+            } else {
+                container.style.justifyContent = "flex-start";
+                const duration = 35 / spd; // Dynamic speed duration
+                container.innerHTML = `
+                    <div style="display: flex; animation: scrollText ${duration}s linear infinite;">
+                        <span class="scroll-item" style="padding-right: 80px;">${text}</span>
+                        <span class="scroll-item" style="padding-right: 80px;">${text}</span>
+                    </div>
+                `;
+            }
         }
-    });
 
-    // Warning Note Sync
-    db.ref('site_settings/warning_note').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
-        }
-    });
+        // 3. FIREBASE LISTENERS
+        document.addEventListener('DOMContentLoaded', function() {
+            // Giveaway Sync
+            db.ref('site_settings/giveaway').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+            });
 
-// --- SMOOTH SCROLL FUNCTION ---
-function applySmoothScroll(containerId, text, speed, color) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+            // Warning Note Sync
+            db.ref('site_settings/warning_note').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
+            });
 
-    // Reset Container
-    container.innerHTML = "";
-    container.style.color = color;
-    container.style.fontSize = "20px"; // Pedda letters
-    container.style.fontWeight = "900"; // Bold
-    container.style.display = "flex";
-    container.style.overflow = "hidden";
-    container.style.whiteSpace = "nowrap";
+            // Global Settings (Social Links etc)
+            db.ref('site_settings').on('value', (snapshot) => {
+                const settings = snapshot.val() || {};
+                const links = settings.socials || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
+                    const el = document.getElementById(`link-${platform}`);
+                    if (el && links[platform]) {
+                        el.href = links[platform];
+                        el.target = "_blank";
+                    }
+                });
+            });
+        });
 
-    if (parseInt(speed) === 0) {
-        container.style.justifyContent = "center";
-        container.innerHTML = `<span>${text}</span>`;
-    } else {
-        const duration = 30 / speed; // Speed adjustment
-        container.style.justifyContent = "flex-start";
-        
-        // Loop kosam double text peduthunnam
-        container.innerHTML = `
-            <div style="display: flex; animation: scrollText ${duration}s linear infinite;">
-                <span style="padding-right: 100px;">${text}</span>
-                <span style="padding-right: 100px;">${text}</span>
-            </div>
-        `;
-    }
-}
-
-
-    // --- SOCIAL LINKS SYNC ---
-    const links = settings.socials || {};
-    ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
-        const el = document.getElementById(`link-${platform}`);
-        if (el && links[platform]) {
-            el.href = links[platform];
-            el.target = "_blank";
-        }
-    });
-}, (error) => {
-    console.error("Firebase Sync Error:", error);
-});
-
-        // 3. ANALYTICS & STATS
+        // 4. ANALYTICS & STATS
         const today = new Date().toISOString().split('T')[0];
         const statsRef = db.ref(`stats/${today}`);
         const myStatusRef = db.ref('presence').push();
@@ -299,7 +274,7 @@ function applySmoothScroll(containerId, text, speed, color) {
             }
         });
 
-        // 4. ADMIN LOGIN
+        // 5. ADMIN LOGIN
         function adminLogin() {
             Swal.fire({
                 title: 'Ruthless Access',
