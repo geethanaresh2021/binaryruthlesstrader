@@ -50,10 +50,9 @@
         /* --- STRIPS --- */
         .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 0 10px; }
         
-        /* Updated Strips for Smooth Logic */
         .top-strip { 
             width: 100%; 
-            height: 44px; /* Slightly taller for bigger text */
+            height: 44px; 
             font-family: 'Roboto Mono', monospace; 
             border: 1px solid #111; 
             border-radius: 4px; 
@@ -65,7 +64,6 @@
         .warning-strip { background: transparent; border-color: rgba(255,0,0,0.3); }
         .announce-strip { background: transparent; border-color: #222; }
 
-        /* Smooth Scroll Keyframes */
         @keyframes scrollText {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -80,37 +78,37 @@
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         .widget-container { display: flex; gap: 25px; width: 100%; max-width: 1200px; justify-content: center; margin-top: 10px; }
         .widget { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 0px; /* gap 0 petti margin-bottom vaadutunnam auto-adjust kosam */
-    width: 100%; 
-    align-items: center; 
-}
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0px; 
+            width: 100%; 
+            align-items: center; 
+        }
 
         .ad-slot { 
-    width: 100%; 
-    max-width: 400px; 
-    height: 55px; /* default height */
-    background: #000; 
-    border: 1px dashed #222; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-family: 'Roboto Mono'; 
-    font-size: 10px; 
-    color: #333; 
-    border-radius: 4px;
-    margin-bottom: 12px; /* Containers madhya gap */
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
+            width: 100%; 
+            max-width: 400px; 
+            height: 55px; 
+            background: #000; 
+            border: 1px dashed #222; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-family: 'Roboto Mono'; 
+            font-size: 10px; 
+            color: #333; 
+            border-radius: 4px;
+            margin-bottom: 12px; 
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-/* Deenivalla container hide ayinappudu space migaladu */
-.ad-slot[style*="display: none"] {
-    margin-bottom: 0 !important;
-    padding: 0 !important;
-}
+        .ad-slot[style*="display: none"] {
+            margin-bottom: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+        }
 
         .ruthless-select { 
             width: 100%; max-width: 400px; padding: 16px; background: var(--panel); border: 1px solid #222; 
@@ -135,7 +133,6 @@
             .widget, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
         }
 
-        /* SWAL POPUP CUSTOM */
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
@@ -167,33 +164,39 @@
     <div class="page-content">
         <div class="widget-container">
             <div class="widget">
-                <div class="ad-slot">AD SLOT 1</div>
-                <div class="ad-slot">AD SLOT 2</div>
+                <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
+                <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
                     <option value="QUOTEX">QUOTEX</option>
                     <option value="TOXA">TOXA</option>
                 </select>
+                
                 <div class="display-box" id="sigScreen">
                     <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
                 </div>
-                <div class="ad-slot">AD SLOT 3</div>
-                <div class="ad-slot">AD SLOT 4</div>
+                
+                <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
+                <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
             </div>
 
             <div class="widget">
-                <div class="ad-slot">AD SLOT 7</div>
-                <div class="ad-slot">AD SLOT 8</div>
+                <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
+                <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
                     <option value="MONEY_MANAGEMENT">MONEY MANAGEMENT</option>
                     <option value="COMPOUNDING_CALCULATOR">COMPOUNDING CALCULATOR</option>
                 </select>
+                
                 <div class="display-box" id="toolScreen">
                     <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
                 </div>
-                <div class="ad-slot">AD SLOT 5</div>
-                <div class="ad-slot">AD SLOT 6</div>
+                
+                <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
+                <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
             </div>
         </div>
     </div>
@@ -213,7 +216,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // 1. FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
             authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -227,51 +229,42 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. SMOOTH SCROLL HANDLER
         function applySmoothScroll(containerId, text, speed, color) {
             const container = document.getElementById(containerId);
             if (!container) return;
-
             container.innerHTML = "";
             container.style.color = color;
-            container.style.fontSize = "20px"; // Bigger text
+            container.style.fontSize = "20px";
             container.style.fontWeight = "900";
             container.style.display = "flex";
             container.style.overflow = "hidden";
             container.style.whiteSpace = "nowrap";
-
             const spd = parseInt(speed) || 0;
-
             if (spd === 0) {
                 container.style.justifyContent = "center";
                 container.innerHTML = `<span class="scroll-item">${text}</span>`;
             } else {
                 container.style.justifyContent = "flex-start";
-                const duration = 35 / spd; // Dynamic speed duration
+                const duration = 35 / spd;
                 container.innerHTML = `
                     <div style="display: flex; animation: scrollText ${duration}s linear infinite;">
                         <span class="scroll-item" style="padding-right: 80px;">${text}</span>
                         <span class="scroll-item" style="padding-right: 80px;">${text}</span>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
-        // 3. FIREBASE LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
-            // Giveaway Sync
             db.ref('site_settings/giveaway').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
             });
 
-            // Warning Note Sync
             db.ref('site_settings/warning_note').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
             });
 
-            // Global Settings (Social Links etc)
             db.ref('site_settings').on('value', (snapshot) => {
                 const settings = snapshot.val() || {};
                 const links = settings.socials || {};
@@ -283,9 +276,39 @@
                     }
                 });
             });
+
+            // LIVE ADS SYNC LOGIC
+            db.ref('site_settings/ads').on('value', (snapshot) => {
+                const ads = snapshot.val();
+                if (!ads) return;
+                for (let i = 1; i <= 8; i++) {
+                    const adId = `adSlot${i}`;
+                    const adData = ads[adId];
+                    const adElement = document.getElementById(adId);
+                    if (adElement && adData) {
+                        if (adData.visible === false) {
+                            adElement.style.display = "none";
+                        } else {
+                            adElement.style.display = "flex";
+                            adElement.style.width = adData.width || "100%";
+                            adElement.style.height = adData.height || "50px";
+                            if (adElement.getAttribute('data-snippet') !== adData.snippet) {
+                                adElement.innerHTML = adData.snippet;
+                                adElement.setAttribute('data-snippet', adData.snippet);
+                                const scripts = adElement.getElementsByTagName('script');
+                                for (let s of scripts) {
+                                    const newScript = document.createElement('script');
+                                    if (s.src) newScript.src = s.src;
+                                    newScript.textContent = s.textContent;
+                                    s.parentNode.replaceChild(newScript, s);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         });
 
-        // 4. ANALYTICS & STATS
         const today = new Date().toISOString().split('T')[0];
         const statsRef = db.ref(`stats/${today}`);
         const myStatusRef = db.ref('presence').push();
@@ -303,7 +326,6 @@
             }
         });
 
-        // 5. ADMIN LOGIN
         function adminLogin() {
             Swal.fire({
                 title: 'Ruthless Access',
@@ -319,53 +341,12 @@
             });
         }
 
-        // Dropdown Persistence
         document.getElementById('sigSelect').addEventListener('change', (e) => localStorage.setItem('last_sig', e.target.value));
         document.getElementById('toolSelect').addEventListener('change', (e) => localStorage.setItem('last_tool', e.target.value));
         window.onload = () => {
             document.getElementById('sigSelect').value = localStorage.getItem('last_sig') || "";
             document.getElementById('toolSelect').value = localStorage.getItem('last_tool') || "";
         };
-
-        // --- LIVE ADS LISTENER & AUTO-ADJUST ---
-db.ref('site_settings/ads').on('value', (snapshot) => {
-    const ads = snapshot.val();
-    if (!ads) return;
-
-    for (let i = 1; i <= 8; i++) {
-        const adId = `adSlot${i}`;
-        const adData = ads[adId];
-        const adElement = document.getElementById(adId);
-
-        if (adElement && adData) {
-            if (adData.visible === false) {
-                // HIDE: Removes space entirely, elements auto-adjust
-                adElement.style.display = "none"; 
-            } else {
-                // SHOW: Restore visibility and layout
-                adElement.style.display = "flex";
-                adElement.style.width = adData.width || "100%";
-                adElement.style.height = adData.height || "50px";
-                
-                // Load Snippet (Only if changed to avoid refreshing same ad)
-                if (adElement.getAttribute('data-snippet') !== adData.snippet) {
-                    adElement.innerHTML = adData.snippet;
-                    adElement.setAttribute('data-snippet', adData.snippet);
-                    
-                    // Re-run any scripts in the snippet
-                    const scripts = adElement.getElementsByTagName('script');
-                    for (let s of scripts) {
-                        const newScript = document.createElement('script');
-                        if (s.src) newScript.src = s.src;
-                        newScript.textContent = s.textContent;
-                        s.parentNode.replaceChild(newScript, s);
-                    }
-                }
-            }
-        }
-    }
-});
-        
-  </script>
+    </script>
 </body>
 </html>
