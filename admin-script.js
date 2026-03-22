@@ -412,19 +412,42 @@ function renderWarningNoteModule() {
 }
 
 function publishWarningToCloud() {
+    // 1. Get values from UI
+    const textVal = document.getElementById('noteText').value;
+    const colorVal = document.getElementById('noteColor').value;
+    const speedVal = document.getElementById('noteSpeed').value;
+
     const data = {
-        text: document.getElementById('noteText').value,
-        color: document.getElementById('noteColor').value,
-        speed: parseInt(document.getElementById('noteSpeed').value)
+        text: textVal,
+        color: colorVal,
+        speed: parseInt(speedVal)
     };
 
+    console.log("Publishing Data:", data); // Check in F12 Console
+
     if (typeof db !== 'undefined') {
+        // Path should be EXACT: site_settings/warning_note
         db.ref('site_settings/warning_note').set(data)
         .then(() => {
-            // Local storage lo kuda backup unchutunnam (UI refresh kosam)
+            console.log("Cloud Save Success!");
             localStorage.setItem('warning_data', JSON.stringify(data));
-            Swal.fire({ icon: 'success', title: 'LIVE NOW', text: 'Note updated with kotha color & speed!', background: '#0a0a0a', color: '#fff' });
+            
+            // SWAL Success Popup
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'LIVE NOW', 
+                text: 'Warning Note updated successfully!', 
+                background: '#0a0a0a', 
+                color: '#fff', 
+                confirmButtonColor: '#ff0000' 
+            });
+        })
+        .catch(err => {
+            console.error("Firebase Set Error:", err);
+            alert("Error: " + err.message);
         });
+    } else {
+        alert("Database not connected! Check your Firebase config.");
     }
 }
 
