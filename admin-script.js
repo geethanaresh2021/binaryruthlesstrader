@@ -9,18 +9,19 @@ window.onload = () => {
 };
 
 // --- CORE NAVIGATION LOGIC ---
+// --- COMPLETE LOAD CONTENT FUNCTION ---
 function loadContent(moduleName) {
     if (!moduleName) return;
 
-    // 1. Save to LocalStorage (Persistence for Refresh)
+    // 1. Save to LocalStorage (Persistence)
     localStorage.setItem('activeModule', moduleName);
     activeModule = moduleName;
 
     // 2. Update Sidebar UI (Active State)
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        // Button text nundi icon/spaces ni trim chesi check chestundi
         const btnText = btn.innerText.trim();
-        if (btnText === moduleName) {
+        // Icon unna kuda text match ayyeలా 'includes' vaduthunnam
+        if (btnText.includes(moduleName)) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
@@ -36,11 +37,13 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // 4. Module Switching Logic (All 16 Modules)
+    // --- CRITICAL: Clear previous content before loading new module ---
+    mainDisplay.innerHTML = ''; 
+
+    // 4. Module Switching Logic
     switch (moduleName) {
         case 'Views':
             renderViewsModule();
-            // Start real-time listener for counts
             if(window.listenToLiveStats) window.listenToLiveStats();
             break;
 
@@ -50,6 +53,35 @@ function loadContent(moduleName) {
                     <label class="input-label">Estimated Revenue (INR)</label>
                     <h1 style="color:#00ffcc; font-size:40px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
                     <button class="action-btn" style="margin-top:20px;" onclick="saveLogic()">SYNC WITH ADS</button>
+                </div>`;
+            break;
+
+        case 'Ads Network':
+            // Ads Network Verification UI
+            mainDisplay.innerHTML = `
+                <div class="admin-card ruthless-card">
+                    <h3 style="color:var(--red); letter-spacing:1px;"><i class="fas fa-shield-check"></i> ADS NETWORK VERIFICATION</h3>
+                    <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Select method and enter the verification code provided by your Ad Network.</p>
+                    
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <label class="input-label">VERIFICATION METHOD</label>
+                        <select id="verifyMethod" class="input-box" style="background:#080808; color:#00ffcc;" onchange="updatePlaceholder()">
+                            <option value="meta">Meta Tag Verification</option>
+                            <option value="ads_txt">ads.txt File Content</option>
+                            <option value="js_tag">JavaScript Tag / Auto-verify</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <label id="inputLabel" class="input-label">VERIFICATION CODE / META TAG</label>
+                        <textarea id="verifyContent" class="input-box" 
+                            placeholder="Paste your code here..."
+                            style="height: 120px; font-family: 'Roboto Mono'; color: #00ffcc; font-weight: bold;"></textarea>
+                    </div>
+
+                    <button class="action-btn" onclick="processVerification()">
+                        <i class="fas fa-check-circle"></i> VERIFY & ACTIVATE WEBSITE
+                    </button>
                 </div>`;
             break;
 
@@ -64,17 +96,28 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        case 'Tools Manager':
+        case 'Social Media':
+            renderSocialMediaModule();
+            break;
+
+        case 'Firebase':
+            renderFirebaseModule();
+            break;
+
+        case 'Giveaway Winner':
+            renderGiveawayModule();
+            break;
+
+        case 'Warning Note':
+            renderWarningNoteModule();
+            break;
+
+        case 'Brand Name':
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <label class="input-label">Active Tool ID</label>
-                    <input type="text" class="input-box" placeholder="Tool Name">
-                    <label class="input-label">Visibility</label>
-                    <select class="input-box" style="background:#080808; color:#00ffcc;">
-                        <option>VISIBLE</option>
-                        <option>HIDDEN</option>
-                    </select>
-                    <button class="action-btn" onclick="saveLogic()">SAVE TOOLS</button>
+                    <label class="input-label">Header Title</label>
+                    <input type="text" id="brandTitle" class="input-box" value="BINARY RUTHLESS TRADER">
+                    <button class="action-btn" onclick="saveBrandName()">UPDATE BRAND</button>
                 </div>`;
             break;
 
@@ -89,40 +132,15 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        // --- 1. ADS NETWORK CONTENT LOAD ---
-case 'Ads Network':
-    mainDisplay.innerHTML = `
-        <div class="admin-card ruthless-card">
-            <h3><i class="fas fa-shield-check"></i> ADS NETWORK VERIFICATION</h3>
-            <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Select method and enter the verification code provided by your Ad Network.</p>
-            
-            <div class="input-group">
-                <label>VERIFICATION METHOD</label>
-                <select id="verifyMethod" class="ruthless-select" onchange="updatePlaceholder()">
-                    <option value="meta">Meta Tag Verification</option>
-                    <option value="html">HTML File Upload (Simulated)</option>
-                    <option value="ads_txt">ads.txt File Content</option>
-                    <option value="js_tag">JavaScript Tag / Auto-verify</option>
-                    <option value="plugin">Plugin-based (Generic)</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label id="inputLabel">VERIFICATION CODE / META TAG</label>
-                <textarea id="verifyContent" class="ruthless-input" 
-                    placeholder="Paste your code here..."
-                    style="height: 120px; font-family: 'Roboto Mono'; color: #00ffcc; font-weight: bold;"></textarea>
-            </div>
-
-            <button class="action-btn" onclick="processVerification()">
-                <i class="fas fa-check-circle"></i> VERIFY & ACTIVATE WEBSITE
-            </button>
-        </div>
-    `;
-    break;
-
-
-
+        default:
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <h2 style="color:var(--red)">${moduleName}</h2>
+                    <p style="color:#666;">Module configuration not found or under maintenance.</p>
+                </div>`;
+            break;
+    }
+}
 // --- ADS VERIFICATION MODULE (FIREBASE ONLY) ---
 function renderAdsModule() {
     const mainDisplay = document.getElementById('mainDisplay');
