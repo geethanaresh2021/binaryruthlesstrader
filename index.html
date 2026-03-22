@@ -61,7 +61,14 @@
     white-space: nowrap;
 }
         .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
-        .announce-strip { background: transparent; color: #fff; border-color: #222; }
+        .announce-strip { 
+    background: transparent; 
+    color: #fff; 
+    border-color: #222; 
+    height: 40px; 
+    line-height: 40px; 
+    overflow: hidden;
+}
 
         /* --- MAIN CONTENT --- */
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -192,8 +199,7 @@ db.ref('site_settings').on('value', (snapshot) => {
     console.log("Ruthless Cloud Sync:", settings);
 
     // --- WARNING NOTE SYNC ---
-// Firebase listener lopala...
-// db.ref('site_settings').on('value', ...) lopala idi replace cheyyi
+
 // db.ref('site_settings').on('value', ...) lopala idi replace cheyyi
 const warningStrip = document.getElementById('warningStrip');
 if (warningStrip && settings.warning_note) {
@@ -216,17 +222,24 @@ if (warningStrip && settings.warning_note) {
         warningStrip.innerHTML = `<marquee key="${key}" scrollamount="${speed}" style="width:100%; display:block;">${text}</marquee>`;
     }
 }
-// --- GIVEAWAY SYNC ---
+// --- GIVEAWAY SYNC (ANNOUNCE STRIP) ---
 const announceStrip = document.getElementById('announceStrip');
 if (announceStrip && settings.giveaway) {
     const gv = settings.giveaway;
     const gvSpeed = parseInt(gv.speed) || 0;
-    const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
-    
+    const gvText = gv.winner || ""; // Nuvvu ichina text mathrame vastundi
+
     if (gvSpeed === 0) {
-        announceStrip.innerHTML = `<div style="width:100%; text-align:center;">${gvContent}</div>`;
+        // SPEED 0: Exactly Center
+        announceStrip.style.display = "flex";
+        announceStrip.style.justifyContent = "center";
+        announceStrip.style.alignItems = "center";
+        announceStrip.innerHTML = `<span>${gvText}</span>`;
     } else {
-        announceStrip.innerHTML = `<marquee scrollamount="${gvSpeed}" style="width:100%; display:block;">${gvContent}</marquee>`;
+        // SPEED > 0: Force Scroll Restart
+        const gvKey = Date.now(); 
+        announceStrip.style.display = "block";
+        announceStrip.innerHTML = `<marquee key="${gvKey}" scrollamount="${gvSpeed}" style="width:100%; display:block;">${gvText}</marquee>`;
     }
 }
     // --- SOCIAL LINKS SYNC ---
