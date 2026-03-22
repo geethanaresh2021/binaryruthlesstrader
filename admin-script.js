@@ -9,26 +9,26 @@ window.onload = () => {
 };
 
 // --- CORE NAVIGATION LOGIC ---
-// --- COMPLETE LOAD CONTENT FUNCTION ---
+// --- UPDATED LOAD CONTENT FUNCTION (MERGED & FIXED) ---
 function loadContent(moduleName) {
     if (!moduleName) return;
 
-    // 1. Save to LocalStorage (Persistence)
+    // 1. Save state for refresh
     localStorage.setItem('activeModule', moduleName);
     activeModule = moduleName;
 
-    // 2. Update Sidebar UI (Active State)
+    // 2. Sidebar Active UI Update
     document.querySelectorAll('.nav-btn').forEach(btn => {
         const btnText = btn.innerText.trim();
-        // Icon unna kuda text match ayyeలా 'includes' vaduthunnam
+        // Includes vaadithe icon unna kuda text match avthundi
         if (btnText.includes(moduleName)) {
             btn.classList.add('active');
         } else {
-            btn.classList.remove('active');
+            btn.classList.remove('remove');
         }
     });
 
-    // 3. Update Panel Header
+    // 3. Panel Header Update
     const panelHeader = document.getElementById('panelHeader');
     if (panelHeader) {
         panelHeader.innerHTML = `<h1>${moduleName}</h1><p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS.</p>`;
@@ -37,10 +37,10 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // --- CRITICAL: Clear previous content before loading new module ---
+    // --- CLEAR PREVIOUS CONTENT ---
     mainDisplay.innerHTML = ''; 
 
-    // 4. Module Switching Logic
+    // 4. Switching Logic for all modules
     switch (moduleName) {
         case 'Views':
             renderViewsModule();
@@ -51,37 +51,28 @@ function loadContent(moduleName) {
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <label class="input-label">Estimated Revenue (INR)</label>
-                    <h1 style="color:#00ffcc; font-size:40px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
+                    <h1 style="color:#00ffcc; font-size:42px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
                     <button class="action-btn" style="margin-top:20px;" onclick="saveLogic()">SYNC WITH ADS</button>
                 </div>`;
             break;
 
         case 'Ads Network':
-            // Ads Network Verification UI
             mainDisplay.innerHTML = `
-                <div class="admin-card ruthless-card">
-                    <h3 style="color:var(--red); letter-spacing:1px;"><i class="fas fa-shield-check"></i> ADS NETWORK VERIFICATION</h3>
-                    <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Select method and enter the verification code provided by your Ad Network.</p>
-                    
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label class="input-label">VERIFICATION METHOD</label>
-                        <select id="verifyMethod" class="input-box" style="background:#080808; color:#00ffcc;" onchange="updatePlaceholder()">
+                <div class="module-card">
+                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">ADS VERIFICATION</h2>
+                    <div class="input-group">
+                        <label class="input-label">METHOD</label>
+                        <select id="verifyMethod" class="input-box" onchange="updatePlaceholder()" style="background:#080808; color:#00ffcc;">
                             <option value="meta">Meta Tag Verification</option>
-                            <option value="ads_txt">ads.txt File Content</option>
-                            <option value="js_tag">JavaScript Tag / Auto-verify</option>
+                            <option value="ads_txt">ads.txt Content</option>
+                            <option value="js_tag">JavaScript Tag</option>
                         </select>
                     </div>
-
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label id="inputLabel" class="input-label">VERIFICATION CODE / META TAG</label>
-                        <textarea id="verifyContent" class="input-box" 
-                            placeholder="Paste your code here..."
-                            style="height: 120px; font-family: 'Roboto Mono'; color: #00ffcc; font-weight: bold;"></textarea>
+                    <div class="input-group" style="margin-top:15px;">
+                        <label id="inputLabel" class="input-label">VERIFICATION CODE</label>
+                        <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste code here..." style="color:#00ffcc; font-weight:bold;"></textarea>
                     </div>
-
-                    <button class="action-btn" onclick="processVerification()">
-                        <i class="fas fa-check-circle"></i> VERIFY & ACTIVATE WEBSITE
-                    </button>
+                    <button class="action-btn" onclick="processVerification()">ACTIVATE ADS</button>
                 </div>`;
             break;
 
@@ -126,18 +117,12 @@ function loadContent(moduleName) {
                 <div class="module-card">
                     <label class="input-label">Signal Source URL</label>
                     <input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com">
-                    <label class="input-label">Platform</label>
-                    <input type="text" id="sigPlat" class="input-box" value="QUOTEX">
                     <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
                 </div>`;
             break;
 
         default:
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <h2 style="color:var(--red)">${moduleName}</h2>
-                    <p style="color:#666;">Module configuration not found or under maintenance.</p>
-                </div>`;
+            mainDisplay.innerHTML = `<div class="module-card"><h2>${moduleName}</h2><p>Module under development.</p></div>`;
             break;
     }
 }
