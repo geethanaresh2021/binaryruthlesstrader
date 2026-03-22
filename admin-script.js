@@ -647,3 +647,76 @@ async function processVerification(methodId) {
         Swal.fire({ icon: 'error', title: 'SYNC FAILED', text: error.message, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
     }
 }
+// Ad Slots generation and fetching
+function loadAdSlots() {
+    const adList = document.getElementById('ad-list');
+    adList.innerHTML = '';
+    for(let i=1; i<=8; i++) {
+        const div = document.createElement('div');
+        div.style = "background:#000; border:1px solid #111; padding:15px; margin-bottom:10px;";
+        div.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <span style="font-family:'Roboto Mono'; color:#00ffcc;" id="name-display-${i}">AD CONTAINER ${i}</span>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="showManage(${i})" style="color:#0088ff; background:none; border:1px solid #333; cursor:pointer; padding:5px;">MANAGE</button>
+                    <button onclick="updateStatus(${i}, false)" style="color:#ffaa00; background:none; border:1px solid #333; cursor:pointer; padding:5px;">HIDE</button>
+                    <button onclick="updateStatus(${i}, true)" style="color:#00ff00; background:none; border:1px solid #333; cursor:pointer; padding:5px;">VISIBLE</button>
+                </div>
+            </div>
+            <div id="manage-ui-${i}" style="display:none; margin-top:15px; border-top:1px solid #222; padding-top:10px;">
+                <input type="text" id="name-${i}" placeholder="Container Name" style="width:100%; margin-bottom:10px;">
+                <textarea id="code-${i}" rows="3" placeholder="Paste Ad Snippet Here" style="width:100%; margin-bottom:10px; background:#000; color:#00ffcc; border:1px solid #222;"></textarea>
+                <select id="size-${i}" onchange="checkCustom(${i})" style="width:100%; margin-bottom:10px;">
+                    <option value="320x50">320x50</option>
+                    <option value="320x100">320x100</option>
+                    <option value="custom">Custom Size</option>
+                </select>
+                <div id="custom-box-${i}" style="display:none; gap:10px; margin-bottom:10px;">
+                    <input type="number" id="w-${i}" placeholder="Width"> <input type="number" id="h-${i}" placeholder="Height">
+                </div>
+                <button onclick="saveAd(${i})" style="width:100%; background:#ff0000; color:#fff; border:none; padding:10px; cursor:pointer; font-family:'Orbitron';">SAVE</button>
+            </div>
+        `;
+        adList.appendChild(div);
+        fetchAd(i);
+    }
+}
+
+function showManage(i) {
+    const el = document.getElementById(`manage-ui-${i}`);
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function checkCustom(i) {
+    document.getElementById(`custom-box-${i}`).style.display = document.getElementById(`size-${i}`).value === 'custom' ? 'flex' : 'none';
+}
+
+function saveAd(i) {
+    const data = {
+        name: document.getElementById(`name-${i}`).value,
+        code: document.getElementById(`code-${i}`).value,
+        sizeType: document.getElementById(`size-${i}`).value,
+        w: document.getElementById(`w-${i}`).value || 320,
+        h: document.getElementById(`h-${i}`).value || 50,
+        visible: true
+    };
+    db.ref(`site_settings/ad_containers/slot${i}`).set(data).then(() => alert("Saved!"));
+}
+
+function updateStatus(i, status) {
+    db.ref(`site_settings/ad_containers/slot${i}`).update({ visible: status }).then(() => alert(status ? "Visible" : "Hidden"));
+}
+
+function fetchAd(i) {
+    db.ref(`site_settings/ad_containers/slot${i}`).once('value', (s) => {
+        const d = s.val();
+        if(d) {
+            document.getElementById(`name-${i}`).value = d.name || '';
+            document.getElementById(`name-display-${i}`).innerText = d.name || `AD CONTAINER ${i}`;
+            document.getElementById(`code-${i}`).value = d.code || '';
+        }
+    });
+}
+
+// Initial Call
+loadAdSlots();
