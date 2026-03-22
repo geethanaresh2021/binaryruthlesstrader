@@ -16,7 +16,6 @@ function loadContent(moduleName) {
 
     // 2. Update Sidebar UI (Active State)
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        // Button text nundi icon/spaces ni trim chesi check chestundi
         const btnText = btn.innerText.trim();
         if (btnText === moduleName) {
             btn.classList.add('active');
@@ -34,11 +33,10 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // 4. Module Switching Logic (All 16 Modules)
+    // 4. Module Switching Logic
     switch (moduleName) {
         case 'Views':
             renderViewsModule();
-            // Start real-time listener for counts
             if(window.listenToLiveStats) window.listenToLiveStats();
             break;
 
@@ -48,17 +46,6 @@ function loadContent(moduleName) {
                     <label class="input-label">Estimated Revenue (INR)</label>
                     <h1 style="color:#00ffcc; font-size:40px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
                     <button class="action-btn" style="margin-top:20px;" onclick="saveLogic()">SYNC WITH ADS</button>
-                </div>`;
-            break;
-
-        case 'ST Resize':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Main Container Width (px)</label>
-                    <input type="text" id="screenWidth" class="input-box" value="1280">
-                    <label class="input-label">Disable Zoom (0/1)</label>
-                    <input type="number" id="zoomDisable" class="input-box" value="1">
-                    <button class="action-btn" onclick="saveSTResize()">APPLY LAYOUT</button>
                 </div>`;
             break;
 
@@ -97,20 +84,57 @@ function loadContent(moduleName) {
             break;
 
         case 'Ads Containers':
+            // Kotha 8 Containers List & Management Logic
+            let adsListHtml = '';
+            for (let i = 1; i <= 8; i++) {
+                adsListHtml += `
+                    <button class="nav-btn" style="width:100%; margin-bottom:5px; justify-content: space-between;" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
+                        <span><i class="fas fa-box"></i> CONTAINER ${i}</span>
+                        <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.5;"></i>
+                    </button>`;
+            }
+
             mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Refresh Interval (Seconds)</label>
-                    <input type="number" id="adRefresh" class="input-box" value="30">
-                    <label class="input-label">Ad Unit Script (6 Containers)</label>
-                    <textarea id="adScript" class="input-box" rows="4" placeholder="Paste Adsterra/Google scripts here..."></textarea>
-                    <button class="action-btn" onclick="saveAdsConfig()">UPDATE ADS</button>
+                <div class="module-card" style="display:flex; flex-direction:column; gap:20px;">
+                    <div id="adsListGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        ${adsListHtml}
+                    </div>
+
+                    <div id="adEditorPanel" style="display:none; border-top: 1px solid #222; pt: 20px; margin-top: 10px;">
+                        <h3 id="editingAdTitle" style="color:var(--red); font-family:'Orbitron'; font-size:14px; margin-bottom:15px;"></h3>
+                        <input type="hidden" id="targetAdId">
+
+                        <div style="display:flex; gap:10px; margin-bottom:15px;">
+                            <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; font-size:10px;">VISIBLE</button>
+                            <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; font-size:10px;">HIDE</button>
+                        </div>
+
+                        <label class="input-label">AD NAME (INTERNAL)</label>
+                        <input type="text" id="adNickname" class="input-box">
+
+                        <label class="input-label">AD SNIPPET (CODE)</label>
+                        <textarea id="adSnippet" class="input-box" rows="4" style="color:#00ffcc; font-family:'Roboto Mono'; font-size:11px;"></textarea>
+
+                        <label class="input-label">SELECT SIZE</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:15px;">
+                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="setPresetSize('320px','50px')">320x50</button>
+                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="setPresetSize('320px','100px')">320x100</button>
+                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="enableCustomSize()">CUSTOM</button>
+                        </div>
+
+                        <div id="customSizeInputs" style="display:none; gap:10px; margin-bottom:15px;">
+                            <input type="text" id="customWidth" class="input-box" placeholder="Width (px)">
+                            <input type="text" id="customHeight" class="input-box" placeholder="Height (px)">
+                        </div>
+
+                        <button class="publish-btn" onclick="saveAdSettings()" style="width:100%; margin-top:10px; background:var(--red);">SAVE & APPLY AD</button>
+                    </div>
                 </div>`;
             break;
 
         case 'Social Media':
-    // Social links kosam kuda sync function create cheskovachu
-    renderSocialMediaModule();
-    break;
+            renderSocialMediaModule();
+            break;
 
         case 'Brand Name':
             mainDisplay.innerHTML = `
@@ -144,9 +168,8 @@ function loadContent(moduleName) {
             break;
 
         case 'Giveaway Winner':
-    // Direct ga render cheyyakunda, sync chesi render chestham
-    syncAdminDataFromCloud(); 
-    break;
+            syncAdminDataFromCloud(); 
+            break;
 
         case 'Firebase':
             renderFirebaseModule();
@@ -173,9 +196,6 @@ function loadContent(moduleName) {
             break;
     }
 }
-
-// --- MODULE SPECIFIC RENDERS ---
-
 // --- 1. FIREBASE MODULE RENDERING ---
 async function syncAdminDataFromCloud() {
     if (typeof db === 'undefined') return;
