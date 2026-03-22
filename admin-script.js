@@ -408,7 +408,35 @@ function saveAdsConfig() { saveLogic(); }
 function saveSocialLinks() { saveLogic(); }
 function saveBrandName() { saveLogic(); }
 function saveJoinSection() { saveLogic(); }
-function saveWarningNote() { saveLogic(); }
+function saveWarningNote() {
+    const noteText = document.getElementById('noteEditor').value.trim();
+    
+    if (!noteText) {
+        Swal.fire({ icon: 'error', title: 'EMPTY NOTE', text: 'Please enter some text!', background: '#0a0a0a', color: '#fff' });
+        return;
+    }
+
+    if (typeof db !== 'undefined') {
+        // Firebase database lo 'warning_note' node ki data pampistunnam
+        db.ref('site_settings/warning_note').set(noteText)
+        .then(() => {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'PUBLISHED', 
+                text: 'Warning Note updated on Home Page!', 
+                background: '#0a0a0a', 
+                color: '#fff', 
+                confirmButtonColor: '#ff0000' 
+            });
+        })
+        .catch(err => {
+            console.error("Firebase Error:", err);
+            Swal.fire({ icon: 'error', title: 'CLOUD ERROR', text: err.message });
+        });
+    } else {
+        Swal.fire({ icon: 'error', title: 'CONNECTION ERROR', text: 'Firebase is not initialized!' });
+    }
+}
 function saveGiveawayToCloud() {
     const win = document.getElementById('winnerName').value;
     const spd = parseInt(document.getElementById('selectedSpeed').value);
