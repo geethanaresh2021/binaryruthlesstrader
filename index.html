@@ -44,15 +44,17 @@
 
         /* SOCIAL MEDIA BUTTONS */
         .social-row { display: flex; gap: 30px; margin-bottom: 25px; }
-        .social-row a { color: #fff; font-size: 28px; transition: 0.3s; }
+        .social-row a { color: #fff; font-size: 28px; transition: 0.3s; text-decoration: none; }
         .social-row a:hover { color: var(--red); transform: scale(1.2); text-shadow: var(--neon); }
 
-        /* --- STRIPS BELOW SOCIAL --- */
+        /* --- STRIPS --- */
         .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 0 10px; }
         .top-strip { 
             width: 100%; font-family: 'Roboto Mono'; font-size: 11px; 
             text-transform: uppercase; padding: 12px 0; 
             border: 1px solid #111; border-radius: 4px; text-align: center;
+            min-height: 40px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
         .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
         .announce-strip { background: transparent; color: #fff; border-color: #222; }
@@ -62,20 +64,8 @@
         .widget-container { display: flex; gap: 25px; width: 100%; max-width: 1200px; justify-content: center; margin-top: 10px; }
         .widget { flex: 1; display: flex; flex-direction: column; gap: 12px; width: 100%; align-items: center; }
 
-        /* AD SLOTS (Full Width Mobile, Max 400 Desktop) */
         .ad-slot { width: 100%; max-width: 400px; height: 55px; background: #000; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 10px; color: #333; border-radius: 4px; }
 
-        /* Style tag lo idhi add cheyyi */
-#warningStrip {
-    display: block !important;
-    min-height: 20px;
-    width: 100%;
-    color: #ff0000; /* Default color */
-    font-family: 'Roboto Mono', monospace;
-    overflow: hidden;
-}
-
-        /* DROPDOWN & DISPLAY */
         .ruthless-select { 
             width: 100%; max-width: 400px; padding: 16px; background: var(--panel); border: 1px solid #222; 
             color: #fff; font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
@@ -83,74 +73,65 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
             background-repeat: no-repeat; background-position: right 15px center; 
         }
-        .ruthless-select:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.2); }
 
         .display-box { width: 100%; max-width: 400px; height: 420px; background: #000; border: 2px solid var(--red); box-shadow: var(--neon); border-radius: 8px; overflow-y: auto; position: relative; }
 
-        /* --- FOOTER --- */
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
         .footer-links a { color: #555; text-decoration: none; transition: 0.3s; }
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* MOBILE MODE FIXES */
         @media (max-width: 768px) {
             .widget-container { flex-direction: column; align-items: center; }
             .brand-img { width: 320px; }
             .header { padding-top: 50px; }
             .widget, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
-            .footer-links { gap: 15px; font-size: 10px; }
         }
 
-        /* STYLISH LOGIN POPUP */
+        /* SWAL POPUP CUSTOM */
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
-        .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; letter-spacing: 1px; }
-        .swal2-input { background: #000 !important; border: 1px solid #222 !important; color: #00ffcc !important; font-family: 'Roboto Mono' !important; font-weight: bold !important; text-align: center !important; }
-        .swal2-confirm { background: var(--red) !important; font-family: 'Orbitron' !important; font-weight: 900 !important; border-radius: 4px !important; }
+        .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
+        .swal2-input { background: #000 !important; border: 1px solid #222 !important; color: #00ffcc !important; text-align: center !important; }
+        .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <button class="admin-btn" onclick="adminLogin()">ADMIN</button>
-        
         <img src="brand-name.png" alt="RUTHLESS TRADER" class="brand-img">
         
         <div class="social-row">
-            <a href="#"><i class="fab fa-telegram"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#" id="link-Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="#" id="link-Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" id="link-YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" id="link-Facebook"><i class="fab fa-facebook"></i></a>
         </div>
 
         <div class="strip-container">
-    <div class="top-strip warning-strip" id="warningStrip">
-        <marquee scrollamount="5">INITIALIZING SYSTEM...</marquee>
-    </div>
-    <div class="top-strip announce-strip" id="announceStrip">
-        <marquee scrollamount="4">LOADING ANNOUNCEMENTS...</marquee>
-    </div>
-</div>
+            <div class="top-strip warning-strip" id="warningStrip">
+                <marquee scrollamount="5">INITIALIZING SYSTEM...</marquee>
+            </div>
+            <div class="top-strip announce-strip" id="announceStrip">
+                <marquee scrollamount="4">LOADING ANNOUNCEMENTS...</marquee>
+            </div>
+        </div>
     </header>
 
     <div class="page-content">
         <div class="widget-container">
-            
             <div class="widget">
                 <div class="ad-slot">AD SLOT 1</div>
                 <div class="ad-slot">AD SLOT 2</div>
-
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
                     <option value="QUOTEX">QUOTEX</option>
                     <option value="TOXA">TOXA</option>
                 </select>
-                
                 <div class="display-box" id="sigScreen">
                     <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
                 </div>
-
                 <div class="ad-slot">AD SLOT 3</div>
                 <div class="ad-slot">AD SLOT 4</div>
             </div>
@@ -158,21 +139,17 @@
             <div class="widget">
                 <div class="ad-slot">AD SLOT 7</div>
                 <div class="ad-slot">AD SLOT 8</div>
-
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
                     <option value="MONEY_MANAGEMENT">MONEY MANAGEMENT</option>
                     <option value="COMPOUNDING_CALCULATOR">COMPOUNDING CALCULATOR</option>
                 </select>
-                
                 <div class="display-box" id="toolScreen">
                     <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
                 </div>
-
                 <div class="ad-slot">AD SLOT 5</div>
                 <div class="ad-slot">AD SLOT 6</div>
             </div>
-
         </div>
     </div>
 
@@ -183,83 +160,72 @@
             <a href="#">PRIVACY</a>
             <a href="#">TERMS</a>
         </div>
-        <div class="trademark">
-            BINARY RUTHLESS TRADER™ | ALL RIGHTS RESERVED © 2026
-        </div>
+        <div class="trademark">BINARY RUTHLESS TRADER™ | ALL RIGHTS RESERVED © 2026</div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const sigSelect = document.getElementById('sigSelect');
-        const toolSelect = document.getElementById('toolSelect');
-
-        // --- Persistence Logic: Load Selection on Refresh ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const lastSig = localStorage.getItem('ruthless_last_sig');
-            const lastTool = localStorage.getItem('ruthless_last_tool');
-
-            if (lastSig) {
-                sigSelect.value = lastSig;
-            }
-            if (lastTool) {
-                toolSelect.value = lastTool;
-            }
-        });
-
-        // --- Save Selection on Change ---
-        sigSelect.addEventListener('change', (e) => {
-            localStorage.setItem('ruthless_last_sig', e.target.value);
-        });
-
-        toolSelect.addEventListener('change', (e) => {
-            localStorage.setItem('ruthless_last_tool', e.target.value);
-        });
-
-        // --- Admin Stylish Login ---
-        function adminLogin() {
-            Swal.fire({
-                title: 'Ruthless Access',
-                html: 'ENTER ACCESS KEY',
-                input: 'password',
-                showCancelButton: true,
-                confirmButtonText: 'UNLOCK',
-                confirmButtonColor: '#ff0000',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (result.value === "0000") {
-                        window.location.href = "admin.html";
-                    } else {
-                        Swal.fire({ icon: 'error', title: 'ACCESS DENIED', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-                    }
-                }
-            });
-        }
-    </script>
-    <script type="module" src="index-script.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
-<script>
-    // 1. ADMIN PAGE NUNDI SAVED CONFIG NI TECHUKUNTUNNAM
-    const savedConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
+    <script>
+        // 1. FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
+            authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader-26654",
+            storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
+            messagingSenderId: "533209261799",
+            appId: "1:533209261799:web:a398ab21b0f913683ea442"
+        };
 
-    if (savedConfig) {
-        // Firebase Initialize with Dynamic Config
-        if (!firebase.apps.length) {
-            firebase.initializeApp(savedConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. TRACKING LOGIC (As usual)
+        // 2. REAL-TIME CLOUD SYNC
+        db.ref('site_settings').on('value', (snapshot) => {
+            const settings = snapshot.val() || {};
+            console.log("Cloud Data:", settings);
+
+            // Warning Note Logic
+            const warningStrip = document.getElementById('warningStrip');
+            if (warningStrip && settings.warning_note) {
+                const wn = settings.warning_note;
+                warningStrip.style.color = wn.color || "#ff0000";
+                const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
+                warningStrip.innerHTML = parseInt(wn.speed) === 0 
+                    ? `<div style="text-align:center; width:100%;">${content}</div>`
+                    : `<marquee scrollamount="${wn.speed}">${content}</marquee>`;
+            }
+
+            // Giveaway Logic
+            const announceStrip = document.getElementById('announceStrip');
+            if (announceStrip && settings.giveaway) {
+                const gv = settings.giveaway;
+                const content = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
+                announceStrip.innerHTML = parseInt(gv.speed) === 0 
+                    ? `<div style="text-align:center; width:100%;">${content}</div>`
+                    : `<marquee scrollamount="${gv.speed}">${content}</marquee>`;
+            }
+
+            // Social Links Sync
+            const links = settings.socials || {};
+            ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
+                const el = document.getElementById(`link-${platform}`);
+                if (el && links[platform]) {
+                    el.href = links[platform];
+                    el.target = "_blank";
+                }
+            });
+        });
+
+        // 3. ANALYTICS & STATS
         const today = new Date().toISOString().split('T')[0];
         const statsRef = db.ref(`stats/${today}`);
-        
-        // Online Presence
         const myStatusRef = db.ref('presence').push();
-        myStatusRef.set({ online: true });
+        myStatusRef.set({ online: true, last_seen: Date.now() });
         myStatusRef.onDisconnect().remove();
 
-        // Reload-Proof Counts
         window.addEventListener('load', () => {
             if (localStorage.getItem('last_visit') !== today) {
                 statsRef.child('unique').transaction(c => (c || 0) + 1);
@@ -271,155 +237,29 @@
             }
         });
 
-        // Global function for Posts
-        window.updatePostCount = function(type) {
-            statsRef.child(type).transaction(c => (c || 0) + 1);
-        };
-
-        console.log("Firebase Connected Dynamically: ", savedConfig.projectId);
-    } else {
-        console.error("No Firebase Config found! Please connect from Admin Page first.");
-    }
-    // --- SOCIAL MEDIA SYNC LOGIC ---
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. LocalStorage nundi links techukuntundi
-    const savedLinks = JSON.parse(localStorage.getItem('socialLinks') || '{}');
-    
-    // 2. Icons ni vetiki vatiki links thagilistundi
-    // Telegram
-    if (savedLinks['Telegram']) {
-        const tgIcon = document.querySelector('.fa-telegram');
-        if (tgIcon && tgIcon.parentElement) {
-            tgIcon.parentElement.href = savedLinks['Telegram'];
-            tgIcon.parentElement.setAttribute('target', '_blank');
-        }
-    }
-    
-    // YouTube
-    if (savedLinks['YouTube']) {
-        const ytIcon = document.querySelector('.fa-youtube');
-        if (ytIcon && ytIcon.parentElement) {
-            ytIcon.parentElement.href = savedLinks['YouTube'];
-            ytIcon.parentElement.setAttribute('target', '_blank');
-        }
-    }
-
-    // Facebook & Instagram kuda ade vidhanga...
-    if (savedLinks['Facebook']) {
-        const fbIcon = document.querySelector('.fa-facebook');
-        if (fbIcon && fbIcon.parentElement) {
-            fbIcon.parentElement.href = savedLinks['Facebook'];
-            fbIcon.parentElement.setAttribute('target', '_blank');
-        }
-    }
-
-    if (savedLinks['Instagram']) {
-        const igIcon = document.querySelector('.fa-instagram');
-        if (igIcon && igIcon.parentElement) {
-            igIcon.parentElement.href = savedLinks['Instagram'];
-            igIcon.parentElement.setAttribute('target', '_blank');
-        }
-    }
-});
-
-</script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-        authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-        databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
-        projectId: "binary-ruthless-trader-26654",
-        storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-        messagingSenderId: "533209261799",
-        appId: "1:533209261799:web:a398ab21b0f913683ea442"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
-    // --- 1. CLOUD SETTINGS LISTENER (GIVEAWAY & WARNINGS) ---
-    // Index.html lo unna Firebase listener logic motham deentho replace cheyyi
-db.ref('site_settings').on('value', (snapshot) => {
-    const settings = snapshot.val() || {};
-    console.log("Index Received Data:", settings);
-
-    // --- WARNING NOTE SYNC ---
-    const warningStrip = document.getElementById('warningStrip');
-    if (warningStrip) {
-        if (settings.warning_note) {
-            const wn = settings.warning_note;
-            warningStrip.style.color = wn.color || "#ff0000";
-            
-            const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
-            
-            if (parseInt(wn.speed) === 0) {
-                warningStrip.innerHTML = `<div style="text-align:center; width:100%;">${content}</div>`;
-            } else {
-                warningStrip.innerHTML = `<marquee scrollamount="${wn.speed}">${content}</marquee>`;
-            }
-        } else {
-            // Data lekapothe default
-            warningStrip.innerHTML = `<marquee scrollamount="5">STAY RUTHLESS | TRADING SYSTEM ACTIVE</marquee>`;
-        }
-    }
-
-    // --- GIVEAWAY SYNC ---
-    const announceStrip = document.getElementById('announceStrip');
-    if (announceStrip && settings.giveaway) {
-        const gv = settings.giveaway;
-        const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
-        
-        if (parseInt(gv.speed) === 0) {
-            announceStrip.innerHTML = `<div style="text-align:center; width:100%;">${gvContent}</div>`;
-        } else {
-            announceStrip.innerHTML = `<marquee scrollamount="${gv.speed}">${gvContent}</marquee>`;
-        }
-    }
-}, (error) => {
-    console.error("Firebase Listener Error:", error);
-});
-
-        // Social Links Update
-        const links = settings.socials || {};
-        const platforms = { 'Telegram': '.fa-telegram', 'YouTube': '.fa-youtube', 'Facebook': '.fa-facebook', 'Instagram': '.fa-instagram' };
-        for (const [name, iconClass] of Object.entries(platforms)) {
-            if (links[name]) {
-                const icon = document.querySelector(iconClass);
-                if (icon && icon.parentElement) {
-                    icon.parentElement.href = links[name];
-                    icon.parentElement.setAttribute('target', '_blank');
+        // 4. ADMIN LOGIN
+        function adminLogin() {
+            Swal.fire({
+                title: 'Ruthless Access',
+                input: 'password',
+                confirmButtonText: 'UNLOCK',
+                confirmButtonColor: '#ff0000',
+            }).then((result) => {
+                if (result.isConfirmed && result.value === "0000") {
+                    window.location.href = "admin.html";
+                } else if (result.isConfirmed) {
+                    Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
                 }
-            }
+            });
         }
-    });
 
-    // --- 2. REAL-TIME ANALYTICS (ONLINE / VISITS) ---
-    const today = new Date().toISOString().split('T')[0];
-    const statsRef = db.ref(`stats/${today}`);
-    
-    // Online Count
-    const myStatusRef = db.ref('presence').push();
-    myStatusRef.set({ online: true, last_seen: Date.now() });
-    myStatusRef.onDisconnect().remove();
-
-    // Unique & Visits (Reload Proof)
-    window.addEventListener('load', () => {
-        if (localStorage.getItem('last_visit') !== today) {
-            statsRef.child('unique').transaction(c => (c || 0) + 1);
-            localStorage.setItem('last_visit', today);
-        }
-        if (!sessionStorage.getItem('active_session')) {
-            statsRef.child('visits').transaction(c => (c || 0) + 1);
-            sessionStorage.setItem('active_session', 'true');
-        }
-    });
-</script>
-
-
+        // Dropdown Persistence
+        document.getElementById('sigSelect').addEventListener('change', (e) => localStorage.setItem('last_sig', e.target.value));
+        document.getElementById('toolSelect').addEventListener('change', (e) => localStorage.setItem('last_tool', e.target.value));
+        window.onload = () => {
+            document.getElementById('sigSelect').value = localStorage.getItem('last_sig') || "";
+            document.getElementById('toolSelect').value = localStorage.getItem('last_tool') || "";
+        };
+    </script>
 </body>
 </html>
