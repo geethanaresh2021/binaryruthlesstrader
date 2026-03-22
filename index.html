@@ -115,13 +115,11 @@
         </div>
 
         <div class="strip-container">
-            <div class="top-strip warning-strip">
-                <marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> WARNING: TRADING INVOLVES RISK. USE SIGNALS AT YOUR OWN RESPONSIBILITY. STAY RUTHLESS.</marquee>
-            </div>
-            <div class="top-strip announce-strip">
-                <marquee scrollamount="4"><i class="fas fa-bullhorn"></i> ANNOUNCEMENT: GLOBAL MARKET VOLATILITY HIGH. VIP SURESHOT SIGNALS UPDATED IN TELEGRAM.</marquee>
-            </div>
+    <div class="top-strip warning-strip" id="warningStrip">
         </div>
+    <div class="top-strip announce-strip" id="announceStrip">
+        </div>
+</div>
     </header>
 
     <div class="page-content">
@@ -317,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
-    // 1. HARDCODED CONFIG (Deenivalla Incognito lo kuda database ki connect avtundi)
     const firebaseConfig = {
         apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
         authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -328,23 +325,34 @@ document.addEventListener('DOMContentLoaded', () => {
         appId: "1:533209261799:web:a398ab21b0f913683ea442"
     };
 
-    // Initialize Firebase
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
     const db = firebase.database();
 
-    // 2. SOCIAL MEDIA CLOUD SYNC (Database nundi direct ga links loading)
-    const socialRef = db.ref('site_settings/socials');
-    socialRef.on('value', (snapshot) => {
-        const links = snapshot.val() || {};
-        const platforms = {
-            'Telegram': '.fa-telegram',
-            'YouTube': '.fa-youtube',
-            'Facebook': '.fa-facebook',
-            'Instagram': '.fa-instagram'
-        };
+    // --- 1. CLOUD SETTINGS LISTENER (GIVEAWAY & WARNINGS) ---
+    db.ref('site_settings').on('value', (snapshot) => {
+        const settings = snapshot.val() || {};
 
+        // Giveaway Update
+        const giveaway = settings.giveaway || { winner: "@User", speed: 2 };
+        const announceStrip = document.getElementById('announceStrip');
+        if (announceStrip) {
+            announceStrip.innerHTML = giveaway.speed === 0 
+                ? `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${giveaway.winner}` 
+                : `<marquee scrollamount="${giveaway.speed}"><i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${giveaway.winner} | JOIN TELEGRAM FOR NEXT SESSION</marquee>`;
+        }
+
+        // Warning Note Update
+        const warningContent = settings.warning_note || "WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.";
+        const warningStrip = document.getElementById('warningStrip');
+        if (warningStrip) {
+            warningStrip.innerHTML = `<marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> ${warningContent}</marquee>`;
+        }
+
+        // Social Links Update
+        const links = settings.socials || {};
+        const platforms = { 'Telegram': '.fa-telegram', 'YouTube': '.fa-youtube', 'Facebook': '.fa-facebook', 'Instagram': '.fa-instagram' };
         for (const [name, iconClass] of Object.entries(platforms)) {
             if (links[name]) {
                 const icon = document.querySelector(iconClass);
@@ -356,23 +364,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. COUNTS LOGIC (Incognito proof)
+    // --- 2. REAL-TIME ANALYTICS (ONLINE / VISITS) ---
     const today = new Date().toISOString().split('T')[0];
     const statsRef = db.ref(`stats/${today}`);
     
     // Online Count
     const myStatusRef = db.ref('presence').push();
-    myStatusRef.set({ online: true });
+    myStatusRef.set({ online: true, last_seen: Date.now() });
     myStatusRef.onDisconnect().remove();
 
     // Unique & Visits (Reload Proof)
     window.addEventListener('load', () => {
-        // Unique User
         if (localStorage.getItem('last_visit') !== today) {
             statsRef.child('unique').transaction(c => (c || 0) + 1);
             localStorage.setItem('last_visit', today);
         }
-        // Session Visit
         if (!sessionStorage.getItem('active_session')) {
             statsRef.child('visits').transaction(c => (c || 0) + 1);
             sessionStorage.setItem('active_session', 'true');
