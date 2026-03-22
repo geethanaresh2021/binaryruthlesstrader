@@ -938,3 +938,109 @@ function saveAdSettings() {
         });
     });
 }
+// ==========================================
+// --- ADS MANAGEMENT FUNCTIONS (GLOBAL) ---
+// ==========================================
+
+window.currentAdVisibility = true;
+
+// 1. Open Editor when Container is clicked
+window.openAdEditor = function(id, title) {
+    console.log("Ruthless Editor Opening for:", id);
+    const panel = document.getElementById('adEditorPanel');
+    const titleEl = document.getElementById('editingAdTitle');
+    const idInput = document.getElementById('targetAdId');
+
+    if(!panel) {
+        console.error("Editor Panel not found in the current module!");
+        return;
+    }
+
+    // Show panel and set titles
+    panel.style.display = 'block';
+    titleEl.innerText = title;
+    idInput.value = id;
+
+    // Firebase nundi existing data ni techi fields lo nimpali
+    if(typeof db !== 'undefined') {
+        db.ref('site_settings/ads/' + id).once('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            document.getElementById('adNickname').value = data.name || title;
+            document.getElementById('adSnippet').value = data.snippet || "";
+            document.getElementById('customWidth').value = data.width || "320px";
+            document.getElementById('customHeight').value = data.height || "50px";
+            
+            // Visibility state set cheyyadam
+            window.setAdVisibility(data.visible !== false);
+        });
+    }
+
+    // Smooth scroll to editor
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+// 2. Visibility Toggle Logic
+window.setAdVisibility = function(isVisible) {
+    window.currentAdVisibility = isVisible;
+    const vBtn = document.getElementById('btnVisible');
+    const hBtn = document.getElementById('btnHidden');
+
+    if(!vBtn || !hBtn) return;
+
+    if(isVisible) {
+        vBtn.style.background = "var(--red)";
+        vBtn.style.boxShadow = "var(--neon)";
+        hBtn.style.background = "#0a0a0a";
+        hBtn.style.boxShadow = "none";
+    } else {
+        hBtn.style.background = "var(--red)";
+        hBtn.style.boxShadow = "var(--neon)";
+        vBtn.style.background = "#0a0a0a";
+        vBtn.style.boxShadow = "none";
+    }
+};
+
+// 3. Size Presets
+window.setPresetSize = function(w, h) {
+    const customInputs = document.getElementById('customSizeInputs');
+    if(customInputs) customInputs.style.display = 'none';
+    document.getElementById('customWidth').value = w;
+    document.getElementById('customHeight').value = h;
+};
+
+// 4. Custom Size Toggle
+window.enableCustomSize = function() {
+    const customInputs = document.getElementById('customSizeInputs');
+    if(customInputs) customInputs.style.display = 'flex';
+};
+
+// 5. Final Save & Run Logic
+window.saveAdSettings = function() {
+    const id = document.getElementById('targetAdId').value;
+    if(!id || typeof db === 'undefined') {
+        alert("System Error: ID or DB missing!");
+        return;
+    }
+
+    const adData = {
+        name: document.getElementById('adNickname').value,
+        snippet: document.getElementById('adSnippet').value,
+        width: document.getElementById('customWidth').value,
+        height: document.getElementById('customHeight').value,
+        visible: window.currentAdVisibility
+    };
+
+    db.ref('site_settings/ads/' + id).set(adData).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'SYSTEM UPDATED',
+            text: 'Ad is now live on Home Page!',
+            background: '#0a0a0a',
+            color: '#fff',
+            confirmButtonColor: '#ff0000'
+        });
+    }).catch(err => {
+        console.error("Save Error:", err);
+        Swal.fire({ icon: 'error', title: 'SAVE FAILED', text: err.message });
+    });
+};
