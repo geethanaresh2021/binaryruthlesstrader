@@ -792,84 +792,107 @@ function publishGiveaway() {
         Swal.fire({ icon: 'success', title: 'LIVE', text: 'Giveaway Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
     });
 }
-// --- 1. ST RESIZER MAIN INTERFACE ---
-function loadSTResizer() {
+// --- ADS MANAGER MAIN INTERFACE ---
+function loadAdsContainers() {
     const display = document.getElementById('mainDisplay');
     const header = document.querySelector('#panelHeader h1');
-    header.innerText = "ST RESIZE MANAGER";
+    header.innerText = "ADS CONTAINERS MANAGER";
 
-    // Containers List
+    let adsListHtml = '';
+    // 8 Ads Containers List
+    for (let i = 1; i <= 8; i++) {
+        adsListHtml += `
+            <button class="action-btn block-btn" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
+                <i class="fas fa-box"></i> AD CONTAINER ${i}
+            </button>`;
+    }
+
     display.innerHTML = `
-    <div class="resizer-panel" style="padding: 10px;">
-        <p style="color: #888; font-size: 11px; margin-bottom: 15px;">SELECT CONTAINER TO RESIZE:</p>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button class="action-btn" onclick="openResizeEditor('signalContainer', 'SIGNAL CONTAINER')">SIGNAL CONTAINER</button>
-            <button class="action-btn" onclick="openResizeEditor('toolsContainer', 'TOOLS CONTAINER')">TOOLS CONTAINER</button>
+    <div class="ads-panel" style="padding: 10px;">
+        <div id="adsList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+            ${adsListHtml}
         </div>
 
-        <div id="resizeEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px;">
-            <h3 id="editingTargetName" style="color: var(--red); margin-bottom: 20px; font-family: 'Orbitron';"></h3>
-            <input type="hidden" id="targetId">
+        <div id="adEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
+            <h3 id="editingAdName" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
+            <input type="hidden" id="targetAdId">
 
-            <div style="margin-bottom: 20px;">
-                <label style="color: #888; font-size: 10px; display: block; margin-bottom: 5px;">DESKTOP SIZES</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="dWidth" placeholder="Width (e.g. 100%)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
-                    <input type="text" id="dHeight" placeholder="Height (e.g. 600px)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
-                </div>
+            <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1;">VISIBLE</button>
+                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1;">HIDE</button>
             </div>
 
-            <div style="margin-bottom: 20px;">
-                <label style="color: #888; font-size: 10px; display: block; margin-bottom: 5px;">MOBILE SIZES (WIDTH FIXED 100%)</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" value="100%" disabled style="flex:1; padding: 12px; background:#111; border:1px solid #222; color:#555; cursor: not-allowed;">
-                    <input type="text" id="mHeight" placeholder="Mobile Height (e.g. 400px)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
-                </div>
-            </div>
+            <div id="manageSection" style="border-top: 1px solid #222; pt: 15px;">
+                <label style="color: #888; font-size: 10px;">AD NAME (INTERNAL)</label>
+                <input type="text" id="adNickname" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px;">
 
-            <div style="display: flex; gap: 10px;">
-                <button onclick="saveSTSizes()" style="flex: 2; padding: 15px; background: var(--red); color: #fff; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;">SAVE SIZES</button>
-                <button onclick="loadSTResizer()" style="flex: 1; padding: 15px; background: #222; color: #fff; border: none; font-family: 'Orbitron'; cursor: pointer;">DEFAULT</button>
+                <label style="color: #888; font-size: 10px;">AD SNIPPET (PASTE CODE HERE)</label>
+                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste <script> or <iframe> code..."></textarea>
+
+                <label style="color: #888; font-size: 10px;">SELECT SIZE</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
+                    <button class="action-btn" onclick="setPresetSize('320px','50px')">320x50</button>
+                    <button class="action-btn" onclick="setPresetSize('320px','100px')">320x100</button>
+                    <button class="action-btn" onclick="enableCustomSize()">CUSTOM</button>
+                </div>
+
+                <div id="customSizeInputs" style="display: none; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="customWidth" placeholder="Width (e.g. 350px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                    <input type="text" id="customHeight" placeholder="Height (e.g. 150px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                </div>
+
+                <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">SAVE & RUN ADS</button>
             </div>
         </div>
     </div>`;
 }
 
-// --- 2. OPEN EDITOR & FETCH CURRENT SIZES ---
-function openResizeEditor(id, name) {
-    document.getElementById('resizeEditor').style.display = 'block';
-    document.getElementById('editingTargetName').innerText = name;
-    document.getElementById('targetId').value = id;
+// Global variable to track visibility in UI
+let currentVisibility = true;
 
-    // Firebase nundi ippudu unna sizes techukundam
-    db.ref('site_settings/st_resizer/' + id).once('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            document.getElementById('dWidth').value = data.desktopWidth || "100%";
-            document.getElementById('dHeight').value = data.desktopHeight || "600px";
-            document.getElementById('mHeight').value = data.mobileHeight || "500px";
-        } else {
-            // Defaults if no data in Firebase
-            document.getElementById('dWidth').value = "100%";
-            document.getElementById('dHeight').value = "600px";
-            document.getElementById('mHeight').value = "500px";
-        }
+function openAdEditor(id, defaultName) {
+    document.getElementById('adEditor').style.display = 'block';
+    document.getElementById('editingAdName').innerText = defaultName;
+    document.getElementById('targetAdId').value = id;
+
+    // Fetch existing data from Firebase
+    db.ref('site_settings/ads/' + id).once('value', (snapshot) => {
+        const data = snapshot.val() || {};
+        document.getElementById('adNickname').value = data.name || defaultName;
+        document.getElementById('adSnippet').value = data.snippet || "";
+        document.getElementById('customWidth').value = data.width || "320px";
+        document.getElementById('customHeight').value = data.height || "50px";
+        setAdVisibility(data.visible !== false);
     });
 }
 
-// --- 3. SAVE TO FIREBASE ---
-function saveSTSizes() {
-    const id = document.getElementById('targetId').value;
-    const dw = document.getElementById('dWidth').value;
-    const dh = document.getElementById('dHeight').value;
-    const mh = document.getElementById('mHeight').value;
+function setAdVisibility(isVisible) {
+    currentVisibility = isVisible;
+    document.getElementById('btnVisible').style.borderColor = isVisible ? "var(--red)" : "#222";
+    document.getElementById('btnHidden').style.borderColor = !isVisible ? "var(--red)" : "#222";
+}
 
-    db.ref('site_settings/st_resizer/' + id).set({
-        desktopWidth: dw,
-        desktopHeight: dh,
-        mobileHeight: mh
-    }).then(() => {
-        Swal.fire({ icon: 'success', title: 'SAVED', text: 'Container sizes updated live!', background: '#0a0a0a', color: '#fff' });
+function setPresetSize(w, h) {
+    document.getElementById('customSizeInputs').style.display = 'none';
+    document.getElementById('customWidth').value = w;
+    document.getElementById('customHeight').value = h;
+}
+
+function enableCustomSize() {
+    document.getElementById('customSizeInputs').style.display = 'flex';
+}
+
+function saveAdSettings() {
+    const id = document.getElementById('targetAdId').value;
+    const adData = {
+        name: document.getElementById('adNickname').value,
+        snippet: document.getElementById('adSnippet').value,
+        width: document.getElementById('customWidth').value,
+        height: document.getElementById('customHeight').value,
+        visible: currentVisibility
+    };
+
+    db.ref('site_settings/ads/' + id).set(adData).then(() => {
+        Swal.fire({ icon: 'success', title: 'AD UPDATED', text: 'Live on Home Page!', background: '#0a0a0a', color: '#fff' });
     });
 }
