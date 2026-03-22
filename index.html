@@ -105,6 +105,28 @@
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
         .swal2-input { background: #000 !important; border: 1px solid #222 !important; color: #00ffcc !important; text-align: center !important; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
+
+
+        /* Smooth Scroll Keyframes */
+@keyframes scrollText {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Half length animation for seamless loop */
+    }
+}
+
+.smooth-scroll-wrapper {
+    will-change: transform;
+    display: flex;
+}
+
+/* Optional: Neon Glow for that Ruthless look */
+#announceStrip span, #warningNoteContainer span {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+}
     </style>
 </head>
 <body>
@@ -194,55 +216,53 @@
         const db = firebase.database();
 
         // --- 1. CLOUD SETTINGS LISTENER (WARNINGS & ANNOUNCEMENTS) ---
-db.ref('site_settings').on('value', (snapshot) => {
-    const settings = snapshot.val() || {};
-    console.log("Ruthless Cloud Sync:", settings);
+// --- SMOOTH SCROLL LOGIC FOR WARNING & GIVEAWAY ---
+function applySmoothScroll(containerId, text, speed, color) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-    // --- WARNING NOTE SYNC ---
-
-// db.ref('site_settings').on('value', ...) lopala idi replace cheyyi
-const warningStrip = document.getElementById('warningStrip');
-if (warningStrip && settings.warning_note) {
-    const wn = settings.warning_note;
-    const speed = parseInt(wn.speed) || 0;
-    const text = wn.text || ""; 
-
-    warningStrip.style.color = wn.color || "#ff0000";
+    // Reset styles
+    container.innerHTML = "";
+    container.style.color = color;
+    container.style.display = "flex";
+    container.style.alignItems = "center";
+    container.style.whiteSpace = "nowrap";
+    container.style.overflow = "hidden";
 
     if (speed === 0) {
-        // SPEED 0: Exactly Center
-        warningStrip.style.display = "flex";
-        warningStrip.style.justifyContent = "center";
-        warningStrip.style.alignItems = "center";
-        warningStrip.innerHTML = `<span>${text}</span>`;
+        // CENTER STILL
+        container.style.justifyContent = "center";
+        container.innerHTML = `<span style="font-weight:900; font-size:20px;">${text}</span>`;
     } else {
-        // SPEED > 0: Force Scroll Restart
-        const key = Date.now(); // Unique key for each update
-        warningStrip.style.display = "block";
-        warningStrip.innerHTML = `<marquee key="${key}" scrollamount="${speed}" style="width:100%; display:block;">${text}</marquee>`;
+        // SMOOTH CSS ANIMATION
+        container.style.justifyContent = "flex-start";
+        
+        // Calculate duration based on speed (Higher speed = Lower duration)
+        // Speed 1 = 20s, Speed 5 = 4s (Ruthless Fast)
+        const duration = 25 / speed; 
+
+        container.innerHTML = `
+            <div class="smooth-scroll-wrapper" style="display: flex; animation: scrollText ${duration}s linear infinite; width: fit-content;">
+                <span style="padding-right: 50px; font-weight:900; font-size:20px;">${text}</span>
+                <span style="padding-right: 50px; font-weight:900; font-size:20px;">${text}</span>
+            </div>
+        `;
     }
 }
-// --- GIVEAWAY SYNC (ANNOUNCE STRIP) ---
+
+// Giveaway Listener calling smooth function
 db.ref('site_settings/giveaway').on('value', (snapshot) => {
     const data = snapshot.val();
-    const announceStrip = document.getElementById('announceStrip');
-    
-    if (data && announceStrip) {
-        const speed = parseInt(data.speed) || 0;
-        const text = data.winner || "";
-        const color = data.color || "#ffffff"; // Admin nundi vachina color
+    if (data) {
+        applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+    }
+});
 
-        announceStrip.style.color = color; // Applying the color
-
-        if (speed === 0) {
-            announceStrip.style.display = "flex";
-            announceStrip.style.justifyContent = "center";
-            announceStrip.innerHTML = `<span>${text}</span>`;
-        } else {
-            announceStrip.style.display = "block";
-            const key = Date.now();
-            announceStrip.innerHTML = `<marquee key="${key}" scrollamount="${speed}" style="width:100%;">${text}</marquee>`;
-        }
+// Warning Note Listener calling smooth function
+db.ref('site_settings/warning_note').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+        applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
     }
 });
     // --- SOCIAL LINKS SYNC ---
