@@ -74,21 +74,12 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        case 'Ads Network':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Network API Key</label>
-                    <input type="text" class="input-box" placeholder="ADS-XXXX-XXXX">
-                    <button class="action-btn" onclick="saveLogic()">VERIFY NETWORK</button>
-                </div>`;
-            break;
-
         case 'Ads Containers':
             // 8 Containers List Generation
             let adsListHtml = '';
             for (let i = 1; i <= 8; i++) {
                 adsListHtml += `
-                    <button class="nav-btn" style="width:100%; margin-bottom:8px; justify-content: space-between; border:1px solid #1a1a1a;" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
+                    <button class="nav-btn" style="width:100%; margin-bottom:8px; justify-content: space-between; border:1px solid #1a1a1a;" onclick="window.openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
                         <span><i class="fas fa-box-open" style="color:var(--red);"></i> &nbsp; AD CONTAINER ${i}</span>
                         <i class="fas fa-chevron-right" style="font-size:12px; opacity:0.5;"></i>
                     </button>`;
@@ -105,8 +96,8 @@ function loadContent(moduleName) {
                         <input type="hidden" id="targetAdId">
 
                         <div style="display:flex; gap:10px; margin-bottom:25px;">
-                            <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; font-weight:bold;">VISIBLE</button>
-                            <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; font-weight:bold;">HIDE</button>
+                            <button id="btnVisible" onclick="window.setAdVisibility(true)" class="action-btn" style="flex:1; font-weight:bold;">VISIBLE</button>
+                            <button id="btnHidden" onclick="window.setAdVisibility(false)" class="action-btn" style="flex:1; font-weight:bold;">HIDE</button>
                         </div>
 
                         <div id="manageSection">
@@ -118,56 +109,18 @@ function loadContent(moduleName) {
 
                             <label class="input-label">CHOOSE SIZE</label>
                             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:20px;">
-                                <button class="action-btn" style="font-size:11px;" onclick="setPresetSize('320px','50px')">320x50</button>
-                                <button class="action-btn" style="font-size:11px;" onclick="setPresetSize('320px','100px')">320x100</button>
-                                <button class="action-btn" style="font-size:11px;" onclick="enableCustomSize()">CUSTOM</button>
+                                <button class="action-btn" style="font-size:11px;" onclick="window.setPresetSize('320px','50px')">320x50</button>
+                                <button class="action-btn" style="font-size:11px;" onclick="window.setPresetSize('320px','100px')">320x100</button>
+                                <button class="action-btn" style="font-size:11px;" onclick="window.enableCustomSize()">CUSTOM</button>
                             </div>
 
                             <div id="customSizeInputs" style="display:none; gap:10px; margin-bottom:20px;">
-                                <input type="text" id="customWidth" class="input-box" placeholder="Width (e.g. 100%)">
-                                <input type="text" id="customHeight" class="input-box" placeholder="Height (e.g. 250px)">
+                                <input type="text" id="customWidth" class="input-box" placeholder="Width">
+                                <input type="text" id="customHeight" class="input-box" placeholder="Height">
                             </div>
 
-                            <button class="publish-btn" onclick="saveAdSettings()" style="width:100%; padding:18px; background:var(--red); font-family:'Orbitron'; font-weight:900; box-shadow: 0 0 20px rgba(255,0,0,0.2);">SAVE & RUN ADS</button>
+                            <button class="publish-btn" onclick="window.saveAdSettings()" style="width:100%; padding:18px; background:var(--red); font-family:'Orbitron'; font-weight:900; box-shadow: 0 0 20px rgba(255,0,0,0.2);">SAVE & RUN ADS</button>
                         </div>
-                    </div>
-                </div>`;
-            break;
-
-            mainDisplay.innerHTML = `
-                <div class="module-card" style="display:flex; flex-direction:column; gap:20px;">
-                    <div id="adsListGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        ${adsListHtml}
-                    </div>
-
-                    <div id="adEditorPanel" style="display:none; border-top: 1px solid #222; pt: 20px; margin-top: 10px;">
-                        <h3 id="editingAdTitle" style="color:var(--red); font-family:'Orbitron'; font-size:14px; margin-bottom:15px;"></h3>
-                        <input type="hidden" id="targetAdId">
-
-                        <div style="display:flex; gap:10px; margin-bottom:15px;">
-                            <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; font-size:10px;">VISIBLE</button>
-                            <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; font-size:10px;">HIDE</button>
-                        </div>
-
-                        <label class="input-label">AD NAME (INTERNAL)</label>
-                        <input type="text" id="adNickname" class="input-box">
-
-                        <label class="input-label">AD SNIPPET (CODE)</label>
-                        <textarea id="adSnippet" class="input-box" rows="4" style="color:#00ffcc; font-family:'Roboto Mono'; font-size:11px;"></textarea>
-
-                        <label class="input-label">SELECT SIZE</label>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:15px;">
-                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="setPresetSize('320px','50px')">320x50</button>
-                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="setPresetSize('320px','100px')">320x100</button>
-                            <button class="action-btn" style="font-size:10px; padding:8px;" onclick="enableCustomSize()">CUSTOM</button>
-                        </div>
-
-                        <div id="customSizeInputs" style="display:none; gap:10px; margin-bottom:15px;">
-                            <input type="text" id="customWidth" class="input-box" placeholder="Width (px)">
-                            <input type="text" id="customHeight" class="input-box" placeholder="Height (px)">
-                        </div>
-
-                        <button class="publish-btn" onclick="saveAdSettings()" style="width:100%; margin-top:10px; background:var(--red);">SAVE & APPLY AD</button>
                     </div>
                 </div>`;
             break;
@@ -185,26 +138,8 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        case 'Affiliate':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Affiliate ID / Link</label>
-                    <input type="text" class="input-box" placeholder="RUTHLESS-001">
-                    <button class="action-btn" onclick="saveLogic()">SAVE AFFILIATE</button>
-                </div>`;
-            break;
-
         case 'Warning Note':
             renderWarningNoteModule();
-            break;
-
-        case 'Join Section':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Join Button Text</label>
-                    <input type="text" id="joinText" class="input-box" value="JOIN PREMIUM">
-                    <button class="action-btn" onclick="saveJoinSection()">UPDATE SECTION</button>
-                </div>`;
             break;
 
         case 'Giveaway Winner':
@@ -213,17 +148,6 @@ function loadContent(moduleName) {
 
         case 'Firebase':
             renderFirebaseModule();
-            break;
-
-        case 'VPS':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">VPS Server Status</label>
-                    <h3 style="color:#00ff00; font-family:'Roboto Mono';">ONLINE (Latency: 24ms)</h3>
-                    <label class="input-label" style="margin-top:15px;">Target IP</label>
-                    <input type="text" class="input-box" value="45.12.88.XX">
-                    <button class="action-btn" onclick="saveLogic()">RESTART SERVER</button>
-                </div>`;
             break;
 
         case 'Security':
