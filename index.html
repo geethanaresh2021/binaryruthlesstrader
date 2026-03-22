@@ -50,12 +50,20 @@
         /* --- STRIPS --- */
         .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 0 10px; }
         .top-strip { 
-            width: 100%; font-family: 'Roboto Mono'; font-size: 11px; 
-            text-transform: uppercase; padding: 12px 0; 
-            border: 1px solid #111; border-radius: 4px; text-align: center;
-            min-height: 40px; display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
+    width: 100%; 
+    font-family: 'Roboto Mono'; 
+    font-size: 11px; 
+    text-transform: uppercase; 
+    border: 1px solid #111; 
+    border-radius: 4px; 
+    
+    /* ADD THESE 4 LINES */
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden;
+}
         .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
         .announce-strip { background: transparent; color: #fff; border-color: #222; }
 
@@ -189,41 +197,33 @@ db.ref('site_settings').on('value', (snapshot) => {
 
     // --- WARNING NOTE SYNC ---
     const warningStrip = document.getElementById('warningStrip');
-    if (warningStrip) {
-        if (settings.warning_note) {
-            const wn = settings.warning_note;
-            const speed = parseInt(wn.speed) || 0; // Speed lekapothe 0 (Center)
-            const text = wn.text || 'STAY RUTHLESS';
-            
-            warningStrip.style.color = wn.color || "#ff0000";
-            const content = `<i class="fas fa-exclamation-triangle"></i> ${text}`;
+if (warningStrip && settings.warning_note) {
+    const wn = settings.warning_note;
+    const speed = parseInt(wn.speed) || 0;
+    const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
+    
+    warningStrip.style.color = wn.color || "#ff0000";
 
-            // SPEED 0 unna, leda text chinnadiga unna CENTER lo untundi
-            if (speed === 0) {
-                warningStrip.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:bold;">${content}</div>`;
-            } else {
-                // Marquee tag restart avvadaniki prathisari kotha element create chesthunnam
-                warningStrip.innerHTML = `<marquee scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; display:block;">${content}</marquee>`;
-            }
-        } else {
-            warningStrip.innerHTML = `<div style="text-align:center; width:100%;">STAY RUTHLESS | SYSTEM ACTIVE</div>`;
-        }
+    if (speed === 0) {
+        // Marquee tag lekunda direct ga pedithe CSS flexbox center chesthundhi
+        warningStrip.innerHTML = `<span style="width:100%; text-align:center;">${content}</span>`;
+    } else {
+        // Speed unte marquee apply avthundi
+        warningStrip.innerHTML = `<marquee scrollamount="${speed}" style="width:100%;">${content}</marquee>`;
     }
-
+}
     // --- GIVEAWAY SYNC (ANNOUNCE STRIP) ---
     const announceStrip = document.getElementById('announceStrip');
-    if (announceStrip) {
-        if (settings.giveaway) {
-            const gv = settings.giveaway;
-            const gvSpeed = parseInt(gv.speed) || 0;
-            const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
-            
-            if (gvSpeed === 0) {
-                announceStrip.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;">${gvContent}</div>`;
-            } else {
-                announceStrip.innerHTML = `<marquee scrollamount="${gvSpeed}" behavior="scroll" direction="left" style="width:100%; display:block;">${gvContent}</marquee>`;
-            }
-        }
+if (announceStrip && settings.giveaway) {
+    const gv = settings.giveaway;
+    const gvSpeed = parseInt(gv.speed) || 0;
+    const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
+    
+    if (gvSpeed === 0) {
+        announceStrip.innerHTML = `<span style="width:100%; text-align:center;">${gvContent}</span>`;
+    } else {
+        announceStrip.innerHTML = `<marquee scrollamount="${gvSpeed}" style="width:100%;">${gvContent}</span>`;
+    }
     }
 
     // --- SOCIAL LINKS SYNC ---
