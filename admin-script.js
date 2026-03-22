@@ -433,10 +433,17 @@ function updateNotePreview() {
     const txt = document.getElementById('noteText').value;
     const clr = document.getElementById('noteColor').value;
     const spd = parseInt(document.getElementById('noteSpeed').value);
-    const content = document.getElementById('notePreviewContent');
+    const previewContainer = document.getElementById('notePreviewContent');
 
-    content.style.color = clr;
-    content.innerHTML = spd === 0 ? `<center>${txt}</center>` : `<marquee scrollamount="${spd}">${txt}</marquee>`;
+    // Color update
+    previewContainer.style.color = clr;
+
+    // Content re-render (Scroll restart avvadaniki idi avasaram)
+    if (spd === 0) {
+        previewContainer.innerHTML = `<center>${txt}</center>`;
+    } else {
+        previewContainer.innerHTML = `<marquee scrollamount="${spd}">${txt}</marquee>`;
+    }
 }
 
 // --- HELPER LOGIC ---
