@@ -1,5 +1,3 @@
-
-const db = firebase.database();
 // --- GLOBAL STORAGE & INITIALIZATION ---
 let activeModule = localStorage.getItem('activeModule') || 'Views';
 
@@ -8,22 +6,19 @@ window.onload = () => {
     loadContent(activeModule);
 };
 
-// --- RUTHLESS ADMIN ENGINE (FIXED) ---
-
-let activeModule = 'Dashboard';
-
+// --- CORE NAVIGATION LOGIC ---
 function loadContent(moduleName) {
     if (!moduleName) return;
 
-    // 1. Save state for persistence
+    // 1. Save to LocalStorage (Persistence for Refresh)
     localStorage.setItem('activeModule', moduleName);
     activeModule = moduleName;
 
-    // 2. Sidebar UI Active State Update
+    // 2. Update Sidebar UI (Active State)
     document.querySelectorAll('.nav-btn').forEach(btn => {
+        // Button text nundi icon/spaces ni trim chesi check chestundi
         const btnText = btn.innerText.trim();
-        // Icons unna kuda text match ayyeలా 'includes' vaduthunnam
-        if (btnText.includes(moduleName)) {
+        if (btnText === moduleName) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
@@ -39,14 +34,11 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // --- CRITICAL: Clear previous content before loading new module ---
-    mainDisplay.innerHTML = ''; 
-
-    // 4. Module Switching Logic
-    // Ee names mee Sidebar button names ki exact ga match avvali
+    // 4. Module Switching Logic (All 16 Modules)
     switch (moduleName) {
         case 'Views':
             renderViewsModule();
+            // Start real-time listener for counts
             if(window.listenToLiveStats) window.listenToLiveStats();
             break;
 
@@ -59,57 +51,28 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        case 'Ads Network':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">ADS NETWORK VERIFICATION</h2>
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label class="input-label">VERIFICATION METHOD</label>
-                        <select id="verifyMethod" class="input-box" onchange="updatePlaceholder()" style="background:#080808; color:#00ffcc;">
-                            <option value="meta">Meta Tag Verification</option>
-                            <option value="ads_txt">ads.txt File Content</option>
-                            <option value="js_tag">JavaScript Tag / Auto-verify</option>
-                        </select>
-                    </div>
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label id="inputLabel" class="input-label">VERIFICATION CODE / META TAG</label>
-                        <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste your code here..." style="color: #00ffcc; font-weight: bold;"></textarea>
-                    </div>
-                    <button class="action-btn" onclick="processVerification()">VERIFY & ACTIVATE WEBSITE</button>
-                </div>`;
-            break;
-
         case 'ST Resize':
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <label class="input-label">Main Container Width (px)</label>
                     <input type="text" id="screenWidth" class="input-box" value="1280">
+                    <label class="input-label">Disable Zoom (0/1)</label>
+                    <input type="number" id="zoomDisable" class="input-box" value="1">
                     <button class="action-btn" onclick="saveSTResize()">APPLY LAYOUT</button>
                 </div>`;
             break;
 
-        case 'Social Media':
-            renderSocialMediaModule();
-            break;
-
-        case 'Firebase':
-            renderFirebaseModule();
-            break;
-
-        case 'Giveaway Winner':
-            renderGiveawayModule();
-            break;
-
-        case 'Warning Note':
-            renderWarningNoteModule();
-            break;
-
-        case 'Brand Name':
+        case 'Tools Manager':
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <label class="input-label">Header Title</label>
-                    <input type="text" id="brandTitle" class="input-box" value="BINARY RUTHLESS TRADER">
-                    <button class="action-btn" onclick="saveBrandName()">UPDATE BRAND</button>
+                    <label class="input-label">Active Tool ID</label>
+                    <input type="text" class="input-box" placeholder="Tool Name">
+                    <label class="input-label">Visibility</label>
+                    <select class="input-box" style="background:#080808; color:#00ffcc;">
+                        <option>VISIBLE</option>
+                        <option>HIDDEN</option>
+                    </select>
+                    <button class="action-btn" onclick="saveLogic()">SAVE TOOLS</button>
                 </div>`;
             break;
 
@@ -117,132 +80,21 @@ function loadContent(moduleName) {
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <label class="input-label">Signal Source URL</label>
-                    <input type="text" id="sigUrl" class="input-box" value="QUOTEX">
+                    <input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com">
+                    <label class="input-label">Platform</label>
+                    <input type="text" id="sigPlat" class="input-box" value="QUOTEX">
                     <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
                 </div>`;
             break;
 
-        default:
+        case 'Ads Network':
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <h2 style="color:var(--red)">${moduleName}</h2>
-                    <p style="color:#666;">This module is under development.</p>
+                    <label class="input-label">Network API Key</label>
+                    <input type="text" class="input-box" placeholder="ADS-XXXX-XXXX">
+                    <button class="action-btn" onclick="saveLogic()">VERIFY NETWORK</button>
                 </div>`;
             break;
-    }
-}
-
-// Page load ayinappudu default module load avvali
-window.addEventListener('DOMContentLoaded', () => {
-    const lastActive = localStorage.getItem('activeModule') || 'Views';
-    loadContent(lastActive);
-});
-// --- ADS VERIFICATION MODULE (FIREBASE ONLY) ---
-function renderAdsModule() {
-    const mainDisplay = document.getElementById('mainDisplay');
-    const options = [
-        { id: 'meta', name: 'Meta Tag Verification', icon: 'fa-code' },
-        { id: 'html', name: 'HTML File Upload', icon: 'fa-file-upload' },
-        { id: 'adstxt', name: 'ads.txt File', icon: 'fa-file-alt' },
-        { id: 'js', name: 'JavaScript / Auto Tag', icon: 'fa-bolt' },
-        { id: 'plugin', name: 'Plugin-based (WordPress)', icon: 'fa-plug' }
-    ];
-
-    mainDisplay.innerHTML = `
-        <div class="module-card">
-            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">ADS NETWORK VERIFICATION</h2>
-            
-            <div id="adsOptionList" style="display:flex; flex-direction:column; gap:10px;">
-                ${options.map(opt => `
-                    <div style="background:#080808; border:1px solid #1a1a1a; border-radius:4px; overflow:hidden;">
-                        <div onclick="toggleAdsVerify('${opt.id}')" style="padding:15px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-left:3px solid #333;">
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <i class="fas ${opt.icon}" style="color:#666; font-size:16px;"></i>
-                                <span style="font-size:13px; color:#eee;">${opt.name}</span>
-                            </div>
-                            <i class="fas fa-chevron-right" style="font-size:10px; color:#222;"></i>
-                        </div>
-                        
-                        <div id="verify-box-${opt.id}" style="display:none; padding:20px; background:#050505; border-top:1px solid #111;">
-                            <label class="input-label">ENTER VERIFICATION DETAILS / CODE</label>
-                            <textarea id="input-${opt.id}" class="input-box" style="height:80px; font-family:'Roboto Mono'; font-size:11px;" placeholder="Paste your code or file content here..."></textarea>
-                            
-                            <div style="display:flex; gap:10px; margin-top:15px;">
-                                <button class="action-btn" style="flex:2; background:#00ffcc; color:#000;" onclick="verifyAdsInFirebase('${opt.id}')">VERIFY & SAVE TO CLOUD</button>
-                                <button class="action-btn" style="flex:1; background:#111; border:1px solid #333;" onclick="toggleAdsVerify('${opt.id}')">CANCEL</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-
-            <div id="adsCloudStatus" style="margin-top:20px;"></div>
-        </div>
-    `;
-    // Load existing verification status from Firebase
-    loadAdsStatusFromFirebase();
-}
-
-// --- TOGGLE BOX ---
-function toggleAdsVerify(id) {
-    const el = document.getElementById(`verify-box-${id}`);
-    const allBoxes = document.querySelectorAll('[id^="verify-box-"]');
-    allBoxes.forEach(box => { if(box.id !== `verify-box-${id}`) box.style.display = 'none'; });
-    el.style.display = (el.style.display === 'none') ? 'block' : 'none';
-}
-
-// --- FIREBASE VERIFY & SAVE ---
-function verifyAdsInFirebase(type) {
-    const codeVal = document.getElementById(`input-${type}`).value.trim();
-    
-    if (!codeVal) {
-        Swal.fire({ icon: 'error', title: 'EMPTY DETAILS', text: 'Enter code first!', background: '#0a0a0a', color: '#fff' });
-        return;
-    }
-
-    if (typeof db === 'undefined') {
-        Swal.fire({ icon: 'error', title: 'NOT CONNECTED', text: 'Please connect Firebase in Setup first!', background: '#0a0a0a', color: '#fff' });
-        return;
-    }
-
-    Swal.fire({
-        title: 'Verifying...',
-        html: 'Linking with Ads Network via Firebase',
-        timer: 1500,
-        background: '#0a0a0a', color: '#fff',
-        didOpen: () => { Swal.showLoading(); }
-    }).then(() => {
-        // Save to Firebase Cloud
-        db.ref('site_settings/ads_verification').set({
-            method: type,
-            code: codeVal,
-            status: 'VERIFIED',
-            lastUpdated: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-            Swal.fire({ icon: 'success', title: 'VERIFIED', text: 'Settings Synced to Cloud!', background: '#0a0a0a', color: '#fff' });
-            renderAdsModule(); // UI Refresh
-        });
-    });
-}
-
-// --- LOAD STATUS ---
-function loadAdsStatusFromFirebase() {
-    if (typeof db === 'undefined') return;
-    db.ref('site_settings/ads_verification').once('value', (snapshot) => {
-        const data = snapshot.val();
-        const statusDiv = document.getElementById('adsCloudStatus');
-        if (data && statusDiv) {
-            statusDiv.innerHTML = `
-                <div style="padding:15px; background:rgba(0,255,204,0.05); border:1px solid #00ffcc33; border-radius:4px;">
-                    <p style="color:#00ffcc; font-size:11px; font-family:'Roboto Mono'; margin:0;">
-                        <i class="fas fa-check-circle"></i> CURRENTLY VERIFIED VIA: ${data.method.toUpperCase()}
-                    </p>
-                    <p style="color:#444; font-size:9px; margin-top:5px;">Last Cloud Sync: ${new Date(data.lastUpdated).toLocaleString()}</p>
-                </div>
-            `;
-        }
-    });
-}
 
         case 'Ads Containers':
             mainDisplay.innerHTML = `
@@ -708,39 +560,3 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log("Firebase Auto-Reconnected");
     }
 });
-function updatePlaceholder() {
-    const method = document.getElementById('verifyMethod').value;
-    const input = document.getElementById('verifyContent');
-    const label = document.getElementById('inputLabel');
-    
-    if(method === 'ads_txt') {
-        input.placeholder = "Example: google.com, pub-000, DIRECT, f08c...";
-        label.innerText = "ADS.TXT CONTENT";
-    } else if(method === 'meta') {
-        input.placeholder = "<meta name='google-site-verification' content='...' />";
-        label.innerText = "META TAG CODE";
-    } else {
-        input.placeholder = "Paste your verification script/code here...";
-        label.innerText = "VERIFICATION CONTENT";
-    }
-}
-
-function processVerification() {
-    const method = document.getElementById('verifyMethod').value;
-    const content = document.getElementById('verifyContent').value;
-
-    if (!content && method !== 'html') {
-        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please enter the details!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-        return;
-    }
-
-    // Firebase DB Update
-    db.ref('site_settings/ads_verification').set({
-        method: method,
-        code: content,
-        status: 'VERIFIED',
-        timestamp: new Date().toLocaleString()
-    }).then(() => {
-        Swal.fire({ icon: 'success', title: 'VERIFIED', text: 'System Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-    });
-}
