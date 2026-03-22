@@ -411,6 +411,23 @@ function renderWarningNoteModule() {
         </div>`;
 }
 
+function publishWarningToCloud() {
+    const data = {
+        text: document.getElementById('noteText').value,
+        color: document.getElementById('noteColor').value,
+        speed: parseInt(document.getElementById('noteSpeed').value)
+    };
+
+    if (typeof db !== 'undefined') {
+        db.ref('site_settings/warning_note').set(data)
+        .then(() => {
+            // Local storage lo kuda backup unchutunnam (UI refresh kosam)
+            localStorage.setItem('warning_data', JSON.stringify(data));
+            Swal.fire({ icon: 'success', title: 'LIVE NOW', text: 'Note updated with kotha color & speed!', background: '#0a0a0a', color: '#fff' });
+        });
+    }
+}
+
 // Preview ni instant ga update chese logic
 function updateNotePreview() {
     const txt = document.getElementById('noteText').value;
