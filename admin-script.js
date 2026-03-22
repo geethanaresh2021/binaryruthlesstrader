@@ -88,8 +88,13 @@ function loadContent(moduleName) {
             break;
 
         case 'Ads Network':
-    renderAdsVerifyModule();
-    break;
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <label class="input-label">Network API Key</label>
+                    <input type="text" class="input-box" placeholder="ADS-XXXX-XXXX">
+                    <button class="action-btn" onclick="saveLogic()">VERIFY NETWORK</button>
+                </div>`;
+            break;
 
         case 'Ads Containers':
             mainDisplay.innerHTML = `
@@ -430,7 +435,6 @@ function renderSocialMediaModule() {
         </div>
     `;
 }
-
 // --- TOGGLE ACCORDION ---
 function toggleSocialEdit(plt) {
     const el = document.getElementById(`edit-${plt}`);
@@ -555,168 +559,3 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log("Firebase Auto-Reconnected");
     }
 });
-// --- ADS VERIFICATION MODULE ---
-function renderAdsVerifyModule() {
-    const mainDisplay = document.getElementById('mainDisplay');
-    const methods = [
-        { id: 'meta', name: 'Meta Tag Verification', icon: 'fa-code' },
-        { id: 'html', name: 'HTML File Upload', icon: 'fa-file-code' },
-        { id: 'adstxt', name: 'ads.txt File', icon: 'fa-file-alt' },
-        { id: 'js', name: 'JavaScript / Auto Verification', icon: 'fa-bolt' },
-        { id: 'plugin', name: 'Plugin-based (WordPress)', icon: 'fa-puzzle-piece' }
-    ];
-
-    mainDisplay.innerHTML = `
-        <div class="module-card">
-            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">WEBSITE OWNER VERIFICATION</h2>
-            <div id="verifyMethods" style="display:flex; flex-direction:column; gap:10px;">
-                ${methods.map(m => `
-                    <div style="background:#080808; border:1px solid #1a1a1a; border-radius:4px;">
-                        <div onclick="toggleVerifyInput('${m.id}')" style="padding:15px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-left:3px solid #444;" id="head-${m.id}">
-                            <div style="display:flex; align-items:center; gap:12px;">
-                                <i class="fas ${m.icon}" style="color:var(--red); width:20px;"></i>
-                                <span style="font-size:13px; font-weight:bold;">${m.name}</span>
-                            </div>
-                            <i class="fas fa-plus" style="font-size:10px; color:#555;"></i>
-                        </div>
-                        
-                        <div id="box-${m.id}" style="display:none; padding:15px; background:#050505; border-top:1px solid #111;">
-                            <label class="input-label">Enter Verification Code / Content</label>
-                            <textarea id="input-${m.id}" class="input-box" rows="3" placeholder="Paste the code provided by your Ads Network here..."></textarea>
-                            <button class="action-btn" onclick="processVerification('${m.id}')">VERIFY & ACTIVATE</button>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-// UI Toggle Logic
-function toggleVerifyInput(id) {
-    const box = document.getElementById(`box-${id}`);
-    const head = document.getElementById(`head-${id}`);
-    const isHidden = box.style.display === 'none';
-    
-    // Close all other boxes
-    document.querySelectorAll('[id^="box-"]').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('[id^="head-"]').forEach(h => h.style.borderLeftColor = '#444');
-
-    if (isHidden) {
-        box.style.display = 'block';
-        head.style.borderLeftColor = 'var(--red)';
-    }
-}
-
-// Backend Storage Logic (Firebase Sync)
-async function processVerification(methodId) {
-    const code = document.getElementById(`input-${methodId}`).value.trim();
-    
-    if (!code) {
-        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please paste the verification code first.', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-        return;
-    }
-
-    // Loading State
-    Swal.fire({ title: 'Verifying...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }, background: '#0a0a0a', color: '#fff' });
-
-    try {
-        if (typeof db !== 'undefined') {
-            // Permanent storage in Firebase Realtime Database
-            await db.ref('site_settings/ads_verification').child(methodId).set({
-                code: code,
-                status: 'VERIFIED',
-                timestamp: Date.now()
-            });
-
-            Swal.fire({ 
-                icon: 'success', 
-                title: 'OWNER VERIFIED', 
-                text: `Website ownership confirmed via ${methodId.toUpperCase()}.`, 
-                background: '#0a0a0a', 
-                color: '#fff',
-                confirmButtonColor: '#00ffcc'
-            });
-            
-            // UI update: border neon green cheyadam success notification kosam
-            document.getElementById(`head-${methodId}`).style.borderLeftColor = '#00ffcc';
-        } else {
-            throw new Error("Database not connected. Please check Firebase settings.");
-        }
-    } catch (error) {
-        Swal.fire({ icon: 'error', title: 'SYNC FAILED', text: error.message, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-    }
-}
-// Ad Slots generation and fetching
-function loadAdSlots() {
-    const adList = document.getElementById('ad-list');
-    adList.innerHTML = '';
-    for(let i=1; i<=8; i++) {
-        const div = document.createElement('div');
-        div.style = "background:#000; border:1px solid #111; padding:15px; margin-bottom:10px;";
-        div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center">
-                <span style="font-family:'Roboto Mono'; color:#00ffcc;" id="name-display-${i}">AD CONTAINER ${i}</span>
-                <div style="display:flex; gap:10px;">
-                    <button onclick="showManage(${i})" style="color:#0088ff; background:none; border:1px solid #333; cursor:pointer; padding:5px;">MANAGE</button>
-                    <button onclick="updateStatus(${i}, false)" style="color:#ffaa00; background:none; border:1px solid #333; cursor:pointer; padding:5px;">HIDE</button>
-                    <button onclick="updateStatus(${i}, true)" style="color:#00ff00; background:none; border:1px solid #333; cursor:pointer; padding:5px;">VISIBLE</button>
-                </div>
-            </div>
-            <div id="manage-ui-${i}" style="display:none; margin-top:15px; border-top:1px solid #222; padding-top:10px;">
-                <input type="text" id="name-${i}" placeholder="Container Name" style="width:100%; margin-bottom:10px;">
-                <textarea id="code-${i}" rows="3" placeholder="Paste Ad Snippet Here" style="width:100%; margin-bottom:10px; background:#000; color:#00ffcc; border:1px solid #222;"></textarea>
-                <select id="size-${i}" onchange="checkCustom(${i})" style="width:100%; margin-bottom:10px;">
-                    <option value="320x50">320x50</option>
-                    <option value="320x100">320x100</option>
-                    <option value="custom">Custom Size</option>
-                </select>
-                <div id="custom-box-${i}" style="display:none; gap:10px; margin-bottom:10px;">
-                    <input type="number" id="w-${i}" placeholder="Width"> <input type="number" id="h-${i}" placeholder="Height">
-                </div>
-                <button onclick="saveAd(${i})" style="width:100%; background:#ff0000; color:#fff; border:none; padding:10px; cursor:pointer; font-family:'Orbitron';">SAVE</button>
-            </div>
-        `;
-        adList.appendChild(div);
-        fetchAd(i);
-    }
-}
-
-function showManage(i) {
-    const el = document.getElementById(`manage-ui-${i}`);
-    el.style.display = el.style.display === 'block' ? 'none' : 'block';
-}
-
-function checkCustom(i) {
-    document.getElementById(`custom-box-${i}`).style.display = document.getElementById(`size-${i}`).value === 'custom' ? 'flex' : 'none';
-}
-
-function saveAd(i) {
-    const data = {
-        name: document.getElementById(`name-${i}`).value,
-        code: document.getElementById(`code-${i}`).value,
-        sizeType: document.getElementById(`size-${i}`).value,
-        w: document.getElementById(`w-${i}`).value || 320,
-        h: document.getElementById(`h-${i}`).value || 50,
-        visible: true
-    };
-    db.ref(`site_settings/ad_containers/slot${i}`).set(data).then(() => alert("Saved!"));
-}
-
-function updateStatus(i, status) {
-    db.ref(`site_settings/ad_containers/slot${i}`).update({ visible: status }).then(() => alert(status ? "Visible" : "Hidden"));
-}
-
-function fetchAd(i) {
-    db.ref(`site_settings/ad_containers/slot${i}`).once('value', (s) => {
-        const d = s.val();
-        if(d) {
-            document.getElementById(`name-${i}`).value = d.name || '';
-            document.getElementById(`name-display-${i}`).innerText = d.name || `AD CONTAINER ${i}`;
-            document.getElementById(`code-${i}`).value = d.code || '';
-        }
-    });
-}
-
-// Initial Call
-loadAdSlots();
