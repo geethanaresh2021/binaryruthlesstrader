@@ -108,8 +108,9 @@ function loadContent(moduleName) {
             break;
 
         case 'Social Media':
-            renderSocialMediaModule();
-            break;
+    // Social links kosam kuda sync function create cheskovachu
+    renderSocialMediaModule();
+    break;
 
         case 'Brand Name':
             mainDisplay.innerHTML = `
@@ -143,8 +144,9 @@ function loadContent(moduleName) {
             break;
 
         case 'Giveaway Winner':
-            renderGiveawayModule();
-            break;
+    // Direct ga render cheyyakunda, sync chesi render chestham
+    syncAdminDataFromCloud(); 
+    break;
 
         case 'Firebase':
             renderFirebaseModule();
@@ -175,6 +177,17 @@ function loadContent(moduleName) {
 // --- MODULE SPECIFIC RENDERS ---
 
 // --- 1. FIREBASE MODULE RENDERING ---
+async function syncAdminDataFromCloud() {
+    if (typeof db === 'undefined') return;
+
+    // Database nundi giveaway data okkasari techi UI refresh chestham
+    const snap = await db.ref('site_settings/giveaway').once('value');
+    if (snap.exists() && activeModule === 'Giveaway Winner') {
+        renderGiveawayModule(snap.val());
+    }
+}
+
+
 function renderFirebaseModule() {
     const configs = JSON.parse(localStorage.getItem('firebaseConfigsList') || '[]');
     const activeConfigId = localStorage.getItem('activeFirebaseId');
@@ -346,20 +359,22 @@ function deleteFirebase(pid) {
     });
 }
 
-function renderGiveawayModule() {
-    const savedData = JSON.parse(localStorage.getItem('giveawayData') || '{"winner":"@User_Name", "speed":2, "status":"VISIBLE"}');
+function renderGiveawayModule(cloudData = null) {
+    // Local storage badulu direct ga cloud data ni vaadutham
+    const data = cloudData || { winner: "@User_Name", speed: 2 }; 
+
     document.getElementById('mainDisplay').innerHTML = `
         <div class="module-card">
             <div id="giveawayPreview" style="background:#0a0a0a; border:1px solid var(--red); height:50px; display:flex; align-items:center; overflow:hidden; position:relative; margin-bottom:20px;">
                 <div style="background:var(--red); color:#fff; padding:0 10px; z-index:2; height:100%; display:flex; align-items:center; font-size:10px; font-weight:bold;">GIVEAWAY</div>
                 <div id="previewContent" style="width:100%; color:#00ffcc; font-family:'Roboto Mono'; font-weight:bold;">
-                    ${savedData.speed === 0 ? `<center>${savedData.winner}</center>` : `<marquee scrollamount="${savedData.speed}">${savedData.winner}</marquee>`}
+                    ${data.speed === 0 ? `<center>${data.winner}</center>` : `<marquee scrollamount="${data.speed}">${data.winner}</marquee>`}
                 </div>
             </div>
             <label class="input-label">Winner Text</label>
-            <input type="text" id="winnerName" class="input-box" value="${savedData.winner}" oninput="updateGiveawayPreview()">
+            <input type="text" id="winnerName" class="input-box" value="${data.winner}" oninput="updateGiveawayPreview()">
             <label class="input-label">Speed (0=Static, 1-5=Scroll)</label>
-            <input type="number" id="selectedSpeed" class="input-box" min="0" max="5" value="${savedData.speed}" oninput="updateGiveawayPreview()">
+            <input type="number" id="selectedSpeed" class="input-box" min="0" max="5" value="${data.speed}" oninput="updateGiveawayPreview()">
             <button class="action-btn" onclick="saveGiveawayToCloud()">PUBLISH GIVEAWAY</button>
         </div>`;
 }
@@ -395,9 +410,19 @@ function saveBrandName() { saveLogic(); }
 function saveJoinSection() { saveLogic(); }
 function saveWarningNote() { saveLogic(); }
 function saveGiveawayToCloud() {
-    const data = { winner: document.getElementById('winnerName').value, speed: parseInt(document.getElementById('selectedSpeed').value) };
-    localStorage.setItem('giveawayData', JSON.stringify(data));
-    saveLogic();
+    const win = document.getElementById('winnerName').value;
+    const spd = parseInt(document.getElementById('selectedSpeed').value);
+    
+    if (typeof db !== 'undefined') {
+        db.ref('site_settings/giveaway').set({
+            winner: win,
+            speed: spd
+        }).then(() => {
+            Swal.fire({ icon: 'success', title: 'CLOUD SYNCED', text: 'Live on Site!', background: '#0a0a0a', color: '#fff' });
+        });
+    } else {
+        Swal.fire({ icon: 'error', title: 'OFFLINE', text: 'Firebase not connected!' });
+    }
 }
 
 // Firebase Helpers
@@ -446,19 +471,13 @@ function toggleSocialEdit(plt) {
 // --- SAVE & SYNC LOGIC ---
 function saveSocialLink(plt) {
     const linkVal = document.getElementById(`link-${plt}`).value.trim();
-    if(!linkVal) return;
+    if(!linkVal || typeof db === 'undefined') return;
 
-    // Firebase ki pampistunnam (Cloud Storage)
-    if (typeof db !== 'undefined') {
-        db.ref('site_settings/socials').child(plt).set(linkVal)
-        .then(() => {
-            Swal.fire({ icon: 'success', title: 'CLOUD SAVED', background: '#0a0a0a', color: '#fff' });
-        });
-    }
+    db.ref('site_settings/socials').child(plt).set(linkVal)
+    .then(() => {
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `${plt} Link Updated`, showConfirmButton: false, timer: 1500, background: '#111', color: '#fff' });
+    });
 }
-
-
-
 // --- SYNC HEADER LINKS ---
 function syncHeaderLinks() {
     const links = JSON.parse(localStorage.getItem('socialLinks') || '{}');
