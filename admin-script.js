@@ -454,7 +454,7 @@ function publishWarningToCloud() {
 // Preview ni instant ga update chese logic
 // Admin Script lo Preview logic ni update cheyyi
 function updateNotePreview() {
-    const txt = document.getElementById('noteText').value; // Exactly what you type
+    const txt = document.getElementById('noteText').value; // Pure text
     const clr = document.getElementById('noteColor').value;
     const spd = parseInt(document.getElementById('noteSpeed').value) || 0;
     const previewContainer = document.getElementById('notePreviewContent');
@@ -462,12 +462,15 @@ function updateNotePreview() {
     previewContainer.style.color = clr;
 
     if (spd === 0) {
-        // Speed 0: Pure Center (No extra icons)
-        previewContainer.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; text-align:center;">${txt}</div>`;
+        // SPEED 0: Center Logic
+        previewContainer.style.textAlign = "center";
+        previewContainer.innerHTML = `<div style="width:100%; display:flex; justify-content:center; align-items:center; height:100%;">${txt}</div>`;
     } else {
-        // Speed > 0: Pure Scroll (No extra icons)
-        // Refreshing the marquee tag for instant scroll
-        previewContainer.innerHTML = `<marquee scrollamount="${spd}" style="width:100%; display:block;">${txt}</marquee>`;
+        // SPEED > 0: Scroll Logic
+        // 'key' add cheyadam valla browser marquee ni restart chestundi
+        const key = Math.random(); 
+        previewContainer.style.textAlign = "left";
+        previewContainer.innerHTML = `<marquee key="${key}" scrollamount="${spd}" style="width:100%; display:block;">${txt}</marquee>`;
     }
 }
 // --- HELPER LOGIC ---
