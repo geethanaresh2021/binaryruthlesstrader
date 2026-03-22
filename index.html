@@ -342,40 +342,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const db = firebase.database();
 
     // --- 1. CLOUD SETTINGS LISTENER (GIVEAWAY & WARNINGS) ---
-    b.ref('site_settings').on('value', (snapshot) => {
+    // Index.html lo unna Firebase listener logic motham deentho replace cheyyi
+db.ref('site_settings').on('value', (snapshot) => {
     const settings = snapshot.val() || {};
-    console.log("Cloud Data Received:", settings); // Check this in Browser Console (F12)
+    console.log("Index Received Data:", settings);
 
-        // Giveaway Update
-        const giveaway = settings.giveaway || { winner: "@User", speed: 2 };
-        const announceStrip = document.getElementById('announceStrip');
-        if (announceStrip) {
-            announceStrip.innerHTML = giveaway.speed === 0 
-                ? `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${giveaway.winner}` 
-                : `<marquee scrollamount="${giveaway.speed}"><i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${giveaway.winner} | JOIN TELEGRAM FOR NEXT SESSION</marquee>`;
-        }
-
-        // --- WARNING NOTE CLOUD UPDATE ---
+    // --- WARNING NOTE SYNC ---
     const warningStrip = document.getElementById('warningStrip');
     if (warningStrip) {
         if (settings.warning_note) {
             const wn = settings.warning_note;
-            const text = wn.text || "STAY RUTHLESS";
-            const color = wn.color || "#ff0000";
-            const speed = parseInt(wn.speed) || 0;
-
-            warningStrip.style.color = color;
-
-            if (speed === 0) {
-                warningStrip.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${text}</div>`;
+            warningStrip.style.color = wn.color || "#ff0000";
+            
+            const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
+            
+            if (parseInt(wn.speed) === 0) {
+                warningStrip.innerHTML = `<div style="text-align:center; width:100%;">${content}</div>`;
             } else {
-                warningStrip.innerHTML = `<marquee scrollamount="${speed}"><i class="fas fa-exclamation-triangle"></i> ${text}</marquee>`;
+                warningStrip.innerHTML = `<marquee scrollamount="${wn.speed}">${content}</marquee>`;
             }
         } else {
-            // Data lekapothe default text
-            warningStrip.innerHTML = `<marquee scrollamount="5">WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>`;
+            // Data lekapothe default
+            warningStrip.innerHTML = `<marquee scrollamount="5">STAY RUTHLESS | TRADING SYSTEM ACTIVE</marquee>`;
         }
     }
+
+    // --- GIVEAWAY SYNC ---
+    const announceStrip = document.getElementById('announceStrip');
+    if (announceStrip && settings.giveaway) {
+        const gv = settings.giveaway;
+        const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
+        
+        if (parseInt(gv.speed) === 0) {
+            announceStrip.innerHTML = `<div style="text-align:center; width:100%;">${gvContent}</div>`;
+        } else {
+            announceStrip.innerHTML = `<marquee scrollamount="${gv.speed}">${gvContent}</marquee>`;
+        }
+    }
+}, (error) => {
+    console.error("Firebase Listener Error:", error);
 });
 
         // Social Links Update
