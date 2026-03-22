@@ -704,3 +704,88 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log("Firebase Auto-Reconnected");
     }
 });
+// --- 1. LOAD GIVEAWAY INTERFACE ---
+function loadGiveawayManager() {
+    const display = document.getElementById('mainDisplay');
+    const header = document.querySelector('#panelHeader h1');
+    header.innerText = "GIVEAWAY WINNER";
+
+    // Nuvvu ichina exact HTML block ikkada load avthundi
+    display.innerHTML = `
+    <div id="giveawaySection" class="settings-panel" style="display: block; padding: 20px; border: 1px solid #222; margin-top: 10px;">
+        <h3 style="color: var(--red); margin-bottom: 15px;">GIVEAWAY SETTINGS</h3>
+        
+        <input type="text" id="giveawayWinner" placeholder="Enter Winner Name or Message..." 
+               style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #00ffcc; font-family: 'Roboto Mono'; font-weight: bold; margin-bottom: 15px;"
+               oninput="updateGiveawayPreview()">
+
+        <select id="giveawaySpeed" style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: #fff; margin-bottom: 15px;" 
+                onchange="updateGiveawayPreview()">
+            <option value="0">0 - CENTER (STILL)</option>
+            <option value="1">1 - VERY SLOW</option>
+            <option value="2">2 - SLOW</option>
+            <option value="3">3 - MEDIUM</option>
+            <option value="4">4 - FAST</option>
+            <option value="5">5 - RUTHLESS FAST</option>
+        </select>
+
+        <div style="width: 100%; height: 40px; background: #000; border: 1px dashed var(--red); margin-bottom: 15px; overflow: hidden;" id="giveawayPreviewBox">
+            <div id="giveawayPreviewContent" style="width: 100%; height: 100%; color: #fff; font-family: 'Roboto Mono'; font-size: 11px; text-transform: uppercase; display: flex; align-items: center;">
+                PREVIEW HERE
+            </div>
+        </div>
+
+        <button onclick="publishGiveaway()" style="width: 100%; padding: 15px; background: var(--red); color: #fff; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;">
+            PUBLISH GIVEAWAY
+        </button>
+    </div>`;
+}
+
+// --- 2. LIVE PREVIEW RENDERER ---
+function updateGiveawayPreview() {
+    const txt = document.getElementById('giveawayWinner').value || "PREVIEW HERE";
+    const spd = parseInt(document.getElementById('giveawaySpeed').value) || 0;
+    const content = document.getElementById('giveawayPreviewContent');
+
+    content.innerHTML = ""; // Clear existing
+
+    if (spd === 0) {
+        // CENTER STILL
+        content.style.display = "flex";
+        content.style.justifyContent = "center";
+        content.innerHTML = `<span style="width:100%; text-align:center;">${txt}</span>`;
+    } else {
+        // SMOOTH SCROLL (Using Unique Key for restart)
+        content.style.display = "block";
+        const key = Date.now();
+        content.innerHTML = `<marquee key="${key}" scrollamount="${spd}" style="width:100%; line-height:40px; display:block;">${txt}</marquee>`;
+    }
+}
+
+// --- 3. PUBLISH TO FIREBASE ---
+function publishGiveaway() {
+    const winnerText = document.getElementById('giveawayWinner').value;
+    const speedVal = parseInt(document.getElementById('giveawaySpeed').value);
+
+    if (!winnerText) {
+        Swal.fire({ icon: 'error', title: 'EMPTY', text: 'Please enter a winner message!', background: '#0a0a0a', color: '#fff' });
+        return;
+    }
+
+    // Firebase database update ('db' refers to your initialized database)
+    db.ref('site_settings/giveaway').set({
+        winner: winnerText,
+        speed: speedVal
+    }).then(() => {
+        Swal.fire({ 
+            icon: 'success', 
+            title: 'LIVE NOW', 
+            text: 'Giveaway updated on Home Page!', 
+            background: '#0a0a0a', 
+            color: '#fff', 
+            confirmButtonColor: '#ff0000' 
+        });
+    }).catch(err => {
+        console.error("Firebase Error:", err);
+    });
+}
