@@ -380,12 +380,46 @@ function renderGiveawayModule(cloudData = null) {
 }
 
 function renderWarningNoteModule() {
+    // Firebase nundi current settings techukoni default ga chupistundi
+    const savedNote = JSON.parse(localStorage.getItem('warning_data') || '{"text":"Warning: Trading is Risk", "color":"#ff0000", "speed":2}');
+
     document.getElementById('mainDisplay').innerHTML = `
         <div class="module-card">
-            <label class="input-label">Warning Content</label>
-            <textarea id="noteEditor" class="input-box" rows="4">Warning: Trading has risk...</textarea>
-            <button class="action-btn" onclick="saveWarningNote()">PUBLISH NOTE</button>
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">WARNING NOTE MANAGEMENT</h2>
+            
+            <div id="notePreviewBox" style="background:#0a0a0a; border:1px solid #222; height:50px; display:flex; align-items:center; overflow:hidden; position:relative; margin-bottom:20px;">
+                <div id="notePreviewContent" style="width:100%; color:${savedNote.color}; font-family:'Roboto Mono'; font-weight:bold; font-size:12px;">
+                    ${savedNote.speed == 0 ? `<center>${savedNote.text}</center>` : `<marquee scrollamount="${savedNote.speed}">${savedNote.text}</marquee>`}
+                </div>
+            </div>
+
+            <label class="input-label">Warning Text</label>
+            <textarea id="noteText" class="input-box" rows="2" oninput="updateNotePreview()">${savedNote.text}</textarea>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
+                <div>
+                    <label class="input-label">Text Color</label>
+                    <input type="color" id="noteColor" class="input-box" value="${savedNote.color}" style="height:45px; padding:5px;" oninput="updateNotePreview()">
+                </div>
+                <div>
+                    <label class="input-label">Scroll Speed (0-5)</label>
+                    <input type="number" id="noteSpeed" class="input-box" min="0" max="5" value="${savedNote.speed}" oninput="updateNotePreview()">
+                </div>
+            </div>
+
+            <button class="action-btn" style="margin-top:20px;" onclick="publishWarningToCloud()">PUBLISH NOTE</button>
         </div>`;
+}
+
+// Preview ni instant ga update chese logic
+function updateNotePreview() {
+    const txt = document.getElementById('noteText').value;
+    const clr = document.getElementById('noteColor').value;
+    const spd = parseInt(document.getElementById('noteSpeed').value);
+    const content = document.getElementById('notePreviewContent');
+
+    content.style.color = clr;
+    content.innerHTML = spd === 0 ? `<center>${txt}</center>` : `<marquee scrollamount="${spd}">${txt}</marquee>`;
 }
 
 // --- HELPER LOGIC ---
