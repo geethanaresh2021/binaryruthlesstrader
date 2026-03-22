@@ -313,8 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
 
 <script>
     // 1. HARDCODED CONFIG (Deenivalla Incognito lo kuda database ki connect avtundi)
@@ -359,6 +358,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. COUNTS LOGIC (Incognito proof)
     const today = new Date().toISOString().split('T')[0];
     const statsRef = db.ref(`stats/${today}`);
+
+    // --- 4. ADS CLOUD SYNC & VERIFICATION ---
+db.ref('site_settings/ads_verification').on('value', (snapshot) => {
+    const ads = snapshot.val();
+    const containers = document.querySelectorAll('.ad-slot');
+
+    if(ads && ads.status === 'VERIFIED') {
+        console.log("Ads System: ACTIVE via", ads.method);
+        
+        // Ad slots ni active chestundi
+        containers.forEach(div => {
+            div.style.borderStyle = 'solid';
+            div.style.borderColor = 'rgba(255, 0, 0, 0.5)';
+            div.style.color = '#555';
+            div.innerHTML = '<i class="fas fa-ad"></i> RUTHLESS ADS ACTIVE';
+        });
+
+        // Meta Tag injection (for Google/Exoclick verification)
+        if(ads.method === 'meta' && !document.getElementById('ads-meta')) {
+            const metaDiv = document.createElement('div');
+            metaDiv.id = 'ads-meta';
+            metaDiv.style.display = 'none';
+            metaDiv.innerHTML = ads.code;
+            document.head.appendChild(metaDiv);
+        }
+    } else {
+        console.log("Ads System: PENDING VERIFICATION");
+    }
+});
     
     // Online Count
     const myStatusRef = db.ref('presence').push();
