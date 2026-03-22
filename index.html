@@ -341,8 +341,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const db = firebase.database();
 
     // --- 1. CLOUD SETTINGS LISTENER (GIVEAWAY & WARNINGS) ---
-    db.ref('site_settings').on('value', (snapshot) => {
-        const settings = snapshot.val() || {};
+    b.ref('site_settings').on('value', (snapshot) => {
+    const settings = snapshot.val() || {};
+    console.log("Cloud Data Received:", settings); // Check this in Browser Console (F12)
 
         // Giveaway Update
         const giveaway = settings.giveaway || { winner: "@User", speed: 2 };
@@ -354,15 +355,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- WARNING NOTE CLOUD UPDATE ---
-    if (parseInt(wn.speed) === 0) {
-            // Speed 0 unte Center lo unchutunnam
-            warningStrip.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</div>`;
+    const warningStrip = document.getElementById('warningStrip');
+    if (warningStrip) {
+        if (settings.warning_note) {
+            const wn = settings.warning_note;
+            const text = wn.text || "STAY RUTHLESS";
+            const color = wn.color || "#ff0000";
+            const speed = parseInt(wn.speed) || 0;
+
+            warningStrip.style.color = color;
+
+            if (speed === 0) {
+                warningStrip.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${text}</div>`;
+            } else {
+                warningStrip.innerHTML = `<marquee scrollamount="${speed}"><i class="fas fa-exclamation-triangle"></i> ${text}</marquee>`;
+            }
         } else {
-            // Speed unte Marquee tag inject chestunnam
-            // Note: Prathi sari kotha marquee tag create chesthe scroll restart avtundi
-            warningStrip.innerHTML = `<marquee scrollamount="${wn.speed}"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</marquee>`;
+            // Data lekapothe default text
+            warningStrip.innerHTML = `<marquee scrollamount="5">WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.</marquee>`;
         }
     }
+});
 
         // Social Links Update
         const links = settings.socials || {};
