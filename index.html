@@ -58,10 +58,8 @@
     border-radius: 4px; 
     height: 40px; 
     overflow: hidden;
-    position: relative;
-    display: flex; /* Default flex for centering */
-    align-items: center;
-    justify-content: center;
+    display: block; /* Very important for marquee */
+    line-height: 40px; /* Text vertical center avvadaniki */
 }
         .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
         .announce-strip { background: transparent; color: #fff; border-color: #222; }
@@ -195,21 +193,23 @@ db.ref('site_settings').on('value', (snapshot) => {
     console.log("Ruthless Cloud Sync:", settings);
 
     // --- WARNING NOTE SYNC ---
+// Firebase listener lopala...
 const warningStrip = document.getElementById('warningStrip');
 if (warningStrip && settings.warning_note) {
     const wn = settings.warning_note;
     const speed = parseInt(wn.speed) || 0;
-    const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
-    
+    const text = wn.text || ""; // Exact text mathrame vastundi
+
     warningStrip.style.color = wn.color || "#ff0000";
 
     if (speed === 0) {
-        // SPEED 0: Normal div tho center chestunnam
-        warningStrip.innerHTML = `<div style="width:100%; text-align:center; font-weight:bold;">${content}</div>`;
+        // Speed 0 ayithe: Horizontal ga Center ki vastundi
+        warningStrip.style.textAlign = "center";
+        warningStrip.innerHTML = `<span>${text}</span>`;
     } else {
-        // SPEED > 0: Marquee tag inject chestunnam
-        // width:100% and display:block important for scroll
-        warningStrip.innerHTML = `<marquee scrollamount="${speed}" style="width:100%; display:block;">${content}</marquee>`;
+        // Speed > 0 ayithe: Scroll avtundi
+        warningStrip.style.textAlign = "left";
+        warningStrip.innerHTML = `<marquee scrollamount="${speed}" style="width:100%; display:block;">${text}</marquee>`;
     }
 }
 
