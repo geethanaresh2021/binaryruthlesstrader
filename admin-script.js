@@ -476,10 +476,23 @@ function updateNotePreview() {
 // --- HELPER LOGIC ---
 
 function updateGiveawayPreview() {
-    const win = document.getElementById('winnerName').value;
-    const spd = parseInt(document.getElementById('selectedSpeed').value);
-    const content = document.getElementById('previewContent');
-    content.innerHTML = spd === 0 ? `<center>${win}</center>` : `<marquee scrollamount="${spd}">${win}</marquee>`;
+    const winner = document.getElementById('giveawayWinner').value; // Pure text
+    const spd = parseInt(document.getElementById('giveawaySpeed').value) || 0;
+    const previewContainer = document.getElementById('giveawayPreviewContent');
+
+    // Speed 0 unte Center, lekunte Scroll
+    if (spd === 0) {
+        previewContainer.style.textAlign = "center";
+        previewContainer.style.display = "flex";
+        previewContainer.style.justifyContent = "center";
+        previewContainer.style.alignItems = "center";
+        previewContainer.innerHTML = `<span>${winner}</span>`;
+    } else {
+        const key = Math.random(); // Force refresh for scroll
+        previewContainer.style.textAlign = "left";
+        previewContainer.style.display = "block";
+        previewContainer.innerHTML = `<marquee key="${key}" scrollamount="${spd}" style="width:100%; display:block;">${winner}</marquee>`;
+    }
 }
 
 function saveLogic() {
