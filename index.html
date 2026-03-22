@@ -217,32 +217,57 @@
 
         // --- 1. CLOUD SETTINGS LISTENER (WARNINGS & ANNOUNCEMENTS) ---
 // --- WARNING NOTE LISTENER ---
-db.ref('site_settings/warning_note').on('value', (snapshot) => {
-    const data = snapshot.val();
-    const warnBox = document.getElementById('warningNoteContainer');
-    if (data && warnBox) {
-        warnBox.style.color = data.color || "#ff0000";
-        warnBox.style.fontSize = "18px"; // Font size pencham
-        warnBox.style.fontWeight = "bold"; // Bold chesham
-        warnBox.style.fontFamily = "'Roboto Mono', monospace";
-        
-        // ... baki scrolling logic ...
-    }
-});
 
-// --- GIVEAWAY / ANNOUNCEMENT LISTENER ---
-db.ref('site_settings/giveaway').on('value', (snapshot) => {
-    const data = snapshot.val();
-    const announceBox = document.getElementById('announceStrip');
-    if (data && announceBox) {
-        announceBox.style.color = data.color || "#ffffff";
-        announceBox.style.fontSize = "18px"; // Font size pencham
-        announceBox.style.fontWeight = "900"; // Extra Bold for Ruthless look
-        announceBox.style.letterSpacing = "1px"; // Letters madhya gap
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Firebase Listeners (Giveaway & Warning Note)
+    // Giveaway / Announcement Sync
+    db.ref('site_settings/giveaway').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+        }
+    });
+
+    // Warning Note Sync
+    db.ref('site_settings/warning_note').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
+        }
+    });
+
+// --- SMOOTH SCROLL FUNCTION ---
+function applySmoothScroll(containerId, text, speed, color) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Reset Container
+    container.innerHTML = "";
+    container.style.color = color;
+    container.style.fontSize = "20px"; // Pedda letters
+    container.style.fontWeight = "900"; // Bold
+    container.style.display = "flex";
+    container.style.overflow = "hidden";
+    container.style.whiteSpace = "nowrap";
+
+    if (parseInt(speed) === 0) {
+        container.style.justifyContent = "center";
+        container.innerHTML = `<span>${text}</span>`;
+    } else {
+        const duration = 30 / speed; // Speed adjustment
+        container.style.justifyContent = "flex-start";
         
-        // ... baki scrolling logic ...
+        // Loop kosam double text peduthunnam
+        container.innerHTML = `
+            <div style="display: flex; animation: scrollText ${duration}s linear infinite;">
+                <span style="padding-right: 100px;">${text}</span>
+                <span style="padding-right: 100px;">${text}</span>
+            </div>
+        `;
     }
-});
+}
+
+
     // --- SOCIAL LINKS SYNC ---
     const links = settings.socials || {};
     ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
