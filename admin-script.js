@@ -84,15 +84,55 @@ function loadContent(moduleName) {
             break;
 
         case 'Ads Containers':
-            // Kotha 8 Containers List & Management Logic
+            // 8 Containers List Generation
             let adsListHtml = '';
             for (let i = 1; i <= 8; i++) {
                 adsListHtml += `
-                    <button class="nav-btn" style="width:100%; margin-bottom:5px; justify-content: space-between;" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
-                        <span><i class="fas fa-box"></i> CONTAINER ${i}</span>
-                        <i class="fas fa-chevron-right" style="font-size:10px; opacity:0.5;"></i>
+                    <button class="nav-btn" style="width:100%; margin-bottom:8px; justify-content: space-between; border:1px solid #1a1a1a;" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
+                        <span><i class="fas fa-box-open" style="color:var(--red);"></i> &nbsp; AD CONTAINER ${i}</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; opacity:0.5;"></i>
                     </button>`;
             }
+
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <div id="adsListGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
+                        ${adsListHtml}
+                    </div>
+
+                    <div id="adEditorPanel" style="display:none; border: 1px solid #222; padding: 20px; background: #050505; border-radius: 8px;">
+                        <h3 id="editingAdTitle" style="color:var(--red); font-family:'Orbitron'; font-size:16px; margin-bottom:20px; text-align:center;"></h3>
+                        <input type="hidden" id="targetAdId">
+
+                        <div style="display:flex; gap:10px; margin-bottom:25px;">
+                            <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; font-weight:bold;">VISIBLE</button>
+                            <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; font-weight:bold;">HIDE</button>
+                        </div>
+
+                        <div id="manageSection">
+                            <label class="input-label">AD NAME (INTERNAL)</label>
+                            <input type="text" id="adNickname" class="input-box" placeholder="e.g. Header Banner">
+
+                            <label class="input-label">AD SNIPPET (PASTE SCRIPT CODE)</label>
+                            <textarea id="adSnippet" class="input-box" rows="6" style="color:#00ffcc; font-family:'Roboto Mono'; font-size:12px;" placeholder="Paste Adsterra/Google script here..."></textarea>
+
+                            <label class="input-label">CHOOSE SIZE</label>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:20px;">
+                                <button class="action-btn" style="font-size:11px;" onclick="setPresetSize('320px','50px')">320x50</button>
+                                <button class="action-btn" style="font-size:11px;" onclick="setPresetSize('320px','100px')">320x100</button>
+                                <button class="action-btn" style="font-size:11px;" onclick="enableCustomSize()">CUSTOM</button>
+                            </div>
+
+                            <div id="customSizeInputs" style="display:none; gap:10px; margin-bottom:20px;">
+                                <input type="text" id="customWidth" class="input-box" placeholder="Width (e.g. 100%)">
+                                <input type="text" id="customHeight" class="input-box" placeholder="Height (e.g. 250px)">
+                            </div>
+
+                            <button class="publish-btn" onclick="saveAdSettings()" style="width:100%; padding:18px; background:var(--red); font-family:'Orbitron'; font-weight:900; box-shadow: 0 0 20px rgba(255,0,0,0.2);">SAVE & RUN ADS</button>
+                        </div>
+                    </div>
+                </div>`;
+            break;
 
             mainDisplay.innerHTML = `
                 <div class="module-card" style="display:flex; flex-direction:column; gap:20px;">
@@ -914,5 +954,63 @@ function saveAdSettings() {
 
     db.ref('site_settings/ads/' + id).set(adData).then(() => {
         Swal.fire({ icon: 'success', title: 'AD UPDATED', text: 'Live on Home Page!', background: '#0a0a0a', color: '#fff' });
+    });
+}
+let currentAdVisibility = true;
+
+function openAdEditor(id, title) {
+    document.getElementById('adEditorPanel').style.display = 'block';
+    document.getElementById('editingAdTitle').innerText = title;
+    document.getElementById('targetAdId').value = id;
+
+    // Firebase nundi data load chestundi
+    db.ref('site_settings/ads/' + id).once('value', (snapshot) => {
+        const data = snapshot.val() || {};
+        document.getElementById('adNickname').value = data.name || title;
+        document.getElementById('adSnippet').value = data.snippet || "";
+        document.getElementById('customWidth').value = data.width || "320px";
+        document.getElementById('customHeight').value = data.height || "50px";
+        setAdVisibility(data.visible !== false);
+    });
+    
+    // Smooth scroll to editor
+    document.getElementById('adEditorPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function setAdVisibility(isVisible) {
+    currentAdVisibility = isVisible;
+    document.getElementById('btnVisible').style.background = isVisible ? "var(--red)" : "#0a0a0a";
+    document.getElementById('btnHidden').style.background = !isVisible ? "var(--red)" : "#0a0a0a";
+}
+
+function setPresetSize(w, h) {
+    document.getElementById('customSizeInputs').style.display = 'none';
+    document.getElementById('customWidth').value = w;
+    document.getElementById('customHeight').value = h;
+}
+
+function enableCustomSize() {
+    document.getElementById('customSizeInputs').style.display = 'flex';
+}
+
+function saveAdSettings() {
+    const id = document.getElementById('targetAdId').value;
+    const adData = {
+        name: document.getElementById('adNickname').value,
+        snippet: document.getElementById('adSnippet').value,
+        width: document.getElementById('customWidth').value,
+        height: document.getElementById('customHeight').value,
+        visible: currentAdVisibility
+    };
+
+    db.ref('site_settings/ads/' + id).set(adData).then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'SYSTEM UPDATED',
+            text: 'Ad is now live and layout adjusted!',
+            background: '#0a0a0a',
+            color: '#fff',
+            confirmButtonColor: '#ff0000'
+        });
     });
 }
