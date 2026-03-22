@@ -119,43 +119,7 @@ case 'Ads Network':
     `;
     break;
 
-// --- 2. ADD THESE FUNCTIONS AT THE END OF admin-script.js ---
-function updatePlaceholder() {
-    const method = document.getElementById('verifyMethod').value;
-    const input = document.getElementById('verifyContent');
-    const label = document.getElementById('inputLabel');
-    
-    if(method === 'ads_txt') {
-        input.placeholder = "Example: google.com, pub-000, DIRECT, f08c...";
-        label.innerText = "ADS.TXT CONTENT";
-    } else if(method === 'meta') {
-        input.placeholder = "<meta name='google-site-verification' content='...' />";
-        label.innerText = "META TAG CODE";
-    } else {
-        input.placeholder = "Paste your verification script/code here...";
-        label.innerText = "VERIFICATION CONTENT";
-    }
-}
 
-function processVerification() {
-    const method = document.getElementById('verifyMethod').value;
-    const content = document.getElementById('verifyContent').value;
-
-    if (!content && method !== 'html') {
-        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please enter the details!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-        return;
-    }
-
-    // Firebase DB Update
-    db.ref('site_settings/ads_verification').set({
-        method: method,
-        code: content,
-        status: 'VERIFIED',
-        timestamp: new Date().toLocaleString()
-    }).then(() => {
-        Swal.fire({ icon: 'success', title: 'VERIFIED', text: 'System Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
-    });
-}
 
 // --- ADS VERIFICATION MODULE (FIREBASE ONLY) ---
 function renderAdsModule() {
@@ -728,4 +692,39 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log("Firebase Auto-Reconnected");
     }
 });
+function updatePlaceholder() {
+    const method = document.getElementById('verifyMethod').value;
+    const input = document.getElementById('verifyContent');
+    const label = document.getElementById('inputLabel');
+    
+    if(method === 'ads_txt') {
+        input.placeholder = "Example: google.com, pub-000, DIRECT, f08c...";
+        label.innerText = "ADS.TXT CONTENT";
+    } else if(method === 'meta') {
+        input.placeholder = "<meta name='google-site-verification' content='...' />";
+        label.innerText = "META TAG CODE";
+    } else {
+        input.placeholder = "Paste your verification script/code here...";
+        label.innerText = "VERIFICATION CONTENT";
+    }
+}
 
+function processVerification() {
+    const method = document.getElementById('verifyMethod').value;
+    const content = document.getElementById('verifyContent').value;
+
+    if (!content && method !== 'html') {
+        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please enter the details!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+        return;
+    }
+
+    // Firebase DB Update
+    db.ref('site_settings/ads_verification').set({
+        method: method,
+        code: content,
+        status: 'VERIFIED',
+        timestamp: new Date().toLocaleString()
+    }).then(() => {
+        Swal.fire({ icon: 'success', title: 'VERIFIED', text: 'System Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+    });
+}
