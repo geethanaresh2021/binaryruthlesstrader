@@ -343,12 +343,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `<marquee scrollamount="${giveaway.speed}"><i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${giveaway.winner} | JOIN TELEGRAM FOR NEXT SESSION</marquee>`;
         }
 
-        // Warning Note Update
-        const warningContent = settings.warning_note || "WARNING: TRADING INVOLVES RISK. STAY RUTHLESS.";
+        // --- WARNING NOTE CLOUD UPDATE ---
+    if (settings.warning_note) {
+        const wn = settings.warning_note;
         const warningStrip = document.getElementById('warningStrip');
         if (warningStrip) {
-            warningStrip.innerHTML = `<marquee scrollamount="5"><i class="fas fa-exclamation-triangle"></i> ${warningContent}</marquee>`;
+            // Color applied and speed check
+            warningStrip.style.color = wn.color;
+            warningStrip.innerHTML = wn.speed === 0 
+                ? `<center><i class="fas fa-exclamation-triangle"></i> ${wn.text}</center>` 
+                : `<marquee scrollamount="${wn.speed}"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</marquee>`;
         }
+    }
 
         // Social Links Update
         const links = settings.socials || {};
