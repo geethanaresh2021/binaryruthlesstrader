@@ -182,42 +182,62 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. REAL-TIME CLOUD SYNC
-        db.ref('site_settings').on('value', (snapshot) => {
-            const settings = snapshot.val() || {};
-            console.log("Cloud Data:", settings);
+        // --- 1. CLOUD SETTINGS LISTENER (WARNINGS & ANNOUNCEMENTS) ---
+db.ref('site_settings').on('value', (snapshot) => {
+    const settings = snapshot.val() || {};
+    console.log("Ruthless Cloud Sync:", settings);
 
-            // Warning Note Logic
-            const warningStrip = document.getElementById('warningStrip');
-            if (warningStrip && settings.warning_note) {
-                const wn = settings.warning_note;
-                warningStrip.style.color = wn.color || "#ff0000";
-                const content = `<i class="fas fa-exclamation-triangle"></i> ${wn.text || 'STAY RUTHLESS'}`;
-                warningStrip.innerHTML = parseInt(wn.speed) === 0 
-                    ? `<div style="text-align:center; width:100%;">${content}</div>`
-                    : `<marquee scrollamount="${wn.speed}">${content}</marquee>`;
+    // --- WARNING NOTE SYNC ---
+    const warningStrip = document.getElementById('warningStrip');
+    if (warningStrip) {
+        if (settings.warning_note) {
+            const wn = settings.warning_note;
+            const speed = parseInt(wn.speed) || 0; // Speed lekapothe 0 (Center)
+            const text = wn.text || 'STAY RUTHLESS';
+            
+            warningStrip.style.color = wn.color || "#ff0000";
+            const content = `<i class="fas fa-exclamation-triangle"></i> ${text}`;
+
+            // SPEED 0 unna, leda text chinnadiga unna CENTER lo untundi
+            if (speed === 0) {
+                warningStrip.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; font-weight:bold;">${content}</div>`;
+            } else {
+                // Marquee tag restart avvadaniki prathisari kotha element create chesthunnam
+                warningStrip.innerHTML = `<marquee scrollamount="${speed}" behavior="scroll" direction="left" style="width:100%; display:block;">${content}</marquee>`;
             }
+        } else {
+            warningStrip.innerHTML = `<div style="text-align:center; width:100%;">STAY RUTHLESS | SYSTEM ACTIVE</div>`;
+        }
+    }
 
-            // Giveaway Logic
-            const announceStrip = document.getElementById('announceStrip');
-            if (announceStrip && settings.giveaway) {
-                const gv = settings.giveaway;
-                const content = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
-                announceStrip.innerHTML = parseInt(gv.speed) === 0 
-                    ? `<div style="text-align:center; width:100%;">${content}</div>`
-                    : `<marquee scrollamount="${gv.speed}">${content}</marquee>`;
+    // --- GIVEAWAY SYNC (ANNOUNCE STRIP) ---
+    const announceStrip = document.getElementById('announceStrip');
+    if (announceStrip) {
+        if (settings.giveaway) {
+            const gv = settings.giveaway;
+            const gvSpeed = parseInt(gv.speed) || 0;
+            const gvContent = `<i class="fas fa-bullhorn"></i> GIVEAWAY WINNER: ${gv.winner || '@User'}`;
+            
+            if (gvSpeed === 0) {
+                announceStrip.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;">${gvContent}</div>`;
+            } else {
+                announceStrip.innerHTML = `<marquee scrollamount="${gvSpeed}" behavior="scroll" direction="left" style="width:100%; display:block;">${gvContent}</marquee>`;
             }
+        }
+    }
 
-            // Social Links Sync
-            const links = settings.socials || {};
-            ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
-                const el = document.getElementById(`link-${platform}`);
-                if (el && links[platform]) {
-                    el.href = links[platform];
-                    el.target = "_blank";
-                }
-            });
-        });
+    // --- SOCIAL LINKS SYNC ---
+    const links = settings.socials || {};
+    ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
+        const el = document.getElementById(`link-${platform}`);
+        if (el && links[platform]) {
+            el.href = links[platform];
+            el.target = "_blank";
+        }
+    });
+}, (error) => {
+    console.error("Firebase Sync Error:", error);
+});
 
         // 3. ANALYTICS & STATS
         const today = new Date().toISOString().split('T')[0];
