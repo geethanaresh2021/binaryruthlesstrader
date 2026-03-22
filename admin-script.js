@@ -8,18 +8,18 @@ window.onload = () => {
     loadContent(activeModule);
 };
 
-// --- CORE NAVIGATION LOGIC ---
-// --- UPDATED LOAD CONTENT FUNCTION (MERGED & FIXED) ---
+// --- UPDATED ADMIN ENGINE ---
+let activeModule = 'Dashboard';
+
 function loadContent(moduleName) {
+    console.log("Button Clicked: " + moduleName); // Debugging line
+    
     if (!moduleName) return;
 
-    // 1. Save state for refresh
     localStorage.setItem('activeModule', moduleName);
-    activeModule = moduleName;
-
-    // 2. Sidebar UI Update (Active State)
+    
+    // 1. Sidebar Active Class Fix
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        // Button lo unna text ni trim chesi match chesthunnam (Icons unna kuda panichesthundi)
         const btnText = btn.innerText.trim();
         if (btnText.includes(moduleName)) {
             btn.classList.add('active');
@@ -28,104 +28,61 @@ function loadContent(moduleName) {
         }
     });
 
-    // 3. Update Panel Header
+    // 2. Header Title Fix
     const panelHeader = document.getElementById('panelHeader');
     if (panelHeader) {
         panelHeader.innerHTML = `<h1>${moduleName}</h1><p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS.</p>`;
     }
 
+    // 3. Main Display Fix (Clear and Update)
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // --- CRITICAL: Ee line paatha content ni clear chesthundi ---
-    mainDisplay.innerHTML = ''; 
+    mainDisplay.innerHTML = ''; // Clear previous content
 
-    // 4. Switching Logic for all 16 Modules
+    // 4. Case-Sensitive Matching
     switch (moduleName) {
         case 'Views':
-            renderViewsModule();
+            renderViewsModule ? renderViewsModule() : (mainDisplay.innerHTML = "Views Function Missing");
             if(window.listenToLiveStats) window.listenToLiveStats();
             break;
 
-        case 'Revenue':
+        case 'Ads Network':
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <label class="input-label">Estimated Revenue (INR)</label>
-                    <h1 style="color:#00ffcc; font-size:40px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
-                    <button class="action-btn" style="margin-top:20px;" onclick="saveLogic()">SYNC WITH ADS</button>
+                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px;">ADS NETWORK VERIFICATION</h2>
+                    <select id="verifyMethod" class="input-box" onchange="updatePlaceholder()">
+                        <option value="meta">Meta Tag Verification</option>
+                        <option value="ads_txt">ads.txt Content</option>
+                    </select>
+                    <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste code here..." style="margin-top:15px; color:#00ffcc; font-weight:bold;"></textarea>
+                    <button class="action-btn" onclick="processVerification()">ACTIVATE ADS</button>
                 </div>`;
             break;
 
-        case 'Ads Network':
-            // Ads Network Verification UI Direct load
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">ADS NETWORK VERIFICATION</h2>
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label class="input-label">VERIFICATION METHOD</label>
-                        <select id="verifyMethod" class="input-box" onchange="updatePlaceholder()" style="background:#080808; color:#00ffcc;">
-                            <option value="meta">Meta Tag Verification</option>
-                            <option value="ads_txt">ads.txt File Content</option>
-                            <option value="js_tag">JavaScript Tag / Auto-verify</option>
-                        </select>
-                    </div>
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label id="inputLabel" class="input-label">VERIFICATION CODE / META TAG</label>
-                        <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste your code here..." style="color: #00ffcc; font-weight: bold;"></textarea>
-                    </div>
-                    <button class="action-btn" onclick="processVerification()">VERIFY & ACTIVATE WEBSITE</button>
-                </div>`;
+        case 'Social Media':
+            renderSocialMediaModule ? renderSocialMediaModule() : (mainDisplay.innerHTML = "Social Media Function Missing");
+            break;
+
+        case 'Firebase':
+            renderFirebaseModule ? renderFirebaseModule() : (mainDisplay.innerHTML = "Firebase Function Missing");
             break;
 
         case 'ST Resize':
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <label class="input-label">Main Container Width (px)</label>
+                    <label class="input-label">Container Width</label>
                     <input type="text" id="screenWidth" class="input-box" value="1280">
-                    <button class="action-btn" onclick="saveSTResize()">APPLY LAYOUT</button>
+                    <button class="action-btn" onclick="saveSTResize()">APPLY</button>
                 </div>`;
             break;
 
-        case 'Social Media':
-            renderSocialMediaModule();
-            break;
-
-        case 'Firebase':
-            renderFirebaseModule();
-            break;
-
-        case 'Giveaway Winner':
-            renderGiveawayModule();
-            break;
-
-        case 'Warning Note':
-            renderWarningNoteModule();
-            break;
-
-        case 'Brand Name':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Header Title</label>
-                    <input type="text" id="brandTitle" class="input-box" value="BINARY RUTHLESS TRADER">
-                    <button class="action-btn" onclick="saveBrandName()">UPDATE BRAND</button>
-                </div>`;
-            break;
-
-        case 'Signal Connection':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Signal Source URL</label>
-                    <input type="text" id="sigUrl" class="input-box" value="QUOTEX">
-                    <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
-                </div>`;
+        case 'Revenue':
+            mainDisplay.innerHTML = `<div class="module-card"><h1 style="color:#00ffcc; font-size:40px;">₹ 15,240.00</h1></div>`;
             break;
 
         default:
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <h2 style="color:var(--red)">${moduleName}</h2>
-                    <p>This module is coming soon or under development.</p>
-                </div>`;
+            mainDisplay.innerHTML = `<div class="module-card"><h2>${moduleName}</h2><p>Working on this module...</p></div>`;
             break;
     }
 }
