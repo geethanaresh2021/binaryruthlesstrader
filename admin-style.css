@@ -243,6 +243,22 @@ h1, h2, h3 { font-family: var(--orbitron); }
     .module-card { padding: 15px; }
 }
 
+.action-btn {
+    padding: 10px 20px;
+    background: #000;
+    color: #fff;
+    border: 1px solid #333;
+    font-family: 'Orbitron';
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.action-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
 /* Animations */
 @keyframes fadeIn { 
     from { opacity: 0; transform: translateY(15px); } 
