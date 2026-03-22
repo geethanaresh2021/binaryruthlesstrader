@@ -792,3 +792,84 @@ function publishGiveaway() {
         Swal.fire({ icon: 'success', title: 'LIVE', text: 'Giveaway Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
     });
 }
+// --- 1. ST RESIZER MAIN INTERFACE ---
+function loadSTResizer() {
+    const display = document.getElementById('mainDisplay');
+    const header = document.querySelector('#panelHeader h1');
+    header.innerText = "ST RESIZE MANAGER";
+
+    // Containers List
+    display.innerHTML = `
+    <div class="resizer-panel" style="padding: 10px;">
+        <p style="color: #888; font-size: 11px; margin-bottom: 15px;">SELECT CONTAINER TO RESIZE:</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button class="action-btn" onclick="openResizeEditor('signalContainer', 'SIGNAL CONTAINER')">SIGNAL CONTAINER</button>
+            <button class="action-btn" onclick="openResizeEditor('toolsContainer', 'TOOLS CONTAINER')">TOOLS CONTAINER</button>
+        </div>
+
+        <div id="resizeEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px;">
+            <h3 id="editingTargetName" style="color: var(--red); margin-bottom: 20px; font-family: 'Orbitron';"></h3>
+            <input type="hidden" id="targetId">
+
+            <div style="margin-bottom: 20px;">
+                <label style="color: #888; font-size: 10px; display: block; margin-bottom: 5px;">DESKTOP SIZES</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="dWidth" placeholder="Width (e.g. 100%)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
+                    <input type="text" id="dHeight" placeholder="Height (e.g. 600px)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="color: #888; font-size: 10px; display: block; margin-bottom: 5px;">MOBILE SIZES (WIDTH FIXED 100%)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" value="100%" disabled style="flex:1; padding: 12px; background:#111; border:1px solid #222; color:#555; cursor: not-allowed;">
+                    <input type="text" id="mHeight" placeholder="Mobile Height (e.g. 400px)" style="flex:1; padding: 12px; background:#000; border:1px solid #333; color:#00ffcc; font-weight:bold;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button onclick="saveSTSizes()" style="flex: 2; padding: 15px; background: var(--red); color: #fff; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;">SAVE SIZES</button>
+                <button onclick="loadSTResizer()" style="flex: 1; padding: 15px; background: #222; color: #fff; border: none; font-family: 'Orbitron'; cursor: pointer;">DEFAULT</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+// --- 2. OPEN EDITOR & FETCH CURRENT SIZES ---
+function openResizeEditor(id, name) {
+    document.getElementById('resizeEditor').style.display = 'block';
+    document.getElementById('editingTargetName').innerText = name;
+    document.getElementById('targetId').value = id;
+
+    // Firebase nundi ippudu unna sizes techukundam
+    db.ref('site_settings/st_resizer/' + id).once('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('dWidth').value = data.desktopWidth || "100%";
+            document.getElementById('dHeight').value = data.desktopHeight || "600px";
+            document.getElementById('mHeight').value = data.mobileHeight || "500px";
+        } else {
+            // Defaults if no data in Firebase
+            document.getElementById('dWidth').value = "100%";
+            document.getElementById('dHeight').value = "600px";
+            document.getElementById('mHeight').value = "500px";
+        }
+    });
+}
+
+// --- 3. SAVE TO FIREBASE ---
+function saveSTSizes() {
+    const id = document.getElementById('targetId').value;
+    const dw = document.getElementById('dWidth').value;
+    const dh = document.getElementById('dHeight').value;
+    const mh = document.getElementById('mHeight').value;
+
+    db.ref('site_settings/st_resizer/' + id).set({
+        desktopWidth: dw,
+        desktopHeight: dh,
+        mobileHeight: mh
+    }).then(() => {
+        Swal.fire({ icon: 'success', title: 'SAVED', text: 'Container sizes updated live!', background: '#0a0a0a', color: '#fff' });
+    });
+}
