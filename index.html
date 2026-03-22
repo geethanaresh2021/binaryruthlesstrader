@@ -65,6 +65,14 @@
         /* AD SLOTS (Full Width Mobile, Max 400 Desktop) */
         .ad-slot { width: 100%; max-width: 400px; height: 55px; background: #000; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 10px; color: #333; border-radius: 4px; }
 
+        /* Style tag lo idhi add cheyyi */
+#warningStrip {
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
         /* DROPDOWN & DISPLAY */
         .ruthless-select { 
             width: 100%; max-width: 400px; padding: 16px; background: var(--panel); border: 1px solid #222; 
@@ -344,15 +352,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- WARNING NOTE CLOUD UPDATE ---
-    if (settings.warning_note) {
-        const wn = settings.warning_note;
-        const warningStrip = document.getElementById('warningStrip');
-        if (warningStrip) {
-            // Color applied and speed check
-            warningStrip.style.color = wn.color;
-            warningStrip.innerHTML = wn.speed === 0 
-                ? `<center><i class="fas fa-exclamation-triangle"></i> ${wn.text}</center>` 
-                : `<marquee scrollamount="${wn.speed}"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</marquee>`;
+    if (parseInt(wn.speed) === 0) {
+            // Speed 0 unte Center lo unchutunnam
+            warningStrip.innerHTML = `<div style="text-align:center; width:100%;"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</div>`;
+        } else {
+            // Speed unte Marquee tag inject chestunnam
+            // Note: Prathi sari kotha marquee tag create chesthe scroll restart avtundi
+            warningStrip.innerHTML = `<marquee scrollamount="${wn.speed}"><i class="fas fa-exclamation-triangle"></i> ${wn.text}</marquee>`;
         }
     }
 
