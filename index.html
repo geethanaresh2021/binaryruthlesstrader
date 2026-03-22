@@ -51,15 +51,14 @@
         .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 0 10px; }
         .top-strip { 
     width: 100%; 
+    height: 40px; 
     font-family: 'Roboto Mono', monospace; 
     font-size: 11px; 
     text-transform: uppercase; 
     border: 1px solid #111; 
     border-radius: 4px; 
-    height: 40px; 
     overflow: hidden;
-    display: block; /* Very important for marquee */
-    line-height: 40px; /* Text vertical center avvadaniki */
+    white-space: nowrap;
 }
         .warning-strip { background: transparent; color: var(--red); border-color: rgba(255,0,0,0.3); }
         .announce-strip { background: transparent; color: #fff; border-color: #222; }
@@ -194,25 +193,29 @@ db.ref('site_settings').on('value', (snapshot) => {
 
     // --- WARNING NOTE SYNC ---
 // Firebase listener lopala...
+// db.ref('site_settings').on('value', ...) lopala idi replace cheyyi
+// db.ref('site_settings').on('value', ...) lopala idi replace cheyyi
 const warningStrip = document.getElementById('warningStrip');
 if (warningStrip && settings.warning_note) {
     const wn = settings.warning_note;
     const speed = parseInt(wn.speed) || 0;
-    const text = wn.text || ""; // Exact text mathrame vastundi
+    const text = wn.text || ""; 
 
     warningStrip.style.color = wn.color || "#ff0000";
 
     if (speed === 0) {
-        // Speed 0 ayithe: Horizontal ga Center ki vastundi
-        warningStrip.style.textAlign = "center";
+        // SPEED 0: Exactly Center
+        warningStrip.style.display = "flex";
+        warningStrip.style.justifyContent = "center";
+        warningStrip.style.alignItems = "center";
         warningStrip.innerHTML = `<span>${text}</span>`;
     } else {
-        // Speed > 0 ayithe: Scroll avtundi
-        warningStrip.style.textAlign = "left";
-        warningStrip.innerHTML = `<marquee scrollamount="${speed}" style="width:100%; display:block;">${text}</marquee>`;
+        // SPEED > 0: Force Scroll Restart
+        const key = Date.now(); // Unique key for each update
+        warningStrip.style.display = "block";
+        warningStrip.innerHTML = `<marquee key="${key}" scrollamount="${speed}" style="width:100%; display:block;">${text}</marquee>`;
     }
 }
-
 // --- GIVEAWAY SYNC ---
 const announceStrip = document.getElementById('announceStrip');
 if (announceStrip && settings.giveaway) {
