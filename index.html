@@ -216,53 +216,31 @@
         const db = firebase.database();
 
         // --- 1. CLOUD SETTINGS LISTENER (WARNINGS & ANNOUNCEMENTS) ---
-// --- SMOOTH SCROLL LOGIC FOR WARNING & GIVEAWAY ---
-function applySmoothScroll(containerId, text, speed, color) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    // Reset styles
-    container.innerHTML = "";
-    container.style.color = color;
-    container.style.display = "flex";
-    container.style.alignItems = "center";
-    container.style.whiteSpace = "nowrap";
-    container.style.overflow = "hidden";
-
-    if (speed === 0) {
-        // CENTER STILL
-        container.style.justifyContent = "center";
-        container.innerHTML = `<span style="font-weight:900; font-size:20px;">${text}</span>`;
-    } else {
-        // SMOOTH CSS ANIMATION
-        container.style.justifyContent = "flex-start";
-        
-        // Calculate duration based on speed (Higher speed = Lower duration)
-        // Speed 1 = 20s, Speed 5 = 4s (Ruthless Fast)
-        const duration = 25 / speed; 
-
-        container.innerHTML = `
-            <div class="smooth-scroll-wrapper" style="display: flex; animation: scrollText ${duration}s linear infinite; width: fit-content;">
-                <span style="padding-right: 50px; font-weight:900; font-size:20px;">${text}</span>
-                <span style="padding-right: 50px; font-weight:900; font-size:20px;">${text}</span>
-            </div>
-        `;
-    }
-}
-
-// Giveaway Listener calling smooth function
-db.ref('site_settings/giveaway').on('value', (snapshot) => {
+// --- WARNING NOTE LISTENER ---
+db.ref('site_settings/warning_note').on('value', (snapshot) => {
     const data = snapshot.val();
-    if (data) {
-        applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+    const warnBox = document.getElementById('warningNoteContainer');
+    if (data && warnBox) {
+        warnBox.style.color = data.color || "#ff0000";
+        warnBox.style.fontSize = "18px"; // Font size pencham
+        warnBox.style.fontWeight = "bold"; // Bold chesham
+        warnBox.style.fontFamily = "'Roboto Mono', monospace";
+        
+        // ... baki scrolling logic ...
     }
 });
 
-// Warning Note Listener calling smooth function
-db.ref('site_settings/warning_note').on('value', (snapshot) => {
+// --- GIVEAWAY / ANNOUNCEMENT LISTENER ---
+db.ref('site_settings/giveaway').on('value', (snapshot) => {
     const data = snapshot.val();
-    if (data) {
-        applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
+    const announceBox = document.getElementById('announceStrip');
+    if (data && announceBox) {
+        announceBox.style.color = data.color || "#ffffff";
+        announceBox.style.fontSize = "18px"; // Font size pencham
+        announceBox.style.fontWeight = "900"; // Extra Bold for Ruthless look
+        announceBox.style.letterSpacing = "1px"; // Letters madhya gap
+        
+        // ... baki scrolling logic ...
     }
 });
     // --- SOCIAL LINKS SYNC ---
