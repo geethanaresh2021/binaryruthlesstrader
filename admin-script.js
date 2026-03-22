@@ -1,3 +1,5 @@
+
+const db = firebase.database();
 // --- GLOBAL STORAGE & INITIALIZATION ---
 let activeModule = localStorage.getItem('activeModule') || 'Views';
 
