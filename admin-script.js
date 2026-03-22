@@ -452,11 +452,30 @@ function publishWarningToCloud() {
 }
 
 // Preview ni instant ga update chese logic
+// Admin Script lo Preview logic ni update cheyyi
 function updateNotePreview() {
     const txt = document.getElementById('noteText').value;
     const clr = document.getElementById('noteColor').value;
-    const spd = parseInt(document.getElementById('noteSpeed').value);
+    const spd = parseInt(document.getElementById('noteSpeed').value) || 0;
     const previewContainer = document.getElementById('notePreviewContent');
+
+    // Color update
+    previewContainer.style.color = clr;
+
+    // Content re-render logic
+    if (spd === 0) {
+        // Speed 0: Flexbox center logic
+        previewContainer.style.display = "flex";
+        previewContainer.style.justifyContent = "center";
+        previewContainer.style.alignItems = "center";
+        previewContainer.innerHTML = `<span style="width:100%; text-align:center; font-weight:bold;">${txt}</span>`;
+    } else {
+        // Speed > 0: Force Marquee refresh
+        previewContainer.style.display = "block";
+        // Marquee tag restart avvadaniki innerHTML ni kothaga assign chestunnam
+        previewContainer.innerHTML = `<marquee scrollamount="${spd}" style="width:100%; display:block;">${txt}</marquee>`;
+    }
+}
 
     // Color update
     previewContainer.style.color = clr;
