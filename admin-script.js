@@ -88,13 +88,8 @@ function loadContent(moduleName) {
             break;
 
         case 'Ads Network':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Network API Key</label>
-                    <input type="text" class="input-box" placeholder="ADS-XXXX-XXXX">
-                    <button class="action-btn" onclick="saveLogic()">VERIFY NETWORK</button>
-                </div>`;
-            break;
+    renderAdsVerifyModule();
+    break;
 
         case 'Ads Containers':
             mainDisplay.innerHTML = `
@@ -560,3 +555,95 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log("Firebase Auto-Reconnected");
     }
 });
+// --- ADS VERIFICATION MODULE ---
+function renderAdsVerifyModule() {
+    const mainDisplay = document.getElementById('mainDisplay');
+    const methods = [
+        { id: 'meta', name: 'Meta Tag Verification', icon: 'fa-code' },
+        { id: 'html', name: 'HTML File Upload', icon: 'fa-file-code' },
+        { id: 'adstxt', name: 'ads.txt File', icon: 'fa-file-alt' },
+        { id: 'js', name: 'JavaScript / Auto Verification', icon: 'fa-bolt' },
+        { id: 'plugin', name: 'Plugin-based (WordPress)', icon: 'fa-puzzle-piece' }
+    ];
+
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px;">WEBSITE OWNER VERIFICATION</h2>
+            <div id="verifyMethods" style="display:flex; flex-direction:column; gap:10px;">
+                ${methods.map(m => `
+                    <div style="background:#080808; border:1px solid #1a1a1a; border-radius:4px;">
+                        <div onclick="toggleVerifyInput('${m.id}')" style="padding:15px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-left:3px solid #444;" id="head-${m.id}">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <i class="fas ${m.icon}" style="color:var(--red); width:20px;"></i>
+                                <span style="font-size:13px; font-weight:bold;">${m.name}</span>
+                            </div>
+                            <i class="fas fa-plus" style="font-size:10px; color:#555;"></i>
+                        </div>
+                        
+                        <div id="box-${m.id}" style="display:none; padding:15px; background:#050505; border-top:1px solid #111;">
+                            <label class="input-label">Enter Verification Code / Content</label>
+                            <textarea id="input-${m.id}" class="input-box" rows="3" placeholder="Paste the code provided by your Ads Network here..."></textarea>
+                            <button class="action-btn" onclick="processVerification('${m.id}')">VERIFY & ACTIVATE</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// UI Toggle Logic
+function toggleVerifyInput(id) {
+    const box = document.getElementById(`box-${id}`);
+    const head = document.getElementById(`head-${id}`);
+    const isHidden = box.style.display === 'none';
+    
+    // Close all other boxes
+    document.querySelectorAll('[id^="box-"]').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('[id^="head-"]').forEach(h => h.style.borderLeftColor = '#444');
+
+    if (isHidden) {
+        box.style.display = 'block';
+        head.style.borderLeftColor = 'var(--red)';
+    }
+}
+
+// Backend Storage Logic (Firebase Sync)
+async function processVerification(methodId) {
+    const code = document.getElementById(`input-${methodId}`).value.trim();
+    
+    if (!code) {
+        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please paste the verification code first.', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+        return;
+    }
+
+    // Loading State
+    Swal.fire({ title: 'Verifying...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }, background: '#0a0a0a', color: '#fff' });
+
+    try {
+        if (typeof db !== 'undefined') {
+            // Permanent storage in Firebase Realtime Database
+            await db.ref('site_settings/ads_verification').child(methodId).set({
+                code: code,
+                status: 'VERIFIED',
+                timestamp: Date.now()
+            });
+
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'OWNER VERIFIED', 
+                text: `Website ownership confirmed via ${methodId.toUpperCase()}.`, 
+                background: '#0a0a0a', 
+                color: '#fff',
+                confirmButtonColor: '#00ffcc'
+            });
+            
+            // UI update: border neon green cheyadam success notification kosam
+            document.getElementById(`head-${methodId}`).style.borderLeftColor = '#00ffcc';
+        } else {
+            throw new Error("Database not connected. Please check Firebase settings.");
+        }
+    } catch (error) {
+        Swal.fire({ icon: 'error', title: 'SYNC FAILED', text: error.message, background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+    }
+}
