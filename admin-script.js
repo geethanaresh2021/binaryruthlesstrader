@@ -87,9 +87,75 @@ function loadContent(moduleName) {
                 </div>`;
             break;
 
-        case 'Ads Network':
-            renderAdsModule();
-            break;
+        // --- 1. ADS NETWORK CONTENT LOAD ---
+case 'Ads Network':
+    mainDisplay.innerHTML = `
+        <div class="admin-card ruthless-card">
+            <h3><i class="fas fa-shield-check"></i> ADS NETWORK VERIFICATION</h3>
+            <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Select method and enter the verification code provided by your Ad Network.</p>
+            
+            <div class="input-group">
+                <label>VERIFICATION METHOD</label>
+                <select id="verifyMethod" class="ruthless-select" onchange="updatePlaceholder()">
+                    <option value="meta">Meta Tag Verification</option>
+                    <option value="html">HTML File Upload (Simulated)</option>
+                    <option value="ads_txt">ads.txt File Content</option>
+                    <option value="js_tag">JavaScript Tag / Auto-verify</option>
+                    <option value="plugin">Plugin-based (Generic)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label id="inputLabel">VERIFICATION CODE / META TAG</label>
+                <textarea id="verifyContent" class="ruthless-input" 
+                    placeholder="Paste your code here..."
+                    style="height: 120px; font-family: 'Roboto Mono'; color: #00ffcc; font-weight: bold;"></textarea>
+            </div>
+
+            <button class="action-btn" onclick="processVerification()">
+                <i class="fas fa-check-circle"></i> VERIFY & ACTIVATE WEBSITE
+            </button>
+        </div>
+    `;
+    break;
+
+// --- 2. ADD THESE FUNCTIONS AT THE END OF admin-script.js ---
+function updatePlaceholder() {
+    const method = document.getElementById('verifyMethod').value;
+    const input = document.getElementById('verifyContent');
+    const label = document.getElementById('inputLabel');
+    
+    if(method === 'ads_txt') {
+        input.placeholder = "Example: google.com, pub-000, DIRECT, f08c...";
+        label.innerText = "ADS.TXT CONTENT";
+    } else if(method === 'meta') {
+        input.placeholder = "<meta name='google-site-verification' content='...' />";
+        label.innerText = "META TAG CODE";
+    } else {
+        input.placeholder = "Paste your verification script/code here...";
+        label.innerText = "VERIFICATION CONTENT";
+    }
+}
+
+function processVerification() {
+    const method = document.getElementById('verifyMethod').value;
+    const content = document.getElementById('verifyContent').value;
+
+    if (!content && method !== 'html') {
+        Swal.fire({ icon: 'error', title: 'EMPTY FIELD', text: 'Please enter the details!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+        return;
+    }
+
+    // Firebase DB Update
+    db.ref('site_settings/ads_verification').set({
+        method: method,
+        code: content,
+        status: 'VERIFIED',
+        timestamp: new Date().toLocaleString()
+    }).then(() => {
+        Swal.fire({ icon: 'success', title: 'VERIFIED', text: 'System Updated!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
+    });
+}
 
 // --- ADS VERIFICATION MODULE (FIREBASE ONLY) ---
 function renderAdsModule() {
