@@ -454,40 +454,22 @@ function publishWarningToCloud() {
 // Preview ni instant ga update chese logic
 // Admin Script lo Preview logic ni update cheyyi
 function updateNotePreview() {
-    const txt = document.getElementById('noteText').value;
+    const txt = document.getElementById('noteText').value; // Exactly what you type
     const clr = document.getElementById('noteColor').value;
     const spd = parseInt(document.getElementById('noteSpeed').value) || 0;
     const previewContainer = document.getElementById('notePreviewContent');
 
-    // Color update
     previewContainer.style.color = clr;
 
-    // Content re-render logic
     if (spd === 0) {
-        // Speed 0: Flexbox center logic
-        previewContainer.style.display = "flex";
-        previewContainer.style.justifyContent = "center";
-        previewContainer.style.alignItems = "center";
-        previewContainer.innerHTML = `<span style="width:100%; text-align:center; font-weight:bold;">${txt}</span>`;
+        // Speed 0: Pure Center (No extra icons)
+        previewContainer.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; text-align:center;">${txt}</div>`;
     } else {
-        // Speed > 0: Force Marquee refresh
-        previewContainer.style.display = "block";
-        // Marquee tag restart avvadaniki innerHTML ni kothaga assign chestunnam
+        // Speed > 0: Pure Scroll (No extra icons)
+        // Refreshing the marquee tag for instant scroll
         previewContainer.innerHTML = `<marquee scrollamount="${spd}" style="width:100%; display:block;">${txt}</marquee>`;
     }
 }
-
-    // Color update
-    previewContainer.style.color = clr;
-
-    // Content re-render (Scroll restart avvadaniki idi avasaram)
-    if (spd === 0) {
-        previewContainer.innerHTML = `<center>${txt}</center>`;
-    } else {
-        previewContainer.innerHTML = `<marquee scrollamount="${spd}">${txt}</marquee>`;
-    }
-}
-
 // --- HELPER LOGIC ---
 
 function updateGiveawayPreview() {
