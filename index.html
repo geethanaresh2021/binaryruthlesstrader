@@ -79,9 +79,38 @@
         /* --- MAIN CONTENT --- */
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         .widget-container { display: flex; gap: 25px; width: 100%; max-width: 1200px; justify-content: center; margin-top: 10px; }
-        .widget { flex: 1; display: flex; flex-direction: column; gap: 12px; width: 100%; align-items: center; }
+        .widget { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0px; /* gap 0 petti margin-bottom vaadutunnam auto-adjust kosam */
+    width: 100%; 
+    align-items: center; 
+}
 
-        .ad-slot { width: 100%; max-width: 400px; height: 55px; background: #000; border: 1px dashed #222; display: flex; align-items: center; justify-content: center; font-family: 'Roboto Mono'; font-size: 10px; color: #333; border-radius: 4px; }
+        .ad-slot { 
+    width: 100%; 
+    max-width: 400px; 
+    height: 55px; /* default height */
+    background: #000; 
+    border: 1px dashed #222; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-family: 'Roboto Mono'; 
+    font-size: 10px; 
+    color: #333; 
+    border-radius: 4px;
+    margin-bottom: 12px; /* Containers madhya gap */
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Deenivalla container hide ayinappudu space migaladu */
+.ad-slot[style*="display: none"] {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
 
         .ruthless-select { 
             width: 100%; max-width: 400px; padding: 16px; background: var(--panel); border: 1px solid #222; 
@@ -297,6 +326,46 @@
             document.getElementById('sigSelect').value = localStorage.getItem('last_sig') || "";
             document.getElementById('toolSelect').value = localStorage.getItem('last_tool') || "";
         };
-    </script>
+
+        // --- LIVE ADS LISTENER & AUTO-ADJUST ---
+db.ref('site_settings/ads').on('value', (snapshot) => {
+    const ads = snapshot.val();
+    if (!ads) return;
+
+    for (let i = 1; i <= 8; i++) {
+        const adId = `adSlot${i}`;
+        const adData = ads[adId];
+        const adElement = document.getElementById(adId);
+
+        if (adElement && adData) {
+            if (adData.visible === false) {
+                // HIDE: Removes space entirely, elements auto-adjust
+                adElement.style.display = "none"; 
+            } else {
+                // SHOW: Restore visibility and layout
+                adElement.style.display = "flex";
+                adElement.style.width = adData.width || "100%";
+                adElement.style.height = adData.height || "50px";
+                
+                // Load Snippet (Only if changed to avoid refreshing same ad)
+                if (adElement.getAttribute('data-snippet') !== adData.snippet) {
+                    adElement.innerHTML = adData.snippet;
+                    adElement.setAttribute('data-snippet', adData.snippet);
+                    
+                    // Re-run any scripts in the snippet
+                    const scripts = adElement.getElementsByTagName('script');
+                    for (let s of scripts) {
+                        const newScript = document.createElement('script');
+                        if (s.src) newScript.src = s.src;
+                        newScript.textContent = s.textContent;
+                        s.parentNode.replaceChild(newScript, s);
+                    }
+                }
+            }
+        }
+    }
+});
+        
+  </script>
 </body>
 </html>
