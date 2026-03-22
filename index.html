@@ -223,25 +223,28 @@ if (warningStrip && settings.warning_note) {
     }
 }
 // --- GIVEAWAY SYNC (ANNOUNCE STRIP) ---
-const announceStrip = document.getElementById('announceStrip');
-if (announceStrip && settings.giveaway) {
-    const gv = settings.giveaway;
-    const gvSpeed = parseInt(gv.speed) || 0;
-    const gvText = gv.winner || ""; // Nuvvu ichina text mathrame vastundi
+db.ref('site_settings/giveaway').on('value', (snapshot) => {
+    const data = snapshot.val();
+    const announceStrip = document.getElementById('announceStrip');
+    
+    if (data && announceStrip) {
+        const speed = parseInt(data.speed) || 0;
+        const text = data.winner || "";
+        const color = data.color || "#ffffff"; // Admin nundi vachina color
 
-    if (gvSpeed === 0) {
-        // SPEED 0: Exactly Center
-        announceStrip.style.display = "flex";
-        announceStrip.style.justifyContent = "center";
-        announceStrip.style.alignItems = "center";
-        announceStrip.innerHTML = `<span>${gvText}</span>`;
-    } else {
-        // SPEED > 0: Force Scroll Restart
-        const gvKey = Date.now(); 
-        announceStrip.style.display = "block";
-        announceStrip.innerHTML = `<marquee key="${gvKey}" scrollamount="${gvSpeed}" style="width:100%; display:block;">${gvText}</marquee>`;
+        announceStrip.style.color = color; // Applying the color
+
+        if (speed === 0) {
+            announceStrip.style.display = "flex";
+            announceStrip.style.justifyContent = "center";
+            announceStrip.innerHTML = `<span>${text}</span>`;
+        } else {
+            announceStrip.style.display = "block";
+            const key = Date.now();
+            announceStrip.innerHTML = `<marquee key="${key}" scrollamount="${speed}" style="width:100%;">${text}</marquee>`;
+        }
     }
-}
+});
     // --- SOCIAL LINKS SYNC ---
     const links = settings.socials || {};
     ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
