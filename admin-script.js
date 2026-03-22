@@ -17,18 +17,18 @@ function loadContent(moduleName) {
     localStorage.setItem('activeModule', moduleName);
     activeModule = moduleName;
 
-    // 2. Sidebar Active UI Update
+    // 2. Sidebar UI Update (Active State)
     document.querySelectorAll('.nav-btn').forEach(btn => {
+        // Button lo unna text ni trim chesi match chesthunnam (Icons unna kuda panichesthundi)
         const btnText = btn.innerText.trim();
-        // Includes vaadithe icon unna kuda text match avthundi
         if (btnText.includes(moduleName)) {
             btn.classList.add('active');
         } else {
-            btn.classList.remove('remove');
+            btn.classList.remove('active');
         }
     });
 
-    // 3. Panel Header Update
+    // 3. Update Panel Header
     const panelHeader = document.getElementById('panelHeader');
     if (panelHeader) {
         panelHeader.innerHTML = `<h1>${moduleName}</h1><p>MANAGING ${moduleName.toUpperCase()} MODULE SETTINGS.</p>`;
@@ -37,10 +37,10 @@ function loadContent(moduleName) {
     const mainDisplay = document.getElementById('mainDisplay');
     if (!mainDisplay) return;
 
-    // --- CLEAR PREVIOUS CONTENT ---
+    // --- CRITICAL: Ee line paatha content ni clear chesthundi ---
     mainDisplay.innerHTML = ''; 
 
-    // 4. Switching Logic for all modules
+    // 4. Switching Logic for all 16 Modules
     switch (moduleName) {
         case 'Views':
             renderViewsModule();
@@ -51,28 +51,29 @@ function loadContent(moduleName) {
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <label class="input-label">Estimated Revenue (INR)</label>
-                    <h1 style="color:#00ffcc; font-size:42px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
+                    <h1 style="color:#00ffcc; font-size:40px; font-family:'Roboto Mono'; font-weight:bold; text-shadow: 0 0 10px #00ffcc66;">₹ 15,240.00</h1>
                     <button class="action-btn" style="margin-top:20px;" onclick="saveLogic()">SYNC WITH ADS</button>
                 </div>`;
             break;
 
         case 'Ads Network':
+            // Ads Network Verification UI Direct load
             mainDisplay.innerHTML = `
                 <div class="module-card">
-                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">ADS VERIFICATION</h2>
-                    <div class="input-group">
-                        <label class="input-label">METHOD</label>
+                    <h2 style="font-size:12px; color:var(--red); margin-bottom:15px; letter-spacing:1px;">ADS NETWORK VERIFICATION</h2>
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <label class="input-label">VERIFICATION METHOD</label>
                         <select id="verifyMethod" class="input-box" onchange="updatePlaceholder()" style="background:#080808; color:#00ffcc;">
                             <option value="meta">Meta Tag Verification</option>
-                            <option value="ads_txt">ads.txt Content</option>
-                            <option value="js_tag">JavaScript Tag</option>
+                            <option value="ads_txt">ads.txt File Content</option>
+                            <option value="js_tag">JavaScript Tag / Auto-verify</option>
                         </select>
                     </div>
-                    <div class="input-group" style="margin-top:15px;">
-                        <label id="inputLabel" class="input-label">VERIFICATION CODE</label>
-                        <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste code here..." style="color:#00ffcc; font-weight:bold;"></textarea>
+                    <div class="input-group" style="margin-bottom:15px;">
+                        <label id="inputLabel" class="input-label">VERIFICATION CODE / META TAG</label>
+                        <textarea id="verifyContent" class="input-box" rows="5" placeholder="Paste your code here..." style="color: #00ffcc; font-weight: bold;"></textarea>
                     </div>
-                    <button class="action-btn" onclick="processVerification()">ACTIVATE ADS</button>
+                    <button class="action-btn" onclick="processVerification()">VERIFY & ACTIVATE WEBSITE</button>
                 </div>`;
             break;
 
@@ -81,8 +82,6 @@ function loadContent(moduleName) {
                 <div class="module-card">
                     <label class="input-label">Main Container Width (px)</label>
                     <input type="text" id="screenWidth" class="input-box" value="1280">
-                    <label class="input-label">Disable Zoom (0/1)</label>
-                    <input type="number" id="zoomDisable" class="input-box" value="1">
                     <button class="action-btn" onclick="saveSTResize()">APPLY LAYOUT</button>
                 </div>`;
             break;
@@ -116,13 +115,17 @@ function loadContent(moduleName) {
             mainDisplay.innerHTML = `
                 <div class="module-card">
                     <label class="input-label">Signal Source URL</label>
-                    <input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com">
+                    <input type="text" id="sigUrl" class="input-box" value="QUOTEX">
                     <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
                 </div>`;
             break;
 
         default:
-            mainDisplay.innerHTML = `<div class="module-card"><h2>${moduleName}</h2><p>Module under development.</p></div>`;
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <h2 style="color:var(--red)">${moduleName}</h2>
+                    <p>This module is coming soon or under development.</p>
+                </div>`;
             break;
     }
 }
