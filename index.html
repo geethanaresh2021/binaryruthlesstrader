@@ -86,28 +86,25 @@
             align-items: center; 
         }
 
+        /* FIXED AD SLOT CSS */
         .ad-slot { 
             width: 100%; 
             max-width: 400px; 
-            height: 55px; 
-            background: #000; 
-            border: 1px dashed #222; 
-            display: flex; 
+            display: none; /* Hide by default to prevent click blocking */
             align-items: center; 
             justify-content: center; 
             font-family: 'Roboto Mono'; 
             font-size: 10px; 
             color: #333; 
             border-radius: 4px;
-            margin-bottom: 12px; 
+            margin-bottom: 0px; 
             overflow: hidden;
-            transition: all 0.3s ease;
         }
-
-        .ad-slot[style*="display: none"] {
-            margin-bottom: 0 !important;
-            padding: 0 !important;
-            border: none !important;
+        .ad-active { 
+            display: flex; 
+            margin-bottom: 12px; 
+            border: 1px dashed #222; 
+            background: #000;
         }
 
         .ruthless-select { 
@@ -126,20 +123,24 @@
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
-            overflow-y: auto; 
+            overflow: hidden; /* Changed from auto to hidden to let internal container handle scroll */
             position: relative; 
         }
 
+        /* FIXED TOOL CONTAINER CSS */
         #toolDisplayContainer {
             width: 100%;
+            height: 100%;
             min-height: 415px;
             max-height: 415px;
             overflow-y: auto;
             overflow-x: hidden;
             background: #050505;
             padding: 10px;
-            border-radius: 4px;
+            position: relative;
         }
+        
+        #sigScreen { overflow-y: auto; }
 
         #toolDisplayContainer::-webkit-scrollbar { width: 5px; }
         #toolDisplayContainer::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
@@ -188,8 +189,8 @@
     <div class="page-content">
         <div class="widget-container">
             <div class="widget">
-                <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
-                <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                <div class="ad-slot" id="adSlot1"></div>
+                <div class="ad-slot" id="adSlot2"></div>
                 
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
@@ -199,13 +200,13 @@
                     <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
                 </div>
                 
-                <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
-                <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
+                <div class="ad-slot" id="adSlot3"></div>
+                <div class="ad-slot" id="adSlot4"></div>
             </div>
 
             <div class="widget">
-                <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
-                <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                <div class="ad-slot" id="adSlot7"></div>
+                <div class="ad-slot" id="adSlot8"></div>
                 
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
@@ -217,8 +218,8 @@
                     </div>
                 </div>
                 
-                <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
-                <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
+                <div class="ad-slot" id="adSlot5"></div>
+                <div class="ad-slot" id="adSlot6"></div>
             </div>
         </div>
     </div>
@@ -276,7 +277,7 @@
             }
         }
 
-        // --- TOOLS DYNAMIC LISTENER ---
+        // --- TOOLS FIXED LISTENER ---
         function listenToTools() {
             const dropdown = document.getElementById('toolSelect');
             const displayArea = document.getElementById('toolDisplayContainer');
@@ -295,25 +296,28 @@
                 }
                 dropdown.innerHTML = options;
 
-                // Load last used tool if exists
                 const lastTool = localStorage.getItem('last_tool');
                 if(lastTool && tools && tools[lastTool] && tools[lastTool].visible) {
                     dropdown.value = lastTool;
-                    displayArea.innerHTML = tools[lastTool].code;
+                    setTimeout(() => { displayArea.innerHTML = tools[lastTool].code; }, 100);
                 }
             });
 
             dropdown.addEventListener('change', (e) => {
                 const selectedId = e.target.value;
                 localStorage.setItem('last_tool', selectedId);
-                db.ref('site_settings/tools/' + selectedId).once('value', (snap) => {
-                    const tool = snap.val();
-                    if (tool) {
-                        displayArea.innerHTML = tool.code;
-                    } else {
-                        displayArea.innerHTML = '<div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
-                    }
-                });
+                if (selectedId) {
+                    db.ref('site_settings/tools/' + selectedId).once('value', (snap) => {
+                        const tool = snap.val();
+                        if (tool) {
+                            displayArea.innerHTML = ""; 
+                            displayArea.innerHTML = tool.code;
+                            displayArea.scrollTop = 0;
+                        }
+                    });
+                } else {
+                    displayArea.innerHTML = '<div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
+                }
             });
         }
 
@@ -341,6 +345,7 @@
                 });
             });
 
+            // FIXED ADS LISTENER
             db.ref('site_settings/ads').on('value', (snapshot) => {
                 const ads = snapshot.val();
                 if (!ads) return;
@@ -349,9 +354,12 @@
                     const adData = ads[adId];
                     const adElement = document.getElementById(adId);
                     if (adElement && adData) {
-                        if (adData.visible === false) {
+                        if (adData.visible === false || !adData.snippet) {
+                            adElement.classList.remove('ad-active');
                             adElement.style.display = "none";
+                            adElement.innerHTML = "";
                         } else {
+                            adElement.classList.add('ad-active');
                             adElement.style.display = "flex";
                             adElement.style.width = adData.width || "100%";
                             adElement.style.height = adData.height || "50px";
@@ -359,7 +367,7 @@
                                 adElement.innerHTML = adData.snippet;
                                 adElement.setAttribute('data-snippet', adData.snippet);
                                 const scripts = adElement.getElementsByTagName('script');
-                                for (let s of scripts) {
+                                for (let s of Array.from(scripts)) {
                                     const newScript = document.createElement('script');
                                     if (s.src) newScript.src = s.src;
                                     newScript.textContent = s.textContent;
