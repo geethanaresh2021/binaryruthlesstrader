@@ -269,7 +269,16 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Giveway Strip
+            // Restore Signal Selection from LocalStorage
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            if(savedSignal) sigSelect.value = savedSignal;
+
+            sigSelect.addEventListener('change', (e) => {
+                localStorage.setItem('ruthless_signal', e.target.value);
+            });
+
+            // Giveaway Strip
             db.ref('site_settings/giveaway').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
@@ -325,7 +334,6 @@
                 }
             });
 
-            // DYNAMIC TOOLS LISTENER
             listenToTools();
         });
 
@@ -347,17 +355,15 @@
                 }
                 dropdown.innerHTML = options;
 
-                dropdown.onchange = (e) => {
-                    const selectedId = e.target.value;
+                // Function to load tool content
+                const loadTool = (selectedId) => {
                     if (selectedId && tools[selectedId]) {
                         let toolCode = tools[selectedId].code;
-                        // SECURITY & SCROLL FIX: Remove any global body overflow settings
                         toolCode = toolCode.replace(/body\s*{[^}]*overflow\s*:\s*hidden\s*;?[^}]*}/gi, '');
                         toolCode = toolCode.replace(/overflow\s*:\s*hidden\s*;/gi, ''); 
                         
                         displayArea.innerHTML = toolCode;
                         
-                        // Execute scripts inside injected tool code
                         const scripts = displayArea.getElementsByTagName('script');
                         for (let s of scripts) {
                             const newScript = document.createElement('script');
@@ -368,6 +374,19 @@
                     } else {
                         displayArea.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
                     }
+                };
+
+                // Restore Tool Selection from LocalStorage
+                const savedToolId = localStorage.getItem('ruthless_tool');
+                if(savedToolId && tools[savedToolId] && tools[savedToolId].visible) {
+                    dropdown.value = savedToolId;
+                    loadTool(savedToolId);
+                }
+
+                dropdown.onchange = (e) => {
+                    const selectedId = e.target.value;
+                    localStorage.setItem('ruthless_tool', selectedId);
+                    loadTool(selectedId);
                 };
             });
         }
