@@ -86,11 +86,10 @@
             align-items: center; 
         }
 
-        /* FIXED AD SLOT CSS */
         .ad-slot { 
             width: 100%; 
             max-width: 400px; 
-            display: none; /* Hide by default to prevent click blocking */
+            display: none; 
             align-items: center; 
             justify-content: center; 
             font-family: 'Roboto Mono'; 
@@ -123,27 +122,25 @@
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
-            overflow: hidden; /* Changed from auto to hidden to let internal container handle scroll */
+            overflow: hidden;
             position: relative; 
         }
 
-        /* FIXED TOOL CONTAINER CSS */
-        #toolDisplayContainer {
+        /* FIXED CONTAINERS CSS */
+        #toolDisplayContainer, #sigScreen {
             width: 100%;
             height: 100%;
-            min-height: 415px;
-            max-height: 415px;
             overflow-y: auto;
             overflow-x: hidden;
             background: #050505;
             padding: 10px;
             position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--red) transparent;
         }
-        
-        #sigScreen { overflow-y: auto; }
 
-        #toolDisplayContainer::-webkit-scrollbar { width: 5px; }
-        #toolDisplayContainer::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        #toolDisplayContainer::-webkit-scrollbar, #sigScreen::-webkit-scrollbar { width: 5px; }
+        #toolDisplayContainer::-webkit-scrollbar-thumb, #sigScreen::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
@@ -196,8 +193,10 @@
                     <option value="">-- SELECT SIGNAL --</option>
                 </select>
                 
-                <div class="display-box" id="sigScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
+                <div class="display-box">
+                    <div id="sigScreen">
+                        <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
+                    </div>
                 </div>
                 
                 <div class="ad-slot" id="adSlot3"></div>
@@ -212,9 +211,9 @@
                     <option value="">-- SELECT TOOL --</option>
                 </select>
                 
-                <div class="display-box" id="toolScreen">
+                <div class="display-box">
                     <div id="toolDisplayContainer">
-                        <div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
+                        <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
                     </div>
                 </div>
                 
@@ -277,7 +276,6 @@
             }
         }
 
-        // --- TOOLS FIXED LISTENER ---
         function listenToTools() {
             const dropdown = document.getElementById('toolSelect');
             const displayArea = document.getElementById('toolDisplayContainer');
@@ -316,7 +314,7 @@
                         }
                     });
                 } else {
-                    displayArea.innerHTML = '<div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
+                    displayArea.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
                 }
             });
         }
@@ -345,7 +343,6 @@
                 });
             });
 
-            // FIXED ADS LISTENER
             db.ref('site_settings/ads').on('value', (snapshot) => {
                 const ads = snapshot.val();
                 if (!ads) return;
