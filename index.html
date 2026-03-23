@@ -60,26 +60,23 @@
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         
         .widget-container { 
-            display: flex; 
+            display: grid; /* Changed from flex to grid for perfect alignment */
+            grid-template-columns: 1fr 1fr;
             gap: 40px; 
             width: 100%; 
             max-width: 1200px; 
-            justify-content: center; 
-            align-items: flex-start; /* CRITICAL: Aligns tops of both columns */
             margin-top: 10px; 
+            align-items: start;
         }
 
         .widget { 
-            flex: 1; 
             display: flex; 
             flex-direction: column; 
             gap: 20px; 
             width: 100%; 
-            max-width: 450px; 
             align-items: center; 
         }
 
-        /* Grouping ads to maintain level spacing */
         .ad-group { width: 100%; display: flex; flex-direction: column; gap: 15px; }
 
         .ad-slot { 
@@ -121,7 +118,7 @@
 
         /* --- TOOL INJECTED AESTHETIC --- */
         #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
-        .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: 900 !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
+        .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
 
         .display-box::-webkit-scrollbar { width: 5px; }
         .display-box::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
@@ -133,7 +130,7 @@
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
         @media (max-width: 850px) {
-            .widget-container { flex-direction: column; align-items: center; gap: 60px; }
+            .widget-container { grid-template-columns: 1fr; gap: 60px; }
             .brand-img { width: 320px; }
             .widget, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
         }
