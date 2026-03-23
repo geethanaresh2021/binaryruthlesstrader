@@ -89,21 +89,25 @@
         .ad-slot { 
             width: 100%; 
             max-width: 400px; 
-            display: none; 
+            height: 55px; 
+            background: #000; 
+            border: 1px dashed #222; 
+            display: flex; 
             align-items: center; 
             justify-content: center; 
             font-family: 'Roboto Mono'; 
             font-size: 10px; 
             color: #333; 
             border-radius: 4px;
-            margin-bottom: 0px; 
-            overflow: hidden;
-        }
-        .ad-active { 
-            display: flex; 
             margin-bottom: 12px; 
-            border: 1px dashed #222; 
-            background: #000;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .ad-slot[style*="display: none"] {
+            margin-bottom: 0 !important;
+            padding: 0 !important;
+            border: none !important;
         }
 
         .ruthless-select { 
@@ -122,25 +126,14 @@
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
-            overflow: hidden;
+            overflow-y: auto; 
+            overflow-x: hidden;
             position: relative; 
         }
 
-        /* FIXED CONTAINERS CSS */
-        #toolDisplayContainer, #sigScreen {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: #050505;
-            padding: 10px;
-            position: relative;
-            scrollbar-width: thin;
-            scrollbar-color: var(--red) transparent;
-        }
-
-        #toolDisplayContainer::-webkit-scrollbar, #sigScreen::-webkit-scrollbar { width: 5px; }
-        #toolDisplayContainer::-webkit-scrollbar-thumb, #sigScreen::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        /* Tool Aesthetic Scrollbar */
+        .display-box::-webkit-scrollbar { width: 5px; }
+        .display-box::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
@@ -158,6 +151,7 @@
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
+
     </style>
 </head>
 <body>
@@ -186,39 +180,37 @@
     <div class="page-content">
         <div class="widget-container">
             <div class="widget">
-                <div class="ad-slot" id="adSlot1"></div>
-                <div class="ad-slot" id="adSlot2"></div>
+                <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
+                <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
                 
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
+                    <option value="QUOTEX">QUOTEX</option>
+                    <option value="TOXA">TOXA</option>
                 </select>
                 
-                <div class="display-box">
-                    <div id="sigScreen">
-                        <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
-                    </div>
+                <div class="display-box" id="sigScreen">
+                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">AWAITING SYSTEM...</div>
                 </div>
                 
-                <div class="ad-slot" id="adSlot3"></div>
-                <div class="ad-slot" id="adSlot4"></div>
+                <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
+                <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
             </div>
 
             <div class="widget">
-                <div class="ad-slot" id="adSlot7"></div>
-                <div class="ad-slot" id="adSlot8"></div>
+                <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
+                <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
                 
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
                 </select>
                 
-                <div class="display-box">
-                    <div id="toolDisplayContainer">
-                        <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
-                    </div>
+                <div class="display-box" id="toolScreen">
+                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
                 </div>
                 
-                <div class="ad-slot" id="adSlot5"></div>
-                <div class="ad-slot" id="adSlot6"></div>
+                <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
+                <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
             </div>
         </div>
     </div>
@@ -276,13 +268,74 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            // Giveway Strip
+            db.ref('site_settings/giveaway').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
+            });
+
+            // Warning Strip
+            db.ref('site_settings/warning_note').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
+            });
+
+            // Social Links
+            db.ref('site_settings').on('value', (snapshot) => {
+                const settings = snapshot.val() || {};
+                const links = settings.socials || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
+                    const el = document.getElementById(`link-${platform}`);
+                    if (el && links[platform]) {
+                        el.href = links[platform];
+                        el.target = "_blank";
+                    }
+                });
+            });
+
+            // ADS SYNC
+            db.ref('site_settings/ads').on('value', (snapshot) => {
+                const ads = snapshot.val();
+                if (!ads) return;
+                for (let i = 1; i <= 8; i++) {
+                    const adId = `adSlot${i}`;
+                    const adData = ads[adId];
+                    const adElement = document.getElementById(adId);
+                    if (adElement && adData) {
+                        if (adData.visible === false) {
+                            adElement.style.display = "none";
+                        } else {
+                            adElement.style.display = "flex";
+                            adElement.style.width = adData.width || "100%";
+                            adElement.style.height = adData.height || "50px";
+                            if (adElement.getAttribute('data-snippet') !== adData.snippet) {
+                                adElement.innerHTML = adData.snippet;
+                                adElement.setAttribute('data-snippet', adData.snippet);
+                                const scripts = adElement.getElementsByTagName('script');
+                                for (let s of scripts) {
+                                    const newScript = document.createElement('script');
+                                    if (s.src) newScript.src = s.src;
+                                    newScript.textContent = s.textContent;
+                                    s.parentNode.replaceChild(newScript, s);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // DYNAMIC TOOLS LISTENER
+            listenToTools();
+        });
+
         function listenToTools() {
             const dropdown = document.getElementById('toolSelect');
-            const displayArea = document.getElementById('toolDisplayContainer');
+            const displayArea = document.getElementById('toolScreen');
 
             db.ref('site_settings/tools').on('value', (snapshot) => {
                 const tools = snapshot.val();
-                let options = '<option value="">-- SELECT A TOOL --</option>';
+                let options = '<option value="">-- SELECT TOOL --</option>';
                 
                 if (tools) {
                     Object.keys(tools).forEach(id => {
@@ -294,88 +347,30 @@
                 }
                 dropdown.innerHTML = options;
 
-                const lastTool = localStorage.getItem('last_tool');
-                if(lastTool && tools && tools[lastTool] && tools[lastTool].visible) {
-                    dropdown.value = lastTool;
-                    setTimeout(() => { displayArea.innerHTML = tools[lastTool].code; }, 100);
-                }
-            });
-
-            dropdown.addEventListener('change', (e) => {
-                const selectedId = e.target.value;
-                localStorage.setItem('last_tool', selectedId);
-                if (selectedId) {
-                    db.ref('site_settings/tools/' + selectedId).once('value', (snap) => {
-                        const tool = snap.val();
-                        if (tool) {
-                            displayArea.innerHTML = ""; 
-                            displayArea.innerHTML = tool.code;
-                            displayArea.scrollTop = 0;
+                dropdown.onchange = (e) => {
+                    const selectedId = e.target.value;
+                    if (selectedId && tools[selectedId]) {
+                        let toolCode = tools[selectedId].code;
+                        // SECURITY & SCROLL FIX: Remove any global body overflow settings
+                        toolCode = toolCode.replace(/body\s*{[^}]*overflow\s*:\s*hidden\s*;?[^}]*}/gi, '');
+                        toolCode = toolCode.replace(/overflow\s*:\s*hidden\s*;/gi, ''); 
+                        
+                        displayArea.innerHTML = toolCode;
+                        
+                        // Execute scripts inside injected tool code
+                        const scripts = displayArea.getElementsByTagName('script');
+                        for (let s of scripts) {
+                            const newScript = document.createElement('script');
+                            if (s.src) newScript.src = s.src;
+                            newScript.textContent = s.textContent;
+                            s.parentNode.replaceChild(newScript, s);
                         }
-                    });
-                } else {
-                    displayArea.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
-                }
+                    } else {
+                        displayArea.innerHTML = '<div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
+                    }
+                };
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            listenToTools();
-
-            db.ref('site_settings/giveaway').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
-            });
-
-            db.ref('site_settings/warning_note').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
-            });
-
-            db.ref('site_settings/socials').on('value', (snapshot) => {
-                const links = snapshot.val() || {};
-                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
-                    const el = document.getElementById(`link-${platform}`);
-                    if (el && links[platform]) {
-                        el.href = links[platform];
-                        el.target = "_blank";
-                    }
-                });
-            });
-
-            db.ref('site_settings/ads').on('value', (snapshot) => {
-                const ads = snapshot.val();
-                if (!ads) return;
-                for (let i = 1; i <= 8; i++) {
-                    const adId = `adSlot${i}`;
-                    const adData = ads[adId];
-                    const adElement = document.getElementById(adId);
-                    if (adElement && adData) {
-                        if (adData.visible === false || !adData.snippet) {
-                            adElement.classList.remove('ad-active');
-                            adElement.style.display = "none";
-                            adElement.innerHTML = "";
-                        } else {
-                            adElement.classList.add('ad-active');
-                            adElement.style.display = "flex";
-                            adElement.style.width = adData.width || "100%";
-                            adElement.style.height = adData.height || "50px";
-                            if (adElement.getAttribute('data-snippet') !== adData.snippet) {
-                                adElement.innerHTML = adData.snippet;
-                                adElement.setAttribute('data-snippet', adData.snippet);
-                                const scripts = adElement.getElementsByTagName('script');
-                                for (let s of Array.from(scripts)) {
-                                    const newScript = document.createElement('script');
-                                    if (s.src) newScript.src = s.src;
-                                    newScript.textContent = s.textContent;
-                                    s.parentNode.replaceChild(newScript, s);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
 
         const today = new Date().toISOString().split('T')[0];
         const statsRef = db.ref(`stats/${today}`);
@@ -408,6 +403,7 @@
                 }
             });
         }
+
     </script>
 </body>
 </html>
