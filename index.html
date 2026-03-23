@@ -47,19 +47,32 @@
         .social-row a { color: #fff; font-size: 28px; transition: 0.3s; text-decoration: none; }
         .social-row a:hover { color: var(--red); transform: scale(1.2); text-shadow: var(--neon); }
 
-        /* --- STRIPS --- */
-        .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; padding: 0 10px; align-self: center; }
-        .top-strip { width: 100%; height: 44px; font-family: 'Roboto Mono', monospace; border: 1px solid #111; border-radius: 4px; overflow: hidden; display: flex; align-items: center; }
-        .warning-strip { background: transparent; border-color: rgba(255,0,0,0.3); }
-        .announce-strip { background: transparent; border-color: #222; }
+        /* --- STRIPS WITH HORIZONTAL RED LINES --- */
+        .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; margin-top: 10px; padding: 0; align-self: center; }
+        
+        /* Red line above Warning Note */
+        .warning-strip { 
+            width: 100%; height: 44px; font-family: 'Roboto Mono', monospace; 
+            border-top: 2px solid var(--red); 
+            border-bottom: none; border-left: none; border-right: none;
+            overflow: hidden; display: flex; align-items: center; background: transparent;
+        }
+
+        /* Red lines above and below Announcement */
+        .announce-strip { 
+            width: 100%; height: 44px; font-family: 'Roboto Mono', monospace; 
+            border-top: 2px solid var(--red); 
+            border-bottom: 2px solid var(--red); 
+            border-left: none; border-right: none;
+            overflow: hidden; display: flex; align-items: center; background: transparent;
+        }
 
         @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .scroll-item { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); text-transform: uppercase; }
 
-        /* --- MAIN CONTENT (INVISIBLE LINE ALIGNMENT FIX) --- */
+        /* --- MAIN CONTENT & DESKTOP LAYOUT --- */
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         
-        /* This is the main wrapper for the invisible rows */
         .desktop-wrapper {
             width: 100%;
             max-width: 1200px;
@@ -67,30 +80,27 @@
             flex-direction: column;
         }
 
-        /* Top Invisible Row for Ads 1,2,7,8 */
         .row-ads-top {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-bottom: 20px;
-            align-items: end; /* All top ads align to the "invisible line" at the bottom of this row */
+            align-items: end;
         }
 
-        /* Middle Invisible Row for Signal & Tool (The Core Containers) */
         .row-core {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            align-items: start; /* Locks Signal & Tool to the top "invisible line" */
+            align-items: start;
         }
 
-        /* Bottom Invisible Row for Ads 3,4,5,6 */
         .row-ads-bottom {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-top: 20px;
-            align-items: start; /* All bottom ads align to the "invisible line" at the top of this row */
+            align-items: start;
         }
 
         .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
@@ -146,8 +156,19 @@
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
+        /* --- MOBILE VIEW (3+3+2 ADS LOGIC) --- */
         @media (max-width: 850px) {
-            .row-ads-top, .row-core, .row-ads-bottom { grid-template-columns: 1fr; gap: 20px; }
+            .desktop-wrapper { display: flex; flex-direction: column; }
+            .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
+            
+            #slot-group-1 { order: 1; display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; } /* Ads 1,2,3 */
+            #signal-box { order: 2; margin-bottom: 40px; }
+            
+            #slot-group-2 { order: 3; display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; } /* Ads 7,8,4 */
+            #tool-box { order: 4; margin-bottom: 40px; }
+            
+            #slot-group-3 { order: 5; display: flex; flex-direction: column; gap: 15px; } /* Ads 5,6 */
+
             .brand-img { width: 320px; }
             .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
         }
@@ -171,49 +192,55 @@
         </div>
 
         <div class="strip-container">
-            <div class="top-strip warning-strip" id="warningNoteContainer"></div>
-            <div class="top-strip announce-strip" id="announceStrip"></div>
+            <div class="warning-strip" id="warningNoteContainer"></div>
+            <div class="announce-strip" id="announceStrip"></div>
         </div>
     </header>
 
     <div class="page-content">
         <div class="desktop-wrapper">
             
-            <div class="row-ads-top">
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
-                    <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+            <div id="slot-group-1">
+                <div class="row-ads-top">
+                    <div class="ad-column">
+                        <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
+                        <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                    </div>
                 </div>
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
-                    <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
-                </div>
+                <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
             </div>
 
-            <div class="row-core">
-                <div class="widget-column">
-                    <select class="ruthless-select" id="sigSelect">
-                        <option value="">-- SELECT SIGNAL --</option>
-                        <option value="QUOTEX">QUOTEX</option>
-                        <option value="TOXA">TOXA</option>
-                    </select>
-                    <div class="display-box" id="sigScreen"></div>
-                </div>
-                <div class="widget-column">
-                    <select class="ruthless-select" id="toolSelect">
-                        <option value="">-- SELECT TOOL --</option>
-                    </select>
-                    <div class="display-box" id="toolScreen"></div>
-                </div>
+            <div id="signal-box" class="widget-column">
+                <select class="ruthless-select" id="sigSelect">
+                    <option value="">-- SELECT SIGNAL --</option>
+                    <option value="QUOTEX">QUOTEX</option>
+                    <option value="TOXA">TOXA</option>
+                </select>
+                <div class="display-box" id="sigScreen"></div>
             </div>
 
-            <div class="row-ads-bottom">
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
-                    <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
+            <div id="slot-group-2">
+                <div class="row-ads-top" style="margin-bottom:0; margin-top:20px;">
+                    <div class="ad-column">
+                        <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
+                        <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                    </div>
                 </div>
+                <div class="ad-slot" id="adSlot4" style="margin-top:15px;">AD SLOT 4</div>
+            </div>
+
+            <div id="tool-box" class="widget-column">
+                <select class="ruthless-select" id="toolSelect">
+                    <option value="">-- SELECT TOOL --</option>
+                </select>
+                <div class="display-box" id="toolScreen"></div>
+            </div>
+
+            <div id="slot-group-3" class="row-ads-bottom">
                 <div class="ad-column">
                     <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
+                </div>
+                <div class="ad-column">
                     <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
                 </div>
             </div>
