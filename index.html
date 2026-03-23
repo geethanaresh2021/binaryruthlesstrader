@@ -56,7 +56,7 @@
         @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .scroll-item { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); text-transform: uppercase; }
 
-        /* --- MAIN CONTENT (NO-OVERLAP FIX) --- */
+        /* --- MAIN CONTENT (DESKTOP LEVELING FIX) --- */
         .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
         
         .widget-container { 
@@ -65,7 +65,7 @@
             width: 100%; 
             max-width: 1200px; 
             justify-content: center; 
-            align-items: flex-start; /* Prevents stretching */
+            align-items: flex-start; /* CRITICAL: Aligns tops of both columns */
             margin-top: 10px; 
         }
 
@@ -73,16 +73,19 @@
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            gap: 20px; /* Forces gap between ads, selects, and screen */
+            gap: 20px; 
             width: 100%; 
             max-width: 450px; 
             align-items: center; 
         }
 
+        /* Grouping ads to maintain level spacing */
+        .ad-group { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+
         .ad-slot { 
             width: 100%; 
             min-height: 55px; 
-            height: auto; /* Grows with content without overlapping */
+            height: auto; 
             background: #000; 
             border: 1px dashed #222; 
             display: flex; 
@@ -118,7 +121,7 @@
 
         /* --- TOOL INJECTED AESTHETIC --- */
         #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
-        .profit-num, .loss-num, .result-val { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; }
+        .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: 900 !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
 
         .display-box::-webkit-scrollbar { width: 5px; }
         .display-box::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
@@ -130,7 +133,7 @@
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
         @media (max-width: 850px) {
-            .widget-container { flex-direction: column; align-items: center; gap: 50px; }
+            .widget-container { flex-direction: column; align-items: center; gap: 60px; }
             .brand-img { width: 320px; }
             .widget, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
         }
@@ -162,27 +165,35 @@
     <div class="page-content">
         <div class="widget-container">
             <div class="widget">
-                <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
-                <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                <div class="ad-group">
+                    <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
+                    <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                </div>
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
                     <option value="QUOTEX">QUOTEX</option>
                     <option value="TOXA">TOXA</option>
                 </select>
                 <div class="display-box" id="sigScreen"></div>
-                <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
-                <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
+                <div class="ad-group">
+                    <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
+                    <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
+                </div>
             </div>
 
             <div class="widget">
-                <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
-                <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                <div class="ad-group">
+                    <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
+                    <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                </div>
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
                 </select>
                 <div class="display-box" id="toolScreen"></div>
-                <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
-                <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
+                <div class="ad-group">
+                    <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
+                    <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
+                </div>
             </div>
         </div>
     </div>
@@ -211,7 +222,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- DATA PERSISTENCE & RESET LOGIC ---
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
