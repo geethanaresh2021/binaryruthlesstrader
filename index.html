@@ -18,7 +18,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
+        body { background: var(--bg) !important; color: #fff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* --- HEADER & BRANDING --- */
         .header { 
@@ -118,16 +118,32 @@
             background-repeat: no-repeat; background-position: right 15px center; 
         }
 
+        /* --- TOOL CONTAINER PROTECTION --- */
         .display-box { 
             width: 100%; 
             height: 420px; 
-            background: #000; 
+            background: #000 !important; 
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
             overflow-y: auto; 
             overflow-x: hidden;
             position: relative; 
+        }
+
+        /* This ISOLATES the tool from the rest of the page */
+        #toolScreen {
+            width: 100% !important;
+            min-height: 100%;
+            position: relative;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Forced width protection for anything inside toolScreen */
+        #toolScreen * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         /* --- TOOL INJECTED AESTHETIC --- */
@@ -219,7 +235,9 @@
                     <select class="ruthless-select" id="toolSelect">
                         <option value="">-- SELECT TOOL --</option>
                     </select>
-                    <div class="display-box" id="toolScreen"></div>
+                    <div class="display-box">
+                        <div id="toolScreen"></div>
+                    </div>
                 </div>
             </div>
 
@@ -268,6 +286,24 @@
                 Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
             }
             localStorage.setItem('ruthless_last_date', todayStr);
+        }
+
+        // TOOL ISOLATION SCRUBBER
+        function cleanToolCode(html) {
+            if (!html) return "";
+            let clean = html;
+            // Remove global tags that break layouts
+            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            // Scope CSS strictly to #toolScreen
+            clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
+                const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
+                    let s = selector.trim();
+                    if (s === 'body' || s === 'html' || s === '*') return '#toolScreen';
+                    return '#toolScreen ' + s;
+                });
+                return '<style>' + scopedCss + '</style>';
+            });
+            return clean;
         }
 
         function saveToolInputs() {
@@ -359,9 +395,7 @@
 
                 const loadTool = (selectedId) => {
                     if (selectedId && tools[selectedId]) {
-                        let toolCode = tools[selectedId].code;
-                        toolCode = toolCode.replace(/body\s*{[^}]*overflow\s*:\s*hidden\s*;?[^}]*}/gi, '');
-                        displayArea.innerHTML = toolCode;
+                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
                         const scripts = displayArea.getElementsByTagName('script');
                         for (let s of scripts) {
                             const ns = document.createElement('script');
