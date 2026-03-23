@@ -136,6 +136,27 @@
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
+
+        #toolDisplayContainer {
+    width: 100%;            /* Width auto fix */
+    min-height: 400px;      /* Minimum height */
+    max-height: 600px;      /* Maximum height (nuvvu adjust chesko) */
+    overflow-y: auto;       /* Tool peddhaga unte up/down scroll avthundi */
+    overflow-x: hidden;     /* Side scroll rakunda chestundi */
+    background: #050505;    /* Ruthless background */
+    border: 1px solid #1a1a1a;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Scrollbar aesthetic (Optional: Ruthless Red Look) */
+#toolDisplayContainer::-webkit-scrollbar {
+    width: 5px;
+}
+#toolDisplayContainer::-webkit-scrollbar-thumb {
+    background: var(--red);
+    border-radius: 10px;
+}
     </style>
 </head>
 <body>
@@ -347,6 +368,41 @@
             document.getElementById('sigSelect').value = localStorage.getItem('last_sig') || "";
             document.getElementById('toolSelect').value = localStorage.getItem('last_tool') || "";
         };
+        // --- HOME PAGE TOOLS DYNAMIC LISTENER ---
+function listenToTools() {
+    const dropdown = document.getElementById('toolDropdown'); // Nee select element ID
+    const displayArea = document.getElementById('toolDisplayContainer'); // Tool kanipinche area
+
+    db.ref('site_settings/tools').on('value', (snapshot) => {
+        const tools = snapshot.val();
+        let options = '<option value="">-- SELECT A TOOL --</option>';
+        
+        if (tools) {
+            Object.keys(tools).forEach(id => {
+                const tool = tools[id];
+                // Visible unna tools mathrame dropdown lo kanipisthayi
+                if (tool.visible) {
+                    options += `<option value="${id}">${tool.name}</option>`;
+                }
+            });
+        }
+        dropdown.innerHTML = options;
+
+        // Tool Select chesinappudu logic
+        dropdown.onchange = (e) => {
+            const selectedId = e.target.value;
+            if (selectedId && tools[selectedId]) {
+                // Tool Code ni inject chesthunnam
+                displayArea.innerHTML = tools[selectedId].code;
+            } else {
+                displayArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Select a tool to start trading.</p>';
+            }
+        };
+    });
+}
+
+// Page load avvagane start cheyyi
+window.addEventListener('DOMContentLoaded', listenToTools);
     </script>
 </body>
 </html>
