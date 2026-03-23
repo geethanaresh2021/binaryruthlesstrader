@@ -118,7 +118,31 @@
             background-repeat: no-repeat; background-position: right 15px center; 
         }
 
-        .display-box { width: 100%; max-width: 400px; height: 420px; background: #000; border: 2px solid var(--red); box-shadow: var(--neon); border-radius: 8px; overflow-y: auto; position: relative; }
+        .display-box { 
+            width: 100%; 
+            max-width: 400px; 
+            height: 420px; 
+            background: #000; 
+            border: 2px solid var(--red); 
+            box-shadow: var(--neon); 
+            border-radius: 8px; 
+            overflow-y: auto; 
+            position: relative; 
+        }
+
+        #toolDisplayContainer {
+            width: 100%;
+            min-height: 415px;
+            max-height: 415px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #050505;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        #toolDisplayContainer::-webkit-scrollbar { width: 5px; }
+        #toolDisplayContainer::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
@@ -136,27 +160,6 @@
         .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
         .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
         .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
-
-        #toolDisplayContainer {
-    width: 100%;            /* Width auto fix */
-    min-height: 400px;      /* Minimum height */
-    max-height: 600px;      /* Maximum height (nuvvu adjust chesko) */
-    overflow-y: auto;       /* Tool peddhaga unte up/down scroll avthundi */
-    overflow-x: hidden;     /* Side scroll rakunda chestundi */
-    background: #050505;    /* Ruthless background */
-    border: 1px solid #1a1a1a;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-/* Scrollbar aesthetic (Optional: Ruthless Red Look) */
-#toolDisplayContainer::-webkit-scrollbar {
-    width: 5px;
-}
-#toolDisplayContainer::-webkit-scrollbar-thumb {
-    background: var(--red);
-    border-radius: 10px;
-}
     </style>
 </head>
 <body>
@@ -190,8 +193,6 @@
                 
                 <select class="ruthless-select" id="sigSelect">
                     <option value="">-- SELECT SIGNAL --</option>
-                    <option value="QUOTEX">QUOTEX</option>
-                    <option value="TOXA">TOXA</option>
                 </select>
                 
                 <div class="display-box" id="sigScreen">
@@ -208,12 +209,12 @@
                 
                 <select class="ruthless-select" id="toolSelect">
                     <option value="">-- SELECT TOOL --</option>
-                    <option value="MONEY_MANAGEMENT">MONEY MANAGEMENT</option>
-                    <option value="COMPOUNDING_CALCULATOR">COMPOUNDING CALCULATOR</option>
                 </select>
                 
                 <div class="display-box" id="toolScreen">
-                    <div style="display: flex; height: 100%; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
+                    <div id="toolDisplayContainer">
+                        <div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: 'Roboto Mono'; font-size: 11px;">READY TO CALCULATE...</div>
+                    </div>
                 </div>
                 
                 <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
@@ -275,7 +276,50 @@
             }
         }
 
+        // --- TOOLS DYNAMIC LISTENER ---
+        function listenToTools() {
+            const dropdown = document.getElementById('toolSelect');
+            const displayArea = document.getElementById('toolDisplayContainer');
+
+            db.ref('site_settings/tools').on('value', (snapshot) => {
+                const tools = snapshot.val();
+                let options = '<option value="">-- SELECT A TOOL --</option>';
+                
+                if (tools) {
+                    Object.keys(tools).forEach(id => {
+                        const tool = tools[id];
+                        if (tool.visible) {
+                            options += `<option value="${id}">${tool.name}</option>`;
+                        }
+                    });
+                }
+                dropdown.innerHTML = options;
+
+                // Load last used tool if exists
+                const lastTool = localStorage.getItem('last_tool');
+                if(lastTool && tools && tools[lastTool] && tools[lastTool].visible) {
+                    dropdown.value = lastTool;
+                    displayArea.innerHTML = tools[lastTool].code;
+                }
+            });
+
+            dropdown.addEventListener('change', (e) => {
+                const selectedId = e.target.value;
+                localStorage.setItem('last_tool', selectedId);
+                db.ref('site_settings/tools/' + selectedId).once('value', (snap) => {
+                    const tool = snap.val();
+                    if (tool) {
+                        displayArea.innerHTML = tool.code;
+                    } else {
+                        displayArea.innerHTML = '<div style="display: flex; height: 100%; min-height:380px; align-items: center; justify-content: center; color: #222; font-family: \'Roboto Mono\'; font-size: 11px;">READY TO CALCULATE...</div>';
+                    }
+                });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            listenToTools();
+
             db.ref('site_settings/giveaway').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) applySmoothScroll('announceStrip', data.winner, data.speed, data.color);
@@ -286,9 +330,8 @@
                 if (data) applySmoothScroll('warningNoteContainer', data.text, data.speed, data.color);
             });
 
-            db.ref('site_settings').on('value', (snapshot) => {
-                const settings = snapshot.val() || {};
-                const links = settings.socials || {};
+            db.ref('site_settings/socials').on('value', (snapshot) => {
+                const links = snapshot.val() || {};
                 ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(platform => {
                     const el = document.getElementById(`link-${platform}`);
                     if (el && links[platform]) {
@@ -298,7 +341,6 @@
                 });
             });
 
-            // LIVE ADS SYNC LOGIC
             db.ref('site_settings/ads').on('value', (snapshot) => {
                 const ads = snapshot.val();
                 if (!ads) return;
@@ -361,48 +403,6 @@
                 }
             });
         }
-
-        document.getElementById('sigSelect').addEventListener('change', (e) => localStorage.setItem('last_sig', e.target.value));
-        document.getElementById('toolSelect').addEventListener('change', (e) => localStorage.setItem('last_tool', e.target.value));
-        window.onload = () => {
-            document.getElementById('sigSelect').value = localStorage.getItem('last_sig') || "";
-            document.getElementById('toolSelect').value = localStorage.getItem('last_tool') || "";
-        };
-        // --- HOME PAGE TOOLS DYNAMIC LISTENER ---
-function listenToTools() {
-    const dropdown = document.getElementById('toolDropdown'); // Nee select element ID
-    const displayArea = document.getElementById('toolDisplayContainer'); // Tool kanipinche area
-
-    db.ref('site_settings/tools').on('value', (snapshot) => {
-        const tools = snapshot.val();
-        let options = '<option value="">-- SELECT A TOOL --</option>';
-        
-        if (tools) {
-            Object.keys(tools).forEach(id => {
-                const tool = tools[id];
-                // Visible unna tools mathrame dropdown lo kanipisthayi
-                if (tool.visible) {
-                    options += `<option value="${id}">${tool.name}</option>`;
-                }
-            });
-        }
-        dropdown.innerHTML = options;
-
-        // Tool Select chesinappudu logic
-        dropdown.onchange = (e) => {
-            const selectedId = e.target.value;
-            if (selectedId && tools[selectedId]) {
-                // Tool Code ni inject chesthunnam
-                displayArea.innerHTML = tools[selectedId].code;
-            } else {
-                displayArea.innerHTML = '<p style="text-align:center; opacity:0.5;">Select a tool to start trading.</p>';
-            }
-        };
-    });
-}
-
-// Page load avvagane start cheyyi
-window.addEventListener('DOMContentLoaded', listenToTools);
     </script>
 </body>
 </html>
