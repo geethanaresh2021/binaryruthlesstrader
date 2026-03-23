@@ -50,18 +50,44 @@ function loadContent(moduleName) {
             break;
 
         case 'Tools Manager':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Active Tool ID</label>
-                    <input type="text" class="input-box" placeholder="Tool Name">
-                    <label class="input-label">Visibility</label>
-                    <select class="input-box" style="background:#080808; color:#00ffcc;">
-                        <option>VISIBLE</option>
-                        <option>HIDDEN</option>
-                    </select>
-                    <button class="action-btn" onclick="saveLogic()">SAVE TOOLS</button>
-                </div>`;
-            break;
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #1a1a1a; pb:15px;">
+                <h2 style="color:var(--red); font-family:'Orbitron'; font-size:16px;">TOOLS INVENTORY</h2>
+                <button class="action-btn" onclick="window.openToolEditor('new')" style="width:auto; padding:8px 20px; font-size:12px; background:#00ffcc; color:#000;">
+                    <i class="fas fa-plus"></i> ADD NEW TOOL
+                </button>
+            </div>
+
+            <div id="toolsListContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:25px;">
+                <p style="color:#444; font-size:12px;">Loading tools...</p>
+            </div>
+
+            <div id="toolEditorPanel" style="display:none; border: 1px solid #222; padding: 25px; background: #050505; border-radius: 8px; box-shadow: 0 10px-40px rgba(0,0,0,0.8);">
+                <h3 id="toolEditorTitle" style="color:var(--red); font-family:'Orbitron'; font-size:16px; margin-bottom:20px; text-align:center;">ADD NEW TOOL</h3>
+                <input type="hidden" id="targetToolId">
+
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <button id="toolBtnVisible" onclick="window.setToolVisibility(true)" class="action-btn" style="flex:1;">VISIBLE</button>
+                    <button id="toolBtnHidden" onclick="window.setToolVisibility(false)" class="action-btn" style="flex:1;">HIDE</button>
+                </div>
+
+                <label class="input-label">TOOL NAME (DISPLAYED IN DROPDOWN)</label>
+                <input type="text" id="toolName" class="input-box" placeholder="e.g. Money Management Calculator">
+
+                <label class="input-label">TOOL CODE (HTML / CSS / JS)</label>
+                <textarea id="toolCode" class="input-box" rows="12" style="color:#00ffcc; font-family:'Roboto Mono'; font-size:11px;" placeholder="Paste your trading tool HTML code here..."></textarea>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="action-btn" onclick="document.getElementById('toolEditorPanel').style.display='none'" style="flex:1; background:#111;">CANCEL</button>
+                    <button class="publish-btn" onclick="window.saveToolSettings()" style="flex:2; background:var(--red);">SAVE & DEPLOY TOOL</button>
+                </div>
+            </div>
+        </div>`;
+    
+    // Switch case load avvagane tools list ni refresh chestundi
+    window.loadToolsList();
+    break;
 
         case 'Signal Connection':
             mainDisplay.innerHTML = `
@@ -1042,5 +1068,100 @@ window.saveAdSettings = function() {
     }).catch(err => {
         console.error("Save Error:", err);
         Swal.fire({ icon: 'error', title: 'SAVE FAILED', text: err.message });
+    });
+};
+// --- TOOLS MANAGEMENT GLOBAL FUNCTIONS ---
+window.currentToolVisibility = true;
+
+// 1. Firebase nundi tools list techi display cheyadam
+window.loadToolsList = function() {
+    const listGrid = document.getElementById('toolsListContainer');
+    if(!listGrid || typeof db === 'undefined') return;
+
+    db.ref('site_settings/tools').on('value', (snapshot) => {
+        let html = '';
+        const data = snapshot.val();
+        if(!data) {
+            listGrid.innerHTML = '<p style="color:#444;">No tools added yet.</p>';
+            return;
+        }
+
+        Object.keys(data).forEach(id => {
+            const tool = data[id];
+            const statusColor = tool.visible ? '#00ffcc' : '#555';
+            html += `
+                <button class="nav-btn" style="width:100%; border:1px solid #1a1a1a; flex-direction:column; align-items:flex-start; padding:12px;" onclick="window.openToolEditor('${id}')">
+                    <span style="font-size:13px; color:#fff; margin-bottom:5px;">${tool.name}</span>
+                    <span style="font-size:9px; color:${statusColor}; letter-spacing:1px;">
+                        <i class="fas fa-circle" style="font-size:7px;"></i> ${tool.visible ? 'LIVE ON SITE' : 'HIDDEN'}
+                    </span>
+                </button>`;
+        });
+        listGrid.innerHTML = html;
+    });
+};
+
+// 2. Editor Open (New tool ki or Edit tool ki)
+window.openToolEditor = function(id) {
+    const panel = document.getElementById('toolEditorPanel');
+    const title = document.getElementById('toolEditorTitle');
+    const idInput = document.getElementById('targetToolId');
+    
+    panel.style.display = 'block';
+    
+    if(id === 'new') {
+        title.innerText = "ADD NEW TOOL";
+        idInput.value = "tool_" + Date.now(); // Unique ID generate chestundi
+        document.getElementById('toolName').value = "";
+        document.getElementById('toolCode').value = "";
+        window.setToolVisibility(true);
+    } else {
+        title.innerText = "EDIT TOOL SETTINGS";
+        idInput.value = id;
+        db.ref('site_settings/tools/' + id).once('value', (snap) => {
+            const tool = snap.val();
+            document.getElementById('toolName').value = tool.name;
+            document.getElementById('toolCode').value = tool.code;
+            window.setToolVisibility(tool.visible);
+        });
+    }
+    panel.scrollIntoView({ behavior: 'smooth' });
+};
+
+// 3. Visibility Toggle
+window.setToolVisibility = function(isVisible) {
+    window.currentToolVisibility = isVisible;
+    const vBtn = document.getElementById('toolBtnVisible');
+    const hBtn = document.getElementById('toolBtnHidden');
+    if(isVisible) {
+        vBtn.style.background = "#00ffcc"; vBtn.style.color = "#000";
+        hBtn.style.background = "#0a0a0a"; hBtn.style.color = "#fff";
+    } else {
+        hBtn.style.background = "var(--red)"; hBtn.style.color = "#fff";
+        vBtn.style.background = "#0a0a0a"; vBtn.style.color = "#fff";
+    }
+};
+
+// 4. Save to Firebase
+window.saveToolSettings = function() {
+    const id = document.getElementById('targetToolId').value;
+    const name = document.getElementById('toolName').value;
+    const code = document.getElementById('toolCode').value;
+
+    if(!name || !code) {
+        alert("Please fill Name and Code!");
+        return;
+    }
+
+    const toolData = {
+        name: name,
+        code: code,
+        visible: window.currentToolVisibility,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    db.ref('site_settings/tools/' + id).set(toolData).then(() => {
+        Swal.fire({ icon: 'success', title: 'TOOL DEPLOYED', background: '#000', color: '#fff' });
+        document.getElementById('toolEditorPanel').style.display = 'none';
     });
 };
