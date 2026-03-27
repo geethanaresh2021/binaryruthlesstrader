@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <div id="ads-verify-meta-container"></div>
+
+    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
+
     <title>Binary Ruthless Trader | Official System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <div id="ads-verify-meta-container"></div>
-    
-
     <style>
         :root { 
             --red: #ff0000; 
@@ -344,7 +346,6 @@
             db.ref('site_settings/verification').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
-                // Inject Meta Tags (Google, Ads Network etc)
                 if (data.meta && data.meta.data) {
                     const container = document.getElementById('ads-verify-meta-container');
                     container.innerHTML = data.meta.data;
@@ -355,7 +356,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             checkMidnightReset();
-            loadVerificationData(); // Run on startup
+            loadVerificationData();
 
             const sigSelect = document.getElementById('sigSelect');
             const savedSignal = localStorage.getItem('ruthless_signal');
@@ -373,7 +374,6 @@
                 });
             });
 
-            // MAIN ADS LISTENER (Handles 8 Slots)
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
