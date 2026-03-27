@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <div id="ads-verify-meta-container"></div>
+
     <style>
         :root { 
             --red: #ff0000; 
@@ -131,7 +133,6 @@
             position: relative; 
         }
 
-        /* This ISOLATES the tool from the rest of the page */
         #toolScreen {
             width: 100% !important;
             min-height: 100%;
@@ -140,7 +141,6 @@
             box-sizing: border-box;
         }
 
-        /* Forced width protection for anything inside toolScreen */
         #toolScreen * {
             max-width: 100% !important;
             box-sizing: border-box !important;
@@ -288,13 +288,10 @@
             localStorage.setItem('ruthless_last_date', todayStr);
         }
 
-        // TOOL ISOLATION SCRUBBER
         function cleanToolCode(html) {
             if (!html) return "";
             let clean = html;
-            // Remove global tags that break layouts
             clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
-            // Scope CSS strictly to #toolScreen
             clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
                 const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
                     let s = selector.trim();
@@ -341,8 +338,24 @@
             }
         }
 
+        // --- VERIFICATION LOADER ---
+        function loadVerificationData() {
+            db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+                // Inject Meta Tags (Google, Ads Network etc)
+                if (data.meta && data.meta.data) {
+                    const container = document.getElementById('ads-verify-meta-container');
+                    container.innerHTML = data.meta.data;
+                    console.log("Ruthless Verification: Meta Data Deployed.");
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             checkMidnightReset();
+            loadVerificationData(); // Run on startup
+
             const sigSelect = document.getElementById('sigSelect');
             const savedSignal = localStorage.getItem('ruthless_signal');
             if(savedSignal) sigSelect.value = savedSignal;
@@ -359,15 +372,21 @@
                 });
             });
 
+            // MAIN ADS LISTENER (Handles 8 Slots)
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
                     const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
                     if (el && d) {
-                        if (d.visible === false) { el.style.display = "none"; } 
+                        if (d.visible === false) { 
+                            el.style.display = "none"; 
+                            el.innerHTML = '';
+                        } 
                         else {
-                            el.style.display = "flex"; el.style.width = d.width || "100%"; 
-                            el.style.minHeight = d.height || "55px"; el.style.height = "auto";
+                            el.style.display = "block"; 
+                            el.style.width = d.width || "100%"; 
+                            el.style.height = d.height || "auto";
+                            el.style.margin = "10px auto";
                             if (el.getAttribute('data-snippet') !== d.snippet) {
                                 el.innerHTML = d.snippet; el.setAttribute('data-snippet', d.snippet);
                                 const sc = el.getElementsByTagName('script');
@@ -429,29 +448,6 @@
                 else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
-        // Home page script lo idhi add cheyyandi
-db.ref('site_settings/ads').on('value', (snapshot) => {
-    const ads = snapshot.val();
-    if(!ads) return;
-
-    Object.keys(ads).forEach(id => {
-        const data = ads[id];
-        const adDiv = document.getElementById(id); // Home page container ID (e.g., adSlot1)
-
-        if (adDiv) {
-            if (data.visible === false) {
-                adDiv.style.display = 'none'; // Hide select chesthe container remove
-                adDiv.innerHTML = ''; 
-            } else {
-                adDiv.style.display = 'block'; // Visible select chesthe show
-                adDiv.style.width = data.width;
-                adDiv.style.height = data.height;
-                adDiv.style.margin = "10px auto";
-                adDiv.innerHTML = data.snippet; // Ad snippet code ikkada run avtundi
-            }
-        }
-    });
-});
     </script>
 </body>
 </html>
