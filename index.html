@@ -96,7 +96,6 @@
 
         .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
         
-        /* AD COLUMN CENTERED FOR DESKTOP */
         .ad-column { 
             display: flex; 
             flex-direction: column; 
@@ -105,7 +104,6 @@
             align-items: center; 
         }
 
-        /* AD SLOT BORDER REMOVED & CENTERED */
         .ad-slot { 
             width: 100%; 
             min-height: 10px; 
@@ -164,17 +162,19 @@
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
+        /* --- MOBILE LAYOUT REORDERING --- */
         @media (max-width: 850px) {
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
             
+            /* Order Logic: Mobile Only */
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
-            #adSlot8 { order: 4; margin-bottom: 15px; }
             
-            #sigCol { order: 5; margin-bottom: 40px; }
+            #sigCol { order: 4; margin-bottom: 40px; }
             
+            #adSlot8 { order: 5; margin-bottom: 15px; }
             #adSlot3 { order: 6; margin-bottom: 15px; }
             #adSlot4 { order: 7; margin-bottom: 15px; }
             
