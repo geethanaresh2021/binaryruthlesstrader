@@ -76,7 +76,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-bottom: 20px;
-            align-items: end;
+            align-items: center;
         }
 
         .row-core {
@@ -91,25 +91,30 @@
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-top: 20px;
-            align-items: start;
+            align-items: center;
         }
 
         .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
-        .ad-column { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        
+        /* AD COLUMN CENTERED FOR DESKTOP */
+        .ad-column { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            width: 100%; 
+            align-items: center; 
+        }
 
+        /* AD SLOT BORDER REMOVED & CENTERED */
         .ad-slot { 
             width: 100%; 
-            min-height: 55px; 
+            min-height: 10px; 
             height: auto; 
-            background: #000; 
-            border: 1px dashed #222; 
+            background: transparent; 
+            border: none; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-family: 'Roboto Mono'; 
-            font-size: 10px; 
-            color: #333; 
-            border-radius: 4px;
             overflow: hidden;
             transition: all 0.3s ease;
         }
@@ -212,12 +217,12 @@
             
             <div class="row-ads-top">
                 <div class="ad-column">
-                    <div class="ad-slot" id="adSlot1">AD SLOT 1</div>
-                    <div class="ad-slot" id="adSlot2">AD SLOT 2</div>
+                    <div class="ad-slot" id="adSlot1"></div>
+                    <div class="ad-slot" id="adSlot2"></div>
                 </div>
                 <div class="ad-column">
-                    <div class="ad-slot" id="adSlot7">AD SLOT 7</div>
-                    <div class="ad-slot" id="adSlot8">AD SLOT 8</div>
+                    <div class="ad-slot" id="adSlot7"></div>
+                    <div class="ad-slot" id="adSlot8"></div>
                 </div>
             </div>
 
@@ -242,12 +247,12 @@
 
             <div class="row-ads-bottom">
                 <div class="ad-column">
-                    <div class="ad-slot" id="adSlot3">AD SLOT 3</div>
-                    <div class="ad-slot" id="adSlot4">AD SLOT 4</div>
+                    <div class="ad-slot" id="adSlot3"></div>
+                    <div class="ad-slot" id="adSlot4"></div>
                 </div>
                 <div class="ad-column">
-                    <div class="ad-slot" id="adSlot5">AD SLOT 5</div>
-                    <div class="ad-slot" id="adSlot6">AD SLOT 6</div>
+                    <div class="ad-slot" id="adSlot5"></div>
+                    <div class="ad-slot" id="adSlot6"></div>
                 </div>
             </div>
 
@@ -368,7 +373,6 @@
                 });
             });
 
-            // --- FIXED: IFRAME ISOLATION ADS LISTENER ---
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
@@ -388,7 +392,6 @@
                                 el.setAttribute('data-snippet', d.snippet);
                                 el.innerHTML = ''; 
 
-                                // Create Iframe to isolate the ad
                                 const iframe = document.createElement('iframe');
                                 iframe.style.width = "100%";
                                 iframe.style.height = d.height || "100%";
