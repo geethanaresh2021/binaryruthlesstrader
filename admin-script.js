@@ -803,13 +803,14 @@ function publishGiveaway() {
     });
 }
 // --- ADS MANAGER MAIN INTERFACE ---
+// --- ADS MANAGER MAIN INTERFACE (REPLACE THIS) ---
 function loadAdsContainers() {
     const display = document.getElementById('mainDisplay');
     const header = document.querySelector('#panelHeader h1');
     header.innerText = "ADS CONTAINERS MANAGER";
 
     let adsListHtml = '';
-    // 8 Ads Containers List
+    // 8 Ads Containers Buttons
     for (let i = 1; i <= 8; i++) {
         adsListHtml += `
             <button class="action-btn block-btn" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
@@ -823,23 +824,27 @@ function loadAdsContainers() {
             ${adsListHtml}
         </div>
 
-        <div id="adEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
-            <h3 id="editingAdName" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
+        <div id="adEditorPanel" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
+            <h3 id="editingAdTitle" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
             <input type="hidden" id="targetAdId">
 
             <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1;">VISIBLE</button>
-                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1;">HIDE</button>
+                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; border:1px solid #333;">VISIBLE</button>
+                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; border:1px solid #333;">HIDE</button>
             </div>
 
-            <div id="manageSection" style="border-top: 1px solid #222; pt: 15px;">
-                <label style="color: #888; font-size: 10px;">AD NAME (INTERNAL)</label>
+            <button onclick="toggleManageSection()" class="action-btn" style="width:100%; background:#111; margin-bottom:15px; border:1px dashed #444;">
+                <i class="fas fa-cog"></i> MANAGE AD DETAILS
+            </button>
+
+            <div id="manageSection" style="display: none; border-top: 1px solid #222; padding-top: 15px; margin-bottom:15px;">
+                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">EDIT CONTAINER NAME</label>
                 <input type="text" id="adNickname" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px;">
 
-                <label style="color: #888; font-size: 10px;">AD SNIPPET (PASTE CODE HERE)</label>
-                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste <script> or <iframe> code..."></textarea>
+                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">AD SNIPPET (CODE)</label>
+                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste Ad Code Here..."></textarea>
 
-                <label style="color: #888; font-size: 10px;">SELECT SIZE</label>
+                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">SELECT SIZE</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
                     <button class="action-btn" onclick="setPresetSize('320px','50px')">320x50</button>
                     <button class="action-btn" onclick="setPresetSize('320px','100px')">320x100</button>
@@ -847,14 +852,39 @@ function loadAdsContainers() {
                 </div>
 
                 <div id="customSizeInputs" style="display: none; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="customWidth" placeholder="Width (e.g. 350px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
-                    <input type="text" id="customHeight" placeholder="Height (e.g. 150px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                    <input type="text" id="customWidth" placeholder="Width (px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                    <input type="text" id="customHeight" placeholder="Height (px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
                 </div>
-
-                <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">SAVE & RUN ADS</button>
             </div>
+
+            <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">
+                SAVE & UPDATE HOME PAGE
+            </button>
         </div>
     </div>`;
+}
+
+// Manage Section display toggle
+function toggleManageSection() {
+    const section = document.getElementById('manageSection');
+    section.style.display = (section.style.display === 'none') ? 'block' : 'none';
+}
+
+// Visibility Button Style Update
+function setAdVisibility(isVisible) {
+    window.currentAdVisibility = isVisible;
+    const vBtn = document.getElementById('btnVisible');
+    const hBtn = document.getElementById('btnHidden');
+    
+    if(isVisible) {
+        vBtn.style.background = "var(--red)";
+        vBtn.style.color = "#fff";
+        hBtn.style.background = "#0a0a0a";
+    } else {
+        hBtn.style.background = "var(--red)";
+        hBtn.style.color = "#fff";
+        vBtn.style.background = "#0a0a0a";
+    }
 }
 
 // Global variable to track visibility in UI
