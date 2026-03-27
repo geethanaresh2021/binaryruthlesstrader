@@ -1,6 +1,12 @@
 // --- GLOBAL STORAGE & INITIALIZATION ---
 let activeModule = localStorage.getItem('activeModule') || 'Views';
 
+import { db, doc, setDoc } from './firebase-logic.js';
+import { getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Buttons panichedaniki window ki link chesthunnam
+window.manageAdSlot = manageAdSlot;
+
 // Page load avvagane last open chesina module ni chupistundi
 window.onload = () => {
     loadContent(activeModule);
@@ -101,55 +107,23 @@ function loadContent(moduleName) {
             break;
 
         case 'Ads Containers':
-            // 8 Containers List Generation
-            let adsListHtml = '';
-            for (let i = 1; i <= 8; i++) {
-                adsListHtml += `
-                    <button class="nav-btn" style="width:100%; margin-bottom:8px; justify-content: space-between; border:1px solid #1a1a1a;" onclick="window.openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
-                        <span><i class="fas fa-box-open" style="color:var(--red);"></i> &nbsp; AD CONTAINER ${i}</span>
-                        <i class="fas fa-chevron-right" style="font-size:12px; opacity:0.5;"></i>
-                    </button>`;
-            }
+    let adsListHtml = '';
+    for (let i = 1; i <= 8; i++) {
+        adsListHtml += `
+            <div style="background:#080808; padding:15px; border:1px solid #1a1a1a; display:flex; justify-content:space-between; align-items:center; border-radius:4px; margin-bottom:5px;">
+                <span style="font-family:'Roboto Mono'; color:#eee; font-size:13px;">AD CONTAINER ${i}</span>
+                <button class="action-btn" style="width:auto; padding:6px 15px; font-size:11px;" onclick="window.manageAdSlot(${i})">MANAGE</button>
+            </div>`;
+    }
 
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <div id="adsListGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
-                        ${adsListHtml}
-                    </div>
-
-                    <div id="adEditorPanel" style="display:none; border: 1px solid #222; padding: 20px; background: #050505; border-radius: 8px;">
-                        <h3 id="editingAdTitle" style="color:var(--red); font-family:'Orbitron'; font-size:16px; margin-bottom:20px; text-align:center;"></h3>
-                        <input type="hidden" id="targetAdId">
-
-                        <div style="display:flex; gap:10px; margin-bottom:25px;">
-                            <button id="btnVisible" onclick="window.setAdVisibility(true)" class="action-btn" style="flex:1; font-weight:bold;">VISIBLE</button>
-                            <button id="btnHidden" onclick="window.setAdVisibility(false)" class="action-btn" style="flex:1; font-weight:bold;">HIDE</button>
-                        </div>
-
-                        <div id="manageSection">
-                            <label class="input-label">AD NAME (INTERNAL)</label>
-                            <input type="text" id="adNickname" class="input-box" placeholder="e.g. Header Banner">
-
-                            <label class="input-label">AD SNIPPET (PASTE SCRIPT CODE)</label>
-                            <textarea id="adSnippet" class="input-box" rows="6" style="color:#00ffcc; font-family:'Roboto Mono'; font-size:12px;" placeholder="Paste Adsterra/Google script here..."></textarea>
-
-                            <label class="input-label">CHOOSE SIZE</label>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; margin-bottom:20px;">
-                                <button class="action-btn" style="font-size:11px;" onclick="window.setPresetSize('320px','50px')">320x50</button>
-                                <button class="action-btn" style="font-size:11px;" onclick="window.setPresetSize('320px','100px')">320x100</button>
-                                <button class="action-btn" style="font-size:11px;" onclick="window.enableCustomSize()">CUSTOM</button>
-                            </div>
-
-                            <div id="customSizeInputs" style="display:none; gap:10px; margin-bottom:20px;">
-                                <input type="text" id="customWidth" class="input-box" placeholder="Width">
-                                <input type="text" id="customHeight" class="input-box" placeholder="Height">
-                            </div>
-
-                            <button class="publish-btn" onclick="window.saveAdSettings()" style="width:100%; padding:18px; background:var(--red); font-family:'Orbitron'; font-weight:900; box-shadow: 0 0 20px rgba(255,0,0,0.2);">SAVE & RUN ADS</button>
-                        </div>
-                    </div>
-                </div>`;
-            break;
+    mainDisplay.innerHTML = `
+        <div class="module-card">
+            <h2 style="font-size:12px; color:var(--red); margin-bottom:20px; letter-spacing:1px; text-align:center;">8 STRATEGIC AD SLOTS</h2>
+            <div id="adsListGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px;">
+                ${adsListHtml}
+            </div>
+        </div>`;
+    break;
 
         case 'Social Media':
             renderSocialMediaModule();
@@ -825,49 +799,42 @@ function loadAdsContainers() {
 // 2. Manage button click chesinappudu Edit/Hide/Visible options
 async function manageAdSlot(slotId) {
     try {
-        // Firestore syntax (db anedi firebase-logic.js nundi import ayyi undali)
-        // doc, getDoc, setDoc functions ni firebase-logic.js nundi access cheyalekapothe 
-        // direct ga 'firebase.firestore()' reference ni ikkada confirm cheskondi.
+        const adDocRef = doc(db, "ads", `slot_${slotId}`);
+        const docSnap = await getDoc(adDocRef);
         
-        const adDocRef = doc(db, "site_settings", `adSlot${slotId}`);
-        const snap = await getDocs(query(collection(db, "site_settings"))); 
-        
-        // Note: Simple handling kosam direct object define chesthunnam
         let adData = { visible: true, snippet: '', width: '100%', height: '55px' };
-        
-        // Pop-up display logic
+        if (docSnap.exists()) adData = docSnap.data();
+
         Swal.fire({
             title: `MANAGE AD SLOT ${slotId}`,
             background: '#0a0a0a',
             color: '#fff',
             html: `
-                <div style="text-align: left; font-family: 'Roboto Mono'; font-size: 12px; padding: 10px;">
-                    <label class="input-label" style="color:#666;">STATUS (HIDE OR VISIBLE)</label>
-                    <select id="adStatus" class="input-box" style="width:100%; margin-bottom:15px;">
-                        <option value="true">VISIBLE</option>
-                        <option value="false">HIDE</option>
+                <div style="text-align: left; font-family: 'Roboto Mono'; font-size: 11px;">
+                    <label class="input-label">STATUS</label>
+                    <select id="adStatus" class="input-box" style="width:100%; margin-bottom:15px; background:#000; color:#fff; border:1px solid #222;">
+                        <option value="true" ${adData.visible ? 'selected' : ''}>VISIBLE</option>
+                        <option value="false" ${!adData.visible ? 'selected' : ''}>HIDE</option>
                     </select>
 
-                    <label class="input-label" style="color:#666;">AD SNIPPET (ADS NETWORK CODE)</label>
-                    <textarea id="adSnippet" class="input-box" style="height: 120px; font-size: 10px; color: #00ffcc; width:100%;">${adData.snippet || ''}</textarea>
+                    <label class="input-label">AD CODE (SNIPPET)</label>
+                    <textarea id="adSnippet" class="input-box" style="width:100%; height:100px; background:#000; color:#00ffcc; border:1px solid #222; font-size:10px;">${adData.snippet || ''}</textarea>
 
-                    <label class="input-label" style="color:#666;">SIZE SETTINGS</label>
-                    <select id="adSize" class="input-box" style="width:100%;" onchange="document.getElementById('customBox').style.display = (this.value === 'custom') ? 'flex' : 'none'">
-                        <option value="100%|55px">320*50 (DEFAULT)</option>
-                        <option value="320px|100px">320*100 (DEFAULT)</option>
+                    <label class="input-label" style="margin-top:15px;">SIZE PRESET</label>
+                    <select id="adSize" class="input-box" style="width:100%; background:#000; color:#fff; border:1px solid #222;" onchange="document.getElementById('customSizeBox').style.display = (this.value === 'custom') ? 'flex' : 'none'">
+                        <option value="100%|55px">320x50 (DEFAULT)</option>
+                        <option value="320px|100px">320x100</option>
                         <option value="custom">CUSTOM SIZE</option>
                     </select>
 
-                    <div id="customBox" style="display: none; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="custW" class="input-box" placeholder="WIDTH" style="width: 48%;" value="${adData.width}">
-                        <input type="text" id="custH" class="input-box" placeholder="HEIGHT" style="width: 48%;" value="${adData.height}">
+                    <div id="customSizeBox" style="display:none; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="custW" class="input-box" placeholder="WIDTH" value="${adData.width}" style="width:48%;">
+                        <input type="text" id="custH" class="input-box" placeholder="HEIGHT" value="${adData.height}" style="width:48%;">
                     </div>
-                </div>
-            `,
+                </div>`,
             showCancelButton: true,
-            confirmButtonText: 'SAVE SETTINGS',
+            confirmButtonText: 'SAVE & DEPLOY',
             confirmButtonColor: '#ff0000',
-            cancelButtonColor: '#333',
             preConfirm: () => {
                 const sizeVal = document.getElementById('adSize').value;
                 let finalW, finalH;
@@ -881,25 +848,17 @@ async function manageAdSlot(slotId) {
                     visible: document.getElementById('adStatus').value === 'true',
                     snippet: document.getElementById('adSnippet').value,
                     width: finalW,
-                    height: finalH,
-                    timestamp: new Date()
+                    height: finalH
                 };
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
-                // Correct Firestore Save Logic
-                try {
-                    await setDoc(doc(db, "ads", `slot_${slotId}`), result.value);
-                    Swal.fire({ icon: 'success', title: 'SETTINGS SAVED', background: '#0a0a0a', color: '#fff', timer: 1500, showConfirmButton: false });
-                } catch (err) {
-                    console.error("Save Error:", err);
-                    Swal.fire('Error', 'Database Save Failed', 'error');
-                }
+                await setDoc(adDocRef, result.value);
+                Swal.fire({ icon: 'success', title: 'LIVE NOW', background: '#0a0a0a', color: '#fff', timer: 1000, showConfirmButton: false });
             }
         });
-    } catch (error) {
-        console.error("Popup Error:", error);
-        alert("Check if SweetAlert2 and Firebase are loaded correctly.");
+    } catch (e) {
+        console.error("Error:", e);
     }
 }
 // Global variable to track visibility in UI
