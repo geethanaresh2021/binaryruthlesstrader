@@ -169,12 +169,12 @@
             
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
-            #adSlot3 { order: 3; margin-bottom: 15px; }
+            #adSlot7 { order: 3; margin-bottom: 15px; }
+            #adSlot8 { order: 4; margin-bottom: 15px; }
             
-            #sigCol { order: 4; margin-bottom: 40px; }
+            #sigCol { order: 5; margin-bottom: 40px; }
             
-            #adSlot7 { order: 5; margin-bottom: 15px; }
-            #adSlot8 { order: 6; margin-bottom: 15px; }
+            #adSlot3 { order: 6; margin-bottom: 15px; }
             #adSlot4 { order: 7; margin-bottom: 15px; }
             
             #toolCol { order: 8; margin-bottom: 40px; }
@@ -373,7 +373,7 @@
                 });
             });
 
-            // --- REPLACED: UPDATED ADS LISTENER ---
+            // --- FIXED: UPDATED ADS LISTENER FOR CONTAINER-STRICT EXECUTION ---
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
@@ -385,26 +385,35 @@
                             el.setAttribute('data-snippet', '');
                         } 
                         else {
-                            el.style.display = "block"; 
+                            el.style.display = "flex"; 
                             el.style.width = d.width || "100%"; 
                             el.style.height = d.height || "auto";
                             el.style.margin = "10px auto";
 
                             if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.innerHTML = d.snippet; 
                                 el.setAttribute('data-snippet', d.snippet);
+                                el.innerHTML = ''; // Clear old
 
-                                // Logic to execute scripts inside the injected ad HTML
-                                const sc = el.getElementsByTagName('script');
-                                for (let s of Array.from(sc)) {
+                                // Trap the ad code inside a dedicated wrapper
+                                const adContainer = document.createElement('div');
+                                adContainer.style.width = "100%";
+                                el.appendChild(adContainer);
+
+                                // Create a temp div to parse the snippet
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = d.snippet;
+                                
+                                const scripts = tempDiv.getElementsByTagName('script');
+                                for (let s of Array.from(scripts)) {
                                     const ns = document.createElement('script');
-                                    // Copy all attributes
                                     Array.from(s.attributes).forEach(attr => ns.setAttribute(attr.name, attr.value));
-                                    // Copy script content
                                     ns.textContent = s.textContent;
-                                    // Replace with executable version
-                                    s.parentNode.replaceChild(ns, s);
+                                    
+                                    // FORCE: Append directly to our container instead of letting it roam
+                                    adContainer.appendChild(ns);
+                                    s.remove();
                                 }
+                                adContainer.appendChild(tempDiv);
                             }
                         }
                     }
