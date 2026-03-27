@@ -803,60 +803,87 @@ function publishGiveaway() {
     });
 }
 // --- ADS MANAGER MAIN INTERFACE ---
+/* --- ADS CONTAINERS MANAGEMENT LOGIC --- */
+
+// 1. Home page lo unna 8 slots list chupinchadam kosam
 function loadAdsContainers() {
     const display = document.getElementById('mainDisplay');
-    const header = document.querySelector('#panelHeader h1');
-    header.innerText = "ADS CONTAINERS MANAGER";
-
-    let adsListHtml = '';
-    // 8 Ads Containers List
+    document.getElementById('panelHeader').innerHTML = `<h1>Ads Containers</h1><p>MANAGE 8 STRATEGIC AD SLOTS</p>`;
+    
+    let html = `<div class="module-card" style="max-width: 600px; margin: 0 auto;">`;
     for (let i = 1; i <= 8; i++) {
-        adsListHtml += `
-            <button class="action-btn block-btn" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
-                <i class="fas fa-box"></i> AD CONTAINER ${i}
-            </button>`;
+        html += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #111; background: #080808; margin-bottom: 8px; border-radius: 4px; border: 1px solid #1a1a1a;">
+                <span style="font-family: 'Roboto Mono'; color: #eee; font-size: 14px;">AD SLOT ${i}</span>
+                <button class="action-btn" style="width: auto; padding: 6px 20px; font-size: 11px;" onclick="manageAdSlot(${i})">MANAGE</button>
+            </div>`;
     }
-
-    display.innerHTML = `
-    <div class="ads-panel" style="padding: 10px;">
-        <div id="adsList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-            ${adsListHtml}
-        </div>
-
-        <div id="adEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
-            <h3 id="editingAdName" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
-            <input type="hidden" id="targetAdId">
-
-            <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1;">VISIBLE</button>
-                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1;">HIDE</button>
-            </div>
-
-            <div id="manageSection" style="border-top: 1px solid #222; pt: 15px;">
-                <label style="color: #888; font-size: 10px;">AD NAME (INTERNAL)</label>
-                <input type="text" id="adNickname" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px;">
-
-                <label style="color: #888; font-size: 10px;">AD SNIPPET (PASTE CODE HERE)</label>
-                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste <script> or <iframe> code..."></textarea>
-
-                <label style="color: #888; font-size: 10px;">SELECT SIZE</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
-                    <button class="action-btn" onclick="setPresetSize('320px','50px')">320x50</button>
-                    <button class="action-btn" onclick="setPresetSize('320px','100px')">320x100</button>
-                    <button class="action-btn" onclick="enableCustomSize()">CUSTOM</button>
-                </div>
-
-                <div id="customSizeInputs" style="display: none; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="customWidth" placeholder="Width (e.g. 350px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
-                    <input type="text" id="customHeight" placeholder="Height (e.g. 150px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
-                </div>
-
-                <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">SAVE & RUN ADS</button>
-            </div>
-        </div>
-    </div>`;
+    html += `</div>`;
+    display.innerHTML = html;
 }
 
+// 2. Manage button click chesinappudu Edit/Hide/Visible options
+async function manageAdSlot(slotId) {
+    const snap = await db.ref(`site_settings/ads/adSlot${slotId}`).once('value');
+    const adData = snap.val() || { visible: true, snippet: '', width: '100%', height: '55px' };
+
+    Swal.fire({
+        title: `MANAGE AD SLOT ${slotId}`,
+        background: '#0a0a0a',
+        color: '#fff',
+        html: `
+            <div style="text-align: left; font-family: 'Roboto Mono'; font-size: 12px; padding: 10px;">
+                <label class="input-label">STATUS (HIDE OR VISIBLE)</label>
+                <select id="adStatus" class="input-box">
+                    <option value="true" ${adData.visible ? 'selected' : ''}>VISIBLE</option>
+                    <option value="false" ${!adData.visible ? 'selected' : ''}>HIDE</option>
+                </select>
+
+                <label class="input-label">AD SNIPPET (ADS NETWORK CODE)</label>
+                <textarea id="adSnippet" class="input-box" style="height: 120px; font-size: 10px; color: #00ffcc;">${adData.snippet || ''}</textarea>
+
+                <label class="input-label">SIZE SETTINGS</label>
+                <select id="adSize" class="input-box" onchange="document.getElementById('customBox').style.display = (this.value === 'custom') ? 'flex' : 'none'">
+                    <option value="100%|55px" ${adData.width === '100%' && adData.height === '55px' ? 'selected' : ''}>320*50 (DEFAULT)</option>
+                    <option value="320px|100px" ${adData.width === '320px' && adData.height === '100px' ? 'selected' : ''}>320*100 (DEFAULT)</option>
+                    <option value="custom" ${adData.width !== '100%' && adData.width !== '320px' ? 'selected' : ''}>CUSTOM SIZE</option>
+                </select>
+
+                <div id="customBox" style="display: ${adData.width !== '100%' && adData.width !== '320px' ? 'flex' : 'none'}; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="custW" class="input-box" placeholder="WIDTH (e.g. 300px)" style="width: 50%;" value="${adData.width}">
+                    <input type="text" id="custH" class="input-box" placeholder="HEIGHT (e.g. 250px)" style="width: 50%;" value="${adData.height}">
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'SAVE SETTINGS',
+        confirmButtonColor: '#ff0000',
+        cancelButtonColor: '#333',
+        preConfirm: () => {
+            const sizeVal = document.getElementById('adSize').value;
+            let finalW, finalH;
+            if (sizeVal === 'custom') {
+                finalW = document.getElementById('custW').value;
+                finalH = document.getElementById('custH').value;
+            } else {
+                [finalW, finalH] = sizeVal.split('|');
+            }
+            return {
+                visible: document.getElementById('adStatus').value === 'true',
+                snippet: document.getElementById('adSnippet').value,
+                width: finalW,
+                height: finalH
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            db.ref(`site_settings/ads/adSlot${slotId}`).set(result.value)
+              .then(() => {
+                  Swal.fire({ icon: 'success', title: 'SETTINGS SAVED', background: '#0a0a0a', color: '#fff', timer: 1500, showConfirmButton: false });
+              });
+        }
+    });
+}
 // Global variable to track visibility in UI
 let currentVisibility = true;
 
