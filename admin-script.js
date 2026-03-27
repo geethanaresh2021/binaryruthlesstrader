@@ -1,11 +1,6 @@
 // --- GLOBAL STORAGE & INITIALIZATION ---
 let activeModule = localStorage.getItem('activeModule') || 'Views';
 
-import { db, doc, setDoc } from './firebase-logic.js';
-import { getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// Buttons panichedaniki window ki link chesthunnam
-window.manageAdSlot = manageAdSlot;
 
 // Page load avvagane last open chesina module ni chupistundi
 window.onload = () => {
