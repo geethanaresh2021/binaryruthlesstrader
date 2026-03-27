@@ -341,7 +341,6 @@
             }
         }
 
-        // --- VERIFICATION LOADER ---
         function loadVerificationData() {
             db.ref('site_settings/verification').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -374,6 +373,7 @@
                 });
             });
 
+            // --- REPLACED: UPDATED ADS LISTENER ---
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
@@ -382,18 +382,27 @@
                         if (d.visible === false) { 
                             el.style.display = "none"; 
                             el.innerHTML = '';
+                            el.setAttribute('data-snippet', '');
                         } 
                         else {
                             el.style.display = "block"; 
                             el.style.width = d.width || "100%"; 
                             el.style.height = d.height || "auto";
                             el.style.margin = "10px auto";
+
                             if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.innerHTML = d.snippet; el.setAttribute('data-snippet', d.snippet);
+                                el.innerHTML = d.snippet; 
+                                el.setAttribute('data-snippet', d.snippet);
+
+                                // Logic to execute scripts inside the injected ad HTML
                                 const sc = el.getElementsByTagName('script');
-                                for (let s of sc) {
+                                for (let s of Array.from(sc)) {
                                     const ns = document.createElement('script');
-                                    if (s.src) ns.src = s.src; ns.textContent = s.textContent;
+                                    // Copy all attributes
+                                    Array.from(s.attributes).forEach(attr => ns.setAttribute(attr.name, attr.value));
+                                    // Copy script content
+                                    ns.textContent = s.textContent;
+                                    // Replace with executable version
                                     s.parentNode.replaceChild(ns, s);
                                 }
                             }
@@ -401,6 +410,7 @@
                     }
                 }
             });
+
             listenToTools();
         });
 
@@ -417,7 +427,7 @@
                     if (selectedId && tools[selectedId]) {
                         displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
                         const scripts = displayArea.getElementsByTagName('script');
-                        for (let s of scripts) {
+                        for (let s of Array.from(scripts)) {
                             const ns = document.createElement('script');
                             if (s.src) ns.src = s.src; ns.textContent = s.textContent;
                             s.parentNode.replaceChild(ns, s);
