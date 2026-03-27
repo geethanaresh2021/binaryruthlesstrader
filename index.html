@@ -429,6 +429,29 @@
                 else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
+        // Home page script lo idhi add cheyyandi
+db.ref('site_settings/ads').on('value', (snapshot) => {
+    const ads = snapshot.val();
+    if(!ads) return;
+
+    Object.keys(ads).forEach(id => {
+        const data = ads[id];
+        const adDiv = document.getElementById(id); // Home page container ID (e.g., adSlot1)
+
+        if (adDiv) {
+            if (data.visible === false) {
+                adDiv.style.display = 'none'; // Hide select chesthe container remove
+                adDiv.innerHTML = ''; 
+            } else {
+                adDiv.style.display = 'block'; // Visible select chesthe show
+                adDiv.style.width = data.width;
+                adDiv.style.height = data.height;
+                adDiv.style.margin = "10px auto";
+                adDiv.innerHTML = data.snippet; // Ad snippet code ikkada run avtundi
+            }
+        }
+    });
+});
     </script>
 </body>
 </html>
