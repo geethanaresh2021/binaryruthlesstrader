@@ -71,7 +71,6 @@
             flex-direction: column;
         }
 
-        /* Desktop Grid Structure */
         .row-ads-top {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -123,7 +122,6 @@
             background-repeat: no-repeat; background-position: right 15px center; 
         }
 
-        /* --- TOOL CONTAINER PROTECTION --- */
         .display-box { 
             width: 100%; 
             height: 420px; 
@@ -149,7 +147,6 @@
             box-sizing: border-box !important;
         }
 
-        /* --- TOOL INJECTED AESTHETIC --- */
         #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
         .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
 
@@ -162,7 +159,6 @@
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- MOBILE REORDERING LOGIC --- */
         @media (max-width: 850px) {
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
@@ -348,7 +344,6 @@
                 if (data.meta && data.meta.data) {
                     const container = document.getElementById('ads-verify-meta-container');
                     container.innerHTML = data.meta.data;
-                    console.log("Ruthless Verification: Meta Data Deployed.");
                 }
             });
         }
@@ -373,7 +368,7 @@
                 });
             });
 
-            // --- FIXED: UPDATED ADS LISTENER FOR CONTAINER-STRICT EXECUTION ---
+            // --- FIXED: IFRAME ISOLATION ADS LISTENER ---
             db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
@@ -388,32 +383,28 @@
                             el.style.display = "flex"; 
                             el.style.width = d.width || "100%"; 
                             el.style.height = d.height || "auto";
-                            el.style.margin = "10px auto";
 
                             if (el.getAttribute('data-snippet') !== d.snippet) {
                                 el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; // Clear old
+                                el.innerHTML = ''; 
 
-                                // Trap the ad code inside a dedicated wrapper
-                                const adContainer = document.createElement('div');
-                                adContainer.style.width = "100%";
-                                el.appendChild(adContainer);
-
-                                // Create a temp div to parse the snippet
-                                const tempDiv = document.createElement('div');
-                                tempDiv.innerHTML = d.snippet;
+                                // Create Iframe to isolate the ad
+                                const iframe = document.createElement('iframe');
+                                iframe.style.width = "100%";
+                                iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none";
+                                iframe.style.overflow = "hidden";
+                                iframe.scrolling = "no";
                                 
-                                const scripts = tempDiv.getElementsByTagName('script');
-                                for (let s of Array.from(scripts)) {
-                                    const ns = document.createElement('script');
-                                    Array.from(s.attributes).forEach(attr => ns.setAttribute(attr.name, attr.value));
-                                    ns.textContent = s.textContent;
-                                    
-                                    // FORCE: Append directly to our container instead of letting it roam
-                                    adContainer.appendChild(ns);
-                                    s.remove();
-                                }
-                                adContainer.appendChild(tempDiv);
+                                el.appendChild(iframe);
+
+                                const doc = iframe.contentWindow.document;
+                                doc.open();
+                                doc.write(`
+                                    <style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style>
+                                    <div>${d.snippet}</div>
+                                `);
+                                doc.close();
                             }
                         }
                     }
