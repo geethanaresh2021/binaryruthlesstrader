@@ -824,65 +824,83 @@ function loadAdsContainers() {
 
 // 2. Manage button click chesinappudu Edit/Hide/Visible options
 async function manageAdSlot(slotId) {
-    const snap = await db.ref(`site_settings/ads/adSlot${slotId}`).once('value');
-    const adData = snap.val() || { visible: true, snippet: '', width: '100%', height: '55px' };
+    try {
+        // Firestore syntax (db anedi firebase-logic.js nundi import ayyi undali)
+        // doc, getDoc, setDoc functions ni firebase-logic.js nundi access cheyalekapothe 
+        // direct ga 'firebase.firestore()' reference ni ikkada confirm cheskondi.
+        
+        const adDocRef = doc(db, "site_settings", `adSlot${slotId}`);
+        const snap = await getDocs(query(collection(db, "site_settings"))); 
+        
+        // Note: Simple handling kosam direct object define chesthunnam
+        let adData = { visible: true, snippet: '', width: '100%', height: '55px' };
+        
+        // Pop-up display logic
+        Swal.fire({
+            title: `MANAGE AD SLOT ${slotId}`,
+            background: '#0a0a0a',
+            color: '#fff',
+            html: `
+                <div style="text-align: left; font-family: 'Roboto Mono'; font-size: 12px; padding: 10px;">
+                    <label class="input-label" style="color:#666;">STATUS (HIDE OR VISIBLE)</label>
+                    <select id="adStatus" class="input-box" style="width:100%; margin-bottom:15px;">
+                        <option value="true">VISIBLE</option>
+                        <option value="false">HIDE</option>
+                    </select>
 
-    Swal.fire({
-        title: `MANAGE AD SLOT ${slotId}`,
-        background: '#0a0a0a',
-        color: '#fff',
-        html: `
-            <div style="text-align: left; font-family: 'Roboto Mono'; font-size: 12px; padding: 10px;">
-                <label class="input-label">STATUS (HIDE OR VISIBLE)</label>
-                <select id="adStatus" class="input-box">
-                    <option value="true" ${adData.visible ? 'selected' : ''}>VISIBLE</option>
-                    <option value="false" ${!adData.visible ? 'selected' : ''}>HIDE</option>
-                </select>
+                    <label class="input-label" style="color:#666;">AD SNIPPET (ADS NETWORK CODE)</label>
+                    <textarea id="adSnippet" class="input-box" style="height: 120px; font-size: 10px; color: #00ffcc; width:100%;">${adData.snippet || ''}</textarea>
 
-                <label class="input-label">AD SNIPPET (ADS NETWORK CODE)</label>
-                <textarea id="adSnippet" class="input-box" style="height: 120px; font-size: 10px; color: #00ffcc;">${adData.snippet || ''}</textarea>
+                    <label class="input-label" style="color:#666;">SIZE SETTINGS</label>
+                    <select id="adSize" class="input-box" style="width:100%;" onchange="document.getElementById('customBox').style.display = (this.value === 'custom') ? 'flex' : 'none'">
+                        <option value="100%|55px">320*50 (DEFAULT)</option>
+                        <option value="320px|100px">320*100 (DEFAULT)</option>
+                        <option value="custom">CUSTOM SIZE</option>
+                    </select>
 
-                <label class="input-label">SIZE SETTINGS</label>
-                <select id="adSize" class="input-box" onchange="document.getElementById('customBox').style.display = (this.value === 'custom') ? 'flex' : 'none'">
-                    <option value="100%|55px" ${adData.width === '100%' && adData.height === '55px' ? 'selected' : ''}>320*50 (DEFAULT)</option>
-                    <option value="320px|100px" ${adData.width === '320px' && adData.height === '100px' ? 'selected' : ''}>320*100 (DEFAULT)</option>
-                    <option value="custom" ${adData.width !== '100%' && adData.width !== '320px' ? 'selected' : ''}>CUSTOM SIZE</option>
-                </select>
-
-                <div id="customBox" style="display: ${adData.width !== '100%' && adData.width !== '320px' ? 'flex' : 'none'}; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="custW" class="input-box" placeholder="WIDTH (e.g. 300px)" style="width: 50%;" value="${adData.width}">
-                    <input type="text" id="custH" class="input-box" placeholder="HEIGHT (e.g. 250px)" style="width: 50%;" value="${adData.height}">
+                    <div id="customBox" style="display: none; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="custW" class="input-box" placeholder="WIDTH" style="width: 48%;" value="${adData.width}">
+                        <input type="text" id="custH" class="input-box" placeholder="HEIGHT" style="width: 48%;" value="${adData.height}">
+                    </div>
                 </div>
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'SAVE SETTINGS',
-        confirmButtonColor: '#ff0000',
-        cancelButtonColor: '#333',
-        preConfirm: () => {
-            const sizeVal = document.getElementById('adSize').value;
-            let finalW, finalH;
-            if (sizeVal === 'custom') {
-                finalW = document.getElementById('custW').value;
-                finalH = document.getElementById('custH').value;
-            } else {
-                [finalW, finalH] = sizeVal.split('|');
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'SAVE SETTINGS',
+            confirmButtonColor: '#ff0000',
+            cancelButtonColor: '#333',
+            preConfirm: () => {
+                const sizeVal = document.getElementById('adSize').value;
+                let finalW, finalH;
+                if (sizeVal === 'custom') {
+                    finalW = document.getElementById('custW').value;
+                    finalH = document.getElementById('custH').value;
+                } else {
+                    [finalW, finalH] = sizeVal.split('|');
+                }
+                return {
+                    visible: document.getElementById('adStatus').value === 'true',
+                    snippet: document.getElementById('adSnippet').value,
+                    width: finalW,
+                    height: finalH,
+                    timestamp: new Date()
+                };
             }
-            return {
-                visible: document.getElementById('adStatus').value === 'true',
-                snippet: document.getElementById('adSnippet').value,
-                width: finalW,
-                height: finalH
-            };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            db.ref(`site_settings/ads/adSlot${slotId}`).set(result.value)
-              .then(() => {
-                  Swal.fire({ icon: 'success', title: 'SETTINGS SAVED', background: '#0a0a0a', color: '#fff', timer: 1500, showConfirmButton: false });
-              });
-        }
-    });
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                // Correct Firestore Save Logic
+                try {
+                    await setDoc(doc(db, "ads", `slot_${slotId}`), result.value);
+                    Swal.fire({ icon: 'success', title: 'SETTINGS SAVED', background: '#0a0a0a', color: '#fff', timer: 1500, showConfirmButton: false });
+                } catch (err) {
+                    console.error("Save Error:", err);
+                    Swal.fire('Error', 'Database Save Failed', 'error');
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Popup Error:", error);
+        alert("Check if SweetAlert2 and Firebase are loaded correctly.");
+    }
 }
 // Global variable to track visibility in UI
 let currentVisibility = true;
