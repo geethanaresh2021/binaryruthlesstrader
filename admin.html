@@ -33,8 +33,12 @@
     <div class="admin-wrapper">
         <nav class="sidebar">
             <div class="nav-group-label">Analytics</div>
-            <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
-            <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
+            <button class="nav-btn white-accent" onclick="loadContent('Views')">
+                <i class="fas fa-eye"></i> Views
+            </button>
+            <button class="nav-btn white-accent" onclick="loadContent('Revenue')">
+                <i class="fas fa-dollar-sign"></i> Revenue
+            </button>
 
             <div class="nav-group-label">Management</div>
             <div class="nav-scroll-container">
@@ -99,6 +103,7 @@
     </div>
 
     <script type="module">
+        // Firebase Config Integration
         const firebaseConfig = {
             apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
             authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -109,19 +114,18 @@
             appId: "1:533209261799:web:a398ab21b0f913683ea442"
         };
         
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        window.fb_db = firebase.database();
+        const fb_db = firebase.database();
 
-        // Import and Export logic to window for onclick access
+        // Logic for Firebase settings
         import { updateCloudConfig, saveFirebaseSettings } from './firebase-logic.js';
         window.updateCloudConfig = updateCloudConfig;
         window.saveFirebaseSettings = saveFirebaseSettings;
 
-        // Header Social Sync
-        window.fb_db.ref('site_settings/socials').on('value', snap => {
+        // Sync Header Icons with Firebase
+        fb_db.ref('site_settings/socials').on('value', snap => {
             const links = snap.val() || {};
             if(links.Telegram) document.getElementById('header-tg').href = links.Telegram;
             if(links.YouTube) document.getElementById('header-yt').href = links.YouTube;
