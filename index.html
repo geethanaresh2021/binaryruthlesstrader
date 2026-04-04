@@ -162,7 +162,6 @@
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- MOBILE LAYOUT REORDERING --- */
         @media (max-width: 850px) {
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
@@ -282,42 +281,71 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- SIGNAL AUTO-FETCH LOGIC (FIXED) ---
+        // --- SIGNAL AUTO-FETCH LOGIC (REPLACED WITH JSON HANDLER) ---
         const sigSelect = document.getElementById('sigSelect');
         const sigScreen = document.getElementById('sigScreen');
+        let signalInterval = null;
 
-        sigSelect.addEventListener('change', async (e) => {
+        async function updateSignals(apiUrl) {
+            try {
+                const response = await fetch(apiUrl);
+                const signals = await response.json(); // Data ni JSON ga convert chesthunnam
+                
+                let html = "";
+                if (!signals || signals.length === 0) {
+                    html = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:11px;">NO LIVE SIGNALS YET</div>';
+                } else {
+                    signals.forEach(sig => {
+                        const isWin = sig.res.toUpperCase().includes('WIN') || sig.res.toUpperCase().includes('TEST');
+                        const isCall = sig.dir.toUpperCase().includes('CALL') || sig.dir.toUpperCase().includes('TEST');
+                        
+                        const resColor = isWin ? '#00ffcc' : '#ff0000';
+                        const dirColor = isCall ? '#00ffcc' : '#ff0000';
+
+                        html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #111; font-family:'Roboto Mono'; font-size:13px; font-weight:bold;">
+                            <span style="color:#fff; flex:1;">${sig.pair}</span>
+                            <span style="color:${dirColor}; flex:1; text-align:center;">${sig.dir.toUpperCase()}</span>
+                            <span style="color:${resColor}; text-shadow: 0 0 8px ${resColor}; flex:1; text-align:center;">${sig.res.toUpperCase()}</span>
+                            <span style="color:#333; font-size:10px; flex:1; text-align:right;">${sig.time}</span>
+                        </div>`;
+                    });
+                }
+                sigScreen.innerHTML = html;
+            } catch (err) {
+                console.error("Signal Fetch Error:", err);
+                sigScreen.innerHTML = '<div style="color:red;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">VPS OFFLINE OR CORS ERROR</div>';
+            }
+        }
+
+        sigSelect.addEventListener('change', (e) => {
             const selected = e.target.value.toLowerCase();
             localStorage.setItem('ruthless_signal', selected);
             
+            if (signalInterval) clearInterval(signalInterval);
+
             if (!selected) {
                 sigScreen.innerHTML = '';
                 return;
             }
 
-            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:10px;">FETCHING LIVE SIGNALS...</div>';
+            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:10px;">CONNECTING TO VPS...</div>';
 
-            // 1. Admin setup chesina URL ni Firebase nundi laguthundi
-            db.ref(`site_settings/signals/${selected}`).once('value', async (snap) => {
+            db.ref(`site_settings/signals/${selected}`).on('value', (snap) => {
                 if (snap.exists()) {
                     const apiUrl = snap.val().url;
-                    try {
-                        // 2. VPS API nundi data fetch chestundi
-                        const response = await fetch(apiUrl);
-                        const data = await response.text(); 
-                        
-                        // 3. Signal container lo data update chestundi
-                        sigScreen.innerHTML = data;
-                    } catch (err) {
-                        console.error("Signal Fetch Error:", err);
-                        sigScreen.innerHTML = '<div style="color:red;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">VPS OFFLINE OR CORS ERROR</div>';
-                    }
+                    // First call immediately
+                    updateSignals(apiUrl);
+                    // Refresh every 5 seconds for live feel
+                    if (signalInterval) clearInterval(signalInterval);
+                    signalInterval = setInterval(() => updateSignals(apiUrl), 5000);
                 } else {
                     sigScreen.innerHTML = '<div style="color:#444;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">NO API CONNECTION SET IN ADMIN</div>';
                 }
             });
         });
 
+        // --- CORE FUNCTIONS ---
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
