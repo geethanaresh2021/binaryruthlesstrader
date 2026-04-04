@@ -435,4 +435,126 @@
             inputs.forEach((input, index) => {
                 const storageId = input.id || `auto_val_${index}`;
                 localStorage.setItem('tool_input_' + storageId, input.value);
-    
+            });
+        }
+
+        function restoreToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                const savedValue = localStorage.getItem('tool_input_' + storageId);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+
+        function applySmoothScroll(containerId, text, speed, color) {
+            const container = document.getElementById(containerId); if (!container) return;
+            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
+            const spd = parseInt(speed) || 0;
+            if (spd === 0) {
+                container.style.justifyContent = "center";
+                container.innerHTML = `<span class="scroll-item">${text}</span>`;
+            } else {
+                container.style.justifyContent = "flex-start";
+                const duration = 35 / spd;
+                container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
+            }
+        }
+
+        function loadVerificationData() {
+            db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+                if (data.meta && data.meta.data) {
+                    const container = document.getElementById('ads-verify-meta-container');
+                    container.innerHTML = data.meta.data;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            loadVerificationData();
+
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                listenToSignals(savedSignal);
+            }
+            sigSelect.addEventListener('change', (e) => {
+                localStorage.setItem('ruthless_signal', e.target.value);
+                listenToSignals(e.target.value);
+            });
+
+            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            
+            db.ref('site_settings/socials').on('value', snap => {
+                const links = snap.val() || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
+                    const el = document.getElementById(`link-${p}`);
+                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
+                });
+            });
+
+            db.ref('site_settings/ads').on('value', snap => {
+                const ads = snap.val(); 
+                if (ads) updateAdSlots(ads);
+            });
+
+            listenToTools();
+        });
+
+        function listenToTools() {
+            const dropdown = document.getElementById('toolSelect');
+            const displayArea = document.getElementById('toolScreen');
+            db.ref('site_settings/tools').on('value', snapshot => {
+                const tools = snapshot.val();
+                let options = '<option value="">-- SELECT TOOL --</option>';
+                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
+                dropdown.innerHTML = options;
+
+                const loadTool = (selectedId) => {
+                    if (selectedId && tools[selectedId]) {
+                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
+                        const scripts = displayArea.getElementsByTagName('script');
+                        for (let s of Array.from(scripts)) {
+                            const ns = document.createElement('script');
+                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
+                            s.parentNode.replaceChild(ns, s);
+                        }
+                        setTimeout(() => { 
+                            restoreToolInputs(); 
+                            displayArea.addEventListener('input', saveToolInputs);
+                            displayArea.addEventListener('change', saveToolInputs);
+                        }, 400);
+                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
+                };
+
+                const saved = localStorage.getItem('ruthless_tool');
+                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
+                dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
+            });
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        const statsRef = db.ref(`stats/${today}`);
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+        });
+
+        function adminLogin() {
+            Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
+                if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
+                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
+            });
+        }
+    </script>
+</body>
+</html>
