@@ -90,15 +90,70 @@ function loadContent(moduleName) {
     break;
 
         case 'Signal Connection':
-            mainDisplay.innerHTML = `
-                <div class="module-card">
-                    <label class="input-label">Signal Source URL</label>
-                    <input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com">
-                    <label class="input-label">Platform</label>
-                    <input type="text" id="sigPlat" class="input-box" value="QUOTEX">
-                    <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
-                </div>`;
-            break;
+    mainDisplay.innerHTML = `
+        <div class="module-card" style="background: #050505; border: 1px solid #222; padding: 20px;">
+            <h3 style="color: var(--red); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 14px;">SELECT SIGNAL SOURCE</h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                <button class="action-btn" style="flex:1; border: 1px solid #333;" onclick="showSignalEditor('TOXA')">TOXA</button>
+                <button class="action-btn" style="flex:1; border: 1px solid #333;" onclick="showSignalEditor('QUOTEX')">QUOTEX</button>
+            </div>
+
+            <div id="signalEditorArea" style="display:none; border-top: 1px solid #111; padding-top: 20px;">
+                <label class="input-label" id="sourceLabel" style="color: #666; font-size: 10px;"></label>
+                <input type="text" id="sigUrl" class="input-box" 
+                       placeholder="Ex: http://103.169.176.38:3000/api/get-signals/toxa" 
+                       style="color: #00ffcc; font-family: 'Roboto Mono'; margin-top: 5px;">
+                
+                <button class="action-btn" style="background: var(--red); color: #fff; width: 100%; margin-top: 15px; font-weight: 900;" 
+                        onclick="saveSignalConn()">
+                    SAVE CONNECTION
+                </button>
+            </div>
+        </div>`;
+
+    // Global variable to track which source we are editing
+    window.activeSignalSource = '';
+
+    // Helper function to show input field when list item is clicked
+    window.showSignalEditor = function(type) {
+        window.activeSignalSource = type;
+        const area = document.getElementById('signalEditorArea');
+        const label = document.getElementById('sourceLabel');
+        const input = document.getElementById('sigUrl');
+        
+        area.style.display = 'block';
+        label.innerText = `${type} VPS API ADDRESS`;
+
+        // Fetch existing link from Firebase to show in input box
+        db.ref(`site_settings/signals/${type.toLowerCase()}`).once('value', (snap) => {
+            input.value = snap.exists() ? snap.val().url : "";
+        });
+    };
+
+    // Updated Save Function
+    window.saveSignalConn = function() {
+        const url = document.getElementById('sigUrl').value.trim();
+        if (!url || !window.activeSignalSource) {
+            Swal.fire({ icon: 'warning', title: 'EMPTY FIELD', text: 'Please enter a valid URL', background: '#0a0a0a', color: '#fff' });
+            return;
+        }
+
+        db.ref(`site_settings/signals/${window.activeSignalSource.toLowerCase()}`).set({
+            url: url,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'CONNECTED', 
+                text: `${window.activeSignalSource} API Link Saved!`, 
+                background: '#0a0a0a', 
+                color: '#fff',
+                confirmButtonColor: '#ff0000'
+            });
+        });
+    };
+    break;
 
         case 'Ads Containers':
             // 8 Containers List Generation
