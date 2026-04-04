@@ -39,18 +39,18 @@
             <div class="nav-scroll-container">
                 
                 <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
-<button class="nav-btn" onclick="renderAdsVerificationModule()">
-    <i class="fas fa-shield-alt"></i> ADS NETWORK VERIFY
-</button>
-    <button class="nav-btn" onclick="loadAdsContainers()">
-    <i class="fas fa-box-open"></i> Ads Containers
-</button>
+                <button class="nav-btn" onclick="renderAdsVerificationModule()">
+                    <i class="fas fa-shield-alt"></i> ADS NETWORK VERIFY
+                </button>
+                <button class="nav-btn" onclick="loadAdsContainers()">
+                    <i class="fas fa-box-open"></i> Ads Containers
+                </button>
                 <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
                 <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
-               <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
+                <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
                 <button class="nav-btn" onclick="loadContent('Giveaway Winner')"><i class="fas fa-trophy"></i> Giveaway Winner</button>
                 <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
-                <button class="nav-btn" onclick="loadContent('Signal Connection')"><i class="fas fa-plug"></i> Signal Connection</button>
+                <button class="nav-btn" onclick="loadSignalConnectionModule()"><i class="fas fa-plug"></i> Signal Connection</button>
                 <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
                 <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
             </div>
@@ -70,9 +70,62 @@
     </div>
 
     <script type="module">
-        import { updateCloudConfig, saveFirebaseSettings } from './firebase-logic.js';
+        import { updateCloudConfig, saveFirebaseSettings, saveVpsUrl } from './firebase-logic.js';
         window.updateCloudConfig = updateCloudConfig;
         window.saveFirebaseSettings = saveFirebaseSettings;
+        window.saveVpsUrl = saveVpsUrl;
+
+        // Signal Connection UI Rendering Logic
+        window.loadSignalConnectionModule = function() {
+            const display = document.getElementById('mainDisplay');
+            document.getElementById('panelHeader').querySelector('h1').innerText = "Signal Connection";
+            
+            display.innerHTML = `
+                <div class="admin-vps-panel" style="background:#000; padding:25px; border:2px solid #ff0000; font-family:'Orbitron';">
+                    <h2 style="color:#ff0000; margin-bottom:20px;">VPS CONFIGURATION</h2>
+                    
+                    <div style="margin-bottom:20px;">
+                        <label style="color:#fff; display:block; margin-bottom:10px;">SELECT PROVIDER</label>
+                        <select id="adminProvider" style="width:100%; background:#111; color:#fff; padding:12px; border:1px solid #333; font-family:'Orbitron';">
+                            <option value="quotex">QUOTEX</option>
+                            <option value="toxa">TOXA</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <label style="color:#fff; display:block; margin-bottom:10px;">VPS API ENDPOINT</label>
+                        <input type="text" id="vpsIpInput" placeholder="http://103.169.176.38:3000/api/get-signals/..." 
+                               style="width:100%; background:#0a0a0a; color:#00ffcc; padding:15px; border:1px solid #444; font-family:'Roboto Mono'; font-weight:bold;">
+                    </div>
+
+                    <button id="saveConfigBtn" onclick="processVpsSave()" style="width:100%; background:#ff0000; color:#fff; padding:15px; border:none; cursor:pointer; font-family:'Orbitron'; font-weight:bold; letter-spacing:1px;">
+                        SAVE TO FIREBASE
+                    </button>
+                </div>
+            `;
+        };
+
+        window.processVpsSave = async function() {
+            const provider = document.getElementById('adminProvider').value;
+            const url = document.getElementById('vpsIpInput').value;
+
+            if(!url) {
+                Swal.fire('Error', 'Please enter VPS URL', 'error');
+                return;
+            }
+
+            const success = await saveVpsUrl(provider, url);
+            if(success) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: provider.toUpperCase() + ' Connection Saved',
+                    icon: 'success',
+                    background: '#000',
+                    color: '#fff',
+                    confirmButtonColor: '#ff0000'
+                });
+            }
+        };
     </script>
 
     <script src="admin-script.js"></script>
