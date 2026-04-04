@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
     <div id="ads-verify-meta-container"></div>
 
     <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
@@ -22,24 +24,8 @@
             --input-green: #00ffcc;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            outline: none; 
-            -webkit-tap-highlight-color: transparent; 
-            touch-action: none; /* Disables zoom/scaling */
-        }
-
-        body { 
-            background: var(--bg) !important; 
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            overflow-x: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg) !important; color: #fff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* --- HEADER & BRANDING --- */
         .header { 
@@ -87,13 +73,27 @@
             flex-direction: column;
         }
 
-        /* Structure Rows */
-        .row-ads-top, .row-core, .row-ads-bottom {
+        .row-ads-top {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .row-core {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
             align-items: start;
+        }
+
+        .row-ads-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+            align-items: center;
         }
 
         .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
@@ -139,30 +139,27 @@
             position: relative; 
         }
 
-        #toolScreen {
+        #toolScreen, #sigScreen {
             width: 100% !important;
             min-height: 100%;
             position: relative;
-            padding: 20px; /* Better spacing between elements */
+            padding: 20px;
             box-sizing: border-box;
         }
 
-        /* UI Overrides for Internal Tools */
-        #toolScreen input { 
-            color: var(--input-green) !important; 
-            font-weight: bold !important; 
-            font-family: 'Roboto Mono' !important; 
+        #toolScreen * , #sigScreen * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
 
-        /* Profit & Loss Neon Numbers */
+        /* --- Ruthless Typography Fixes --- */
+        #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
         .profit-num, .loss-num, .result-val, .profit-value, .loss-value { 
             font-size: 32px !important; 
             font-weight: bold !important; 
-            text-shadow: 0 0 10px var(--red), 0 0 20px var(--red) !important; 
+            text-shadow: var(--neon) !important; 
             font-family: 'Roboto Mono' !important; 
             color: #fff !important; 
-            display: inline-block;
-            margin: 10px 0;
         }
 
         .display-box::-webkit-scrollbar { width: 5px; }
@@ -191,6 +188,7 @@
             #adSlot6 { order: 10; margin-bottom: 15px; }
 
             .brand-img { width: 320px; }
+            .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
             .ad-column { display: contents; }
         }
 
@@ -239,7 +237,9 @@
                         <option value="QUOTEX">QUOTEX</option>
                         <option value="TOXA">TOXA</option>
                     </select>
-                    <div class="display-box" id="sigScreen"></div>
+                    <div class="display-box">
+                        <div id="sigScreen"></div>
+                    </div>
                 </div>
                 <div class="widget-column" id="toolCol">
                     <select class="ruthless-select" id="toolSelect">
@@ -289,6 +289,31 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        /* --- API LOGIC FOR SIGNALS --- */
+        async function fetchRuthlessSignals(type) {
+            const screen = document.getElementById('sigScreen');
+            if(!type) { screen.innerHTML = ""; return; }
+            
+            screen.innerHTML = '<div style="color:var(--red); font-family:Roboto Mono; text-align:center; margin-top:50px;">FETCHING RUTHLESS SIGNALS...</div>';
+            
+            const url = type === 'TOXA' ? 'http://103.169.176.38:3000/api/get-signals/toxa' : 'http://103.169.176.38:3000/api/get-signals/quotex';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.text(); // Assuming API returns HTML/Text
+                screen.innerHTML = data;
+            } catch (err) {
+                screen.innerHTML = `<div style="color:var(--red); font-size:12px; text-align:center; padding:20px;">CONNECTION ERROR: API down or browser blocking HTTP. Allow 'Insecure Content' in site settings.</div>`;
+            }
+        }
+
+        document.getElementById('sigSelect').addEventListener('change', (e) => {
+            const val = e.target.value;
+            localStorage.setItem('ruthless_signal', val);
+            fetchRuthlessSignals(val);
+        });
+
+        /* --- RESTORE OLD LOGIC --- */
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
@@ -303,7 +328,7 @@
             let clean = html;
             clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
             clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
-                const scopedCss = css.replace(/([^\r\n,{}]+)(?=\s*{)/g, function(selector) {
+                const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
                     let s = selector.trim();
                     if (s === 'body' || s === 'html' || s === '*') return '#toolScreen';
                     return '#toolScreen ' + s;
@@ -348,25 +373,15 @@
             }
         }
 
-        function loadVerificationData() {
-            db.ref('site_settings/verification').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                if (data.meta && data.meta.data) {
-                    const container = document.getElementById('ads-verify-meta-container');
-                    container.innerHTML = data.meta.data;
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             checkMidnightReset();
-            loadVerificationData();
 
             const sigSelect = document.getElementById('sigSelect');
             const savedSignal = localStorage.getItem('ruthless_signal');
-            if(savedSignal) sigSelect.value = savedSignal;
-            sigSelect.addEventListener('change', (e) => localStorage.setItem('ruthless_signal', e.target.value));
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                fetchRuthlessSignals(savedSignal);
+            }
 
             db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
             db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
@@ -387,30 +402,9 @@
                         if (d.visible === false) { 
                             el.style.display = "none"; 
                             el.innerHTML = '';
-                        } 
-                        else {
+                        } else {
                             el.style.display = "flex"; 
-                            el.style.width = d.width || "100%"; 
-                            el.style.height = d.height || "auto";
-
-                            if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; 
-                                const iframe = document.createElement('iframe');
-                                iframe.style.width = "100%";
-                                iframe.style.height = d.height || "100%";
-                                iframe.style.border = "none";
-                                iframe.style.overflow = "hidden";
-                                iframe.scrolling = "no";
-                                el.appendChild(iframe);
-                                const doc = iframe.contentWindow.document;
-                                doc.open();
-                                doc.write(`
-                                    <style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style>
-                                    <div>${d.snippet}</div>
-                                `);
-                                doc.close();
-                            }
+                            el.innerHTML = `<iframe srcdoc="<style>body{margin:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style><div>${d.snippet}</div>" style="width:100%;height:${d.height || '100%'};border:none;overflow:hidden;" scrolling="no"></iframe>`;
                         }
                     }
                 }
@@ -451,17 +445,9 @@
             });
         }
 
-        const today = new Date().toISOString().split('T')[0];
-        const statsRef = db.ref(`stats/${today}`);
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
-            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
-        });
-
         function adminLogin() {
             Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
                 if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
-                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
     </script>
