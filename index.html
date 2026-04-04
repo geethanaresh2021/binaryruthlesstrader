@@ -137,6 +137,8 @@
             position: relative; 
         }
 
+        #sigScreen { padding: 10px; }
+
         #toolScreen {
             width: 100% !important;
             min-height: 100%;
@@ -270,6 +272,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
+        // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
             authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -282,57 +285,127 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- VPS SIGNALS FETCH LOGIC ---
-        let signalInterval = null;
+        let currentSignalListener = null;
 
+        // --- REAL-TIME SIGNALS LOGIC (FIREBASE) ---
         function listenToSignals(broker) {
             const sigScreen = document.getElementById('sigScreen');
-            if (signalInterval) clearInterval(signalInterval);
+            
+            // Previous listener clear cheyyali
+            if (currentSignalListener) {
+                currentSignalListener.off();
+            }
 
             if (!broker) {
                 sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>';
                 return;
             }
 
-            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">CONNECTING VPS...</div>';
+            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">SYNCHRONIZING CORE...</div>';
 
-            const fetchVPS = async () => {
-                try {
-                    const apiUrl = `http://103.169.176.38:3000/api/get-signals/${broker.toLowerCase()}`;
-                    const response = await fetch(apiUrl);
-                    const data = await response.json();
+            // Firebase: Get Last 10 Posts
+            currentSignalListener = db.ref('signals/' + broker.toLowerCase()).limitToLast(10);
 
-                    if (!data || data.length === 0) {
-                        if (!sigScreen.innerHTML.includes('sig-entry')) {
-                            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#333;font-size:11px;">WAITING FOR SIGNALS...</div>';
-                        }
-                        return;
+            currentSignalListener.on('value', (snapshot) => {
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#000; border:1px solid #111; padding:10px; margin-bottom:15px; border-radius:4px; font-family:'Roboto Mono';">
+                        <div style="font-size:9px; color:#555;">TRADES COUNT</div>
+                        <div style="color:#00ffcc; font-weight:bold; font-size:13px;">WINS: 672</div>
+                        <div style="color:#ff0000; font-weight:bold; font-size:13px;">LOSS: 263</div>
+                    </div>`;
+                
+                let posts = [];
+                snapshot.forEach(child => { posts.push(child.val()); });
+                posts.reverse(); // Latest post top ki ravali
+
+                posts.forEach((data, index) => {
+                    const msg = data.message || '';
+                    const isLatest = index === 0;
+                    
+                    let accentColor = "#eee";
+                    let glow = "";
+                    
+                    if (msg.includes("SURESHOT")) {
+                        accentColor = "#00ffcc";
+                        if(isLatest) glow = "box-shadow: 0 0 15px #00ffcc44;";
+                    } else if (msg.includes("PRE-SIGNAL")) {
+                        accentColor = "#ffcc00";
+                        if(isLatest) glow = "box-shadow: 0 0 15px #ffcc0033;";
+                    } else if (msg.includes("LOSS")) {
+                        accentColor = "#ff0000";
                     }
 
-                    let html = '<div style="padding:15px; font-family:\'Roboto Mono\';">';
-                    data.forEach(s => {
-                        const msg = s.message || s;
-                        const isSureshot = String(msg).toUpperCase().includes('SURESHOT');
-                        html += `
-                            <div class="sig-entry" style="margin-bottom:12px; padding:12px; border-left:4px solid ${isSureshot ? '#00ffcc' : '#ff0000'}; background: rgba(255,255,255,0.03); position: relative;">
-                                <span style="font-size:9px; color:#444; position:absolute; top:2px; right:8px;">LIVE</span>
-                                <div style="color:#fff; font-size:14px; font-weight:bold;">${msg}</div>
-                            </div>`;
-                    });
-                    html += '</div>';
-                    sigScreen.innerHTML = html;
-                    sigScreen.scrollTop = sigScreen.scrollHeight;
+                    html += `
+                        <div style="border-left:4px solid ${accentColor}; background:rgba(255,255,255,0.02); padding:15px; margin-bottom:10px; border-radius:4px; opacity:${isLatest ? '1' : '0.4'}; ${glow} transition:0.3s;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                                <span style="font-family:'Orbitron'; font-size:8px; color:${accentColor}; letter-spacing:1px;">${isLatest ? '● LIVE FEED' : 'HISTORY'}</span>
+                                <span style="font-size:8px; color:#333;">${data.time || ''}</span>
+                            </div>
+                            <div style="color:#fff; font-family:'Roboto Mono'; font-weight:bold; font-size:${isLatest ? '14px' : '12px'}; line-height:1.5; white-space:pre-line;">${msg}</div>
+                        </div>`;
+                });
 
-                } catch (e) {
-                    console.error("VPS Fetch Error", e);
-                    sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">VPS OFFLINE</div>';
-                }
-            };
-
-            fetchVPS();
-            signalInterval = setInterval(fetchVPS, 2000);
+                sigScreen.innerHTML = html || '<div style="text-align:center; padding:50px; color:#111;">WAITING FOR POSTS...</div>';
+                sigScreen.scrollTop = 0;
+            });
         }
 
+        // --- ADS REFRESH LOGIC (2 MINS + USER INTERACTION) ---
+        let lastAdRefresh = Date.now();
+        const AD_REFRESH_COOLDOWN = 2 * 60 * 1000; // 2 Minutes
+
+        function triggerAdsRefresh() {
+            const now = Date.now();
+            if (now - lastAdRefresh > AD_REFRESH_COOLDOWN) {
+                console.log("Ruthless: Refreshing Ads due to User Activity...");
+                lastAdRefresh = now;
+                // Re-fetch ad settings to force iframe reload
+                db.ref('site_settings/ads').once('value', snapshot => {
+                    const ads = snapshot.val();
+                    if(ads) updateAdSlots(ads, true);
+                });
+            }
+        }
+
+        function updateAdSlots(ads, force = false) {
+            for (let i = 1; i <= 8; i++) {
+                const id = `adSlot${i}`; 
+                const d = ads[id]; 
+                const el = document.getElementById(id);
+                if (el && d) {
+                    if (d.visible === false) { 
+                        el.style.display = "none"; 
+                        el.innerHTML = '';
+                    } else {
+                        el.style.display = "flex"; 
+                        el.style.width = d.width || "100%"; 
+                        el.style.height = d.height || "auto";
+
+                        // Only update if snippet changed OR force refresh is true
+                        if (force || el.getAttribute('data-snippet') !== d.snippet) {
+                            el.setAttribute('data-snippet', d.snippet);
+                            el.innerHTML = ''; 
+                            const iframe = document.createElement('iframe');
+                            iframe.style.width = "100%";
+                            iframe.style.height = d.height || "100%";
+                            iframe.style.border = "none";
+                            iframe.scrolling = "no";
+                            el.appendChild(iframe);
+                            const doc = iframe.contentWindow.document;
+                            doc.open();
+                            doc.write(`<style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style><div>${d.snippet}</div>`);
+                            doc.close();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Event listeners for Ad refresh
+        window.addEventListener('scroll', triggerAdsRefresh);
+        window.addEventListener('click', triggerAdsRefresh);
+
+        // --- CORE SITE LOGIC ---
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
@@ -362,162 +435,4 @@
             inputs.forEach((input, index) => {
                 const storageId = input.id || `auto_val_${index}`;
                 localStorage.setItem('tool_input_' + storageId, input.value);
-            });
-        }
-
-        function restoreToolInputs() {
-            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
-            inputs.forEach((input, index) => {
-                const storageId = input.id || `auto_val_${index}`;
-                const savedValue = localStorage.getItem('tool_input_' + storageId);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            });
-        }
-
-        function applySmoothScroll(containerId, text, speed, color) {
-            const container = document.getElementById(containerId); if (!container) return;
-            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
-            const spd = parseInt(speed) || 0;
-            if (spd === 0) {
-                container.style.justifyContent = "center";
-                container.innerHTML = `<span class="scroll-item">${text}</span>`;
-            } else {
-                container.style.justifyContent = "flex-start";
-                const duration = 35 / spd;
-                container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
-            }
-        }
-
-        function loadVerificationData() {
-            db.ref('site_settings/verification').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                if (data.meta && data.meta.data) {
-                    const container = document.getElementById('ads-verify-meta-container');
-                    container.innerHTML = data.meta.data;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            checkMidnightReset();
-            loadVerificationData();
-
-            const sigSelect = document.getElementById('sigSelect');
-            const savedSignal = localStorage.getItem('ruthless_signal');
-            if(savedSignal) {
-                sigSelect.value = savedSignal;
-                listenToSignals(savedSignal);
-            }
-            sigSelect.addEventListener('change', (e) => {
-                localStorage.setItem('ruthless_signal', e.target.value);
-                listenToSignals(e.target.value);
-            });
-
-            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
-            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
-            
-            db.ref('site_settings/socials').on('value', snap => {
-                const links = snap.val() || {};
-                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
-                    const el = document.getElementById(`link-${p}`);
-                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
-                });
-            });
-
-            db.ref('site_settings/ads').on('value', snap => {
-                const ads = snap.val(); if (!ads) return;
-                for (let i = 1; i <= 8; i++) {
-                    const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
-                    if (el && d) {
-                        if (d.visible === false) { 
-                            el.style.display = "none"; 
-                            el.innerHTML = '';
-                            el.setAttribute('data-snippet', '');
-                        } 
-                        else {
-                            el.style.display = "flex"; 
-                            el.style.width = d.width || "100%"; 
-                            el.style.height = d.height || "auto";
-
-                            if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; 
-
-                                const iframe = document.createElement('iframe');
-                                iframe.style.width = "100%";
-                                iframe.style.height = d.height || "100%";
-                                iframe.style.border = "none";
-                                iframe.style.overflow = "hidden";
-                                iframe.scrolling = "no";
-                                
-                                el.appendChild(iframe);
-
-                                const doc = iframe.contentWindow.document;
-                                doc.open();
-                                doc.write(`
-                                    <style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style>
-                                    <div>${d.snippet}</div>
-                                `);
-                                doc.close();
-                            }
-                        }
-                    }
-                }
-            });
-
-            listenToTools();
-        });
-
-        function listenToTools() {
-            const dropdown = document.getElementById('toolSelect');
-            const displayArea = document.getElementById('toolScreen');
-            db.ref('site_settings/tools').on('value', snapshot => {
-                const tools = snapshot.val();
-                let options = '<option value="">-- SELECT TOOL --</option>';
-                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
-                dropdown.innerHTML = options;
-
-                const loadTool = (selectedId) => {
-                    if (selectedId && tools[selectedId]) {
-                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
-                        const scripts = displayArea.getElementsByTagName('script');
-                        for (let s of Array.from(scripts)) {
-                            const ns = document.createElement('script');
-                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
-                            s.parentNode.replaceChild(ns, s);
-                        }
-                        setTimeout(() => { 
-                            restoreToolInputs(); 
-                            displayArea.addEventListener('input', saveToolInputs);
-                            displayArea.addEventListener('change', saveToolInputs);
-                        }, 400);
-                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
-                };
-
-                const saved = localStorage.getItem('ruthless_tool');
-                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
-                dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
-            });
-        }
-
-        const today = new Date().toISOString().split('T')[0];
-        const statsRef = db.ref(`stats/${today}`);
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
-            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
-        });
-
-        function adminLogin() {
-            Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
-                if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
-                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
-            });
-        }
-    </script>
-</body>
-</html>
+    
