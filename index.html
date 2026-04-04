@@ -285,16 +285,21 @@
         let sigInterval = null;
 
         async function fetchSignals(type) {
-            const endpoint = type === 'TOXA' 
+            const apiBase = type === 'TOXA' 
                 ? 'http://103.169.176.38:3000/api/get-signals/toxa' 
                 : 'http://103.169.176.38:3000/api/get-signals/quotex';
             
+            // CORS bypass cheyadaniki proxy add chestunnam
+            const endpoint = 'https://cors-anywhere.herokuapp.com/' + apiBase;
+            
             try {
                 const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 renderSignals(data);
             } catch (err) {
-                sigScreen.innerHTML = `<div style="color:red; font-size:12px;">SIGNAL FETCH ERROR...</div>`;
+                console.error("Fetch Error:", err);
+                sigScreen.innerHTML = `<div style="color:red; font-size:12px; text-align:center;">SIGNAL FETCH ERROR...<br><span style="font-size:10px; color:#444;">Please check CORS or Mixed Content settings</span></div>`;
             }
         }
 
