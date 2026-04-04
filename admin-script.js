@@ -511,7 +511,59 @@ function saveLogic() {
 
 // Cloud Sync Functions (As requested, keeping options consistent)
 function saveSTResize() { saveLogic(); }
-function saveSignalConn() { saveLogic(); }
+// --- SIGNAL MANAGEMENT (TOXA & QUOTEX) ---
+function loadSignalManager() {
+    const display = document.getElementById('mainDisplay');
+    const header = document.querySelector('#panelHeader h1');
+    header.innerText = "SIGNAL CONNECTION";
+
+    display.innerHTML = `
+    <div class="settings-panel" style="padding: 20px; background: #050505; border: 1px solid #222;">
+        <h3 style="color: var(--red); font-family: 'Orbitron'; margin-bottom: 20px;">SELECT SOURCE</h3>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button class="action-btn" style="flex:1;" onclick="showSignalEditor('toxa')">TOXA SOURCE</button>
+            <button class="action-btn" style="flex:1;" onclick="showSignalEditor('quotex')">QUOTEX SOURCE</button>
+        </div>
+
+        <div id="signalEditorArea" style="display:none; border-top: 1px solid #222; padding-top: 20px;">
+            <label id="sourceLabel" style="color: #888; font-size: 10px; font-family: 'Orbitron'; text-transform: uppercase;"></label>
+            <input type="text" id="signalEndpoint" placeholder="Enter VPS API URL (e.g. http://103.169.176.38:3000/...)" 
+                   style="width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #00ffcc; font-family: 'Roboto Mono'; margin-top: 5px;">
+            
+            <button onclick="saveSignalEndpoint()" style="width: 100%; padding: 15px; background: var(--red); color: #fff; border: none; font-family: 'Orbitron'; font-weight: 900; margin-top: 15px; cursor: pointer;">
+                SAVE CONNECTION
+            </button>
+        </div>
+    </div>`;
+}
+
+let activeSource = '';
+
+function showSignalEditor(type) {
+    activeSource = type;
+    const area = document.getElementById('signalEditorArea');
+    const label = document.getElementById('sourceLabel');
+    area.style.display = 'block';
+    label.innerText = `${type} API ENDPOINT ADDRESS`;
+
+    // Fetch existing address from Firebase if available
+    db.ref(`site_settings/signals/${type}`).once('value', (snap) => {
+        document.getElementById('signalEndpoint').value = snap.exists() ? snap.val().url : "";
+    });
+}
+
+function saveSignalEndpoint() {
+    const url = document.getElementById('signalEndpoint').value.trim();
+    if(!url) return;
+
+    db.ref(`site_settings/signals/${activeSource}`).set({
+        url: url,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        Swal.fire({ icon: 'success', title: 'CONNECTED', text: `${activeSource.toUpperCase()} API Saved!`, background: '#0a0a0a', color: '#fff' });
+    });
+}
 function saveAdsConfig() { saveLogic(); }
 function saveSocialLinks() { saveLogic(); }
 function saveBrandName() { saveLogic(); }
