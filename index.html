@@ -151,7 +151,11 @@
         }
 
         #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
-        .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
+        
+        /* Neon Styles for Signals */
+        .profit-num { color: #00ffcc !important; text-shadow: 0 0 10px #00ffcc !important; font-family: 'Roboto Mono' !important; font-weight: bold !important; font-size: 16px; }
+        .loss-num { color: #ff0000 !important; text-shadow: 0 0 10px #ff0000 !important; font-family: 'Roboto Mono' !important; font-weight: bold !important; font-size: 16px; }
+        .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
 
         .display-box::-webkit-scrollbar { width: 5px; }
         .display-box::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
@@ -167,7 +171,6 @@
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
             
-            /* Order Logic: Mobile Only */
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
@@ -281,7 +284,49 @@
             appId: "1:533209261799:web:a398ab21b0f913683ea442"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const fb_db = firebase.database();
+
+        // --- VPS FETCH LOGIC ---
+        const VPS_IP = "103.169.176.38";
+        let signalInterval = null;
+
+        async function fetchRuthlessSignals() {
+            const platform = document.getElementById('sigSelect').value.toLowerCase();
+            if (!platform) {
+                document.getElementById('sigScreen').innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">SELECT PLATFORM TO LOAD SIGNALS...</div>';
+                return;
+            }
+            try {
+                const response = await fetch(`http://${VPS_IP}:3000/api/get-signals/${platform}`);
+                const signals = await response.json();
+                renderSignals(signals);
+            } catch (error) {
+                console.error("VPS Error:", error);
+            }
+        }
+
+        function renderSignals(signals) {
+            const screen = document.getElementById('sigScreen');
+            if (!signals || signals.length === 0) {
+                screen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-size:12px;">WAITING FOR NEXT SIGNAL...</div>';
+                return;
+            }
+            let html = `<table style="width:100%; border-collapse: collapse; font-family: 'Roboto Mono'; font-size: 14px; text-align: center;">
+                <tr style="border-bottom: 2px solid #222; background: #111; position: sticky; top: 0; color: #fff;">
+                    <th style="padding: 10px;">PAIR</th><th style="padding: 10px;">DIR</th><th style="padding: 10px;">RESULT</th><th style="padding: 10px;">TIME</th>
+                </tr>`;
+            signals.forEach(sig => {
+                const resClass = sig.res.includes('WIN') ? 'profit-num' : 'loss-num';
+                html += `<tr style="border-bottom: 1px solid #111;">
+                    <td style="padding: 12px; font-weight: bold; color:#fff;">${sig.pair}</td>
+                    <td style="padding: 12px; color: ${sig.dir === 'CALL' ? '#00ffcc' : '#ff0000'}">${sig.dir}</td>
+                    <td style="padding: 12px;" class="${resClass}">${sig.res}</td>
+                    <td style="padding: 12px; color: #444; font-size: 11px;">${sig.time}</td>
+                </tr>`;
+            });
+            html += '</table>';
+            screen.innerHTML = html;
+        }
 
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
@@ -294,8 +339,7 @@
 
         function cleanToolCode(html) {
             if (!html) return "";
-            let clean = html;
-            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
             clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
                 const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
                     let s = selector.trim();
@@ -343,12 +387,10 @@
         }
 
         function loadVerificationData() {
-            db.ref('site_settings/verification').on('value', (snapshot) => {
+            fb_db.ref('site_settings/verification').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (!data) return;
-                if (data.meta && data.meta.data) {
-                    const container = document.getElementById('ads-verify-meta-container');
-                    container.innerHTML = data.meta.data;
+                if (data && data.meta && data.meta.data) {
+                    document.getElementById('ads-verify-meta-container').innerHTML = data.meta.data;
                 }
             });
         }
@@ -359,13 +401,22 @@
 
             const sigSelect = document.getElementById('sigSelect');
             const savedSignal = localStorage.getItem('ruthless_signal');
-            if(savedSignal) sigSelect.value = savedSignal;
-            sigSelect.addEventListener('change', (e) => localStorage.setItem('ruthless_signal', e.target.value));
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                fetchRuthlessSignals();
+                signalInterval = setInterval(fetchRuthlessSignals, 15000);
+            }
+            sigSelect.addEventListener('change', (e) => {
+                localStorage.setItem('ruthless_signal', e.target.value);
+                fetchRuthlessSignals();
+                if (signalInterval) clearInterval(signalInterval);
+                signalInterval = setInterval(fetchRuthlessSignals, 15000);
+            });
 
-            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
-            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            fb_db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            fb_db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
             
-            db.ref('site_settings/socials').on('value', snap => {
+            fb_db.ref('site_settings/socials').on('value', snap => {
                 const links = snap.val() || {};
                 ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
                     const el = document.getElementById(`link-${p}`);
@@ -373,40 +424,22 @@
                 });
             });
 
-            db.ref('site_settings/ads').on('value', snap => {
+            fb_db.ref('site_settings/ads').on('value', snap => {
                 const ads = snap.val(); if (!ads) return;
                 for (let i = 1; i <= 8; i++) {
                     const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
                     if (el && d) {
-                        if (d.visible === false) { 
-                            el.style.display = "none"; 
-                            el.innerHTML = '';
-                            el.setAttribute('data-snippet', '');
-                        } 
+                        if (d.visible === false) { el.style.display = "none"; el.innerHTML = ''; el.setAttribute('data-snippet', ''); } 
                         else {
-                            el.style.display = "flex"; 
-                            el.style.width = d.width || "100%"; 
-                            el.style.height = d.height || "auto";
-
+                            el.style.display = "flex"; el.style.width = d.width || "100%"; el.style.height = d.height || "auto";
                             if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; 
-
+                                el.setAttribute('data-snippet', d.snippet); el.innerHTML = ''; 
                                 const iframe = document.createElement('iframe');
-                                iframe.style.width = "100%";
-                                iframe.style.height = d.height || "100%";
-                                iframe.style.border = "none";
-                                iframe.style.overflow = "hidden";
-                                iframe.scrolling = "no";
-                                
+                                iframe.style.width = "100%"; iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none"; iframe.style.overflow = "hidden"; iframe.scrolling = "no";
                                 el.appendChild(iframe);
-
                                 const doc = iframe.contentWindow.document;
-                                doc.open();
-                                doc.write(`
-                                    <style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style>
-                                    <div>${d.snippet}</div>
-                                `);
+                                doc.open(); doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
                                 doc.close();
                             }
                         }
@@ -420,7 +453,7 @@
         function listenToTools() {
             const dropdown = document.getElementById('toolSelect');
             const displayArea = document.getElementById('toolScreen');
-            db.ref('site_settings/tools').on('value', snapshot => {
+            fb_db.ref('site_settings/tools').on('value', snapshot => {
                 const tools = snapshot.val();
                 let options = '<option value="">-- SELECT TOOL --</option>';
                 if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
@@ -449,10 +482,10 @@
             });
         }
 
-        const today = new Date().toISOString().split('T')[0];
-        const statsRef = db.ref(`stats/${today}`);
+        const today_stats = new Date().toISOString().split('T')[0];
+        const statsRef = fb_db.ref(`stats/${today_stats}`);
         window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (localStorage.getItem('last_visit') !== today_stats) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today_stats); }
             if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
         });
 
@@ -463,12 +496,5 @@
             });
         }
     </script>
-
-<!-- Pop Ads Script -->
-
-
-
-
-    
 </body>
 </html>
