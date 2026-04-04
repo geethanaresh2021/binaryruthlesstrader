@@ -145,16 +145,9 @@
             box-sizing: border-box;
         }
 
-        /* --- SIGNAL ROW STYLING --- */
-        .sig-row {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px; 
-            border-bottom: 1px solid #111; 
-            font-family: 'Roboto Mono'; 
-            font-size: 14px; 
-            font-weight: bold;
+        #toolScreen * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
@@ -177,11 +170,15 @@
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
+            
             #sigCol { order: 4; margin-bottom: 40px; }
+            
             #adSlot8 { order: 5; margin-bottom: 15px; }
             #adSlot3 { order: 6; margin-bottom: 15px; }
             #adSlot4 { order: 7; margin-bottom: 15px; }
+            
             #toolCol { order: 8; margin-bottom: 40px; }
+            
             #adSlot5 { order: 9; margin-bottom: 15px; }
             #adSlot6 { order: 10; margin-bottom: 15px; }
 
@@ -285,42 +282,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- VPS SIGNAL FETCH LOGIC ---
-        let signalInterval = null;
-        const vpsBaseUrl = "http://103.169.176.38:3000/api/get-signals/";
-
-        async function fetchRuthlessSignals(type) {
-            const screen = document.getElementById('sigScreen');
-            try {
-                const response = await fetch(vpsBaseUrl + type.toLowerCase());
-                if (!response.ok) throw new Error("Offline");
-                const signals = await response.json();
-                
-                let html = "";
-                if (!signals || signals.length === 0) {
-                    html = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:11px;">NO LIVE SIGNALS</div>';
-                } else {
-                    signals.forEach(sig => {
-                        const isWin = sig.res.toUpperCase().includes('WIN') || sig.res.toUpperCase().includes('TEST');
-                        const isCall = sig.dir.toUpperCase().includes('CALL') || sig.dir.toUpperCase().includes('TEST');
-                        const resColor = isWin ? '#00ffcc' : '#ff0000';
-                        const dirColor = isCall ? '#00ffcc' : '#ff0000';
-
-                        html += `
-                        <div class="sig-row">
-                            <span style="color:#fff; flex:1.5;">${sig.pair}</span>
-                            <span style="color:${dirColor}; flex:1; text-align:center;">${sig.dir.toUpperCase()}</span>
-                            <span style="color:${resColor}; text-shadow: 0 0 8px ${resColor}; flex:1.5; text-align:center;">${sig.res.toUpperCase()}</span>
-                            <span style="color:#333; font-size:10px; flex:1; text-align:right;">${sig.time}</span>
-                        </div>`;
-                    });
-                }
-                screen.innerHTML = html;
-            } catch (err) {
-                screen.innerHTML = '<div style="color:red;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">VPS OFFLINE OR CORS ERROR<br><small style="color:#333;">Check Port 3000</small></div>';
-            }
-        }
-
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
@@ -380,30 +341,25 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            checkMidnightReset();
-            
-            const sigSelect = document.getElementById('sigSelect');
-            const savedSignal = localStorage.getItem('ruthless_signal');
-            
-            if(savedSignal) {
-                sigSelect.value = savedSignal;
-                fetchRuthlessSignals(savedSignal);
-                signalInterval = setInterval(() => fetchRuthlessSignals(savedSignal), 5000);
-            }
-
-            sigSelect.addEventListener('change', (e) => {
-                const val = e.target.value;
-                localStorage.setItem('ruthless_signal', val);
-                if (signalInterval) clearInterval(signalInterval);
-                if (val) {
-                    document.getElementById('sigScreen').innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:10px;">CONNECTING...</div>';
-                    fetchRuthlessSignals(val);
-                    signalInterval = setInterval(() => fetchRuthlessSignals(val), 5000);
-                } else {
-                    document.getElementById('sigScreen').innerHTML = '';
+        function loadVerificationData() {
+            db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+                if (data.meta && data.meta.data) {
+                    const container = document.getElementById('ads-verify-meta-container');
+                    container.innerHTML = data.meta.data;
                 }
             });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            loadVerificationData();
+
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            if(savedSignal) sigSelect.value = savedSignal;
+            sigSelect.addEventListener('change', (e) => localStorage.setItem('ruthless_signal', e.target.value));
 
             db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
             db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
@@ -424,11 +380,33 @@
                         if (d.visible === false) { 
                             el.style.display = "none"; 
                             el.innerHTML = '';
-                        } else {
+                            el.setAttribute('data-snippet', '');
+                        } 
+                        else {
                             el.style.display = "flex"; 
+                            el.style.width = d.width || "100%"; 
+                            el.style.height = d.height || "auto";
+
                             if (el.getAttribute('data-snippet') !== d.snippet) {
                                 el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = d.snippet; 
+                                el.innerHTML = ''; 
+
+                                const iframe = document.createElement('iframe');
+                                iframe.style.width = "100%";
+                                iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none";
+                                iframe.style.overflow = "hidden";
+                                iframe.scrolling = "no";
+                                
+                                el.appendChild(iframe);
+
+                                const doc = iframe.contentWindow.document;
+                                doc.open();
+                                doc.write(`
+                                    <style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style>
+                                    <div>${d.snippet}</div>
+                                `);
+                                doc.close();
                             }
                         }
                     }
@@ -459,6 +437,7 @@
                         setTimeout(() => { 
                             restoreToolInputs(); 
                             displayArea.addEventListener('input', saveToolInputs);
+                            displayArea.addEventListener('change', saveToolInputs);
                         }, 400);
                     } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
                 };
@@ -468,6 +447,13 @@
                 dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
             });
         }
+
+        const today = new Date().toISOString().split('T')[0];
+        const statsRef = db.ref(`stats/${today}`);
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+        });
 
         function adminLogin() {
             Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
