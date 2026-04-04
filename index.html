@@ -167,7 +167,6 @@
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
             
-            /* Order Logic: Mobile Only */
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
@@ -283,12 +282,12 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- SIGNAL AUTO-FETCH LOGIC ---
+        // --- SIGNAL AUTO-FETCH LOGIC (FIXED) ---
         const sigSelect = document.getElementById('sigSelect');
         const sigScreen = document.getElementById('sigScreen');
 
         sigSelect.addEventListener('change', async (e) => {
-            const selected = e.target.value;
+            const selected = e.target.value.toLowerCase();
             localStorage.setItem('ruthless_signal', selected);
             
             if (!selected) {
@@ -296,21 +295,25 @@
                 return;
             }
 
-            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;">FETCHING SIGNALS...</div>';
+            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-family:Roboto Mono;font-size:10px;">FETCHING LIVE SIGNALS...</div>';
 
-            // Firebase nundi VPS address teeskuntundi
+            // 1. Admin setup chesina URL ni Firebase nundi laguthundi
             db.ref(`site_settings/signals/${selected}`).once('value', async (snap) => {
                 if (snap.exists()) {
                     const apiUrl = snap.val().url;
                     try {
+                        // 2. VPS API nundi data fetch chestundi
                         const response = await fetch(apiUrl);
-                        const data = await response.text(); // Assuming VPS returns HTML or formatted text
+                        const data = await response.text(); 
+                        
+                        // 3. Signal container lo data update chestundi
                         sigScreen.innerHTML = data;
                     } catch (err) {
-                        sigScreen.innerHTML = '<div style="color:red;padding:20px;font-size:10px;">VPS CONNECTION ERROR</div>';
+                        console.error("Signal Fetch Error:", err);
+                        sigScreen.innerHTML = '<div style="color:red;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">VPS OFFLINE OR CORS ERROR</div>';
                     }
                 } else {
-                    sigScreen.innerHTML = '<div style="color:#444;padding:20px;font-size:10px;">NO SOURCE SET IN ADMIN</div>';
+                    sigScreen.innerHTML = '<div style="color:#444;padding:20px;font-size:10px;text-align:center;font-family:Roboto Mono;">NO API CONNECTION SET IN ADMIN</div>';
                 }
             });
         });
