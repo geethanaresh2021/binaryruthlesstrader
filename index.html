@@ -282,6 +282,57 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // --- VPS SIGNALS FETCH LOGIC ---
+        let signalInterval = null;
+
+        function listenToSignals(broker) {
+            const sigScreen = document.getElementById('sigScreen');
+            if (signalInterval) clearInterval(signalInterval);
+
+            if (!broker) {
+                sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>';
+                return;
+            }
+
+            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">CONNECTING VPS...</div>';
+
+            const fetchVPS = async () => {
+                try {
+                    const apiUrl = `http://103.169.176.38:3000/api/get-signals/${broker.toLowerCase()}`;
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+
+                    if (!data || data.length === 0) {
+                        if (!sigScreen.innerHTML.includes('sig-entry')) {
+                            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#333;font-size:11px;">WAITING FOR SIGNALS...</div>';
+                        }
+                        return;
+                    }
+
+                    let html = '<div style="padding:15px; font-family:\'Roboto Mono\';">';
+                    data.forEach(s => {
+                        const msg = s.message || s;
+                        const isSureshot = String(msg).toUpperCase().includes('SURESHOT');
+                        html += `
+                            <div class="sig-entry" style="margin-bottom:12px; padding:12px; border-left:4px solid ${isSureshot ? '#00ffcc' : '#ff0000'}; background: rgba(255,255,255,0.03); position: relative;">
+                                <span style="font-size:9px; color:#444; position:absolute; top:2px; right:8px;">LIVE</span>
+                                <div style="color:#fff; font-size:14px; font-weight:bold;">${msg}</div>
+                            </div>`;
+                    });
+                    html += '</div>';
+                    sigScreen.innerHTML = html;
+                    sigScreen.scrollTop = sigScreen.scrollHeight;
+
+                } catch (e) {
+                    console.error("VPS Fetch Error", e);
+                    sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">VPS OFFLINE</div>';
+                }
+            };
+
+            fetchVPS();
+            signalInterval = setInterval(fetchVPS, 2000);
+        }
+
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
@@ -349,41 +400,6 @@
                     const container = document.getElementById('ads-verify-meta-container');
                     container.innerHTML = data.meta.data;
                 }
-            });
-        }
-
-        // --- VPS TO FIREBASE LIVE SIGNAL LISTENER ---
-        let signalListener = null;
-        function listenToSignals(broker) {
-            const sigScreen = document.getElementById('sigScreen');
-            if (signalListener) signalListener.off(); // Purge old listeners
-
-            if (!broker) {
-                sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>';
-                return;
-            }
-
-            sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">FETCHING VPS SIGNALS...</div>';
-
-            // VPS pushes to 'signals/[broker_name]'
-            signalListener = db.ref(`signals/${broker.toLowerCase()}`).limitToLast(20);
-            signalListener.on('value', snapshot => {
-                const data = snapshot.val();
-                if (!data) {
-                    sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">NO VPS SIGNALS ACTIVE</div>';
-                    return;
-                }
-
-                let html = '<div style="padding:15px; font-family:\'Roboto Mono\'; font-size:14px;">';
-                // Reverse to show newest at bottom for natural trading flow
-                Object.keys(data).forEach(key => {
-                    const s = data[key];
-                    const msg = (typeof s === 'object') ? s.message : s;
-                    html += `<div style="margin-bottom:12px; padding:10px; border-left:3px solid var(--red); background:rgba(255,0,0,0.05); color:#fff;">${msg}</div>`;
-                });
-                html += '</div>';
-                sigScreen.innerHTML = html;
-                sigScreen.scrollTop = sigScreen.scrollHeight; // Auto-scroll
             });
         }
 
