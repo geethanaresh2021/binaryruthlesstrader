@@ -3,132 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Dashboard | Ruthless System</title>
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <div id="ads-verify-meta-container"></div>
+
+    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
+    
+    <title>Binary Ruthless Trader</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <link rel="stylesheet" href="admin-style.css">
+    <style>
+        :root { 
+            --red: #ff0000; 
+            --white: #ffffff; 
+            --bg: #050505; 
+            --panel: #0a0a0a;
+            --neon: 0 0 15px var(--red); 
+            --input-green: #00ffcc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg) !important; color: #fff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* --- HEADER & BRANDING --- */
+        .header { 
+            width: 100%; padding: 40px 10px 20px 10px; position: relative; 
+            display: flex; flex-direction: column; align-items: center; 
+            background: #000; border-bottom: 1px solid #111; z-index: 100;
+        }
+        
+        .brand-img { 
+            width: 450px; 
+            max-width: 90%; 
+            filter: drop-shadow(var(--neon)); 
+            margin-bottom: 25px; 
+        }
+
+        .admin-btn { 
+            position: absolute; top: 15px; right: 15px; 
+            background: transparent; border: 1px solid #222; 
+            color: #444; padding: 6px 15px; font-size: 10px; 
+            cursor: pointer; border-radius: 4px; font-family: 'Roboto Mono';
+            transition: 0.3s;
+        }
+        .admin-btn:hover { border-color: var(--red); color: var(--red); }
+
+        .social-row { display: flex; gap: 30px; margin-bottom: 25px; }
+        .social-row a { color: #fff; font-size: 28px; transition: 0.3s; text-decoration: none; }
+        .social-row a:hover { color: var(--red); transform: scale(1.2); text-shadow: var(--neon); }
+
+        /* --- STRIPS --- */
+        .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; padding: 0 10px; align-self: center; }
+        .top-strip { width: 100%; height: 44px; font-family: 'Roboto Mono', monospace; border-top: 2px solid var(--red); overflow: hidden; display: flex; align-items: center; }
+        .warning-strip { background: transparent; }
+        .announce-strip { background: transparent; border-bottom: 2px solid var(--red); }
+
+        @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .scroll-item { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); text-transform: uppercase; }
+
+        /* --- MAIN CONTENT LAYOUT --- */
+        .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        
+        .desktop-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row-ads-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .row-core {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .row-ads-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
+        
+        .ad-column { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            width: 100%; 
+            align-items: center; 
+        }
+
+        .ad-slot { 
+            width: 100%; 
+            min-height: 10px; 
+            height: auto; 
+            background: transparent; 
+            border: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .ruthless-select { 
+            width: 100%; padding: 16px; background: var(--panel); border: 1px solid #222; 
+            color: #fff; font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
+            appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
+            background-repeat: no-repeat; background-position: right 15px center; 
+        }
+
+        .display-box { 
+            width: 100%; 
+            height: 420px; 
+            background: #000 !important; 
+            border: 2px solid var(--red); 
+            box-shadow: var(--neon); 
+            border-radius: 8px; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            position: relative; 
+        }
+
+        #toolScreen {
+            width: 100% !important;
+            min-height: 100%;
+            position: relative;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        #toolScreen * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        #toolScreen input { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono' !important; }
+        
+        /* Neon Styles for Signals */
+        .profit-num { color: #00ffcc !important; text-shadow: 0 0 10px #00ffcc !important; font-family: 'Roboto Mono' !important; font-weight: bold !important; font-size: 16px; }
+        .loss-num { color: #ff0000 !important; text-shadow: 0 0 10px #ff0000 !important; font-family: 'Roboto Mono' !important; font-weight: bold !important; font-size: 16px; }
+        .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: var(--neon) !important; font-family: 'Roboto Mono' !important; color: #fff !important; }
+
+        .display-box::-webkit-scrollbar { width: 5px; }
+        .display-box::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+
+        .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
+        .footer-links a { color: #555; text-decoration: none; transition: 0.3s; }
+        .footer-links a:hover { color: var(--red); }
+        .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* --- MOBILE LAYOUT REORDERING --- */
+        @media (max-width: 850px) {
+            .desktop-wrapper { display: flex; flex-direction: column; }
+            .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
+            
+            #adSlot1 { order: 1; margin-bottom: 15px; }
+            #adSlot2 { order: 2; margin-bottom: 15px; }
+            #adSlot7 { order: 3; margin-bottom: 15px; }
+            
+            #sigCol { order: 4; margin-bottom: 40px; }
+            
+            #adSlot8 { order: 5; margin-bottom: 15px; }
+            #adSlot3 { order: 6; margin-bottom: 15px; }
+            #adSlot4 { order: 7; margin-bottom: 15px; }
+            
+            #toolCol { order: 8; margin-bottom: 40px; }
+            
+            #adSlot5 { order: 9; margin-bottom: 15px; }
+            #adSlot6 { order: 10; margin-bottom: 15px; }
+
+            .brand-img { width: 320px; }
+            .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
+            .ad-column { display: contents; }
+        }
+
+        .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
+        .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
+        .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
+    </style>
 </head>
 <body>
 
-    <header class="admin-header">
-        <div style="width: 100px;"></div> 
-        <div class="brand-section">
-            <img src="brand-name.png" alt="RUTHLESS SYSTEM" class="brand-img">
-            <div class="social-row">
-                <a href="#"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
+    <header class="header">
+        <button class="admin-btn" onclick="adminLogin()">ADMIN</button>
+        <img src="brand-name.png" alt="RUTHLESS TRADER" class="brand-img">
+        
+        <div class="social-row">
+            <a href="#" id="link-Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="#" id="link-Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" id="link-YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" id="link-Facebook"><i class="fab fa-facebook"></i></a>
         </div>
-        <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
+
+        <div class="strip-container">
+            <div class="top-strip warning-strip" id="warningNoteContainer"></div>
+            <div class="top-strip announce-strip" id="announceStrip"></div>
+        </div>
     </header>
 
-    <div class="admin-wrapper">
-        <nav class="sidebar">
-            <div class="nav-group-label">Analytics</div>
-            <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
-            <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
-
-            <div class="nav-group-label">Management</div>
-            <div class="nav-scroll-container">
-                
-                <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
-                <button class="nav-btn" onclick="renderAdsVerificationModule()">
-                    <i class="fas fa-shield-alt"></i> ADS NETWORK VERIFY
-                </button>
-                <button class="nav-btn" onclick="loadAdsContainers()">
-                    <i class="fas fa-box-open"></i> Ads Containers
-                </button>
-                <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
-                <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
-                <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
-                <button class="nav-btn" onclick="loadContent('Giveaway Winner')"><i class="fas fa-trophy"></i> Giveaway Winner</button>
-                <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
-                <button class="nav-btn" onclick="renderSignalConnectionModule()"><i class="fas fa-plug"></i> Signal Connection</button>
-                <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
-                <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
-            </div>
-        </nav>
-
-        <main class="content-area">
-            <div class="panel-header" id="panelHeader">
-                <h1>Admin Dashboard</h1>
-                <p>AUTHENTICATED SESSION: BINARY RUTHLESS TRADER</p>
-            </div>
-            <div id="mainDisplay">
-                <div style="display: flex; height: 300px; align-items: center; justify-content: center; color: #222; font-family: 'Orbitron';">
-                    SELECT A CATEGORY TO MANAGE SYSTEM
+    <div class="page-content">
+        <div class="desktop-wrapper">
+            
+            <div class="row-ads-top">
+                <div class="ad-column">
+                    <div class="ad-slot" id="adSlot1"></div>
+                    <div class="ad-slot" id="adSlot2"></div>
+                </div>
+                <div class="ad-column">
+                    <div class="ad-slot" id="adSlot7"></div>
+                    <div class="ad-slot" id="adSlot8"></div>
                 </div>
             </div>
-        </main>
+
+            <div class="row-core">
+                <div class="widget-column" id="sigCol">
+                    <select class="ruthless-select" id="sigSelect">
+                        <option value="">-- SELECT SIGNAL --</option>
+                        <option value="QUOTEX">QUOTEX</option>
+                        <option value="TOXA">TOXA</option>
+                    </select>
+                    <div class="display-box" id="sigScreen"></div>
+                </div>
+                <div class="widget-column" id="toolCol">
+                    <select class="ruthless-select" id="toolSelect">
+                        <option value="">-- SELECT TOOL --</option>
+                    </select>
+                    <div class="display-box">
+                        <div id="toolScreen"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-ads-bottom">
+                <div class="ad-column">
+                    <div class="ad-slot" id="adSlot3"></div>
+                    <div class="ad-slot" id="adSlot4"></div>
+                </div>
+                <div class="ad-column">
+                    <div class="ad-slot" id="adSlot5"></div>
+                    <div class="ad-slot" id="adSlot6"></div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <script type="module">
-        import { updateCloudConfig, saveFirebaseSettings, saveVpsUrl } from './firebase-logic.js';
-        window.updateCloudConfig = updateCloudConfig;
-        window.saveFirebaseSettings = saveFirebaseSettings;
-        window.saveVpsUrl = saveVpsUrl;
+    <footer class="footer-mini">
+        <div class="footer-links">
+            <a href="#">CONTACT US</a> <a href="#">TRADEMARK</a> <a href="#">PRIVACY</a> <a href="#">TERMS</a>
+        </div>
+        <div class="trademark">BINARY RUTHLESS TRADER™ | ALL RIGHTS RESERVED © 2026</div>
+    </footer>
 
-        // --- Signal Connection Module (Options ravadaniki idi important) ---
-        window.renderSignalConnectionModule = function() {
-            const display = document.getElementById('mainDisplay');
-            document.getElementById('panelHeader').querySelector('h1').innerText = "Signal Connection";
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
-            display.innerHTML = `
-                <div class="admin-vps-panel" style="background:#000; padding:25px; border:2px solid #ff0000; font-family:'Orbitron';">
-                    <h2 style="color:#ff0000; margin-bottom:20px; font-size:18px;">VPS CONFIGURATION</h2>
-                    
-                    <div style="margin-bottom:20px;">
-                        <label style="color:#fff; display:block; margin-bottom:10px; font-size:12px;">SELECT PLATFORM</label>
-                        <select id="adminProvider" style="width:100%; background:#111; color:#fff; padding:12px; border:1px solid #333; font-family:'Orbitron';">
-                            <option value="quotex">QUOTEX</option>
-                            <option value="toxa">TOXA</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-bottom:20px;">
-                        <label style="color:#fff; display:block; margin-bottom:10px; font-size:12px;">VPS API ENDPOINT (NODE.JS)</label>
-                        <input type="text" id="vpsIpInput" placeholder="http://103.169.176.38:3000/api/get-signals/..." 
-                               style="width:100%; background:#0a0a0a; color:#00ffcc; padding:15px; border:1px solid #444; font-family:'Roboto Mono'; font-weight:bold;">
-                    </div>
-
-                    <button id="saveConfigBtn" onclick="processVpsSave()" style="width:100%; background:#ff0000; color:#fff; padding:15px; border:none; cursor:pointer; font-family:'Orbitron'; font-weight:bold; letter-spacing:1px; transition: 0.3s;">
-                        SAVE TO FIREBASE
-                    </button>
-                </div>
-            `;
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
+            authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader-26654",
+            storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
+            messagingSenderId: "533209261799",
+            appId: "1:533209261799:web:a398ab21b0f913683ea442"
         };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const fb_db = firebase.database();
 
-        // --- Save Logic ---
-        window.processVpsSave = async function() {
-            const provider = document.getElementById('adminProvider').value;
-            const url = document.getElementById('vpsIpInput').value;
+        // --- VPS FETCH LOGIC ---
+        const VPS_IP = "103.169.176.38";
+        let signalInterval = null;
 
-            if(!url || url.trim() === "") {
-                Swal.fire({ icon: 'error', title: 'Empty URL', text: 'Enter VPS Address', background: '#000', color: '#fff' });
+        async function fetchRuthlessSignals() {
+            const platform = document.getElementById('sigSelect').value.toLowerCase();
+            if (!platform) {
+                document.getElementById('sigScreen').innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">SELECT PLATFORM TO LOAD SIGNALS...</div>';
                 return;
             }
-
-            const success = await saveVpsUrl(provider, url);
-            if(success) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: provider.toUpperCase() + ' Connection Saved',
-                    icon: 'success',
-                    background: '#000',
-                    color: '#fff',
-                    confirmButtonColor: '#ff0000'
-                });
+            try {
+                const response = await fetch(`http://${VPS_IP}:3000/api/get-signals/${platform}`);
+                const signals = await response.json();
+                renderSignals(signals);
+            } catch (error) {
+                console.error("VPS Error:", error);
             }
-        };
-    </script>
+        }
 
-    <script src="admin-script.js"></script>
+        function renderSignals(signals) {
+            const screen = document.getElementById('sigScreen');
+            if (!signals || signals.length === 0) {
+                screen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#444;font-size:12px;">WAITING FOR NEXT SIGNAL...</div>';
+                return;
+            }
+            let html = `<table style="width:100%; border-collapse: collapse; font-family: 'Roboto Mono'; font-size: 14px; text-align: center;">
+                <tr style="border-bottom: 2px solid #222; background: #111; position: sticky; top: 0; color: #fff;">
+                    <th style="padding: 10px;">PAIR</th><th style="padding: 10px;">DIR</th><th style="padding: 10px;">RESULT</th><th style="padding: 10px;">TIME</th>
+                </tr>`;
+            signals.forEach(sig => {
+                const resClass = sig.res.includes('WIN') ? 'profit-num' : 'loss-num';
+                html += `<tr style="border-bottom: 1px solid #111;">
+                    <td style="padding: 12px; font-weight: bold; color:#fff;">${sig.pair}</td>
+                    <td style="padding: 12px; color: ${sig.dir === 'CALL' ? '#00ffcc' : '#ff0000'}">${sig.dir}</td>
+                    <td style="padding: 12px;" class="${resClass}">${sig.res}</td>
+                    <td style="padding: 12px; color: #444; font-size: 11px;">${sig.time}</td>
+                </tr>`;
+            });
+            html += '</table>';
+            screen.innerHTML = html;
+        }
+
+        function checkMidnightReset() {
+            const lastUpdate = localStorage.getItem('ruthless_last_date');
+            const todayStr = new Date().toDateString();
+            if (lastUpdate && lastUpdate !== todayStr) {
+                Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
+            }
+            localStorage.setItem('ruthless_last_date', todayStr);
+        }
+
+        function cleanToolCode(html) {
+            if (!html) return "";
+            let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
+                const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
+                    let s = selector.trim();
+                    if (s === 'body' || s === 'html' || s === '*') return '#toolScreen';
+                    return '#toolScreen ' + s;
+                });
+                return '<style>' + scopedCss + '</style>';
+            });
+            return clean;
+        }
+
+        function saveToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                localStorage.setItem('tool_input_' + storageId, input.value);
+            });
+        }
+
+        function restoreToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                const savedValue = localStorage.getItem('tool_input_' + storageId);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+
+        function applySmoothScroll(containerId, text, speed, color) {
+            const container = document.getElementById(containerId); if (!container) return;
+            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
+            const spd = parseInt(speed) || 0;
+            if (spd === 0) {
+                container.style.justifyContent = "center";
+                container.innerHTML = `<span class="scroll-item">${text}</span>`;
+            } else {
+                container.style.justifyContent = "flex-start";
+                const duration = 35 / spd;
+                container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
+            }
+        }
+
+        function loadVerificationData() {
+            fb_db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.meta && data.meta.data) {
+                    document.getElementById('ads-verify-meta-container').innerHTML = data.meta.data;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            loadVerificationData();
+
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                fetchRuthlessSignals();
+                signalInterval = setInterval(fetchRuthlessSignals, 15000);
+            }
+            sigSelect.addEventListener('change', (e) => {
+                localStorage.setItem('ruthless_signal', e.target.value);
+                fetchRuthlessSignals();
+                if (signalInterval) clearInterval(signalInterval);
+                signalInterval = setInterval(fetchRuthlessSignals, 15000);
+            });
+
+            fb_db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            fb_db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            
+            fb_db.ref('site_settings/socials').on('value', snap => {
+                const links = snap.val() || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
+                    const el = document.getElementById(`link-${p}`);
+                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
+                });
+            });
+
+            fb_db.ref('site_settings/ads').on('value', snap => {
+                const ads = snap.val(); if (!ads) return;
+                for (let i = 1; i <= 8; i++) {
+                    const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
+                    if (el && d) {
+                        if (d.visible === false) { el.style.display = "none"; el.innerHTML = ''; el.setAttribute('data-snippet', ''); } 
+                        else {
+                            el.style.display = "flex"; el.style.width = d.width || "100%"; el.style.height = d.height || "auto";
+                            if (el.getAttribute('data-snippet') !== d.snippet) {
+                                el.setAttribute('data-snippet', d.snippet); el.innerHTML = ''; 
+                                const iframe = document.createElement('iframe');
+                                iframe.style.width = "100%"; iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none"; iframe.style.overflow = "hidden"; iframe.scrolling = "no";
+                                el.appendChild(iframe);
+                                const doc = iframe.contentWindow.document;
+                                doc.open(); doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
+                                doc.close();
+                            }
+                        }
+                    }
+                }
+            });
+
+            listenToTools();
+        });
+
+        function listenToTools() {
+            const dropdown = document.getElementById('toolSelect');
+            const displayArea = document.getElementById('toolScreen');
+            fb_db.ref('site_settings/tools').on('value', snapshot => {
+                const tools = snapshot.val();
+                let options = '<option value="">-- SELECT TOOL --</option>';
+                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
+                dropdown.innerHTML = options;
+
+                const loadTool = (selectedId) => {
+                    if (selectedId && tools[selectedId]) {
+                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
+                        const scripts = displayArea.getElementsByTagName('script');
+                        for (let s of Array.from(scripts)) {
+                            const ns = document.createElement('script');
+                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
+                            s.parentNode.replaceChild(ns, s);
+                        }
+                        setTimeout(() => { 
+                            restoreToolInputs(); 
+                            displayArea.addEventListener('input', saveToolInputs);
+                            displayArea.addEventListener('change', saveToolInputs);
+                        }, 400);
+                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
+                };
+
+                const saved = localStorage.getItem('ruthless_tool');
+                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
+                dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
+            });
+        }
+
+        const today_stats = new Date().toISOString().split('T')[0];
+        const statsRef = fb_db.ref(`stats/${today_stats}`);
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('last_visit') !== today_stats) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today_stats); }
+            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+        });
+
+        function adminLogin() {
+            Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
+                if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
+                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
+            });
+        }
+    </script>
 </body>
 </html>
