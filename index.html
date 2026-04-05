@@ -291,7 +291,6 @@
         function listenToSignals(broker) {
             const sigScreen = document.getElementById('sigScreen');
             
-            // Previous listener clear cheyyali
             if (currentSignalListener) {
                 currentSignalListener.off();
             }
@@ -303,10 +302,25 @@
 
             sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">SYNCHRONIZING CORE...</div>';
 
-            // Firebase: Get Last 10 Posts
-            currentSignalListener = db.ref('signals/' + broker.toLowerCase()).limitToLast(10);
+            // DATABASE PATH: Check if signals are in 'signals/quotex'
+            const path = 'signals/' + broker.toLowerCase();
+            currentSignalListener = db.ref(path).limitToLast(10);
 
             currentSignalListener.on('value', (snapshot) => {
+                // --- DEBUGGING ---
+                console.log("--- Firebase Check ---");
+                console.log("Path:", path);
+                console.log("Data Exists:", snapshot.exists());
+                console.log("Value:", snapshot.val());
+
+                if (!snapshot.exists()) {
+                    sigScreen.innerHTML = `<div style="text-align:center; padding:50px; color:#333; font-size:10px;">
+                        NO SIGNALS IN DATABASE<br>
+                        <span style="color:#111; font-size:8px;">Path: ${path}</span>
+                    </div>`;
+                    return;
+                }
+
                 let html = `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#000; border:1px solid #111; padding:10px; margin-bottom:15px; border-radius:4px; font-family:'Roboto Mono';">
                         <div style="font-size:9px; color:#555;">TRADES COUNT</div>
@@ -315,8 +329,11 @@
                     </div>`;
                 
                 let posts = [];
-                snapshot.forEach(child => { posts.push(child.val()); });
-                posts.reverse(); // Latest post top ki ravali
+                snapshot.forEach(child => { 
+                    let data = child.val();
+                    posts.push(data); 
+                });
+                posts.reverse(); 
 
                 posts.forEach((data, index) => {
                     const msg = data.message || '';
@@ -345,21 +362,22 @@
                         </div>`;
                 });
 
-                sigScreen.innerHTML = html || '<div style="text-align:center; padding:50px; color:#111;">WAITING FOR POSTS...</div>';
+                sigScreen.innerHTML = html;
                 sigScreen.scrollTop = 0;
+            }, (error) => {
+                console.error("Firebase Error:", error);
+                sigScreen.innerHTML = `<div style="text-align:center; padding:50px; color:red;">Connection Error: ${error.message}</div>`;
             });
         }
 
-        // --- ADS REFRESH LOGIC (2 MINS + USER INTERACTION) ---
+        // --- ADS REFRESH LOGIC ---
         let lastAdRefresh = Date.now();
-        const AD_REFRESH_COOLDOWN = 2 * 60 * 1000; // 2 Minutes
+        const AD_REFRESH_COOLDOWN = 2 * 60 * 1000;
 
         function triggerAdsRefresh() {
             const now = Date.now();
             if (now - lastAdRefresh > AD_REFRESH_COOLDOWN) {
-                console.log("Ruthless: Refreshing Ads due to User Activity...");
                 lastAdRefresh = now;
-                // Re-fetch ad settings to force iframe reload
                 db.ref('site_settings/ads').once('value', snapshot => {
                     const ads = snapshot.val();
                     if(ads) updateAdSlots(ads, true);
@@ -381,7 +399,6 @@
                         el.style.width = d.width || "100%"; 
                         el.style.height = d.height || "auto";
 
-                        // Only update if snippet changed OR force refresh is true
                         if (force || el.getAttribute('data-snippet') !== d.snippet) {
                             el.setAttribute('data-snippet', d.snippet);
                             el.innerHTML = ''; 
@@ -401,7 +418,6 @@
             }
         }
 
-        // Event listeners for Ad refresh
         window.addEventListener('scroll', triggerAdsRefresh);
         window.addEventListener('click', triggerAdsRefresh);
 
