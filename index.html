@@ -88,7 +88,7 @@
             align-items: start;
         }
 
-        .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
+        .widget-column { display: flex; flex-direction: column; gap: 0px; width: 100%; align-items: center; }
         
         .ad-column { 
             display: flex; 
@@ -114,7 +114,7 @@
         .ruthless-select { 
             width: 100%; padding: 16px; background: var(--panel); border: 1px solid #222; 
             color: #fff; font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
-            appearance: none; cursor: pointer;
+            appearance: none; cursor: pointer; margin-bottom: 20px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
             background-repeat: no-repeat; background-position: right 15px center; 
         }
@@ -125,7 +125,7 @@
             background: #000 !important; 
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
-            border-radius: 8px; 
+            border-radius: 0 0 8px 8px; 
             overflow-y: auto; 
             overflow-x: hidden;
             position: relative; 
@@ -139,6 +139,13 @@
             box-sizing: border-box;
         }
 
+        /* --- STATS ROW --- */
+        .stats-row {
+            display: flex; justify-content: space-around; width: 100%;
+            padding: 15px; background: #050505; border: 2px solid var(--red);
+            border-bottom: none; border-radius: 8px 8px 0 0; font-family: 'Roboto Mono';
+        }
+
         /* --- TOOL SPECIFIC FORMATTING --- */
         #toolScreen input, #toolScreen select { 
             color: var(--input-green) !important; 
@@ -150,7 +157,6 @@
             margin-bottom: 10px;
         }
 
-        /* Bold large numbers with neon glow */
         .profit-num, .loss-num, .result-val, .profit-value, .loss-value { 
             font-size: 32px !important; 
             font-weight: bold !important; 
@@ -170,11 +176,9 @@
         .footer-links a:hover { color: var(--red); }
         .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- MOBILE LAYOUT REORDERING --- */
         @media (max-width: 850px) {
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
-            
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
@@ -185,7 +189,6 @@
             #toolCol { order: 8; margin-bottom: 40px; }
             #adSlot5 { order: 9; margin-bottom: 15px; }
             #adSlot6 { order: 10; margin-bottom: 15px; }
-
             .brand-img { width: 320px; }
             .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
             .ad-column { display: contents; }
@@ -236,13 +239,29 @@
                         <option value="QUOTEX">QUOTEX</option>
                         <option value="TOXA">TOXA</option>
                     </select>
+                    
+                    <div class="stats-row">
+                        <div style="text-align:center;">
+                            <div style="color:#444; font-size:9px; letter-spacing:1px; margin-bottom:5px;">TOTAL</div>
+                            <div id="totalCount" style="color:#fff; font-size:22px; font-weight:bold;">0</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="color:#00ffcc; font-size:9px; letter-spacing:1px; margin-bottom:5px;">WINS</div>
+                            <div id="winCount" style="color:#00ffcc; font-size:22px; font-weight:bold; text-shadow:0 0 10px rgba(0,255,204,0.6);">0</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="color:var(--red); font-size:9px; letter-spacing:1px; margin-bottom:5px;">LOSS</div>
+                            <div id="lossCount" style="color:#ff0000; font-size:22px; font-weight:bold; text-shadow:0 0 10px rgba(255,0,0,0.6);">0</div>
+                        </div>
+                    </div>
                     <div class="display-box" id="sigScreen"></div>
                 </div>
+
                 <div class="widget-column" id="toolCol">
                     <select class="ruthless-select" id="toolSelect">
                         <option value="">-- SELECT TOOL --</option>
                     </select>
-                    <div class="display-box">
+                    <div class="display-box" style="border-radius: 8px;">
                         <div id="toolScreen"></div>
                     </div>
                 </div>
@@ -285,6 +304,10 @@
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        let signalRef = null;
+        let statsRef = null;
+        let lastProcessedMsg = ""; 
 
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
@@ -361,7 +384,6 @@
             loadVerificationData();
 
             const sigSelect = document.getElementById('sigSelect');
-            const sigScreen = document.getElementById('sigScreen');
             const savedSignal = localStorage.getItem('ruthless_signal');
             
             if(savedSignal) {
@@ -400,7 +422,6 @@
                             el.style.display = "flex"; 
                             el.style.width = d.width || "100%"; 
                             el.style.height = d.height || "auto";
-
                             if (el.getAttribute('data-snippet') !== d.snippet) {
                                 el.setAttribute('data-snippet', d.snippet);
                                 el.innerHTML = ''; 
@@ -423,15 +444,30 @@
             listenToTools();
         });
 
-        let signalRef = null;
         function listenToSignals(broker) {
             const sigScreen = document.getElementById('sigScreen');
+            const winDisp = document.getElementById('winCount');
+            const lossDisp = document.getElementById('lossCount');
+            const totalDisp = document.getElementById('totalCount');
+
             if (signalRef) signalRef.off();
+            if (statsRef) statsRef.off();
             if (!broker) { sigScreen.innerHTML = ''; return; }
 
-            sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:var(--red);">SYNCING...</div>';
-            signalRef = db.ref('signals/' + broker.toLowerCase());
+            const brokerKey = broker.toLowerCase();
+            sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:var(--red);">SYNCING ' + broker + '...</div>';
 
+            // 1. Firebase Stats Listener
+            statsRef = db.ref('stats_storage/' + brokerKey);
+            statsRef.on('value', (snapshot) => {
+                const stats = snapshot.val() || { wins: 0, loss: 0 };
+                winDisp.innerText = stats.wins;
+                lossDisp.innerText = stats.loss;
+                totalDisp.innerText = (stats.wins + stats.loss);
+            });
+
+            // 2. Signals Listener
+            signalRef = db.ref('signals/' + brokerKey);
             signalRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
@@ -439,11 +475,27 @@
                     return;
                 }
 
+                const msg = (data.updatedAt || "").toUpperCase();
+                
+                // --- FIREBASE AUTO-COUNTER LOGIC ---
+                if (msg !== lastProcessedMsg && !msg.includes("ANALYZING") && !msg.includes("STABLE")) {
+                    lastProcessedMsg = msg;
+                    if (msg.includes("WIN")) {
+                        db.ref('stats_storage/' + brokerKey + '/wins').transaction(c => (c || 0) + 1);
+                    } else if (msg.includes("LOSS")) {
+                        db.ref('stats_storage/' + brokerKey + '/loss').transaction(c => (c || 0) + 1);
+                    }
+                }
+
                 sigScreen.innerHTML = `
-                    <div style="padding:15px; border-bottom:1px solid #111; background:rgba(255,0,0,0.05);">
-                        <div style="font-family:'Roboto Mono'; font-size:10px; color:var(--red); margin-bottom:5px;">● LIVE SIGNAL</div>
-                        <div style="font-size:16px; font-weight:bold; color:#fff;">${data.updatedAt || 'WAITING...'}</div>
-                        <div style="font-size:9px; color:#444; margin-top:10px; word-break:break-all;">${data.url || ''}</div>
+                    <div style="padding:20px; background:linear-gradient(180deg, #0a0000 0%, #000 100%);">
+                        <div style="font-family:'Roboto Mono'; font-size:10px; color:var(--red); margin-bottom:10px; font-weight:bold;">● LIVE SIGNAL FEED</div>
+                        <div style="font-size:22px; font-weight:bold; color:#fff; font-family:'Roboto Mono'; text-shadow:var(--neon); line-height:1.4;">
+                            ${data.updatedAt || 'WAITING...'}
+                        </div>
+                        <div style="font-size:10px; color:#333; margin-top:15px; font-family:'Roboto Mono'; border-top:1px solid #111; padding-top:10px;">
+                            TIMESTAMP: ${data.url || 'N/A'}
+                        </div>
                     </div>
                 `;
             });
@@ -482,10 +534,10 @@
         }
 
         const today = new Date().toISOString().split('T')[0];
-        const statsRef = db.ref(`stats/${today}`);
+        const siteStatsRef = db.ref(`stats/${today}`);
         window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
-            if (!sessionStorage.getItem('active_session')) { statsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+            if (localStorage.getItem('last_visit') !== today) { siteStatsRef.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (!sessionStorage.getItem('active_session')) { siteStatsRef.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
         });
 
         function adminLogin() {
