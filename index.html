@@ -302,12 +302,13 @@
 
             sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">SYNCHRONIZING CORE...</div>';
 
-            // DATABASE PATH: Check if signals are in 'signals/quotex'
-            const path = 'signals/' + broker.toLowerCase();
+            // Fixed path mismatch for TOXA and handling field mapping
+            let cleanBroker = broker.toLowerCase();
+            const path = 'signals/' + cleanBroker;
+            
             currentSignalListener = db.ref(path).limitToLast(10);
 
             currentSignalListener.on('value', (snapshot) => {
-                // --- DEBUGGING ---
                 console.log("--- Firebase Check ---");
                 console.log("Path:", path);
                 console.log("Data Exists:", snapshot.exists());
@@ -330,13 +331,17 @@
                 
                 let posts = [];
                 snapshot.forEach(child => { 
-                    let data = child.val();
-                    posts.push(data); 
+                    let val = child.val();
+                    // Mapping your updatedAt field to message and url to time
+                    posts.push({
+                        message: val.updatedAt || val.message || "SIGNAL DATA",
+                        time: val.url || val.time || ""
+                    }); 
                 });
                 posts.reverse(); 
 
                 posts.forEach((data, index) => {
-                    const msg = data.message || '';
+                    const msg = String(data.message);
                     const isLatest = index === 0;
                     
                     let accentColor = "#eee";
@@ -356,7 +361,7 @@
                         <div style="border-left:4px solid ${accentColor}; background:rgba(255,255,255,0.02); padding:15px; margin-bottom:10px; border-radius:4px; opacity:${isLatest ? '1' : '0.4'}; ${glow} transition:0.3s;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                                 <span style="font-family:'Orbitron'; font-size:8px; color:${accentColor}; letter-spacing:1px;">${isLatest ? '● LIVE FEED' : 'HISTORY'}</span>
-                                <span style="font-size:8px; color:#333;">${data.time || ''}</span>
+                                <span style="font-size:8px; color:#333;">${data.time}</span>
                             </div>
                             <div style="color:#fff; font-family:'Roboto Mono'; font-weight:bold; font-size:${isLatest ? '14px' : '12px'}; line-height:1.5; white-space:pre-line;">${msg}</div>
                         </div>`;
