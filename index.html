@@ -302,11 +302,10 @@
 
             sigScreen.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:var(--red);font-size:11px;">SYNCHRONIZING CORE...</div>';
 
-            // Fixed path mismatch for TOXA and handling field mapping
             let cleanBroker = broker.toLowerCase();
             const path = 'signals/' + cleanBroker;
             
-            currentSignalListener = db.ref(path).limitToLast(10);
+            currentSignalListener = db.ref(path);
 
             currentSignalListener.on('value', (snapshot) => {
                 console.log("--- Firebase Check ---");
@@ -322,6 +321,7 @@
                     return;
                 }
 
+                const data = snapshot.val();
                 let html = `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#000; border:1px solid #111; padding:10px; margin-bottom:15px; border-radius:4px; font-family:'Roboto Mono';">
                         <div style="font-size:9px; color:#555;">TRADES COUNT</div>
@@ -329,25 +329,35 @@
                         <div style="color:#ff0000; font-weight:bold; font-size:13px;">LOSS: 263</div>
                     </div>`;
                 
-                let posts = [];
-                snapshot.forEach(child => { 
-                    let val = child.val();
-                    // Mapping your updatedAt field to message and url to time
-                    posts.push({
-                        message: val.updatedAt || val.message || "SIGNAL DATA",
-                        time: val.url || val.time || ""
-                    }); 
-                });
-                posts.reverse(); 
+                // Logic to handle both Direct fields (updatedAt) and List of signals
+                let signalsToDisplay = [];
+                
+                if (data.updatedAt) {
+                    // It's a direct object like {updatedAt: ..., url: ...}
+                    signalsToDisplay.push({
+                        message: data.updatedAt,
+                        time: data.url || ""
+                    });
+                } else {
+                    // It's a list/folder of multiple signals
+                    Object.keys(data).forEach(key => {
+                        let val = data[key];
+                        signalsToDisplay.push({
+                            message: val.updatedAt || val.message || "SIGNAL DATA",
+                            time: val.url || val.time || ""
+                        });
+                    });
+                    signalsToDisplay.reverse(); // Newest first
+                }
 
-                posts.forEach((data, index) => {
-                    const msg = String(data.message);
+                signalsToDisplay.forEach((signal, index) => {
+                    const msg = String(signal.message);
                     const isLatest = index === 0;
                     
                     let accentColor = "#eee";
                     let glow = "";
                     
-                    if (msg.includes("SURESHOT")) {
+                    if (msg.includes("SURESHOT") || msg.includes("CALL") || msg.includes("PUT")) {
                         accentColor = "#00ffcc";
                         if(isLatest) glow = "box-shadow: 0 0 15px #00ffcc44;";
                     } else if (msg.includes("PRE-SIGNAL")) {
@@ -361,7 +371,7 @@
                         <div style="border-left:4px solid ${accentColor}; background:rgba(255,255,255,0.02); padding:15px; margin-bottom:10px; border-radius:4px; opacity:${isLatest ? '1' : '0.4'}; ${glow} transition:0.3s;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                                 <span style="font-family:'Orbitron'; font-size:8px; color:${accentColor}; letter-spacing:1px;">${isLatest ? '● LIVE FEED' : 'HISTORY'}</span>
-                                <span style="font-size:8px; color:#333;">${data.time}</span>
+                                <span style="font-size:8px; color:#333;">${signal.time}</span>
                             </div>
                             <div style="color:#fff; font-family:'Roboto Mono'; font-weight:bold; font-size:${isLatest ? '14px' : '12px'}; line-height:1.5; white-space:pre-line;">${msg}</div>
                         </div>`;
