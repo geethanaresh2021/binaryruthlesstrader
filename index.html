@@ -142,26 +142,21 @@
         .b-label { color: #444; font-size: 8px; letter-spacing: 1px; margin-bottom: 3px; font-family: 'Roboto Mono'; }
         .b-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 18px; }
 
-        #sigScreen { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center;
-            overflow: hidden;
-        }
-        
-        /* Added Dynamic Signal Styles */
-        .sig-asset { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
-        .sig-dir { font-size: 26px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .sig-call { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
-        .sig-put { color: var(--red); text-shadow: 0 0 10px var(--red); }
-        .sig-timer { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; margin-top: 10px; color: #fff; text-shadow: 0 0 20px #fff; }
-        .sig-result { font-size: 38px; font-weight: 900; animation: glow 1.5s infinite alternate; }
-        @keyframes glow { from { text-shadow: 0 0 5px #fff; } to { text-shadow: 0 0 25px var(--red); } }
-
+        #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+
+        /* --- SIGNAL UI ADDITIONS --- */
+        .sig-asset { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .sig-entry-text { font-family: 'Roboto Mono'; font-size: 16px; color: #888; margin-bottom: 10px; }
+        .sig-direction { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .arrow-up { color: #00ffcc; animation: bounceUp 1s infinite; }
+        .arrow-down { color: #ff0000; animation: bounceDown 1s infinite; }
+        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+        .sig-timer-val { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px #fff; }
+        .sig-result-zoom { font-size: 40px; font-weight: 900; text-transform: uppercase; animation: zoomInOut 1.5s infinite ease-in-out; }
+        @keyframes zoomInOut { 0% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.6; } }
 
         /* --- TOOL SPECIFIC FORMATTING --- */
         #toolScreen input, #toolScreen select { 
@@ -325,7 +320,8 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let sigTimerInterval = null;
+        let sigMainTimer = null;
+        let lastSignalId = "";
 
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
@@ -465,18 +461,26 @@
 
         let signalRef = null;
         let statsRef = null;
-        let lastSignalMsg = "";
 
-        function startTimer(duration) {
-            clearInterval(sigTimerInterval);
-            let timer = duration, seconds;
-            const timerDisplay = document.getElementById('sigTimer');
-            sigTimerInterval = setInterval(function () {
-                seconds = parseInt(timer % 61, 10);
-                timerDisplay.textContent = seconds + "s";
-                if (--timer < 0) {
-                    clearInterval(sigTimerInterval);
-                    timerDisplay.textContent = "WAIT...";
+        function startTradeCountdown(targetTime, duration) {
+            clearInterval(sigMainTimer);
+            const displayArea = document.getElementById('timerZone');
+            
+            sigMainTimer = setInterval(() => {
+                const now = new Date();
+                if (now < targetTime) {
+                    if(displayArea) displayArea.innerHTML = '<div style="color:#444; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
+                    return;
+                }
+
+                const elapsed = Math.floor((now - targetTime) / 1000);
+                const remaining = duration - elapsed;
+
+                if (remaining <= 0) {
+                    clearInterval(sigMainTimer);
+                    if(displayArea) displayArea.innerHTML = '<div class="sig-timer-val">00s</div>';
+                } else {
+                    if(displayArea) displayArea.innerHTML = `<div class="sig-timer-val">${remaining}s</div>`;
                 }
             }, 1000);
         }
@@ -510,46 +514,64 @@
                     return;
                 }
 
-                const msg = (data.updatedAt || "").toUpperCase();
+                const currentMsg = (data.updatedAt || "").toUpperCase();
 
-                // Logic 1: Analyzing State
-                if (msg.includes("ANALYZING")) {
-                    sigScreen.innerHTML = `<div style="font-size:18px; color:var(--red); font-weight:bold; letter-spacing:2px; animation:blink 1s infinite;">ANALYZING MARKET...</div>`;
-                    return;
-                }
-
-                // Logic 2: Win/Loss Display
-                if (msg.includes("WIN") || msg.includes("LOSS")) {
-                    clearInterval(sigTimerInterval);
-                    const isWin = msg.includes("WIN");
-                    sigScreen.innerHTML = `<div class="sig-result" style="color:${isWin?'#00ffcc':'#ff0000'}">${msg}</div>`;
+                // Handle Result Display (Win/Loss)
+                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
+                    const isWin = currentMsg.includes("WIN");
+                    const color = isWin ? "#00ffcc" : "#ff0000";
                     
-                    if (msg !== lastSignalMsg) {
-                        lastSignalMsg = msg;
+                    // Update stats if it's a new message
+                    if (currentMsg !== lastSignalId) {
+                        lastSignalId = currentMsg;
                         if (isWin) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                        else db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                        else {
+                            // If first loss, extend timer to 120 (MTG)
+                            if (!currentMsg.includes("MTG")) {
+                                const entry = new Date(); // Continue from now
+                                startTradeCountdown(entry, 120);
+                            }
+                            db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                        }
+                    }
+
+                    const timerArea = document.getElementById('timerZone');
+                    if (timerArea) {
+                        timerArea.innerHTML = `<div class="sig-result-zoom" style="color:${color}">${currentMsg}</div>`;
                     }
                     return;
                 }
 
-                // Logic 3: Live Trade Signal
-                const isCall = msg.includes("CALL") || msg.includes("UP");
-                const dirClass = isCall ? 'sig-call' : 'sig-put';
-                const dirIcon = isCall ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
-                const dirText = isCall ? 'CALL / UP' : 'PUT / DOWN';
-                
-                // Extract asset if possible, else use default
-                const asset = msg.split(' ')[0] || "MARKET";
+                // Handle Analyzing State
+                if (currentMsg.includes("ANALYZING")) {
+                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:zoomInOut 1s infinite;">MARKET ANALYZING...</div>';
+                    return;
+                }
 
-                sigScreen.innerHTML = `
-                    <div class="sig-asset">${asset}</div>
-                    <div class="sig-dir ${dirClass}"><i class="fas ${dirIcon}"></i> ${dirText}</div>
-                    <div id="sigTimer" class="sig-timer">60s</div>
-                    <div style="font-size:10px; color:#444; margin-top:10px;">${msg}</div>
-                `;
-                
-                startTimer(60);
-                lastSignalMsg = msg;
+                // New Trade Signal Logic
+                if (currentMsg !== lastSignalId) {
+                    lastSignalId = currentMsg;
+                    const parts = currentMsg.split(" ");
+                    const asset = parts[0] || "ASSET";
+                    const isCall = currentMsg.includes("CALL") || currentMsg.includes("UP");
+                    
+                    // Entry Time Logic: Signal Time + 1 Minute
+                    const now = new Date();
+                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
+                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
+
+                    sigScreen.innerHTML = `
+                        <div class="sig-asset">${asset}</div>
+                        <div class="sig-entry-text">ENTRY TIME : ${entryStr}</div>
+                        <div class="sig-direction ${isCall?'arrow-up':'arrow-down'}">
+                            <i class="fas ${isCall?'fa-arrow-up':'fa-arrow-down'}"></i> ${isCall?'CALL / UP':'PUT / DOWN'}
+                        </div>
+                        <div id="timerZone" style="height:80px; display:flex; align-items:center; justify-content:center;"></div>
+                        <div style="font-family:'Roboto Mono'; font-size:10px; color:#444; margin-top:20px;">USE OUR MONEY MANAGEMENT TOOL</div>
+                    `;
+
+                    startTradeCountdown(entryTime, 60);
+                }
             });
         }
 
