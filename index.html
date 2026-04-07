@@ -126,7 +126,7 @@
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
-            overflow: hidden; 
+            overflow: hidden; /* Important for internal scroll */
             position: relative; 
             display: flex;
             flex-direction: column;
@@ -142,35 +142,27 @@
         .b-label { color: #444; font-size: 8px; letter-spacing: 1px; margin-bottom: 3px; font-family: 'Roboto Mono'; }
         .b-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 18px; }
 
-        /* --- SIGNAL CONTAINER FORMATTING --- */
         #sigScreen { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            text-align: center; 
+            text-align: center;
             overflow: hidden;
-            padding: 10px;
         }
-
-        .sig-asset { font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; }
-        .sig-dir { font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
-        .sig-call { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
-        .sig-put { color: var(--red); text-shadow: 0 0 10px var(--red); }
         
-        .arrow-up { animation: arrowUp 1s infinite; }
-        .arrow-down { animation: arrowDown 1s infinite; }
-        @keyframes arrowUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes arrowDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-
-        .sig-entry { font-family: 'Roboto Mono'; font-size: 18px; color: #aaa; margin-bottom: 8px; }
-        .sig-mtg-txt { color: var(--red); font-size: 16px; font-weight: bold; margin-bottom: 15px; }
-        .sig-warning-txt { color: #ffcc00; font-size: 11px; font-family: 'Roboto Mono'; margin-bottom: 20px; }
-        
-        .sig-timer-display { font-family: 'Roboto Mono'; font-size: 48px; font-weight: 900; color: #fff; text-shadow: 0 0 15px #fff; }
-        .win-animation { animation: winGlow 1.5s infinite; color: #00ffcc !important; text-shadow: 0 0 20px #00ffcc; font-size: 28px; font-weight: 900; }
-        @keyframes winGlow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        /* Signal Elements */
+        .asset-name { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .dir-label { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .dir-call { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+        .dir-put { color: var(--red); text-shadow: 0 0 10px var(--red); }
+        .entry-time { font-family: 'Roboto Mono'; font-size: 16px; color: #666; margin-bottom: 15px; }
+        .mtg-notice { color: var(--red); font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+        .warning-text { color: #ffcc00; font-size: 10px; font-family: 'Roboto Mono'; margin-bottom: 15px; }
+        .main-timer { font-size: 52px; font-weight: 900; font-family: 'Roboto Mono'; color: #fff; text-shadow: 0 0 15px #fff; }
+        .win-anim { font-size: 32px; font-weight: 900; color: #00ffcc !important; text-shadow: 0 0 20px #00ffcc; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
@@ -195,8 +187,8 @@
             margin: 10px 0;
         }
 
-        .display-box div::-webkit-scrollbar { width: 5px; }
-        .display-box div::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        #sigScreen::-webkit-scrollbar, .display-box div::-webkit-scrollbar { width: 5px; }
+        #sigScreen::-webkit-scrollbar-thumb, .display-box div::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
 
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
@@ -208,6 +200,7 @@
         @media (max-width: 850px) {
             .desktop-wrapper { display: flex; flex-direction: column; }
             .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
+            
             #adSlot1 { order: 1; margin-bottom: 15px; }
             #adSlot2 { order: 2; margin-bottom: 15px; }
             #adSlot7 { order: 3; margin-bottom: 15px; }
@@ -218,6 +211,7 @@
             #toolCol { order: 8; margin-bottom: 40px; }
             #adSlot5 { order: 9; margin-bottom: 15px; }
             #adSlot6 { order: 10; margin-bottom: 15px; }
+
             .brand-img { width: 320px; }
             .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
             .ad-column { display: contents; }
@@ -249,6 +243,7 @@
 
     <div class="page-content">
         <div class="desktop-wrapper">
+            
             <div class="row-ads-top">
                 <div class="ad-column">
                     <div class="ad-slot" id="adSlot1"></div>
@@ -269,16 +264,29 @@
                     </select>
                     <div class="display-box">
                         <div class="box-stats">
-                            <div class="b-stat"><div class="b-label">TOTAL</div><div id="totalCount" class="b-val" style="color:#fff;">0</div></div>
-                            <div class="b-stat"><div class="b-label" style="color:#00ffcc;">WINS</div><div id="winCount" class="b-val" style="color:#00ffcc;">0</div></div>
-                            <div class="b-stat"><div class="b-label" style="color:var(--red);">LOSS</div><div id="lossCount" class="b-val" style="color:var(--red);">0</div></div>
+                            <div class="b-stat">
+                                <div class="b-label">TOTAL</div>
+                                <div id="totalCount" class="b-val" style="color:#fff;">0</div>
+                            </div>
+                            <div class="b-stat">
+                                <div class="b-label" style="color:#00ffcc;">WINS</div>
+                                <div id="winCount" class="b-val" style="color:#00ffcc;">0</div>
+                            </div>
+                            <div class="b-stat">
+                                <div class="b-label" style="color:var(--red);">LOSS</div>
+                                <div id="lossCount" class="b-val" style="color:var(--red);">0</div>
+                            </div>
                         </div>
                         <div id="sigScreen"></div>
                     </div>
                 </div>
                 <div class="widget-column" id="toolCol">
-                    <select class="ruthless-select" id="toolSelect"><option value="">-- SELECT TOOL --</option></select>
-                    <div class="display-box"><div id="toolScreen"></div></div>
+                    <select class="ruthless-select" id="toolSelect">
+                        <option value="">-- SELECT TOOL --</option>
+                    </select>
+                    <div class="display-box">
+                        <div id="toolScreen"></div>
+                    </div>
                 </div>
             </div>
 
@@ -292,11 +300,14 @@
                     <div class="ad-slot" id="adSlot6"></div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <footer class="footer-mini">
-        <div class="footer-links"><a href="#">CONTACT US</a> <a href="#">TRADEMARK</a> <a href="#">PRIVACY</a> <a href="#">TERMS</a></div>
+        <div class="footer-links">
+            <a href="#">CONTACT US</a> <a href="#">TRADEMARK</a> <a href="#">PRIVACY</a> <a href="#">TERMS</a>
+        </div>
         <div class="trademark">BINARY RUTHLESS TRADER™ | ALL RIGHTS RESERVED © 2026</div>
     </footer>
 
@@ -317,155 +328,205 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let signalRef = null, statsRef = null, lastSignalMsg = "", tradeTimer = null;
-        let currentSignalData = { asset: "", direction: "", time: "", dirClass: "", arrow: "" };
+        let sigTimerInterval = null;
+        let lastKnownSignal = { asset: "", dir: "", time: "", class: "", icon: "" };
 
-        function startTradeTimer(duration) {
-            clearInterval(tradeTimer);
-            let timer = duration;
-            const display = document.getElementById('timerDisplay');
+        function checkMidnightReset() {
+            const lastUpdate = localStorage.getItem('ruthless_last_date');
+            const todayStr = new Date().toDateString();
+            if (lastUpdate && lastUpdate !== todayStr) {
+                Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
+            }
+            localStorage.setItem('ruthless_last_date', todayStr);
+        }
+
+        function cleanToolCode(html) {
+            if (!html) return "";
+            let clean = html;
+            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
+                const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
+                    let s = selector.trim();
+                    if (s === 'body' || s === 'html' || s === '*') return '#toolScreen';
+                    return '#toolScreen ' + s;
+                });
+                return '<style>' + scopedCss + '</style>';
+            });
+            return clean;
+        }
+
+        function saveToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                localStorage.setItem('tool_input_' + storageId, input.value);
+            });
+        }
+
+        function restoreToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                const savedValue = localStorage.getItem('tool_input_' + storageId);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+
+        function applySmoothScroll(containerId, text, speed, color) {
+            const container = document.getElementById(containerId); if (!container) return;
+            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
+            const spd = parseInt(speed) || 0;
+            if (spd === 0) {
+                container.style.justifyContent = "center";
+                container.innerHTML = `<span class="scroll-item">${text}</span>`;
+            } else {
+                container.style.justifyContent = "flex-start";
+                const duration = 35 / spd;
+                container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
+            }
+        }
+
+        function startSigTimer(duration) {
+            clearInterval(sigTimerInterval);
+            let time = duration;
+            const display = document.getElementById('timerVal');
             if(!display) return;
-            tradeTimer = setInterval(() => {
-                display.innerText = timer + "s";
-                if (--timer < 0) { clearInterval(tradeTimer); display.innerText = "WAITING RESULT..."; }
+            sigTimerInterval = setInterval(() => {
+                display.innerText = time + "s";
+                if (--time < 0) { clearInterval(sigTimerInterval); display.innerText = "WAITING..."; }
             }, 1000);
         }
 
         function listenToSignals(broker) {
             const sigScreen = document.getElementById('sigScreen');
-            const winD = document.getElementById('winCount'), lossD = document.getElementById('lossCount'), totalD = document.getElementById('totalCount');
-            if (signalRef) signalRef.off(); if (statsRef) statsRef.off(); if (!broker) { sigScreen.innerHTML = ''; return; }
-            sigScreen.innerHTML = '<div style="color:var(--red);">SYNCING...</div>';
+            const winD = document.getElementById('winCount');
+            const lossD = document.getElementById('lossCount');
+            const totalD = document.getElementById('totalCount');
+
+            if (signalRef) signalRef.off();
+            if (statsRef) statsRef.off();
+            if (!broker) { sigScreen.innerHTML = ''; return; }
+
+            sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:var(--red);">SYNCING...</div>';
             const key = broker.toLowerCase();
+
             statsRef = db.ref('stats_storage/' + key);
-            statsRef.on('value', snap => { const s = snap.val() || { wins: 0, loss: 0 }; winD.innerText = s.wins; lossD.innerText = s.loss; totalD.innerText = s.wins + s.loss; });
+            statsRef.on('value', snap => {
+                const s = snap.val() || { wins: 0, loss: 0 };
+                winD.innerText = s.wins;
+                lossD.innerText = s.loss;
+                totalD.innerText = s.wins + s.loss;
+            });
 
             signalRef = db.ref('signals/' + key);
             signalRef.on('value', (snapshot) => {
-                const data = snapshot.val(); if (!data) return;
-                const msg = (data.updatedAt || "").toUpperCase();
+                const data = snapshot.val();
+                if (!data) { sigScreen.innerHTML = '<div style="color:#222;">NO ACTIVE SIGNAL</div>'; return; }
 
-                if (msg.includes("ANALYZING")) {
+                const currentMsg = (data.updatedAt || "").toUpperCase();
+
+                // Logic: Analyzing State
+                if (currentMsg.includes("ANALYZING")) {
                     sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:blink 1s infinite;">ANALYZING MARKET...</div>';
                     return;
                 }
 
-                // Handle Results
-                if (msg.includes("WIN") || msg.includes("LOSS")) {
-                    clearInterval(tradeTimer);
-                    let resultHtml = "";
-                    if (msg.includes("SURESHOT WIN")) resultHtml = '<div class="win-animation">SURESHOT WIN</div>';
-                    else if (msg.includes("MTG WIN")) resultHtml = '<div class="win-animation">MTG WIN</div>';
-                    else if (msg.includes("LOSS")) resultHtml = '<div style="color:var(--red); font-size:28px; font-weight:900;">MTG LOSS</div>';
+                // Logic: Win/Loss Results
+                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
+                    clearInterval(sigTimerInterval);
+                    let resultHtml = (currentMsg.includes("WIN")) ? `<div class="win-anim">${currentMsg}</div>` : `<div style="color:var(--red); font-size:32px; font-weight:900;">${currentMsg}</div>`;
                     
                     sigScreen.innerHTML = `
-                        <div class="sig-asset">${currentSignalData.asset}</div>
-                        <div class="sig-dir ${currentSignalData.dirClass}"><i class="fas ${currentSignalData.arrow}"></i> ${currentSignalData.direction}</div>
-                        <div class="sig-entry">Entry time : ${currentSignalData.time}</div>
-                        <div class="sig-mtg-txt">Auto MTG</div>
-                        <div class="sig-warning-txt">⚠️ Use Our Money Management Tool ⚠️</div>
-                        <div id="resultDisplay">${resultHtml}</div>
+                        <div class="asset-name">${lastKnownSignal.asset}</div>
+                        <div class="dir-label ${lastKnownSignal.class}"><i class="fas ${lastKnownSignal.icon}"></i> ${lastKnownSignal.dir}</div>
+                        <div class="entry-time">Entry Time: ${lastKnownSignal.time}</div>
+                        <div class="mtg-notice">Auto MTG Enabled</div>
+                        <div class="warning-text">⚠️ USE OUR MONEY MANAGEMENT TOOL ⚠️</div>
+                        <div id="resultBox">${resultHtml}</div>
                     `;
                     
-                    if (msg !== lastSignalMsg) {
-                        lastSignalMsg = msg;
-                        if (msg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                        if (msg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                    if (currentMsg !== lastSignalMsg) {
+                        lastSignalMsg = currentMsg;
+                        if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
+                        if (currentMsg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
                     }
                     return;
                 }
 
-                // New Pre-Signal Alert
-                const parts = msg.split(" ");
-                const asset = parts[0] || "---", dir = parts[1] || "", time = parts[2] || "--:--";
-                const isCall = dir.includes("CALL") || dir.includes("UP");
-                const dirClass = isCall ? "sig-call" : "sig-put";
-                const arrow = isCall ? "fa-arrow-up arrow-up" : "fa-arrow-down arrow-down";
-                const dirLabel = isCall ? "CALL (UP)" : "PUT (DOWN)";
+                // Logic: New Trade Alert
+                const parts = currentMsg.split(" ");
+                const asset = parts[0] || "---";
+                const direction = parts[1] || "";
+                const time = parts[2] || "--:--";
 
-                currentSignalData = { asset, direction: dirLabel, time, dirClass, arrow };
+                const isCall = direction.includes("CALL") || direction.includes("UP");
+                const dirClass = isCall ? "dir-call" : "dir-put";
+                const dirIcon = isCall ? "fa-arrow-up" : "fa-arrow-down";
+                const dirText = isCall ? "CALL (UP)" : "PUT (DOWN)";
+
+                lastKnownSignal = { asset, dir: dirText, time, class: dirClass, icon: dirIcon };
 
                 sigScreen.innerHTML = `
-                    <div class="sig-asset">${asset}</div>
-                    <div class="sig-dir ${dirClass}"><i class="fas ${arrow}"></i> ${dirLabel}</div>
-                    <div class="sig-entry">Entry time : ${time}</div>
-                    <div class="sig-mtg-txt">Auto MTG</div>
-                    <div class="sig-warning-txt">⚠️ Use Our Money Management Tool ⚠️</div>
-                    <div id="timerDisplay" class="sig-timer-display">--s</div>
+                    <div class="asset-name">${asset}</div>
+                    <div class="dir-label ${dirClass}"><i class="fas ${dirIcon}"></i> ${dirText}</div>
+                    <div class="entry-time">Entry Time: ${time}</div>
+                    <div class="mtg-notice">Auto MTG Enabled</div>
+                    <div class="warning-text">⚠️ USE OUR MONEY MANAGEMENT TOOL ⚠️</div>
+                    <div id="timerVal" class="main-timer">--s</div>
                 `;
 
-                // Auto Start Timer based on signal type
-                if(msg.includes("MTG")) startTradeTimer(120);
-                else startTradeTimer(60);
-
-                lastSignalMsg = msg;
+                // Start Timer
+                const timerSec = currentMsg.includes("MTG") ? 120 : 60;
+                startSigTimer(timerSec);
+                lastSignalMsg = currentMsg;
             });
         }
 
-        // --- Common Functions ---
-        function cleanToolCode(html) {
-            if (!html) return "";
-            let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
-            clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, (m, css) => `<style>${css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, s => s.trim() === 'body' ? '#toolScreen' : '#toolScreen ' + s)}</style>`);
-            return clean;
-        }
-
-        function saveToolInputs() { document.querySelectorAll('#toolScreen input, #toolScreen select').forEach((i, idx) => localStorage.setItem('tool_input_' + (i.id || `auto_${idx}`), i.value)); }
-        function restoreToolInputs() { document.querySelectorAll('#toolScreen input, #toolScreen select').forEach((i, idx) => { const v = localStorage.getItem('tool_input_' + (i.id || `auto_${idx}`)); if(v !== null) { i.value = v; i.dispatchEvent(new Event('change')); } }); }
-
-        function applySmoothScroll(id, txt, spd, clr) {
-            const container = document.getElementById(id); if (!container) return;
-            container.innerHTML = ""; container.style.color = clr; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
-            const s = parseInt(spd) || 0;
-            if (s === 0) { container.style.justifyContent = "center"; container.innerHTML = `<span class="scroll-item">${txt}</span>`; }
-            else { const dur = 35 / s; container.innerHTML = `<div style="display:flex; animation:scrollText ${dur}s linear infinite;"><span class="scroll-item" style="padding-right:80px;">${txt}</span><span class="scroll-item" style="padding-right:80px;">${txt}</span></div>`; }
-        }
-
         function listenToTools() {
-            const dropdown = document.getElementById('toolSelect'), displayArea = document.getElementById('toolScreen');
+            const dropdown = document.getElementById('toolSelect');
+            const displayArea = document.getElementById('toolScreen');
             db.ref('site_settings/tools').on('value', snapshot => {
-                const tools = snapshot.val(); let options = '<option value="">-- SELECT TOOL --</option>';
+                const tools = snapshot.val();
+                let options = '<option value="">-- SELECT TOOL --</option>';
                 if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
                 dropdown.innerHTML = options;
-                const loadTool = (id) => {
-                    if (id && tools[id]) {
-                        displayArea.innerHTML = cleanToolCode(tools[id].code);
+
+                const loadTool = (selectedId) => {
+                    if (selectedId && tools[selectedId]) {
+                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
                         const scripts = displayArea.getElementsByTagName('script');
-                        for (let s of Array.from(scripts)) { const ns = document.createElement('script'); if (s.src) ns.src = s.src; ns.textContent = s.textContent; s.parentNode.replaceChild(ns, s); }
-                        setTimeout(() => { restoreToolInputs(); displayArea.addEventListener('input', saveToolInputs); }, 400);
-                    } else displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>';
+                        for (let s of Array.from(scripts)) {
+                            const ns = document.createElement('script');
+                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
+                            s.parentNode.replaceChild(ns, s);
+                        }
+                        setTimeout(() => { 
+                            restoreToolInputs(); 
+                            displayArea.addEventListener('input', saveToolInputs);
+                            displayArea.addEventListener('change', saveToolInputs);
+                        }, 400);
+                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
                 };
-                const saved = localStorage.getItem('ruthless_tool'); if(saved && tools[saved]?.visible) { dropdown.value = saved; loadTool(saved); }
+
+                const saved = localStorage.getItem('ruthless_tool');
+                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
                 dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             checkMidnightReset();
-            const sigSelect = document.getElementById('sigSelect'), savedSignal = localStorage.getItem('ruthless_signal');
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
             if(savedSignal) { sigSelect.value = savedSignal; listenToSignals(savedSignal); }
             sigSelect.addEventListener('change', (e) => { localStorage.setItem('ruthless_signal', e.target.value); listenToSignals(e.target.value); });
-            db.ref('site_settings/giveaway').on('value', snap => snap.val() && applySmoothScroll('announceStrip', snap.val().winner, snap.val().speed, snap.val().color));
-            db.ref('site_settings/warning_note').on('value', snap => snap.val() && applySmoothScroll('warningNoteContainer', snap.val().text, snap.val().speed, snap.val().color));
+            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
             listenToTools();
-            db.ref('site_settings/ads').on('value', snap => {
-                const ads = snap.val(); if (!ads) return;
-                for (let i = 1; i <= 8; i++) {
-                    const id = `adSlot${i}`, d = ads[id], el = document.getElementById(id);
-                    if (el && d) {
-                        if (!d.visible) { el.style.display = "none"; el.innerHTML = ''; }
-                        else {
-                            el.style.display = "flex"; el.style.width = d.width || "100%"; el.style.height = d.height || "auto";
-                            if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet); el.innerHTML = '';
-                                const ifr = document.createElement('iframe'); ifr.style.width = "100%"; ifr.style.height = d.height || "100%"; ifr.style.border = "none"; ifr.scrolling = "no";
-                                el.appendChild(ifr); const doc = ifr.contentWindow.document; doc.open();
-                                doc.write(`<style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style><div>${d.snippet}</div>`); doc.close();
-                            }
-                        }
-                    }
-                }
-            });
         });
 
         function adminLogin() {
