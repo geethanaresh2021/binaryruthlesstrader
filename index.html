@@ -145,18 +145,26 @@
         #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
-        /* --- SIGNAL UI ADDITIONS --- */
-        .sig-asset { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
-        .sig-entry-text { font-family: 'Roboto Mono'; font-size: 16px; color: #888; margin-bottom: 10px; }
-        .sig-direction { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .arrow-up { color: #00ffcc; animation: bounceUp 1s infinite; }
-        .arrow-down { color: #ff0000; animation: bounceDown 1s infinite; }
+        /* --- NEW SIGNAL UI ELEMENTS --- */
+        .asset-name { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 5px; }
+        .entry-info { font-family: 'Roboto Mono'; font-size: 16px; color: #666; margin-bottom: 15px; }
+        .direction-box { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .up-arrow-anim { color: #00ffcc; animation: bounceUp 1s infinite; }
+        .down-arrow-anim { color: #ff0000; animation: bounceDown 1s infinite; }
         @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
         @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 
-        .sig-timer-val { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px #fff; }
-        .sig-result-zoom { font-size: 40px; font-weight: 900; text-transform: uppercase; animation: zoomInOut 1.5s infinite ease-in-out; }
-        @keyframes zoomInOut { 0% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.6; } }
+        .timer-display { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--red); }
+        
+        .result-zoom { 
+            font-size: 40px; font-weight: 900; 
+            animation: zoomEffect 1.5s infinite ease-in-out; 
+            text-transform: uppercase;
+        }
+        @keyframes zoomEffect {
+            0%, 100% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 20px currentColor; }
+        }
 
         /* --- TOOL SPECIFIC FORMATTING --- */
         #toolScreen input, #toolScreen select { 
@@ -320,8 +328,8 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let sigMainTimer = null;
-        let lastSignalId = "";
+        let sigTimerInstance = null;
+        let lastMsgId = "";
 
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
@@ -462,25 +470,25 @@
         let signalRef = null;
         let statsRef = null;
 
-        function startTradeCountdown(targetTime, duration) {
-            clearInterval(sigMainTimer);
-            const displayArea = document.getElementById('timerZone');
+        function startSigTimer(startTime, duration) {
+            clearInterval(sigTimerInstance);
+            const container = document.getElementById('dynamicTimer');
             
-            sigMainTimer = setInterval(() => {
+            sigTimerInstance = setInterval(() => {
                 const now = new Date();
-                if (now < targetTime) {
-                    if(displayArea) displayArea.innerHTML = '<div style="color:#444; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
+                if (now < startTime) {
+                    if(container) container.innerHTML = '<span style="color:#444; font-size:12px;">WAITING FOR ENTRY...</span>';
                     return;
                 }
 
-                const elapsed = Math.floor((now - targetTime) / 1000);
+                const elapsed = Math.floor((now - startTime) / 1000);
                 const remaining = duration - elapsed;
 
                 if (remaining <= 0) {
-                    clearInterval(sigMainTimer);
-                    if(displayArea) displayArea.innerHTML = '<div class="sig-timer-val">00s</div>';
+                    clearInterval(sigTimerInstance);
+                    if(container) container.innerHTML = '<div class="timer-display">00s</div>';
                 } else {
-                    if(displayArea) displayArea.innerHTML = `<div class="sig-timer-val">${remaining}s</div>`;
+                    if(container) container.innerHTML = `<div class="timer-display">${remaining}s</div>`;
                 }
             }, 1000);
         }
@@ -516,61 +524,59 @@
 
                 const currentMsg = (data.updatedAt || "").toUpperCase();
 
-                // Handle Result Display (Win/Loss)
+                // RESULT LOGIC (WIN/LOSS)
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     const isWin = currentMsg.includes("WIN");
                     const color = isWin ? "#00ffcc" : "#ff0000";
                     
-                    // Update stats if it's a new message
-                    if (currentMsg !== lastSignalId) {
-                        lastSignalId = currentMsg;
+                    if (currentMsg !== lastMsgId) {
+                        lastMsgId = currentMsg;
                         if (isWin) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
                         else {
-                            // If first loss, extend timer to 120 (MTG)
                             if (!currentMsg.includes("MTG")) {
-                                const entry = new Date(); // Continue from now
-                                startTradeCountdown(entry, 120);
+                                // Auto start 120s MTG timer if first loss
+                                startSigTimer(new Date(), 120);
                             }
                             db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
                         }
                     }
 
-                    const timerArea = document.getElementById('timerZone');
-                    if (timerArea) {
-                        timerArea.innerHTML = `<div class="sig-result-zoom" style="color:${color}">${currentMsg}</div>`;
+                    const timerZone = document.getElementById('dynamicTimer');
+                    if(timerZone) {
+                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${currentMsg}</div>`;
                     }
                     return;
                 }
 
-                // Handle Analyzing State
+                // ANALYZING STATE
                 if (currentMsg.includes("ANALYZING")) {
-                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:zoomInOut 1s infinite;">MARKET ANALYZING...</div>';
+                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:zoomEffect 1s infinite;">MARKET ANALYZING...</div>';
                     return;
                 }
 
-                // New Trade Signal Logic
-                if (currentMsg !== lastSignalId) {
-                    lastSignalId = currentMsg;
+                // NEW SIGNAL LOGIC
+                if (currentMsg !== lastMsgId) {
+                    lastMsgId = currentMsg;
                     const parts = currentMsg.split(" ");
                     const asset = parts[0] || "ASSET";
-                    const isCall = currentMsg.includes("CALL") || currentMsg.includes("UP");
+                    const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
                     
-                    // Entry Time Logic: Signal Time + 1 Minute
+                    // Calculation: Entry Time = Signal Received Minute + 1
                     const now = new Date();
                     const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
                     const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
 
                     sigScreen.innerHTML = `
-                        <div class="sig-asset">${asset}</div>
-                        <div class="sig-entry-text">ENTRY TIME : ${entryStr}</div>
-                        <div class="sig-direction ${isCall?'arrow-up':'arrow-down'}">
-                            <i class="fas ${isCall?'fa-arrow-up':'fa-arrow-down'}"></i> ${isCall?'CALL / UP':'PUT / DOWN'}
+                        <div class="asset-name">${asset}</div>
+                        <div class="entry-info">ENTRY TIME : ${entryStr}</div>
+                        <div class="direction-box ${isUp?'up-arrow-anim':'down-arrow-anim'}">
+                            <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
                         </div>
-                        <div id="timerZone" style="height:80px; display:flex; align-items:center; justify-content:center;"></div>
+                        <div id="dynamicTimer" style="min-height:80px; display:flex; align-items:center; justify-content:center;"></div>
                         <div style="font-family:'Roboto Mono'; font-size:10px; color:#444; margin-top:20px;">USE OUR MONEY MANAGEMENT TOOL</div>
                     `;
 
-                    startTradeCountdown(entryTime, 60);
+                    startSigTimer(entryTime, 60);
                 }
             });
         }
