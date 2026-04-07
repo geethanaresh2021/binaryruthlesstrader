@@ -152,17 +152,14 @@
             overflow: hidden;
         }
         
-        /* Signal Elements */
-        .asset-name { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
-        .dir-label { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .dir-call { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
-        .dir-put { color: var(--red); text-shadow: 0 0 10px var(--red); }
-        .entry-time { font-family: 'Roboto Mono'; font-size: 16px; color: #666; margin-bottom: 15px; }
-        .mtg-notice { color: var(--red); font-size: 14px; font-weight: bold; margin-bottom: 10px; }
-        .warning-text { color: #ffcc00; font-size: 10px; font-family: 'Roboto Mono'; margin-bottom: 15px; }
-        .main-timer { font-size: 52px; font-weight: 900; font-family: 'Roboto Mono'; color: #fff; text-shadow: 0 0 15px #fff; }
-        .win-anim { font-size: 32px; font-weight: 900; color: #00ffcc !important; text-shadow: 0 0 20px #00ffcc; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        /* Added Dynamic Signal Styles */
+        .sig-asset { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .sig-dir { font-size: 26px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .sig-call { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+        .sig-put { color: var(--red); text-shadow: 0 0 10px var(--red); }
+        .sig-timer { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; margin-top: 10px; color: #fff; text-shadow: 0 0 20px #fff; }
+        .sig-result { font-size: 38px; font-weight: 900; animation: glow 1.5s infinite alternate; }
+        @keyframes glow { from { text-shadow: 0 0 5px #fff; } to { text-shadow: 0 0 25px var(--red); } }
 
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
@@ -329,7 +326,6 @@
         const db = firebase.database();
 
         let sigTimerInterval = null;
-        let lastKnownSignal = { asset: "", dir: "", time: "", class: "", icon: "" };
 
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
@@ -390,14 +386,98 @@
             }
         }
 
-        function startSigTimer(duration) {
+        function loadVerificationData() {
+            db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+                if (data.meta && data.meta.data) {
+                    const container = document.getElementById('ads-verify-meta-container');
+                    container.innerHTML = data.meta.data;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            loadVerificationData();
+
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                listenToSignals(savedSignal);
+            }
+
+            sigSelect.addEventListener('change', (e) => {
+                const broker = e.target.value;
+                localStorage.setItem('ruthless_signal', broker);
+                listenToSignals(broker);
+            });
+
+            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            
+            db.ref('site_settings/socials').on('value', snap => {
+                const links = snap.val() || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
+                    const el = document.getElementById(`link-${p}`);
+                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
+                });
+            });
+
+            db.ref('site_settings/ads').on('value', snap => {
+                const ads = snap.val(); if (!ads) return;
+                for (let i = 1; i <= 8; i++) {
+                    const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
+                    if (el && d) {
+                        if (d.visible === false) { 
+                            el.style.display = "none"; 
+                            el.innerHTML = '';
+                            el.setAttribute('data-snippet', '');
+                        } 
+                        else {
+                            el.style.display = "flex"; 
+                            el.style.width = d.width || "100%"; 
+                            el.style.height = d.height || "auto";
+
+                            if (el.getAttribute('data-snippet') !== d.snippet) {
+                                el.setAttribute('data-snippet', d.snippet);
+                                el.innerHTML = ''; 
+                                const iframe = document.createElement('iframe');
+                                iframe.style.width = "100%";
+                                iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none";
+                                iframe.scrolling = "no";
+                                el.appendChild(iframe);
+                                const doc = iframe.contentWindow.document;
+                                doc.open();
+                                doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
+                                doc.close();
+                            }
+                        }
+                    }
+                }
+            });
+
+            listenToTools();
+        });
+
+        let signalRef = null;
+        let statsRef = null;
+        let lastSignalMsg = "";
+
+        function startTimer(duration) {
             clearInterval(sigTimerInterval);
-            let time = duration;
-            const display = document.getElementById('timerVal');
-            if(!display) return;
-            sigTimerInterval = setInterval(() => {
-                display.innerText = time + "s";
-                if (--time < 0) { clearInterval(sigTimerInterval); display.innerText = "WAITING..."; }
+            let timer = duration, seconds;
+            const timerDisplay = document.getElementById('sigTimer');
+            sigTimerInterval = setInterval(function () {
+                seconds = parseInt(timer % 61, 10);
+                timerDisplay.textContent = seconds + "s";
+                if (--timer < 0) {
+                    clearInterval(sigTimerInterval);
+                    timerDisplay.textContent = "WAIT...";
+                }
             }, 1000);
         }
 
@@ -425,64 +505,51 @@
             signalRef = db.ref('signals/' + key);
             signalRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (!data) { sigScreen.innerHTML = '<div style="color:#222;">NO ACTIVE SIGNAL</div>'; return; }
-
-                const currentMsg = (data.updatedAt || "").toUpperCase();
-
-                // Logic: Analyzing State
-                if (currentMsg.includes("ANALYZING")) {
-                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:blink 1s infinite;">ANALYZING MARKET...</div>';
+                if (!data) {
+                    sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:#333;">NO ACTIVE SIGNAL</div>';
                     return;
                 }
 
-                // Logic: Win/Loss Results
-                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
+                const msg = (data.updatedAt || "").toUpperCase();
+
+                // Logic 1: Analyzing State
+                if (msg.includes("ANALYZING")) {
+                    sigScreen.innerHTML = `<div style="font-size:18px; color:var(--red); font-weight:bold; letter-spacing:2px; animation:blink 1s infinite;">ANALYZING MARKET...</div>`;
+                    return;
+                }
+
+                // Logic 2: Win/Loss Display
+                if (msg.includes("WIN") || msg.includes("LOSS")) {
                     clearInterval(sigTimerInterval);
-                    let resultHtml = (currentMsg.includes("WIN")) ? `<div class="win-anim">${currentMsg}</div>` : `<div style="color:var(--red); font-size:32px; font-weight:900;">${currentMsg}</div>`;
+                    const isWin = msg.includes("WIN");
+                    sigScreen.innerHTML = `<div class="sig-result" style="color:${isWin?'#00ffcc':'#ff0000'}">${msg}</div>`;
                     
-                    sigScreen.innerHTML = `
-                        <div class="asset-name">${lastKnownSignal.asset}</div>
-                        <div class="dir-label ${lastKnownSignal.class}"><i class="fas ${lastKnownSignal.icon}"></i> ${lastKnownSignal.dir}</div>
-                        <div class="entry-time">Entry Time: ${lastKnownSignal.time}</div>
-                        <div class="mtg-notice">Auto MTG Enabled</div>
-                        <div class="warning-text">⚠️ USE OUR MONEY MANAGEMENT TOOL ⚠️</div>
-                        <div id="resultBox">${resultHtml}</div>
-                    `;
-                    
-                    if (currentMsg !== lastSignalMsg) {
-                        lastSignalMsg = currentMsg;
-                        if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                        if (currentMsg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                    if (msg !== lastSignalMsg) {
+                        lastSignalMsg = msg;
+                        if (isWin) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
+                        else db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
                     }
                     return;
                 }
 
-                // Logic: New Trade Alert
-                const parts = currentMsg.split(" ");
-                const asset = parts[0] || "---";
-                const direction = parts[1] || "";
-                const time = parts[2] || "--:--";
-
-                const isCall = direction.includes("CALL") || direction.includes("UP");
-                const dirClass = isCall ? "dir-call" : "dir-put";
-                const dirIcon = isCall ? "fa-arrow-up" : "fa-arrow-down";
-                const dirText = isCall ? "CALL (UP)" : "PUT (DOWN)";
-
-                lastKnownSignal = { asset, dir: dirText, time, class: dirClass, icon: dirIcon };
+                // Logic 3: Live Trade Signal
+                const isCall = msg.includes("CALL") || msg.includes("UP");
+                const dirClass = isCall ? 'sig-call' : 'sig-put';
+                const dirIcon = isCall ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
+                const dirText = isCall ? 'CALL / UP' : 'PUT / DOWN';
+                
+                // Extract asset if possible, else use default
+                const asset = msg.split(' ')[0] || "MARKET";
 
                 sigScreen.innerHTML = `
-                    <div class="asset-name">${asset}</div>
-                    <div class="dir-label ${dirClass}"><i class="fas ${dirIcon}"></i> ${dirText}</div>
-                    <div class="entry-time">Entry Time: ${time}</div>
-                    <div class="mtg-notice">Auto MTG Enabled</div>
-                    <div class="warning-text">⚠️ USE OUR MONEY MANAGEMENT TOOL ⚠️</div>
-                    <div id="timerVal" class="main-timer">--s</div>
+                    <div class="sig-asset">${asset}</div>
+                    <div class="sig-dir ${dirClass}"><i class="fas ${dirIcon}"></i> ${dirText}</div>
+                    <div id="sigTimer" class="sig-timer">60s</div>
+                    <div style="font-size:10px; color:#444; margin-top:10px;">${msg}</div>
                 `;
-
-                // Start Timer
-                const timerSec = currentMsg.includes("MTG") ? 120 : 60;
-                startSigTimer(timerSec);
-                lastSignalMsg = currentMsg;
+                
+                startTimer(60);
+                lastSignalMsg = msg;
             });
         }
 
@@ -518,21 +585,17 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            checkMidnightReset();
-            const sigSelect = document.getElementById('sigSelect');
-            const savedSignal = localStorage.getItem('ruthless_signal');
-            if(savedSignal) { sigSelect.value = savedSignal; listenToSignals(savedSignal); }
-            sigSelect.addEventListener('change', (e) => { localStorage.setItem('ruthless_signal', e.target.value); listenToSignals(e.target.value); });
-            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
-            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
-            listenToTools();
+        const today = new Date().toISOString().split('T')[0];
+        const statsRefVisit = db.ref(`stats/${today}`);
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('last_visit') !== today) { statsRefVisit.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (!sessionStorage.getItem('active_session')) { statsRefVisit.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
         });
 
         function adminLogin() {
             Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
                 if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
-                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED' });
+                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
     </script>
