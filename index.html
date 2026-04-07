@@ -126,7 +126,7 @@
             border: 2px solid var(--red); 
             box-shadow: var(--neon); 
             border-radius: 8px; 
-            overflow: hidden; /* Important for internal scroll */
+            overflow: hidden; 
             position: relative; 
             display: flex;
             flex-direction: column;
@@ -145,26 +145,18 @@
         #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
-        /* --- NEW SIGNAL UI ELEMENTS --- */
-        .asset-name { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 5px; }
-        .entry-info { font-family: 'Roboto Mono'; font-size: 16px; color: #666; margin-bottom: 15px; }
-        .direction-box { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .up-arrow-anim { color: #00ffcc; animation: bounceUp 1s infinite; }
-        .down-arrow-anim { color: #ff0000; animation: bounceDown 1s infinite; }
-        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+        /* --- SIGNAL UI ELEMENTS --- */
+        .sig-asset { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 5px; }
+        .sig-entry { font-family: 'Roboto Mono'; font-size: 16px; color: #888; margin-bottom: 15px; }
+        .sig-dir { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .up-anim { color: #00ffcc; animation: bounceUp 0.8s infinite; }
+        .down-anim { color: var(--red); animation: bounceDown 0.8s infinite; }
+        @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 
-        .timer-display { font-size: 60px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--red); }
-        
-        .result-zoom { 
-            font-size: 40px; font-weight: 900; 
-            animation: zoomEffect 1.5s infinite ease-in-out; 
-            text-transform: uppercase;
-        }
-        @keyframes zoomEffect {
-            0%, 100% { transform: scale(0.8); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 20px currentColor; }
-        }
+        .timer-display { font-size: 65px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--red); }
+        .result-anim { font-size: 38px; font-weight: 900; text-transform: uppercase; animation: resultZoom 1.2s infinite ease-in-out; }
+        @keyframes resultZoom { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 25px currentColor; } }
 
         /* --- TOOL SPECIFIC FORMATTING --- */
         #toolScreen input, #toolScreen select { 
@@ -328,9 +320,107 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let sigTimerInstance = null;
-        let lastMsgId = "";
+        let activeTimerInterval = null;
+        let lastSignalId = "";
 
+        function startTradeLogic(entryTime, duration) {
+            clearInterval(activeTimerInterval);
+            const timerZone = document.getElementById('timerZone');
+            
+            activeTimerInterval = setInterval(() => {
+                const now = new Date();
+                
+                // If not reached entry time yet
+                if (now < entryTime) {
+                    timerZone.innerHTML = '<div style="color:#222; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
+                    return;
+                }
+
+                const diff = Math.floor((now - entryTime) / 1000);
+                let remaining = duration - diff;
+
+                if (remaining <= 0) {
+                    clearInterval(activeTimerInterval);
+                    timerZone.innerHTML = '<div class="timer-display">00s</div>';
+                } else {
+                    timerZone.innerHTML = `<div class="timer-display">${remaining}s</div>`;
+                }
+            }, 1000);
+        }
+
+        function listenToSignals(broker) {
+            const sigScreen = document.getElementById('sigScreen');
+            const winD = document.getElementById('winCount'), lossD = document.getElementById('lossCount'), totalD = document.getElementById('totalCount');
+            if (!broker) { sigScreen.innerHTML = ''; return; }
+
+            const key = broker.toLowerCase();
+
+            // Stats Sync
+            db.ref('stats_storage/' + key).on('value', snap => {
+                const s = snap.val() || { wins: 0, loss: 0 };
+                winD.innerText = s.wins; lossD.innerText = s.loss; totalD.innerText = s.wins + s.loss;
+            });
+
+            // Signal Sync
+            db.ref('signals/' + key).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                const msg = (data.updatedAt || "").toUpperCase();
+
+                // 1. If result comes (WIN/LOSS)
+                if (msg.includes("WIN") || msg.includes("LOSS")) {
+                    const isWin = msg.includes("WIN");
+                    const color = isWin ? "#00ffcc" : "#ff0000";
+                    const timerZone = document.getElementById('timerZone');
+                    
+                    if (timerZone) {
+                        clearInterval(activeTimerInterval);
+                        timerZone.innerHTML = `<div class="result-anim" style="color:${color}">${msg}</div>`;
+                    }
+                    
+                    // If it was a first-time LOSS, start MTG timer (120s)
+                    if (msg.includes("LOSS") && !msg.includes("MTG")) {
+                        startTradeLogic(new Date(), 120);
+                    }
+                    return;
+                }
+
+                // 2. Analyzing State
+                if (msg.includes("ANALYZING")) {
+                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:resultZoom 1s infinite;">MARKET ANALYZING...</div>';
+                    lastSignalId = "ANALYZING";
+                    return;
+                }
+
+                // 3. New Signal Logic
+                if (msg !== lastSignalId) {
+                    lastSignalId = msg;
+                    const parts = msg.split(" ");
+                    const asset = parts[0] || "ASSET";
+                    const isUp = msg.includes("CALL") || msg.includes("UP");
+                    
+                    // Calc Entry Time (Current time + 1 min)
+                    const now = new Date();
+                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
+                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
+
+                    sigScreen.innerHTML = `
+                        <div class="sig-asset">${asset}</div>
+                        <div class="sig-entry">ENTRY TIME : ${entryStr}</div>
+                        <div class="sig-dir ${isUp ? 'up-anim' : 'down-anim'}">
+                            <i class="fas ${isUp ? 'fa-arrow-up' : 'fa-arrow-down'}"></i> ${isUp ? 'UP' : 'DOWN'}
+                        </div>
+                        <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;">
+                            </div>
+                        <div style="font-family:'Roboto Mono'; font-size:9px; color:#333; margin-top:20px;">USE OUR MONEY MANAGEMENT TOOL</div>
+                    `;
+                    startTradeLogic(entryTime, 60);
+                }
+            });
+        }
+
+        // Rest of the supporting functions (Strips, Tools, Admin)
         function checkMidnightReset() {
             const lastUpdate = localStorage.getItem('ruthless_last_date');
             const todayStr = new Date().toDateString();
@@ -342,8 +432,7 @@
 
         function cleanToolCode(html) {
             if (!html) return "";
-            let clean = html;
-            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
             clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
                 const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
                     let s = selector.trim();
@@ -390,197 +479,6 @@
             }
         }
 
-        function loadVerificationData() {
-            db.ref('site_settings/verification').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                if (data.meta && data.meta.data) {
-                    const container = document.getElementById('ads-verify-meta-container');
-                    container.innerHTML = data.meta.data;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            checkMidnightReset();
-            loadVerificationData();
-
-            const sigSelect = document.getElementById('sigSelect');
-            const savedSignal = localStorage.getItem('ruthless_signal');
-            
-            if(savedSignal) {
-                sigSelect.value = savedSignal;
-                listenToSignals(savedSignal);
-            }
-
-            sigSelect.addEventListener('change', (e) => {
-                const broker = e.target.value;
-                localStorage.setItem('ruthless_signal', broker);
-                listenToSignals(broker);
-            });
-
-            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
-            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
-            
-            db.ref('site_settings/socials').on('value', snap => {
-                const links = snap.val() || {};
-                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
-                    const el = document.getElementById(`link-${p}`);
-                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
-                });
-            });
-
-            db.ref('site_settings/ads').on('value', snap => {
-                const ads = snap.val(); if (!ads) return;
-                for (let i = 1; i <= 8; i++) {
-                    const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
-                    if (el && d) {
-                        if (d.visible === false) { 
-                            el.style.display = "none"; 
-                            el.innerHTML = '';
-                            el.setAttribute('data-snippet', '');
-                        } 
-                        else {
-                            el.style.display = "flex"; 
-                            el.style.width = d.width || "100%"; 
-                            el.style.height = d.height || "auto";
-
-                            if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; 
-                                const iframe = document.createElement('iframe');
-                                iframe.style.width = "100%";
-                                iframe.style.height = d.height || "100%";
-                                iframe.style.border = "none";
-                                iframe.scrolling = "no";
-                                el.appendChild(iframe);
-                                const doc = iframe.contentWindow.document;
-                                doc.open();
-                                doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
-                                doc.close();
-                            }
-                        }
-                    }
-                }
-            });
-
-            listenToTools();
-        });
-
-        let signalRef = null;
-        let statsRef = null;
-
-        function startSigTimer(startTime, duration) {
-            clearInterval(sigTimerInstance);
-            const container = document.getElementById('dynamicTimer');
-            
-            sigTimerInstance = setInterval(() => {
-                const now = new Date();
-                if (now < startTime) {
-                    if(container) container.innerHTML = '<span style="color:#444; font-size:12px;">WAITING FOR ENTRY...</span>';
-                    return;
-                }
-
-                const elapsed = Math.floor((now - startTime) / 1000);
-                const remaining = duration - elapsed;
-
-                if (remaining <= 0) {
-                    clearInterval(sigTimerInstance);
-                    if(container) container.innerHTML = '<div class="timer-display">00s</div>';
-                } else {
-                    if(container) container.innerHTML = `<div class="timer-display">${remaining}s</div>`;
-                }
-            }, 1000);
-        }
-
-        function listenToSignals(broker) {
-            const sigScreen = document.getElementById('sigScreen');
-            const winD = document.getElementById('winCount');
-            const lossD = document.getElementById('lossCount');
-            const totalD = document.getElementById('totalCount');
-
-            if (signalRef) signalRef.off();
-            if (statsRef) statsRef.off();
-            if (!broker) { sigScreen.innerHTML = ''; return; }
-
-            sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:var(--red);">SYNCING...</div>';
-            const key = broker.toLowerCase();
-
-            statsRef = db.ref('stats_storage/' + key);
-            statsRef.on('value', snap => {
-                const s = snap.val() || { wins: 0, loss: 0 };
-                winD.innerText = s.wins;
-                lossD.innerText = s.loss;
-                totalD.innerText = s.wins + s.loss;
-            });
-
-            signalRef = db.ref('signals/' + key);
-            signalRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) {
-                    sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:#333;">NO ACTIVE SIGNAL</div>';
-                    return;
-                }
-
-                const currentMsg = (data.updatedAt || "").toUpperCase();
-
-                // RESULT LOGIC (WIN/LOSS)
-                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
-                    const isWin = currentMsg.includes("WIN");
-                    const color = isWin ? "#00ffcc" : "#ff0000";
-                    
-                    if (currentMsg !== lastMsgId) {
-                        lastMsgId = currentMsg;
-                        if (isWin) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                        else {
-                            if (!currentMsg.includes("MTG")) {
-                                // Auto start 120s MTG timer if first loss
-                                startSigTimer(new Date(), 120);
-                            }
-                            db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
-                        }
-                    }
-
-                    const timerZone = document.getElementById('dynamicTimer');
-                    if(timerZone) {
-                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${currentMsg}</div>`;
-                    }
-                    return;
-                }
-
-                // ANALYZING STATE
-                if (currentMsg.includes("ANALYZING")) {
-                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:zoomEffect 1s infinite;">MARKET ANALYZING...</div>';
-                    return;
-                }
-
-                // NEW SIGNAL LOGIC
-                if (currentMsg !== lastMsgId) {
-                    lastMsgId = currentMsg;
-                    const parts = currentMsg.split(" ");
-                    const asset = parts[0] || "ASSET";
-                    const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
-                    
-                    // Calculation: Entry Time = Signal Received Minute + 1
-                    const now = new Date();
-                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
-                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
-
-                    sigScreen.innerHTML = `
-                        <div class="asset-name">${asset}</div>
-                        <div class="entry-info">ENTRY TIME : ${entryStr}</div>
-                        <div class="direction-box ${isUp?'up-arrow-anim':'down-arrow-anim'}">
-                            <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
-                        </div>
-                        <div id="dynamicTimer" style="min-height:80px; display:flex; align-items:center; justify-content:center;"></div>
-                        <div style="font-family:'Roboto Mono'; font-size:10px; color:#444; margin-top:20px;">USE OUR MONEY MANAGEMENT TOOL</div>
-                    `;
-
-                    startSigTimer(entryTime, 60);
-                }
-            });
-        }
-
         function listenToTools() {
             const dropdown = document.getElementById('toolSelect');
             const displayArea = document.getElementById('toolScreen');
@@ -589,7 +487,6 @@
                 let options = '<option value="">-- SELECT TOOL --</option>';
                 if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
                 dropdown.innerHTML = options;
-
                 const loadTool = (selectedId) => {
                     if (selectedId && tools[selectedId]) {
                         displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
@@ -599,31 +496,36 @@
                             if (s.src) ns.src = s.src; ns.textContent = s.textContent;
                             s.parentNode.replaceChild(ns, s);
                         }
-                        setTimeout(() => { 
-                            restoreToolInputs(); 
-                            displayArea.addEventListener('input', saveToolInputs);
-                            displayArea.addEventListener('change', saveToolInputs);
-                        }, 400);
+                        setTimeout(() => { restoreToolInputs(); displayArea.addEventListener('input', saveToolInputs); displayArea.addEventListener('change', saveToolInputs); }, 400);
                     } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
                 };
-
                 const saved = localStorage.getItem('ruthless_tool');
                 if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
                 dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
             });
         }
 
-        const today = new Date().toISOString().split('T')[0];
-        const statsRefVisit = db.ref(`stats/${today}`);
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRefVisit.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
-            if (!sessionStorage.getItem('active_session')) { statsRefVisit.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
+            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            db.ref('site_settings/socials').on('value', snap => {
+                const links = snap.val() || {};
+                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
+                    const el = document.getElementById(`link-${p}`);
+                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
+                });
+            });
+            listenToTools();
+            const sigSelect = document.getElementById('sigSelect');
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            if(savedSignal) { sigSelect.value = savedSignal; listenToSignals(savedSignal); }
+            sigSelect.onchange = (e) => { localStorage.setItem('ruthless_signal', e.target.value); listenToSignals(e.target.value); };
         });
 
         function adminLogin() {
             Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
                 if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
-                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
     </script>
