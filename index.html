@@ -436,7 +436,7 @@
         let lastSignalMsg = "";
         let tradeTimer = null;
 
-        function runLiveTimer(startTime, duration) {
+        function runLiveTimer(startTime) {
             clearInterval(tradeTimer);
             const timerZone = document.getElementById('timerZone');
             
@@ -448,13 +448,7 @@
                 }
 
                 const elapsed = Math.floor((now - startTime) / 1000);
-                let remaining = duration - elapsed;
-
-                if (remaining <= 0) {
-                    timerZone.innerHTML = `<div class="timer-val">${duration}s</div>`;
-                } else {
-                    timerZone.innerHTML = `<div class="timer-val">${elapsed}s</div>`;
-                }
+                timerZone.innerHTML = `<div class="timer-val">${elapsed}s</div>`;
             }, 1000);
         }
 
@@ -470,9 +464,12 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                const currentMsg = (data.updatedAt || "").toUpperCase();
+                let currentMsg = (data.updatedAt || "").toUpperCase();
+                
+                // Clear out unnecessary divider text like "TOXA" or symbols
+                currentMsg = currentMsg.replace(/━━━━━━━━━━━━━━━/g, '').replace(/\*/g, '').trim();
 
-                // 1. Result Check (Sureshot / MTG Win / MTG Loss)
+                // 1. Result Check (Win/Loss)
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
@@ -496,7 +493,7 @@
                     return;
                 }
 
-                // 3. New Signal Entry
+                // 3. New Signal Entry (Pair details format)
                 if (currentMsg !== lastSignalMsg) {
                     lastSignalMsg = currentMsg;
                     const parts = currentMsg.split(" ");
@@ -516,8 +513,7 @@
                         <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
                         <div style="font-family:'Roboto Mono'; font-size:12px; color:#fff; margin-top:10px; font-weight:bold;">DURATION: 1 MIN | AUTO MTG: 1 STEP</div>
                     `;
-                    // Default logic: Entry start (60s) if no result, MTG logic handled by 120s limit
-                    runLiveTimer(entryTime, 120);
+                    runLiveTimer(entryTime);
                 }
             });
         }
