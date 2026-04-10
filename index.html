@@ -381,7 +381,7 @@
             sigSelect.addEventListener('change', (e) => {
                 const broker = e.target.value;
                 localStorage.setItem('ruthless_signal', broker);
-                localStorage.removeItem('ruthless_active_sig_data'); // Clear active session on change
+                localStorage.removeItem('ruthless_active_sig_data');
                 listenToSignals(broker);
             });
 
@@ -461,7 +461,6 @@
             if (signalRef) signalRef.off();
             if (!broker) { sigScreen.innerHTML = '<div style="color:#222; font-size:11px;">SELECT PLATFORM...</div>'; return; }
 
-            // Restore from localStorage if page refreshed
             const savedData = localStorage.getItem('ruthless_active_sig_data');
             if(savedData) {
                 const parsed = JSON.parse(savedData);
@@ -470,7 +469,10 @@
                     if(parsed.startTime) runLiveTimer(parsed.startTime);
                     if(parsed.resultHtml) {
                         clearInterval(tradeTimer);
-                        setTimeout(() => { document.getElementById('timerZone').innerHTML = parsed.resultHtml; }, 100);
+                        setTimeout(() => { 
+                            const zone = document.getElementById('timerZone');
+                            if(zone) zone.innerHTML = parsed.resultHtml; 
+                        }, 100);
                     }
                 }
             }
@@ -483,10 +485,14 @@
                 if (!data) return;
 
                 let rawMsg = (data.updatedAt || "").toUpperCase();
-                // Clean: Remove Dividers, Stars, and Platform names from the container text
-                let currentMsg = rawMsg.replace(/━━━━━━━━━━━━━━━/g, '').replace(/\*/g, '').replace('TOXA', '').replace('QUOTEX', '').trim();
+                // "PRE SIGNAL" keyword removal + cleanup
+                let currentMsg = rawMsg.replace(/━━━━━━━━━━━━━━━/g, '')
+                                       .replace(/\*/g, '')
+                                       .replace('TOXA', '')
+                                       .replace('QUOTEX', '')
+                                       .trim();
 
-                // 1. Result Check (Win/Loss)
+                // 1. Result Check
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     clearInterval(tradeTimer);
                     let finalResult = "RESULT";
@@ -501,7 +507,6 @@
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
                         timerZone.innerHTML = resultHtml;
-                        // Update persistence
                         let saved = JSON.parse(localStorage.getItem('ruthless_active_sig_data') || '{}');
                         saved.resultHtml = resultHtml;
                         localStorage.setItem('ruthless_active_sig_data', JSON.stringify(saved));
@@ -517,11 +522,16 @@
                     return;
                 }
 
-                // 3. New Signal Entry
+                // 3. New Signal / Pre-Signal Entry
                 if (currentMsg !== lastSignalMsg && currentMsg.length > 3) {
                     lastSignalMsg = currentMsg;
                     const parts = currentMsg.split(" ");
-                    const asset = parts[0] || "ASSET";
+                    
+                    // Logic: Get Pair Details (even if it's a Pre-signal)
+                    // If message contains "PRE SIGNAL", we still show the Asset/Pair
+                    let asset = parts[0] || "ASSET";
+                    if(asset === "PRE") asset = parts[2] || parts[1] || "ASSET"; // Handle "PRE SIGNAL EURUSD"
+
                     const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
                     
                     const now = new Date();
@@ -540,7 +550,6 @@
                     
                     sigScreen.innerHTML = signalHtml;
                     
-                    // Save to localStorage for persistence
                     const sigData = {
                         broker: broker,
                         html: signalHtml,
