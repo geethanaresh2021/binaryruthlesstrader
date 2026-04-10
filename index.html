@@ -132,20 +132,30 @@
             flex-direction: column;
         }
 
-        #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15px; }
+        /* --- STICKY INTERNAL STATS --- */
+        .box-stats {
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 12px 5px; background: #080808; border-bottom: 1px solid #1a1a1a;
+            flex-shrink: 0;
+        }
+        .b-stat { text-align: center; }
+        .b-label { color: #444; font-size: 8px; letter-spacing: 1px; margin-bottom: 3px; font-family: 'Roboto Mono'; }
+        .b-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 18px; }
+
+        #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
         /* --- SIGNAL UI ELEMENTS --- */
-        .sig-asset { font-size: 38px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 2px; }
-        .sig-entry { font-family: 'Roboto Mono'; font-size: 18px; color: #888; margin-bottom: 5px; font-weight: bold; }
-        .sig-dir { font-size: 30px; font-weight: 900; display: flex; align-items: center; gap: 12px; margin: 15px 0; text-transform: uppercase; }
-        .up-anim { color: var(--input-green); animation: bounceUp 0.8s infinite; text-shadow: 0 0 15px var(--input-green); }
-        .down-anim { color: var(--red); animation: bounceDown 0.8s infinite; text-shadow: 0 0 15px var(--red); }
+        .sig-asset { font-size: 30px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 2px; }
+        .sig-entry { font-family: 'Roboto Mono'; font-size: 16px; color: #888; margin-bottom: 15px; }
+        .sig-dir { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .up-anim { color: #00ffcc; animation: bounceUp 0.8s infinite; }
+        .down-anim { color: #ff0000; animation: bounceDown 0.8s infinite; }
         @keyframes bounceUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 
-        .timer-val { font-size: 80px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; margin-top: 10px; }
-        .result-zoom { font-size: 42px; font-weight: 900; text-transform: uppercase; animation: resultAnim 1.2s infinite ease-in-out; }
+        .timer-val { font-size: 65px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--red); }
+        .result-zoom { font-size: 38px; font-weight: 900; text-transform: uppercase; animation: resultAnim 1.2s infinite ease-in-out; }
         @keyframes resultAnim { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 25px currentColor; } }
 
         /* --- TOOL SPECIFIC FORMATTING --- */
@@ -245,9 +255,21 @@
                         <option value="TOXA">TOXA</option>
                     </select>
                     <div class="display-box">
-                        <div id="sigScreen">
-                            <div style="color:#222; font-size:11px; letter-spacing:2px;">WAITING FOR SIGNAL...</div>
+                        <div class="box-stats">
+                            <div class="b-stat">
+                                <div class="b-label">TOTAL</div>
+                                <div id="totalCount" class="b-val" style="color:#fff;">0</div>
+                            </div>
+                            <div class="b-stat">
+                                <div class="b-label" style="color:#00ffcc;">WINS</div>
+                                <div id="winCount" class="b-val" style="color:#00ffcc;">0</div>
+                            </div>
+                            <div class="b-stat">
+                                <div class="b-label" style="color:var(--red);">LOSS</div>
+                                <div id="lossCount" class="b-val" style="color:var(--red);">0</div>
+                            </div>
                         </div>
+                        <div id="sigScreen"></div>
                     </div>
                 </div>
                 <div class="widget-column" id="toolCol">
@@ -298,107 +320,19 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let signalRef = null;
-        let lastSignalMsg = "";
-        let tradeTimer = null;
-        let activeTimerMode = false;
-
-        function runLiveTimer(startTime) {
-            clearInterval(tradeTimer);
-            const timerZone = document.getElementById('timerZone');
-            if(!timerZone) return;
-
-            tradeTimer = setInterval(() => {
-                const now = new Date();
-                const diff = Math.floor((now - startTime) / 1000);
-
-                if (diff >= 0) {
-                    activeTimerMode = true;
-                    // Timer starts (1, 2, 3...) when entry time is reached
-                    if (diff <= 120) {
-                        timerZone.innerHTML = `<div class="timer-val">${diff}s</div>`;
-                    }
-                } else {
-                    // Empty place before entry time
-                    timerZone.innerHTML = ""; 
-                }
-            }, 1000);
+        function checkMidnightReset() {
+            const lastUpdate = localStorage.getItem('ruthless_last_date');
+            const todayStr = new Date().toDateString();
+            if (lastUpdate && lastUpdate !== todayStr) {
+                Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
+            }
+            localStorage.setItem('ruthless_last_date', todayStr);
         }
 
-        function listenToSignals(broker) {
-            const sigScreen = document.getElementById('sigScreen');
-            if (signalRef) signalRef.off();
-            if (!broker) { sigScreen.innerHTML = '<div style="color:#222; font-size:11px;">CHOOSE BROKER</div>'; return; }
-
-            signalRef = db.ref('signals/' + broker.toLowerCase());
-            signalRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-
-                const currentMsg = (data.updatedAt || "").toUpperCase();
-
-                // 1. Result Logic (Sure Shot or MTG)
-                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
-                    const timerZone = document.getElementById('timerZone');
-                    if (timerZone && activeTimerMode) {
-                        clearInterval(tradeTimer);
-                        activeTimerMode = false;
-                        
-                        const isWin = currentMsg.includes("WIN");
-                        const color = isWin ? "#00ffcc" : "#ff0000";
-                        
-                        // Result text formatting
-                        let finalResult = currentMsg;
-                        if(currentMsg.includes("SURESHOT")) finalResult = "SURESHOT " + (isWin ? "WIN" : "LOSS");
-                        else if(currentMsg.includes("MTG")) finalResult = "MTG " + (isWin ? "WIN" : "LOSS");
-
-                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${finalResult}</div>`;
-                    }
-                    return; // Details stay on screen until next signal
-                }
-
-                // 2. Analyzing State
-                if (currentMsg.includes("ANALYZING")) {
-                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; font-size:24px; animation:resultAnim 1s infinite;">MARKET ANALYZING...</div>';
-                    clearInterval(tradeTimer);
-                    activeTimerMode = false;
-                    return;
-                }
-
-                // 3. New Signal Entry
-                if (currentMsg !== lastSignalMsg) {
-                    lastSignalMsg = currentMsg;
-                    const parts = currentMsg.split(" ");
-                    const asset = parts[0] || "ASSET";
-                    const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
-                    
-                    const now = new Date();
-                    // Set Entry Time to next minute
-                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
-                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
-
-                    sigScreen.innerHTML = `
-                        <div class="sig-asset">${asset}</div>
-                        <div class="sig-entry">ENTRY TIME : ${entryStr}</div>
-                        <div class="sig-entry">DIRECTION : ${isUp ? 'UP' : 'DOWN'}</div>
-                        <div class="sig-entry">DURATION : 1 MIN</div>
-                        <div class="sig-entry" style="color:var(--red); font-size:14px; margin-top:5px;">AUTO MTG 1 STEP</div>
-                        <div class="sig-dir ${isUp?'up-anim':'down-anim'}">
-                            <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
-                        </div>
-                        <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;">
-                            </div>
-                    `;
-                    runLiveTimer(entryTime);
-                }
-            });
-        }
-
-        // --- Standard Tools & Ads Logic ---
-        
         function cleanToolCode(html) {
             if (!html) return "";
-            let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
+            let clean = html;
+            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
             clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
                 const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
                     let s = selector.trim();
@@ -410,48 +344,73 @@
             return clean;
         }
 
-        function listenToTools() {
-            const dropdown = document.getElementById('toolSelect');
-            const displayArea = document.getElementById('toolScreen');
-            db.ref('site_settings/tools').on('value', snapshot => {
-                const tools = snapshot.val();
-                let options = '<option value="">-- SELECT TOOL --</option>';
-                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
-                dropdown.innerHTML = options;
-                dropdown.onchange = (e) => {
-                    const tid = e.target.value;
-                    if(tid && tools[tid]) {
-                        displayArea.innerHTML = cleanToolCode(tools[tid].code);
-                        const scripts = displayArea.getElementsByTagName('script');
-                        for (let s of Array.from(scripts)) {
-                            const ns = document.createElement('script');
-                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
-                            s.parentNode.replaceChild(ns, s);
-                        }
-                    } else { displayArea.innerHTML = ''; }
-                };
+        function saveToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                localStorage.setItem('tool_input_' + storageId, input.value);
+            });
+        }
+
+        function restoreToolInputs() {
+            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
+            inputs.forEach((input, index) => {
+                const storageId = input.id || `auto_val_${index}`;
+                const savedValue = localStorage.getItem('tool_input_' + storageId);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
             });
         }
 
         function applySmoothScroll(containerId, text, speed, color) {
             const container = document.getElementById(containerId); if (!container) return;
-            container.innerHTML = ""; container.style.color = color;
+            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
             const spd = parseInt(speed) || 0;
             if (spd === 0) {
                 container.style.justifyContent = "center";
                 container.innerHTML = `<span class="scroll-item">${text}</span>`;
             } else {
+                container.style.justifyContent = "flex-start";
                 const duration = 35 / spd;
                 container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        function loadVerificationData() {
+            db.ref('site_settings/verification').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+                if (data.meta && data.meta.data) {
+                    const container = document.getElementById('ads-verify-meta-container');
+                    container.innerHTML = data.meta.data;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMidnightReset();
+            loadVerificationData();
+
             const sigSelect = document.getElementById('sigSelect');
-            sigSelect.addEventListener('change', (e) => listenToSignals(e.target.value));
+            const savedSignal = localStorage.getItem('ruthless_signal');
+            
+            if(savedSignal) {
+                sigSelect.value = savedSignal;
+                listenToSignals(savedSignal);
+            }
+
+            sigSelect.addEventListener('change', (e) => {
+                const broker = e.target.value;
+                localStorage.setItem('ruthless_signal', broker);
+                listenToSignals(broker);
+            });
 
             db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
             db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
+            
             db.ref('site_settings/socials').on('value', snap => {
                 const links = snap.val() || {};
                 ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
@@ -465,9 +424,30 @@
                 for (let i = 1; i <= 8; i++) {
                     const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
                     if (el && d) {
-                        if (d.visible === false) { el.style.display = "none"; } 
+                        if (d.visible === false) { 
+                            el.style.display = "none"; 
+                            el.innerHTML = '';
+                            el.setAttribute('data-snippet', '');
+                        } 
                         else {
-                            el.style.display = "flex"; el.innerHTML = `<iframe style="width:100%; height:${d.height || '100%'}; border:none;" scrolling="no" srcdoc="<style>body{margin:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style><div>${d.snippet}</div>"></iframe>`;
+                            el.style.display = "flex"; 
+                            el.style.width = d.width || "100%"; 
+                            el.style.height = d.height || "auto";
+
+                            if (el.getAttribute('data-snippet') !== d.snippet) {
+                                el.setAttribute('data-snippet', d.snippet);
+                                el.innerHTML = ''; 
+                                const iframe = document.createElement('iframe');
+                                iframe.style.width = "100%";
+                                iframe.style.height = d.height || "100%";
+                                iframe.style.border = "none";
+                                iframe.scrolling = "no";
+                                el.appendChild(iframe);
+                                const doc = iframe.contentWindow.document;
+                                doc.open();
+                                doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
+                                doc.close();
+                            }
                         }
                     }
                 }
@@ -476,9 +456,158 @@
             listenToTools();
         });
 
+        let signalRef = null;
+        let statsRef = null;
+        let lastSignalMsg = "";
+        let tradeTimer = null;
+
+        function runLiveTimer(startTime, duration) {
+            clearInterval(tradeTimer);
+            const timerZone = document.getElementById('timerZone');
+            
+            tradeTimer = setInterval(() => {
+                const now = new Date();
+                if (now < startTime) {
+                    timerZone.innerHTML = '<div style="color:#222; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
+                    return;
+                }
+
+                const elapsed = Math.floor((now - startTime) / 1000);
+                let remaining = duration - elapsed;
+
+                if (remaining <= 0) {
+                    clearInterval(tradeTimer);
+                    timerZone.innerHTML = '<div class="timer-val">00s</div>';
+                } else {
+                    timerZone.innerHTML = `<div class="timer-val">${remaining}s</div>`;
+                }
+            }, 1000);
+        }
+
+        function listenToSignals(broker) {
+            const sigScreen = document.getElementById('sigScreen');
+            const winD = document.getElementById('winCount');
+            const lossD = document.getElementById('lossCount');
+            const totalD = document.getElementById('totalCount');
+
+            if (signalRef) signalRef.off();
+            if (statsRef) statsRef.off();
+            if (!broker) { sigScreen.innerHTML = ''; return; }
+
+            const key = broker.toLowerCase();
+            statsRef = db.ref('stats_storage/' + key);
+            statsRef.on('value', snap => {
+                const s = snap.val() || { wins: 0, loss: 0 };
+                winD.innerText = s.wins;
+                lossD.innerText = s.loss;
+                totalD.innerText = (s.wins + s.loss);
+            });
+
+            signalRef = db.ref('signals/' + key);
+            signalRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                const currentMsg = (data.updatedAt || "").toUpperCase();
+
+                // 1. Result Check (Win/Loss animations)
+                if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
+                    const timerZone = document.getElementById('timerZone');
+                    if (timerZone) {
+                        clearInterval(tradeTimer);
+                        const isWin = currentMsg.includes("WIN");
+                        const color = isWin ? "#00ffcc" : "#ff0000";
+                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${currentMsg}</div>`;
+                    }
+
+                    // Auto-MTG Logic: If first loss, start 120s timer
+                    if (currentMsg.includes("LOSS") && !currentMsg.includes("MTG")) {
+                        runLiveTimer(new Date(), 120);
+                    }
+
+                    // Update stats only once per unique result
+                    if (currentMsg !== lastSignalMsg) {
+                        lastSignalMsg = currentMsg;
+                        if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
+                        if (currentMsg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                    }
+                    return;
+                }
+
+                // 2. Analyzing State
+                if (currentMsg.includes("ANALYZING")) {
+                    sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:resultAnim 1s infinite;">MARKET ANALYZING...</div>';
+                    return;
+                }
+
+                // 3. New Signal Entry
+                if (currentMsg !== lastSignalMsg) {
+                    lastSignalMsg = currentMsg;
+                    const parts = currentMsg.split(" ");
+                    const asset = parts[0] || "ASSET";
+                    const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
+                    
+                    const now = new Date();
+                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
+                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
+
+                    sigScreen.innerHTML = `
+                        <div class="sig-asset">${asset}</div>
+                        <div class="sig-entry">ENTRY TIME : ${entryStr}</div>
+                        <div class="sig-dir ${isUp?'up-anim':'down-anim'}">
+                            <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
+                        </div>
+                        <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
+                        <div style="font-family:'Roboto Mono'; font-size:9px; color:#444; margin-top:15px;">AUTO MTG | USE MONEY MANAGEMENT TOOL</div>
+                    `;
+                    runLiveTimer(entryTime, 60);
+                }
+            });
+        }
+
+        function listenToTools() {
+            const dropdown = document.getElementById('toolSelect');
+            const displayArea = document.getElementById('toolScreen');
+            db.ref('site_settings/tools').on('value', snapshot => {
+                const tools = snapshot.val();
+                let options = '<option value="">-- SELECT TOOL --</option>';
+                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
+                dropdown.innerHTML = options;
+
+                const loadTool = (selectedId) => {
+                    if (selectedId && tools[selectedId]) {
+                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
+                        const scripts = displayArea.getElementsByTagName('script');
+                        for (let s of Array.from(scripts)) {
+                            const ns = document.createElement('script');
+                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
+                            s.parentNode.replaceChild(ns, s);
+                        }
+                        setTimeout(() => { 
+                            restoreToolInputs(); 
+                            displayArea.addEventListener('input', saveToolInputs);
+                            displayArea.addEventListener('change', saveToolInputs);
+                        }, 400);
+                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
+                };
+
+                const saved = localStorage.getItem('ruthless_tool');
+                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
+                dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
+            });
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        const statsRefVisit = db.ref(`stats/${today}`);
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('last_visit') !== today) { statsRefVisit.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
+            if (!sessionStorage.getItem('active_session')) { statsRefVisit.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
+        });
+
         function adminLogin() {
             Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
                 if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
+                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
             });
         }
     </script>
