@@ -475,11 +475,11 @@
                 const elapsed = Math.floor((now - startTime) / 1000);
                 let remaining = duration - elapsed;
 
+                // Stop at 0 but keep showing the timer until a result comes
                 if (remaining <= 0) {
-                    clearInterval(tradeTimer);
-                    timerZone.innerHTML = '<div class="timer-val">00s</div>';
+                    timerZone.innerHTML = `<div class="timer-val">${duration}s</div>`;
                 } else {
-                    timerZone.innerHTML = `<div class="timer-val">${remaining}s</div>`;
+                    timerZone.innerHTML = `<div class="timer-val">${elapsed}s</div>`;
                 }
             }, 1000);
         }
@@ -515,17 +515,16 @@
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
                         clearInterval(tradeTimer);
+                        let finalResult = currentMsg;
+                        if(currentMsg.includes("SURESHOT") && currentMsg.includes("WIN")) finalResult = "SURESHOT WIN";
+                        else if(currentMsg.includes("MTG") && currentMsg.includes("WIN")) finalResult = "MTG WIN";
+                        else if(currentMsg.includes("MTG") && currentMsg.includes("LOSS")) finalResult = "MTG LOSS";
+                        
                         const isWin = currentMsg.includes("WIN");
                         const color = isWin ? "#00ffcc" : "#ff0000";
-                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${currentMsg}</div>`;
+                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${finalResult}</div>`;
                     }
 
-                    // Auto-MTG Logic: If first loss, start 120s timer
-                    if (currentMsg.includes("LOSS") && !currentMsg.includes("MTG")) {
-                        runLiveTimer(new Date(), 120);
-                    }
-
-                    // Update stats only once per unique result
                     if (currentMsg !== lastSignalMsg) {
                         lastSignalMsg = currentMsg;
                         if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
@@ -558,9 +557,10 @@
                             <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
                         </div>
                         <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
-                        <div style="font-family:'Roboto Mono'; font-size:9px; color:#444; margin-top:15px;">AUTO MTG | USE MONEY MANAGEMENT TOOL</div>
+                        <div style="font-family:'Roboto Mono'; font-size:12px; color:#fff; margin-top:10px; font-weight:bold;">DURATION: 1 MIN | AUTO MTG: 1 STEP</div>
                     `;
-                    runLiveTimer(entryTime, 60);
+                    // If regular signal, we wait for 60s, if no result, MTG will handle up to 120s
+                    runLiveTimer(entryTime, 120); 
                 }
             });
         }
