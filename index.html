@@ -485,14 +485,12 @@
                 if (!data) return;
 
                 let rawMsg = (data.updatedAt || "").toUpperCase();
-                // "PRE SIGNAL" keyword removal + cleanup
                 let currentMsg = rawMsg.replace(/━━━━━━━━━━━━━━━/g, '')
                                        .replace(/\*/g, '')
                                        .replace('TOXA', '')
                                        .replace('QUOTEX', '')
                                        .trim();
 
-                // 1. Result Check
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     clearInterval(tradeTimer);
                     let finalResult = "RESULT";
@@ -514,7 +512,6 @@
                     return;
                 }
 
-                // 2. Analyzing State
                 if (currentMsg.includes("ANALYZING")) {
                     clearInterval(tradeTimer);
                     sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:resultAnim 1s infinite;">MARKET ANALYZING...</div>';
@@ -522,15 +519,13 @@
                     return;
                 }
 
-                // 3. New Signal / Pre-Signal Entry
                 if (currentMsg !== lastSignalMsg && currentMsg.length > 3) {
                     lastSignalMsg = currentMsg;
-                    const parts = currentMsg.split(" ");
+                    const parts = currentMsg.split(/\s+/);
                     
-                    // Logic: Get Pair Details (even if it's a Pre-signal)
-                    // If message contains "PRE SIGNAL", we still show the Asset/Pair
-                    let asset = parts[0] || "ASSET";
-                    if(asset === "PRE") asset = parts[2] || parts[1] || "ASSET"; // Handle "PRE SIGNAL EURUSD"
+                    // Filter "PRE" and "SIGNAL" from parts to get the actual Asset
+                    let assetParts = parts.filter(p => p !== "PRE" && p !== "SIGNAL");
+                    let asset = assetParts[0] || "ASSET";
 
                     const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
                     
