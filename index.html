@@ -461,17 +461,14 @@
         let lastSignalMsg = "";
         let tradeTimer = null;
 
+        // --- UPDATED TIMER LOGIC ---
         function runLiveTimer(startTime, duration) {
             clearInterval(tradeTimer);
             const timerZone = document.getElementById('timerZone');
-            
+            if(!timerZone) return;
+
             tradeTimer = setInterval(() => {
                 const now = new Date();
-                if (now < startTime) {
-                    timerZone.innerHTML = '<div style="color:#222; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
-                    return;
-                }
-
                 const elapsed = Math.floor((now - startTime) / 1000);
                 let remaining = duration - elapsed;
 
@@ -510,7 +507,7 @@
 
                 const currentMsg = (data.updatedAt || "").toUpperCase();
 
-                // 1. Result Check (Win/Loss animations)
+                // 1. Result Check (Win/Loss) - UPDATE ONLY TIMER ZONE
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
@@ -522,10 +519,9 @@
 
                     // Auto-MTG Logic: If first loss, start 120s timer
                     if (currentMsg.includes("LOSS") && !currentMsg.includes("MTG")) {
-                        runLiveTimer(new Date(), 120);
+                        runLiveTimer(new Date(), 60); // 1-min MTG entry wait
                     }
 
-                    // Update stats only once per unique result
                     if (currentMsg !== lastSignalMsg) {
                         lastSignalMsg = currentMsg;
                         if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
@@ -540,7 +536,7 @@
                     return;
                 }
 
-                // 3. New Signal Entry
+                // 3. New Signal Entry - FULL RENDER
                 if (currentMsg !== lastSignalMsg) {
                     lastSignalMsg = currentMsg;
                     const parts = currentMsg.split(" ");
@@ -548,8 +544,8 @@
                     const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
                     
                     const now = new Date();
-                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
-                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
+                    const entryTime = new Date(); // Start timer exactly when signal hits screen
+                    const entryStr = now.getHours().toString().padStart(2, '0') + ":" + (now.getMinutes()+1).toString().padStart(2, '0');
 
                     sigScreen.innerHTML = `
                         <div class="sig-asset">${asset}</div>
@@ -557,7 +553,9 @@
                         <div class="sig-dir ${isUp?'up-anim':'down-anim'}">
                             <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}
                         </div>
-                        <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
+                        <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;">
+                             <div class="timer-val">60s</div>
+                        </div>
                         <div style="font-family:'Roboto Mono'; font-size:9px; color:#444; margin-top:15px;">AUTO MTG | USE MONEY MANAGEMENT TOOL</div>
                     `;
                     runLiveTimer(entryTime, 60);
