@@ -132,16 +132,6 @@
             flex-direction: column;
         }
 
-        /* --- STICKY INTERNAL STATS --- */
-        .box-stats {
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 12px 5px; background: #080808; border-bottom: 1px solid #1a1a1a;
-            flex-shrink: 0;
-        }
-        .b-stat { text-align: center; }
-        .b-label { color: #444; font-size: 8px; letter-spacing: 1px; margin-bottom: 3px; font-family: 'Roboto Mono'; }
-        .b-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 18px; }
-
         #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
 
@@ -255,20 +245,6 @@
                         <option value="TOXA">TOXA</option>
                     </select>
                     <div class="display-box">
-                        <div class="box-stats">
-                            <div class="b-stat">
-                                <div class="b-label">TOTAL</div>
-                                <div id="totalCount" class="b-val" style="color:#fff;">0</div>
-                            </div>
-                            <div class="b-stat">
-                                <div class="b-label" style="color:#00ffcc;">WINS</div>
-                                <div id="winCount" class="b-val" style="color:#00ffcc;">0</div>
-                            </div>
-                            <div class="b-stat">
-                                <div class="b-label" style="color:var(--red);">LOSS</div>
-                                <div id="lossCount" class="b-val" style="color:var(--red);">0</div>
-                            </div>
-                        </div>
                         <div id="sigScreen"></div>
                     </div>
                 </div>
@@ -457,7 +433,6 @@
         });
 
         let signalRef = null;
-        let statsRef = null;
         let lastSignalMsg = "";
         let tradeTimer = null;
 
@@ -475,7 +450,6 @@
                 const elapsed = Math.floor((now - startTime) / 1000);
                 let remaining = duration - elapsed;
 
-                // Stop at 0 but keep showing the timer until a result comes
                 if (remaining <= 0) {
                     timerZone.innerHTML = `<div class="timer-val">${duration}s</div>`;
                 } else {
@@ -486,31 +460,19 @@
 
         function listenToSignals(broker) {
             const sigScreen = document.getElementById('sigScreen');
-            const winD = document.getElementById('winCount');
-            const lossD = document.getElementById('lossCount');
-            const totalD = document.getElementById('totalCount');
-
             if (signalRef) signalRef.off();
-            if (statsRef) statsRef.off();
-            if (!broker) { sigScreen.innerHTML = ''; return; }
+            if (!broker) { sigScreen.innerHTML = '<div style="color:#222; font-size:11px;">SELECT PLATFORM...</div>'; return; }
 
             const key = broker.toLowerCase();
-            statsRef = db.ref('stats_storage/' + key);
-            statsRef.on('value', snap => {
-                const s = snap.val() || { wins: 0, loss: 0 };
-                winD.innerText = s.wins;
-                lossD.innerText = s.loss;
-                totalD.innerText = (s.wins + s.loss);
-            });
-
             signalRef = db.ref('signals/' + key);
+            
             signalRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
 
                 const currentMsg = (data.updatedAt || "").toUpperCase();
 
-                // 1. Result Check (Win/Loss animations)
+                // 1. Result Check (Sureshot / MTG Win / MTG Loss)
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
@@ -524,12 +486,7 @@
                         const color = isWin ? "#00ffcc" : "#ff0000";
                         timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${finalResult}</div>`;
                     }
-
-                    if (currentMsg !== lastSignalMsg) {
-                        lastSignalMsg = currentMsg;
-                        if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                        if (currentMsg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
-                    }
+                    lastSignalMsg = currentMsg;
                     return;
                 }
 
@@ -559,8 +516,8 @@
                         <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
                         <div style="font-family:'Roboto Mono'; font-size:12px; color:#fff; margin-top:10px; font-weight:bold;">DURATION: 1 MIN | AUTO MTG: 1 STEP</div>
                     `;
-                    // If regular signal, we wait for 60s, if no result, MTG will handle up to 120s
-                    runLiveTimer(entryTime, 120); 
+                    // Default logic: Entry start (60s) if no result, MTG logic handled by 120s limit
+                    runLiveTimer(entryTime, 120);
                 }
             });
         }
