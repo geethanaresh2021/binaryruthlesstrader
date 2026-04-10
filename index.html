@@ -381,6 +381,7 @@
             sigSelect.addEventListener('change', (e) => {
                 const broker = e.target.value;
                 localStorage.setItem('ruthless_signal', broker);
+                localStorage.removeItem('ruthless_active_sig_data'); // Clear active session on change
                 listenToSignals(broker);
             });
 
@@ -436,19 +437,22 @@
         let lastSignalMsg = "";
         let tradeTimer = null;
 
-        function runLiveTimer(startTime) {
+        function runLiveTimer(startTimeStamp) {
             clearInterval(tradeTimer);
             const timerZone = document.getElementById('timerZone');
+            if(!timerZone) return;
             
+            const startTime = new Date(startTimeStamp);
+
             tradeTimer = setInterval(() => {
                 const now = new Date();
-                if (now < startTime) {
-                    timerZone.innerHTML = '<div style="color:#222; font-size:12px; letter-spacing:2px;">WAITING FOR ENTRY...</div>';
-                    return;
-                }
-
                 const elapsed = Math.floor((now - startTime) / 1000);
-                timerZone.innerHTML = `<div class="timer-val">${elapsed}s</div>`;
+                
+                if (elapsed < 0) {
+                    timerZone.innerHTML = '<div style="color:#222; font-size:12px; letter-spacing:2px;">READYING...</div>';
+                } else {
+                    timerZone.innerHTML = `<div class="timer-val">${elapsed}s</div>`;
+                }
             }, 1000);
         }
 
@@ -457,6 +461,20 @@
             if (signalRef) signalRef.off();
             if (!broker) { sigScreen.innerHTML = '<div style="color:#222; font-size:11px;">SELECT PLATFORM...</div>'; return; }
 
+            // Restore from localStorage if page refreshed
+            const savedData = localStorage.getItem('ruthless_active_sig_data');
+            if(savedData) {
+                const parsed = JSON.parse(savedData);
+                if(parsed.broker === broker) {
+                    sigScreen.innerHTML = parsed.html;
+                    if(parsed.startTime) runLiveTimer(parsed.startTime);
+                    if(parsed.resultHtml) {
+                        clearInterval(tradeTimer);
+                        setTimeout(() => { document.getElementById('timerZone').innerHTML = parsed.resultHtml; }, 100);
+                    }
+                }
+            }
+
             const key = broker.toLowerCase();
             signalRef = db.ref('signals/' + key);
             
@@ -464,47 +482,53 @@
                 const data = snapshot.val();
                 if (!data) return;
 
-                let currentMsg = (data.updatedAt || "").toUpperCase();
-                
-                // Clear out unnecessary divider text like "TOXA" or symbols
-                currentMsg = currentMsg.replace(/━━━━━━━━━━━━━━━/g, '').replace(/\*/g, '').trim();
+                let rawMsg = (data.updatedAt || "").toUpperCase();
+                // Clean: Remove Dividers, Stars, and Platform names from the container text
+                let currentMsg = rawMsg.replace(/━━━━━━━━━━━━━━━/g, '').replace(/\*/g, '').replace('TOXA', '').replace('QUOTEX', '').trim();
 
                 // 1. Result Check (Win/Loss)
                 if (currentMsg.includes("WIN") || currentMsg.includes("LOSS")) {
+                    clearInterval(tradeTimer);
+                    let finalResult = "RESULT";
+                    if(currentMsg.includes("SURESHOT")) finalResult = "SURESHOT WIN";
+                    else if(currentMsg.includes("MTG") && currentMsg.includes("WIN")) finalResult = "MTG WIN";
+                    else if(currentMsg.includes("MTG") && currentMsg.includes("LOSS")) finalResult = "MTG LOSS";
+                    
+                    const isWin = currentMsg.includes("WIN");
+                    const color = isWin ? "#00ffcc" : "#ff0000";
+                    const resultHtml = `<div class="result-zoom" style="color:${color}">${finalResult}</div>`;
+                    
                     const timerZone = document.getElementById('timerZone');
                     if (timerZone) {
-                        clearInterval(tradeTimer);
-                        let finalResult = currentMsg;
-                        if(currentMsg.includes("SURESHOT") && currentMsg.includes("WIN")) finalResult = "SURESHOT WIN";
-                        else if(currentMsg.includes("MTG") && currentMsg.includes("WIN")) finalResult = "MTG WIN";
-                        else if(currentMsg.includes("MTG") && currentMsg.includes("LOSS")) finalResult = "MTG LOSS";
-                        
-                        const isWin = currentMsg.includes("WIN");
-                        const color = isWin ? "#00ffcc" : "#ff0000";
-                        timerZone.innerHTML = `<div class="result-zoom" style="color:${color}">${finalResult}</div>`;
+                        timerZone.innerHTML = resultHtml;
+                        // Update persistence
+                        let saved = JSON.parse(localStorage.getItem('ruthless_active_sig_data') || '{}');
+                        saved.resultHtml = resultHtml;
+                        localStorage.setItem('ruthless_active_sig_data', JSON.stringify(saved));
                     }
-                    lastSignalMsg = currentMsg;
                     return;
                 }
 
                 // 2. Analyzing State
                 if (currentMsg.includes("ANALYZING")) {
+                    clearInterval(tradeTimer);
                     sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:resultAnim 1s infinite;">MARKET ANALYZING...</div>';
+                    localStorage.removeItem('ruthless_active_sig_data');
                     return;
                 }
 
-                // 3. New Signal Entry (Pair details format)
-                if (currentMsg !== lastSignalMsg) {
+                // 3. New Signal Entry
+                if (currentMsg !== lastSignalMsg && currentMsg.length > 3) {
                     lastSignalMsg = currentMsg;
                     const parts = currentMsg.split(" ");
                     const asset = parts[0] || "ASSET";
                     const isUp = currentMsg.includes("CALL") || currentMsg.includes("UP");
                     
                     const now = new Date();
-                    const entryTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0);
-                    const entryStr = entryTime.getHours().toString().padStart(2, '0') + ":" + entryTime.getMinutes().toString().padStart(2, '0');
+                    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0);
+                    const entryStr = startTime.getHours().toString().padStart(2, '0') + ":" + startTime.getMinutes().toString().padStart(2, '0');
 
-                    sigScreen.innerHTML = `
+                    const signalHtml = `
                         <div class="sig-asset">${asset}</div>
                         <div class="sig-entry">ENTRY TIME : ${entryStr}</div>
                         <div class="sig-dir ${isUp?'up-anim':'down-anim'}">
@@ -513,7 +537,19 @@
                         <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
                         <div style="font-family:'Roboto Mono'; font-size:12px; color:#fff; margin-top:10px; font-weight:bold;">DURATION: 1 MIN | AUTO MTG: 1 STEP</div>
                     `;
-                    runLiveTimer(entryTime);
+                    
+                    sigScreen.innerHTML = signalHtml;
+                    
+                    // Save to localStorage for persistence
+                    const sigData = {
+                        broker: broker,
+                        html: signalHtml,
+                        startTime: startTime.toISOString(),
+                        resultHtml: null
+                    };
+                    localStorage.setItem('ruthless_active_sig_data', JSON.stringify(sigData));
+                    
+                    runLiveTimer(startTime.toISOString());
                 }
             });
         }
