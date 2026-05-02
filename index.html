@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link rel="stylesheet" href="style.css">
+    
     <style>
         :root { --red: #ff0000; --white: #ffffff; --bg: #050505; --panel: #0a0a0a; --neon: 0 0 15px var(--red); --input-green: #00ffcc; }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -44,8 +46,11 @@
         .timer-val { font-size: 65px; font-family: 'Roboto Mono'; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--red); }
         .result-zoom { font-size: 38px; font-weight: 900; text-transform: uppercase; animation: resultAnim 1.2s infinite ease-in-out; }
         @keyframes resultAnim { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 25px currentColor; } }
+        
+        /* User Personalization Styles */
         #toolScreen input, #toolScreen select { color: var(--input-green) !important; font-weight: bold !important; font-family: 'Roboto Mono', monospace !important; background: #111; border: 1px solid #222; padding: 8px; margin-bottom: 10px; }
         .profit-num, .loss-num, .result-val, .profit-value, .loss-value { font-size: 32px !important; font-weight: bold !important; text-shadow: 0 0 10px var(--red) !important; font-family: 'Roboto Mono', monospace !important; color: #fff !important; display: inline-block; margin: 10px 0; }
+        
         .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
         .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
         .footer-links a { color: #555; text-decoration: none; transition: 0.3s; }
@@ -144,6 +149,7 @@
     <script src="firebase-config.js"></script>
     <script src="ads-manager.js"></script>
     <script src="login.js"></script>
+    <script src="admin-script.js"></script>
     <script src="app-logic.js"></script>
 </body>
 </html>
