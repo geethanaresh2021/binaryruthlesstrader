@@ -1492,3 +1492,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => { if(s[p]) document.getElementById(`link-${p}`).href = s[p]; });
     });
 });
+// firebase-logic.js lo mee functions bayataki kanipinchali ante..
+export function updateCloudConfig() { ... }
+
+// admin.html lo window object ki attach cheyandi
+import { updateCloudConfig } from './firebase-logic.js';
+window.updateCloudConfig = updateCloudConfig; 
