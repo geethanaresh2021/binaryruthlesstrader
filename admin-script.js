@@ -803,14 +803,13 @@ function publishGiveaway() {
     });
 }
 // --- ADS MANAGER MAIN INTERFACE ---
-// --- ADS MANAGER MAIN INTERFACE (REPLACE THIS) ---
 function loadAdsContainers() {
     const display = document.getElementById('mainDisplay');
     const header = document.querySelector('#panelHeader h1');
     header.innerText = "ADS CONTAINERS MANAGER";
 
     let adsListHtml = '';
-    // 8 Ads Containers Buttons
+    // 8 Ads Containers List
     for (let i = 1; i <= 8; i++) {
         adsListHtml += `
             <button class="action-btn block-btn" onclick="openAdEditor('adSlot${i}', 'AD CONTAINER ${i}')">
@@ -824,27 +823,23 @@ function loadAdsContainers() {
             ${adsListHtml}
         </div>
 
-        <div id="adEditorPanel" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
-            <h3 id="editingAdTitle" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
+        <div id="adEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505;">
+            <h3 id="editingAdName" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron';"></h3>
             <input type="hidden" id="targetAdId">
 
             <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1; border:1px solid #333;">VISIBLE</button>
-                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1; border:1px solid #333;">HIDE</button>
+                <button id="btnVisible" onclick="setAdVisibility(true)" class="action-btn" style="flex:1;">VISIBLE</button>
+                <button id="btnHidden" onclick="setAdVisibility(false)" class="action-btn" style="flex:1;">HIDE</button>
             </div>
 
-            <button onclick="toggleManageSection()" class="action-btn" style="width:100%; background:#111; margin-bottom:15px; border:1px dashed #444;">
-                <i class="fas fa-cog"></i> MANAGE AD DETAILS
-            </button>
-
-            <div id="manageSection" style="display: none; border-top: 1px solid #222; padding-top: 15px; margin-bottom:15px;">
-                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">EDIT CONTAINER NAME</label>
+            <div id="manageSection" style="border-top: 1px solid #222; pt: 15px;">
+                <label style="color: #888; font-size: 10px;">AD NAME (INTERNAL)</label>
                 <input type="text" id="adNickname" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; margin-bottom:15px;">
 
-                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">AD SNIPPET (CODE)</label>
-                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste Ad Code Here..."></textarea>
+                <label style="color: #888; font-size: 10px;">AD SNIPPET (PASTE CODE HERE)</label>
+                <textarea id="adSnippet" rows="5" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; margin-bottom:15px;" placeholder="Paste <script> or <iframe> code..."></textarea>
 
-                <label style="color: #888; font-size: 10px; font-family: 'Orbitron';">SELECT SIZE</label>
+                <label style="color: #888; font-size: 10px;">SELECT SIZE</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 15px;">
                     <button class="action-btn" onclick="setPresetSize('320px','50px')">320x50</button>
                     <button class="action-btn" onclick="setPresetSize('320px','100px')">320x100</button>
@@ -852,39 +847,14 @@ function loadAdsContainers() {
                 </div>
 
                 <div id="customSizeInputs" style="display: none; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="customWidth" placeholder="Width (px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
-                    <input type="text" id="customHeight" placeholder="Height (px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                    <input type="text" id="customWidth" placeholder="Width (e.g. 350px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
+                    <input type="text" id="customHeight" placeholder="Height (e.g. 150px)" style="flex:1; padding:10px; background:#000; border:1px solid #333; color:#fff;">
                 </div>
-            </div>
 
-            <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">
-                SAVE & UPDATE HOME PAGE
-            </button>
+                <button onclick="saveAdSettings()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer;">SAVE & RUN ADS</button>
+            </div>
         </div>
     </div>`;
-}
-
-// Manage Section display toggle
-function toggleManageSection() {
-    const section = document.getElementById('manageSection');
-    section.style.display = (section.style.display === 'none') ? 'block' : 'none';
-}
-
-// Visibility Button Style Update
-function setAdVisibility(isVisible) {
-    window.currentAdVisibility = isVisible;
-    const vBtn = document.getElementById('btnVisible');
-    const hBtn = document.getElementById('btnHidden');
-    
-    if(isVisible) {
-        vBtn.style.background = "var(--red)";
-        vBtn.style.color = "#fff";
-        hBtn.style.background = "#0a0a0a";
-    } else {
-        hBtn.style.background = "var(--red)";
-        hBtn.style.color = "#fff";
-        vBtn.style.background = "#0a0a0a";
-    }
 }
 
 // Global variable to track visibility in UI
@@ -971,51 +941,6 @@ function setPresetSize(w, h) {
 
 function enableCustomSize() {
     document.getElementById('customSizeInputs').style.display = 'flex';
-}
-
-// --- ADS VERIFICATION MODULE ---
-function renderAdsVerificationModule() {
-    const mainDisplay = document.getElementById('mainDisplay');
-    const header = document.querySelector('#panelHeader h1');
-    header.innerText = "ADS NETWORK VERIFICATION";
-
-    // 5 Verification Methods List
-    const methods = [
-        { id: 'meta', name: 'META TAG VERIFICATION', icon: 'fa-code' },
-        { id: 'adstxt', name: 'ADS.TXT FILE VERIFICATION', icon: 'fa-file-alt' },
-        { id: 'htmlfile', name: 'HTML FILE UPLOAD', icon: 'fa-upload' },
-        { id: 'dns', name: 'DNS (DOMAIN) VERIFICATION', icon: 'fa-globe' },
-        { id: 'gsc', name: 'GOOGLE SEARCH CONSOLE LINK', icon: 'fa-search' }
-    ];
-
-    let methodsHtml = methods.map(m => `
-        <button class="action-btn block-btn" onclick="openVerifyEditor('${m.id}', '${m.name}')" style="text-align:left; padding:15px; margin-bottom:10px; display:flex; align-items:center; gap:15px; width:100%;">
-            <i class="fas ${m.icon}" style="color:var(--red); width:20px; font-size:18px;"></i>
-            <span style="font-family:'Orbitron'; font-size:12px; letter-spacing:1px;">${m.name}</span>
-        </button>
-    `).join('');
-
-    mainDisplay.innerHTML = `
-    <div class="verify-panel" style="padding: 10px;">
-        <div id="methodsList">
-            ${methodsHtml}
-        </div>
-
-        <div id="verifyEditor" class="settings-panel" style="display: none; border: 1px solid #222; padding: 20px; background: #050505; margin-top:20px;">
-            <h3 id="verifyMethodTitle" style="color: var(--red); margin-bottom: 15px; font-family: 'Orbitron'; font-size:14px; text-transform:uppercase;"></h3>
-            <input type="hidden" id="targetMethodId">
-
-            <label id="verifyLabel" style="color: #888; font-size: 10px; font-family: 'Orbitron'; display:block; margin-bottom:10px;">ENTER VERIFICATION DETAILS</label>
-            
-            <textarea id="verifyDetails" rows="8" 
-                style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#00ffcc; font-family:'Roboto Mono'; font-weight:bold; margin-bottom:20px; outline:none;" 
-                placeholder="Paste code or details here..."></textarea>
-
-            <button onclick="saveVerification()" class="publish-btn" style="width: 100%; padding: 15px; background: var(--red); border:none; color:#fff; font-family:'Orbitron'; font-weight:900; cursor:pointer; text-transform:uppercase;">
-                VERIFY & SAVE DATA
-            </button>
-        </div>
-    </div>`;
 }
 
 function saveAdSettings() {
@@ -1238,61 +1163,5 @@ window.saveToolSettings = function() {
     db.ref('site_settings/tools/' + id).set(toolData).then(() => {
         Swal.fire({ icon: 'success', title: 'TOOL DEPLOYED', background: '#000', color: '#fff' });
         document.getElementById('toolEditorPanel').style.display = 'none';
-    });
-};
-// 1. Editor switching logic
-window.openVerifyEditor = function(id, title) {
-    const editor = document.getElementById('verifyEditor');
-    const titleEl = document.getElementById('verifyMethodTitle');
-    const labelEl = document.getElementById('verifyLabel');
-    const idInput = document.getElementById('targetMethodId');
-    const detailsArea = document.getElementById('verifyDetails');
-
-    editor.style.display = 'block';
-    titleEl.innerText = title;
-    idInput.value = id;
-    detailsArea.value = ""; // Reset input
-
-    // Method ni batti label marchesthundi
-    if(id === 'meta') labelEl.innerText = "PASTE <META> TAG PROVIDED BY ADS NETWORK";
-    else if(id === 'adstxt') labelEl.innerText = "PASTE FULL ADS.TXT CONTENT";
-    else if(id === 'dns') labelEl.innerText = "ENTER TXT OR CNAME RECORD VALUE";
-    else labelEl.innerText = "ENTER VERIFICATION CODE OR FILE NAME";
-
-    // Firebase nundi existing data load chestundi
-    if(typeof db !== 'undefined') {
-        db.ref('site_settings/verification/' + id).once('value', (snap) => {
-            if(snap.exists()) detailsArea.value = snap.val().data;
-        });
-    }
-
-    editor.scrollIntoView({ behavior: 'smooth' });
-};
-
-// 2. Final Save Logic
-window.saveVerification = function() {
-    const id = document.getElementById('targetMethodId').value;
-    const data = document.getElementById('verifyDetails').value.trim();
-
-    if(!data) {
-        Swal.fire({ icon: 'error', title: 'INPUT REQUIRED', text: 'Enter verification details first!', background: '#111', color: '#fff' });
-        return;
-    }
-
-    const verifyData = {
-        data: data,
-        method: id,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    db.ref('site_settings/verification/' + id).set(verifyData).then(() => {
-        Swal.fire({
-            icon: 'success',
-            title: 'VERIFICATION SAVED',
-            text: 'Website settings updated successfully!',
-            background: '#0a0a0a',
-            color: '#fff',
-            confirmButtonColor: '#ff0000'
-        });
     });
 };
