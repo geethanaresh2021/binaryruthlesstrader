@@ -90,70 +90,15 @@ function loadContent(moduleName) {
     break;
 
         case 'Signal Connection':
-    mainDisplay.innerHTML = `
-        <div class="module-card" style="background: #050505; border: 1px solid #222; padding: 20px;">
-            <h3 style="color: var(--red); font-family: 'Orbitron'; margin-bottom: 20px; font-size: 14px;">SELECT SIGNAL SOURCE</h3>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-                <button class="action-btn" style="flex:1; border: 1px solid #333;" onclick="showSignalEditor('TOXA')">TOXA</button>
-                <button class="action-btn" style="flex:1; border: 1px solid #333;" onclick="showSignalEditor('QUOTEX')">QUOTEX</button>
-            </div>
-
-            <div id="signalEditorArea" style="display:none; border-top: 1px solid #111; padding-top: 20px;">
-                <label class="input-label" id="sourceLabel" style="color: #666; font-size: 10px;"></label>
-                <input type="text" id="sigUrl" class="input-box" 
-                       placeholder="Ex: http://103.169.176.38:3000/api/get-signals/toxa" 
-                       style="color: #00ffcc; font-family: 'Roboto Mono'; margin-top: 5px;">
-                
-                <button class="action-btn" style="background: var(--red); color: #fff; width: 100%; margin-top: 15px; font-weight: 900;" 
-                        onclick="saveSignalConn()">
-                    SAVE CONNECTION
-                </button>
-            </div>
-        </div>`;
-
-    // Global variable to track which source we are editing
-    window.activeSignalSource = '';
-
-    // Helper function to show input field when list item is clicked
-    window.showSignalEditor = function(type) {
-        window.activeSignalSource = type;
-        const area = document.getElementById('signalEditorArea');
-        const label = document.getElementById('sourceLabel');
-        const input = document.getElementById('sigUrl');
-        
-        area.style.display = 'block';
-        label.innerText = `${type} VPS API ADDRESS`;
-
-        // Fetch existing link from Firebase to show in input box
-        db.ref(`site_settings/signals/${type.toLowerCase()}`).once('value', (snap) => {
-            input.value = snap.exists() ? snap.val().url : "";
-        });
-    };
-
-    // Updated Save Function
-    window.saveSignalConn = function() {
-        const url = document.getElementById('sigUrl').value.trim();
-        if (!url || !window.activeSignalSource) {
-            Swal.fire({ icon: 'warning', title: 'EMPTY FIELD', text: 'Please enter a valid URL', background: '#0a0a0a', color: '#fff' });
-            return;
-        }
-
-        db.ref(`site_settings/signals/${window.activeSignalSource.toLowerCase()}`).set({
-            url: url,
-            updatedAt: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-            Swal.fire({ 
-                icon: 'success', 
-                title: 'CONNECTED', 
-                text: `${window.activeSignalSource} API Link Saved!`, 
-                background: '#0a0a0a', 
-                color: '#fff',
-                confirmButtonColor: '#ff0000'
-            });
-        });
-    };
-    break;
+            mainDisplay.innerHTML = `
+                <div class="module-card">
+                    <label class="input-label">Signal Source URL</label>
+                    <input type="text" id="sigUrl" class="input-box" placeholder="https://api.signals.com">
+                    <label class="input-label">Platform</label>
+                    <input type="text" id="sigPlat" class="input-box" value="QUOTEX">
+                    <button class="action-btn" onclick="saveSignalConn()">CONNECT LIVE</button>
+                </div>`;
+            break;
 
         case 'Ads Containers':
             // 8 Containers List Generation
@@ -564,9 +509,9 @@ function saveLogic() {
     Swal.fire({ icon: 'success', title: 'SUCCESS', text: 'Settings Saved Locally & Cloud Synced!', background: '#0a0a0a', color: '#fff', confirmButtonColor: '#ff0000' });
 }
 
-// --- SIGNAL MANAGEMENT (TOXA & QUOTEX) ---
-// --- ADMIN: SIGNAL CONNECTION LOGIC ---
-
+// Cloud Sync Functions (As requested, keeping options consistent)
+function saveSTResize() { saveLogic(); }
+function saveSignalConn() { saveLogic(); }
 function saveAdsConfig() { saveLogic(); }
 function saveSocialLinks() { saveLogic(); }
 function saveBrandName() { saveLogic(); }
@@ -1351,150 +1296,3 @@ window.saveVerification = function() {
         });
     });
 };
-// LocalStorage data reset logic at midnight
-function checkMidnightReset() {
-    const lastUpdate = localStorage.getItem('ruthless_last_date');
-    const todayStr = new Date().toDateString();
-    if (lastUpdate && lastUpdate !== todayStr) {
-        Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
-    }
-    localStorage.setItem('ruthless_last_date', todayStr);
-}
-
-// Tool styles isolation logic
-function cleanToolCode(html) {
-    if (!html) return "";
-    let clean = html.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
-    clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
-        return '<style>' + css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, selector => {
-            let s = selector.trim();
-            return (s === 'body' || s === 'html' || s === '*') ? '#toolScreen' : '#toolScreen ' + s;
-        }) + '</style>';
-    });
-    return clean;
-}
-
-// Save & Restore Tool Inputs
-function saveToolInputs() {
-    document.querySelectorAll('#toolScreen input, #toolScreen select').forEach((input, index) => {
-        localStorage.setItem('tool_input_' + (input.id || `auto_val_${index}`), input.value);
-    });
-}
-
-function restoreToolInputs() {
-    document.querySelectorAll('#toolScreen input, #toolScreen select').forEach((input, index) => {
-        const val = localStorage.getItem('tool_input_' + (input.id || `auto_val_${index}`));
-        if (val !== null) {
-            input.value = val;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-    });
-}
-
-// Marquee Animation Logic
-function applySmoothScroll(containerId, text, speed, color) {
-    const container = document.getElementById(containerId); if (!container) return;
-    container.style.color = color;
-    const spd = parseInt(speed) || 0;
-    if (spd === 0) {
-        container.style.justifyContent = "center";
-        container.innerHTML = `<span class="scroll-item">${text}</span>`;
-    } else {
-        container.style.justifyContent = "flex-start";
-        const duration = 35 / spd;
-        container.innerHTML = `<div style="display:flex; animation:scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right:80px;">${text}</span><span class="scroll-item" style="padding-right:80px;">${text}</span></div>`;
-    }
-}
-
-// Main Signal Listener
-let tradeTimer = null;
-function runLiveTimer(startTimeStamp) {
-    clearInterval(tradeTimer);
-    const zone = document.getElementById('timerZone'); if(!zone) return;
-    const start = new Date(startTimeStamp);
-    tradeTimer = setInterval(() => {
-        const elapsed = Math.floor((new Date() - start) / 1000);
-        zone.innerHTML = elapsed < 0 ? '<div style="color:#222;font-size:12px;">READYING...</div>' : `<div class="timer-val">${elapsed}s</div>`;
-    }, 1000);
-}
-
-function listenToSignals(broker) {
-    const sigScreen = document.getElementById('sigScreen');
-    if (!broker) { sigScreen.innerHTML = '<div style="color:#222;font-size:11px;">SELECT PLATFORM...</div>'; return; }
-    
-    db.ref('signals/' + broker.toLowerCase()).on('value', snap => {
-        const data = snap.val(); if (!data) return;
-        let msg = (data.updatedAt || "").toUpperCase().replace(/━━━━━━━━━━━━━━━|\*|TOXA|QUOTEX/g, '').trim();
-
-        if (msg.includes("WIN") || msg.includes("LOSS")) {
-            clearInterval(tradeTimer);
-            const isWin = msg.includes("WIN");
-            sigScreen.querySelector('#timerZone').innerHTML = `<div class="result-zoom" style="color:${isWin?'#00ffcc':'#ff0000'}">${msg.includes("SURESHOT")?"SURESHOT WIN":isWin?"MTG WIN":"MTG LOSS"}</div>`;
-            return;
-        }
-
-        if (msg.includes("ANALYZING")) {
-            clearInterval(tradeTimer);
-            sigScreen.innerHTML = '<div style="color:var(--red); font-weight:900; animation:resultAnim 1s infinite;">MARKET ANALYZING...</div>';
-            return;
-        }
-
-        const isUp = msg.includes("CALL") || msg.includes("UP");
-        const asset = msg.split(/\s+/).filter(p => p !== "PRE" && p !== "SIGNAL")[0] || "ASSET";
-        const now = new Date();
-        const entryStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-
-        sigScreen.innerHTML = `
-            <div class="sig-asset">${asset}</div>
-            <div class="sig-entry">ENTRY TIME : ${entryStr}</div>
-            <div class="sig-dir ${isUp?'up-anim':'down-anim'}"><i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${isUp?'CALL / UP':'PUT / DOWN'}</div>
-            <div id="timerZone" style="min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
-            <div style="font-family:'Roboto Mono'; font-size:12px; color:#fff; margin-top:10px; font-weight:bold;">DURATION: 1 MIN | AUTO MTG: 1 STEP</div>
-        `;
-        runLiveTimer(new Date().toISOString());
-    });
-}
-
-function listenToTools() {
-    const dropdown = document.getElementById('toolSelect');
-    db.ref('site_settings/tools').on('value', snap => {
-        const tools = snap.val();
-        let html = '<option value="">-- SELECT TOOL --</option>';
-        Object.keys(tools || {}).forEach(id => { if(tools[id].visible) html += `<option value="${id}">${tools[id].name}</option>`; });
-        dropdown.innerHTML = html;
-        dropdown.onchange = (e) => {
-            const tool = tools[e.target.value];
-            const area = document.getElementById('toolScreen');
-            if(tool) {
-                area.innerHTML = cleanToolCode(tool.code);
-                area.querySelectorAll('script').forEach(s => {
-                    const n = document.createElement('script');
-                    if(s.src) n.src = s.src; n.textContent = s.textContent;
-                    s.parentNode.replaceChild(n, s);
-                });
-                setTimeout(() => { restoreToolInputs(); area.addEventListener('input', saveToolInputs); }, 400);
-            }
-        };
-    });
-}
-
-// Initializing
-document.addEventListener('DOMContentLoaded', () => {
-    checkMidnightReset();
-    listenToTools();
-    const sigSelect = document.getElementById('sigSelect');
-    sigSelect.onchange = (e) => listenToSignals(e.target.value);
-    
-    db.ref('site_settings/giveaway').on('value', snap => applySmoothScroll('announceStrip', snap.val().winner, snap.val().speed, snap.val().color));
-    db.ref('site_settings/warning_note').on('value', snap => applySmoothScroll('warningNoteContainer', snap.val().text, snap.val().speed, snap.val().color));
-    db.ref('site_settings/socials').on('value', snap => {
-        const s = snap.val() || {};
-        ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => { if(s[p]) document.getElementById(`link-${p}`).href = s[p]; });
-    });
-});
-// firebase-logic.js lo mee functions bayataki kanipinchali ante..
-export function updateCloudConfig() { ... }
-
-// admin.html lo window object ki attach cheyandi
-import { updateCloudConfig } from './firebase-logic.js';
-window.updateCloudConfig = updateCloudConfig; 
