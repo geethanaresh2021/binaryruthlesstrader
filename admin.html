@@ -7,13 +7,12 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="admin-style.css"> </head>
+    <link rel="stylesheet" href="admin-style.css">
+</head>
 <body>
 
     <header class="admin-header">
@@ -21,10 +20,10 @@
         <div class="brand-section">
             <img src="brand-name.png" alt="RUTHLESS SYSTEM" class="brand-img">
             <div class="social-row">
-                <a href="#" id="header-tg"><i class="fab fa-telegram"></i></a>
-                <a href="#" id="header-yt"><i class="fab fa-youtube"></i></a>
-                <a href="#" id="header-fb"><i class="fab fa-facebook"></i></a>
-                <a href="#" id="header-ig"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
         <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
@@ -33,59 +32,27 @@
     <div class="admin-wrapper">
         <nav class="sidebar">
             <div class="nav-group-label">Analytics</div>
-            <button class="nav-btn white-accent" onclick="loadContent('Views')">
-                <i class="fas fa-eye"></i> Views
-            </button>
-            <button class="nav-btn white-accent" onclick="loadContent('Revenue')">
-                <i class="fas fa-dollar-sign"></i> Revenue
-            </button>
+            <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
+            <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
 
             <div class="nav-group-label">Management</div>
             <div class="nav-scroll-container">
                 
-                <button class="nav-btn" onclick="loadContent('Tools Manager')">
-                    <i class="fas fa-tools"></i> Tools Manager
-                </button>
-                
-                <button class="nav-btn" onclick="renderAdsVerificationModule()">
-                    <i class="fas fa-shield-alt"></i> ADS NETWORK VERIFY
-                </button>
-                
-                <button class="nav-btn" onclick="loadAdsContainers()">
-                    <i class="fas fa-box-open"></i> Ads Containers
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Social Media')">
-                    <i class="fas fa-share-alt"></i> Social Media
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Brand Name')">
-                    <i class="fas fa-id-card"></i> Brand Name
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Warning Note')">
-                    <i class="fas fa-exclamation-triangle"></i> Warning Note
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Giveaway Winner')">
-                    <i class="fas fa-trophy"></i> Giveaway Winner
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Firebase')">
-                    <i class="fas fa-fire-alt"></i> Firebase
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Signal Connection')">
-                    <i class="fas fa-plug"></i> Signal Connection
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('VPS')">
-                    <i class="fas fa-server"></i> VPS
-                </button>
-                
-                <button class="nav-btn" onclick="loadContent('Security')">
-                    <i class="fas fa-user-shield"></i> Security
-                </button>
+                <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
+<button class="nav-btn" onclick="renderAdsVerificationModule()">
+    <i class="fas fa-shield-alt"></i> ADS NETWORK VERIFY
+</button>
+    <button class="nav-btn" onclick="loadAdsContainers()">
+    <i class="fas fa-box-open"></i> Ads Containers
+</button>
+                <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
+                <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
+               <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
+                <button class="nav-btn" onclick="loadContent('Giveaway Winner')"><i class="fas fa-trophy"></i> Giveaway Winner</button>
+                <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
+                <button class="nav-btn" onclick="loadContent('Signal Connection')"><i class="fas fa-plug"></i> Signal Connection</button>
+                <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
+                <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
             </div>
         </nav>
 
@@ -95,36 +62,19 @@
                 <p>AUTHENTICATED SESSION: BINARY RUTHLESS TRADER</p>
             </div>
             <div id="mainDisplay">
-                <div style="display: flex; height: 300px; align-items: center; justify-content: center; color: #444; font-family: 'Orbitron'; text-align: center; padding: 20px;">
+                <div style="display: flex; height: 300px; align-items: center; justify-content: center; color: #222; font-family: 'Orbitron';">
                     SELECT A CATEGORY TO MANAGE SYSTEM
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="firebase-config.js"></script>
-    <script src="ads-manager.js"></script>
-    
-    <script>
-        // Sync Header Icons with Firebase using the database instance from firebase-config.js
-        // database variable name based on your firebase-config.js (commonly 'db' or 'fb_db')
-        const siteRef = firebase.database().ref('site_settings/socials');
-        siteRef.on('value', snap => {
-            const links = snap.val() || {};
-            if(links.Telegram) document.getElementById('header-tg').href = links.Telegram;
-            if(links.YouTube) document.getElementById('header-yt').href = links.YouTube;
-            if(links.Facebook) document.getElementById('header-fb').href = links.Facebook;
-            if(links.Instagram) document.getElementById('header-ig').href = links.Instagram;
-        });
-    </script>
-
-    <script src="admin-script.js"></script>
-    
     <script type="module">
         import { updateCloudConfig, saveFirebaseSettings } from './firebase-logic.js';
         window.updateCloudConfig = updateCloudConfig;
         window.saveFirebaseSettings = saveFirebaseSettings;
     </script>
 
+    <script src="admin-script.js"></script>
 </body>
 </html>
