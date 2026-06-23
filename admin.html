@@ -2,77 +2,312 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Dashboard | Ruthless System</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruthless Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <link rel="stylesheet" href="admin-style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-card: rgba(20, 20, 25, 0.8);
+            --accent-red: #ff0000;
+            --accent-green: #00ffcc;
+            --text-main: #ffffff;
+            --text-muted: #a0a5b0;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }
+        body { background: #000000; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px 16px; flex:1; }
+
+        .admin-navbar {
+            background: #050505; border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .admin-navbar h1 { font-family: 'Orbitron', sans-serif; font-size: 22px; text-transform: uppercase; }
+        .admin-navbar h1 span { color: var(--accent-red); }
+
+        .btn-exit {
+            font-family: 'Orbitron', sans-serif; background: transparent; 
+            border: 1px solid var(--accent-red); color: var(--accent-red);
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+
+        /* NAVIGATION TABS */
+        .admin-tabs-bar {
+            display: flex; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 4px; margin-bottom: 24px; gap: 4px; max-width: 500px;
+        }
+        .tab-btn {
+            flex: 1; padding: 10px; background: transparent; border: none; color: var(--text-muted);
+            font-weight: 600; font-size: 13px; cursor: pointer; border-radius: 6px;
+        }
+        .tab-btn.active { background: rgba(255,255,255,0.08); color: var(--text-main); }
+
+        .workspace-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; }
+        
+        label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 600; }
+        input, select, textarea {
+            width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background: #000000; color: var(--accent-green); font-family: 'Roboto Mono', monospace; font-weight: bold; margin-bottom: 16px; outline: none;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+        .sub-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+
+        .ruthless-btn {
+            width: 100%; padding: 12px; border-radius: 6px; border: none; background: #ffffff;
+            color: #000000; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 13px;
+        }
+        .ruthless-btn.save-red { background: var(--accent-red); color: #fff; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+
+        .sub-navigation { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; }
+        .sub-tab-btn { padding: 8px 12px; background: transparent; border: 1px solid var(--border-color); color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer; }
+        .sub-tab-btn.active { background: #fff; color: #000; border: none; }
+    </style>
 </head>
 <body>
 
-    <header class="admin-header">
-        <div style="width: 100px;"></div> 
-        <div class="brand-section">
-            <img src="brand-name.png" alt="RUTHLESS SYSTEM" class="brand-img">
-            <div class="social-row">
-                <a href="#"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-        <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
-    </header>
-
-    <div class="admin-wrapper">
-        <nav class="sidebar">
-            <div class="nav-group-label">Analytics</div>
-            <button class="nav-btn white-accent" onclick="loadContent('Views')"><i class="fas fa-eye"></i> Views</button>
-            <button class="nav-btn white-accent" onclick="loadContent('Revenue')"><i class="fas fa-dollar-sign"></i> Revenue</button>
-
-            <div class="nav-group-label">Management</div>
-            <div class="nav-scroll-container">
-                
-                <button class="nav-btn" onclick="loadContent('Tools Manager')"><i class="fas fa-tools"></i> Tools Manager</button>
-                <button class="nav-btn" onclick="loadContent('Ads Network')"><i class="fas fa-shield-check"></i> Ads Network Verify</button>
-                <button class="nav-btn" onclick="loadAdsContainers()">
-    <i class="fas fa-box-open"></i> Ads Containers
-</button>
-                <button class="nav-btn" onclick="loadContent('Social Media')"><i class="fas fa-share-alt"></i> Social Media</button>
-                <button class="nav-btn" onclick="loadContent('Brand Name')"><i class="fas fa-id-card"></i> Brand Name</button>
-               <button class="nav-btn" onclick="loadContent('Warning Note')"><i class="fas fa-exclamation-triangle"></i> Warning Note</button>
-                <button class="nav-btn" onclick="loadContent('Giveaway Winner')"><i class="fas fa-trophy"></i> Giveaway Winner</button>
-                <button class="nav-btn" onclick="loadContent('Firebase')"><i class="fas fa-fire-alt"></i> Firebase</button>
-                <button class="nav-btn" onclick="loadContent('Signal Connection')"><i class="fas fa-plug"></i> Signal Connection</button>
-                <button class="nav-btn" onclick="loadContent('VPS')"><i class="fas fa-server"></i> VPS</button>
-                <button class="nav-btn" onclick="loadContent('Security')"><i class="fas fa-user-shield"></i> Security</button>
-            </div>
-        </nav>
-
-        <main class="content-area">
-            <div class="panel-header" id="panelHeader">
-                <h1>Admin Dashboard</h1>
-                <p>AUTHENTICATED SESSION: BINARY RUTHLESS TRADER</p>
-            </div>
-            <div id="mainDisplay">
-                <div style="display: flex; height: 300px; align-items: center; justify-content: center; color: #222; font-family: 'Orbitron';">
-                    SELECT A CATEGORY TO MANAGE SYSTEM
-                </div>
-            </div>
-        </main>
+    <div class="admin-navbar">
+        <h1>Control <span>Panel</span></h1>
+        <button class="btn-exit" onclick="window.location.href='index.html'">Exit Portal</button>
     </div>
 
-    <script type="module">
-        import { updateCloudConfig, saveFirebaseSettings } from './firebase-logic.js';
-        window.updateCloudConfig = updateCloudConfig;
-        window.saveFirebaseSettings = saveFirebaseSettings;
-    </script>
+    <div class="container">
+        <div class="admin-tabs-bar">
+            <button class="tab-btn active" id="tabTools">Tools Setup</button>
+            <button class="tab-btn" id="tabAds">Ads Scheduler</button>
+            <button class="tab-btn" id="tabBranding">Branding / Socials</button>
+        </div>
 
-    <script src="admin-script.js"></script>
+        <div class="workspace-card">
+            <!-- SECTION 1: TOOLS STRUCTURE -->
+            <div id="panelTools">
+                <div style="margin-bottom: 16px;">
+                    <label>Select Architecture Mode</label>
+                    <select id="adminToolsDropdown"><option value="none">-- CREATE NEW SCHEMA --</option></select>
+                </div>
+                <div class="grid">
+                    <div><label>Unique Tool ID</label><input type="text" id="toolId"></div>
+                    <div><label>Tool Display Title</label><input type="text" id="toolName"></div>
+                    <div>
+                        <label>Scope Matrix</label>
+                        <select id="toolScope">
+                            <option value="public">Public Only</option>
+                            <option value="private">Private / Protected Only</option>
+                            <option value="both">Both Sections</option>
+                        </select>
+                    </div>
+                </div>
+                <label>HTML Content Engine Payload</label>
+                <textarea id="toolHtml" style="height: 180px; font-size: 12px;"></textarea>
+                <div style="display: flex; gap: 12px;">
+                    <button class="ruthless-btn save-red" id="btnSaveTool">Save Structural Blueprint</button>
+                    <button class="ruthless-btn" id="btnDeleteTool" style="background:transparent; border:1px solid var(--accent-red); color:var(--accent-red);">Wipe Tool</button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: ADS NETWORKS MANAGEMENT -->
+            <div id="panelAds" style="display: none;">
+                <div style="margin-bottom: 16px;"><label>Select Targeted Layout Slot</label>
+                    <select id="adSlotSelector">
+                        <option value="top1">Top Layer - Ad Box 1</option>
+                        <option value="top2">Top Layer - Ad Box 2</option>
+                        <option value="bot1">Bottom Layer - Ad Box 3</option>
+                        <option value="bot2">Bottom Layer - Ad Box 4</option>
+                    </select>
+                </div>
+                <div class="sub-card">
+                    <div class="grid">
+                        <div><label>Width Size CSS Rules</label><input type="text" id="adWidth" value="100%"></div>
+                        <div><label>Height Size CSS Rules</label><input type="text" id="adHeight" value="90px"></div>
+                        <div><label>Visibility Status</label><select id="adVisibility"><option value="visible">VISIBLE</option><option value="hide">HIDDEN / OFF</option></select></div>
+                    </div>
+                    <label>Ad Script String Code Payload</label>
+                    <textarea id="adCode" style="height: 100px; font-size: 12px;"></textarea>
+                    <button class="ruthless-btn save-red" id="btnSaveAd">Commit Ad Update</button>
+                </div>
+            </div>
+
+            <!-- SECTION 3: BRANDING & SOCIAL SYSTEM INTERFACES -->
+            <div id="panelBranding" style="display: none;">
+                <div class="grid">
+                    <div class="sub-card">
+                        <label><i class="fab fa-telegram"></i> Telegram Gateway</label>
+                        <input type="text" id="tgUrl" placeholder="https://..."><select id="tgStatus"><option value="visible">VISIBLE</option><option value="hide">HIDE</option></select>
+                    </div>
+                    <div class="sub-card">
+                        <label><i class="fab fa-instagram"></i> Instagram Gateway</label>
+                        <input type="text" id="instaUrl" placeholder="https://..."><select id="instaStatus"><option value="visible">VISIBLE</option><option value="hide">HIDE</option></select>
+                    </div>
+                    <div class="sub-card">
+                        <label><i class="fab fa-youtube"></i> YouTube Gateway</label>
+                        <input type="text" id="ytUrl" placeholder="https://..."><select id="ytStatus"><option value="visible">VISIBLE</option><option value="hide">HIDE</option></select>
+                    </div>
+                    <div class="sub-card">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp Gateway</label>
+                        <input type="text" id="waUrl" placeholder="https://..."><select id="waStatus"><option value="visible">VISIBLE</option><option value="hide">HIDE</option></select>
+                    </div>
+                </div>
+                <div class="sub-card">
+                    <label>Risk Warning Custom Global Banner Text</label>
+                    <textarea id="warningText" style="height: 50px;"></textarea>
+                    <select id="warningStatus"><option value="visible">VISIBLE</option><option value="hide">HIDDEN</option></select>
+                </div>
+                <div class="sub-card">
+                    <label>Copyright Layout Footer Metadata Info</label>
+                    <textarea id="footerText" style="height: 50px;"></textarea>
+                    <select id="footerStatus"><option value="visible">VISIBLE</option><option value="hide">HIDDEN</option></select>
+                </div>
+                <button class="ruthless-btn save-red" id="btnSaveBranding">Save Global Settings Meta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
+            authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader-26654",
+            storageBucket: "binary-ruthless-trader-26654.appspot.com",
+            messagingSenderId: "533209261799",
+            appId: "1:533209261799:web:a398ab21b0f913683ea442",
+            measurementId: "G-WQCXMV5PR"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let toolsCacheMemory = {}, adsCacheMemory = {};
+
+        // Tab System Routing
+        const tabs = {
+            'tabTools': 'panelTools',
+            'tabAds': 'panelAds',
+            'tabBranding': 'panelBranding'
+        };
+
+        Object.keys(tabs).forEach(tBtnId => {
+            document.getElementById(tBtnId).addEventListener('click', () => {
+                Object.keys(tabs).forEach(k => {
+                    document.getElementById(k).classList.remove('active');
+                    document.getElementById(tabs[k]).style.display = 'none';
+                });
+                document.getElementById(tBtnId).classList.add('active');
+                document.getElementById(tabs[tBtnId]).style.display = 'block';
+            });
+        });
+
+        // TOOLS ENGINE MANAGEMENT LOGIC
+        db.collection('tools').orderBy('timestamp','asc').onSnapshot(snap => {
+            toolsCacheMemory = {};
+            const dropdown = document.getElementById('adminToolsDropdown');
+            dropdown.innerHTML = '<option value="none">-- CREATE NEW SCHEMA --</option>';
+            snap.forEach(doc => {
+                const d = doc.data(); toolsCacheMemory[doc.id] = d;
+                const opt = document.createElement('option');
+                opt.value = doc.id; opt.textContent = `${d.toolName} [${doc.id}]`;
+                dropdown.appendChild(opt);
+            });
+        });
+
+        document.getElementById('adminToolsDropdown').addEventListener('change', (e) => {
+            const data = toolsCacheMemory[e.target.value];
+            if(data) {
+                document.getElementById('toolId').value = data.toolId; document.getElementById('toolId').disabled = true;
+                document.getElementById('toolName').value = data.toolName;
+                document.getElementById('toolScope').value = data.scope || 'public';
+                document.getElementById('toolHtml').value = data.htmlContent || '';
+            } else { resetToolsFormNode(); }
+        });
+
+        function resetToolsFormNode() {
+            document.getElementById('toolId').value = ''; document.getElementById('toolId').disabled = false;
+            document.getElementById('toolName').value = ''; document.getElementById('toolHtml').value = '';
+        }
+
+        document.getElementById('btnSaveTool').addEventListener('click', async () => {
+            const id = document.getElementById('toolId').value.trim();
+            const name = document.getElementById('toolName').value.trim();
+            const html = document.getElementById('toolHtml').value.trim();
+            const scope = document.getElementById('toolScope').value;
+            if(!id || !name || !html) return alert("Fill parameters correctly.");
+            
+            await db.collection('tools').doc(id).set({
+                toolId: id, toolName: name, htmlContent: html, scope: scope,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Blueprint Saved."); resetToolsFormNode(); document.getElementById('adminToolsDropdown').value = 'none';
+        });
+
+        document.getElementById('btnDeleteTool').addEventListener('click', async () => {
+            const id = document.getElementById('toolId').value.trim();
+            if(!id || !confirm("Wipe completely?")) return;
+            await db.collection('tools').doc(id).delete();
+            alert("Destroyed."); resetToolsFormNode(); document.getElementById('adminToolsDropdown').value = 'none';
+        });
+
+        // ADS RUNTIME SYNC MANAGEMENT
+        db.collection('settings').doc('adsChannels').onSnapshot(doc => {
+            if(doc.exists()) {
+                adsCacheMemory = doc.data(); loadSelectedAdParameters(document.getElementById('adSlotSelector').value);
+            }
+        });
+
+        document.getElementById('adSlotSelector').addEventListener('change', (e) => loadSelectedAdParameters(e.target.value));
+
+        function loadSelectedAdParameters(key) {
+            const node = adsCacheMemory[key] || {};
+            document.getElementById('adWidth').value = node.width || '100%';
+            document.getElementById('adHeight').value = node.height || '90px';
+            document.getElementById('adVisibility').value = node.visibility || 'visible';
+            document.getElementById('adCode').value = node.code || '';
+        }
+
+        document.getElementById('btnSaveAd').addEventListener('click', async () => {
+            const slotKey = document.getElementById('adSlotSelector').value;
+            adsCacheMemory[slotKey] = {
+                width: document.getElementById('adWidth').value.trim(),
+                height: document.getElementById('adHeight').value.trim(),
+                visibility: document.getElementById('adVisibility').value,
+                code: document.getElementById('adCode').value.trim()
+            };
+            await db.collection('settings').doc('adsChannels').set(adsCacheMemory);
+            alert("Ad Space Updated.");
+        });
+
+        // BRANDING FORM HANDLING INTEGRATION
+        db.collection('settings').doc('brandingControl').onSnapshot(doc => {
+            if(doc.exists()) {
+                const b = doc.data();
+                document.getElementById('tgUrl').value = b.tgUrl || ''; document.getElementById('tgStatus').value = b.tgStatus || 'visible';
+                document.getElementById('instaUrl').value = b.instaUrl || ''; document.getElementById('instaStatus').value = b.instaStatus || 'visible';
+                document.getElementById('ytUrl').value = b.ytUrl || ''; document.getElementById('ytStatus').value = b.ytStatus || 'visible';
+                document.getElementById('waUrl').value = b.waUrl || ''; document.getElementById('waStatus').value = b.waStatus || 'visible';
+                document.getElementById('warningText').value = b.warningText || 'Note: Trading is risky.';
+                document.getElementById('warningStatus').value = b.warningStatus || 'visible';
+                document.getElementById('footerText').value = b.footerText || '';
+                document.getElementById('footerStatus').value = b.footerStatus || 'visible';
+            }
+        });
+
+        document.getElementById('btnSaveBranding').addEventListener('click', async () => {
+            await db.collection('settings').doc('brandingControl').set({
+                tgUrl: document.getElementById('tgUrl').value.trim(), tgStatus: document.getElementById('tgStatus').value,
+                instaUrl: document.getElementById('instaUrl').value.trim(), instaStatus: document.getElementById('instaStatus').value,
+                ytUrl: document.getElementById('ytUrl').value.trim(), ytStatus: document.getElementById('ytStatus').value,
+                waUrl: document.getElementById('waUrl').value.trim(), waStatus: document.getElementById('waStatus').value,
+                warningText: document.getElementById('warningText').value.trim(), warningStatus: document.getElementById('warningStatus').value,
+                footerText: document.getElementById('footerText').value.trim(), footerStatus: document.getElementById('footerStatus').value
+            });
+            alert("Branding Configuration Synced Globally.");
+        });
+    </script>
 </body>
 </html>
