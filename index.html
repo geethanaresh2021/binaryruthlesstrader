@@ -9,63 +9,41 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-:root { --bg-primary: #000000; --bg-card: rgba(15, 15, 20, 0.6); --accent-red: #ff3344; --accent-green: #00ffcc; --text-main: #ffffff; --text-muted: #a0a5b0; --border-color: rgba(255, 255, 255, 0.1); --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-*{ margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color:transparent; }
-html, body { background-color: var(--bg-primary); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
-body { background: radial-gradient(circle at 50% 0%, #1a0a0d 0%, #000000 70%); display: flex; flex-direction: column; }
-.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 16px; flex: 1 0 auto; }
-.ruthless-navbar { width: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); border-bottom: 1px solid var(--border-color); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 999; }
-.nav-brand h1 { font-family: 'Orbitron', sans-serif; font-size: 19px; font-weight: 900; color: var(--text-main); letter-spacing: 1px; text-transform: uppercase; }
+:root { --bg-primary: #000000; --accent-red: #ff3344; --accent-green: #00ffcc; --text-main: #ffffff; --text-muted: #a0a5b0; --border-color: rgba(255, 255, 255, 0.1); }
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }
+body { background: radial-gradient(circle at 50% 0%, #1a0a0d 0%, #000000 70%); color: var(--text-main); min-height: 100vh; }
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 20px; }
+.ruthless-navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border-color); }
+.nav-brand h1 { font-family: 'Orbitron', sans-serif; color: var(--text-main); }
 .nav-brand h1 span { color: var(--accent-red); }
-.action-bar-row { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 480px; padding: 4px 8px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; }
-.social-icon-btn { color: var(--accent-red); font-size: 20px; text-decoration: none; }
-.nav-login-btn { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 12px; color: var(--text-main); background: var(--accent-red); border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; }
-.runtime-warning-banner-box { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px; margin: 16px auto; text-align: center; font-size: 12px; max-width: 1000px; }
-.ads-vertical-stack { display: flex; flex-direction: column; gap: 12px; width: 100%; margin: 16px 0; }
-.ad-slot-frame { background: rgba(10, 10, 12, 0.4); border: 1px dashed var(--border-color); border-radius: 12px; display: none; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto; width: 100%; }
-.tool-workspace-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 24px; padding: 16px; margin: 16px 0; box-shadow: var(--glass-glow); width: 100%; }
-.tools-selection-container { max-width: 280px; margin: 0 auto 20px auto; text-align: center; }
-select { width: 100%; padding: 10px; border-radius: 10px; background: rgba(0,0,0,0.8); color: var(--accent-green) !important; font-family: 'Roboto Mono', monospace !important; font-weight: bold !important; }
-.system-footer-block { border-top: 1px solid var(--border-color); padding: 20px; text-align: center; color: var(--text-muted); font-size: 11px; background: rgba(0,0,0,0.9); }
-@media(min-width: 768px) { .ruthless-navbar { flex-direction: row; justify-content: space-between; padding: 20px 32px; } }
+.runtime-warning-banner-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: 600; }
+.tool-card { background: rgba(15,15,20,0.6); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color); }
 </style>
 </head>
 <body>
-<div id="homePageMasterView" class="layout-grid-system">
-    <div class="ruthless-navbar">
-        <div class="nav-brand"><h1>Binary <span>Ruthless</span> Trader</h1></div>
-        <div class="action-bar-row">
-            <div class="social-icons-rack" id="publicSocialHeaderRackContainer"></div>
-            <button class="nav-login-btn" onclick="window.location.href='admin.html'">Login</button>
-        </div>
+<div class="ruthless-navbar">
+    <div class="nav-brand"><h1>Binary <span>Ruthless</span> Trader</h1></div>
+    <button onclick="window.location.href='admin.html'" style="background:var(--accent-red); color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Login</button>
+</div>
+<div class="container">
+    <div class="runtime-warning-banner-box" id="publicRuntimeWarningBannerDisplay">Loading...</div>
+    <div class="tool-card">
+        <select id="publicToolSelector" style="width:100%; padding:10px; background:black; color:var(--accent-green);"></select>
+        <div id="publicWorkspaceEngine" style="margin-top:20px;"></div>
     </div>
-    <div class="container">
-        <div class="runtime-warning-banner-box" id="publicRuntimeWarningBannerDisplay">Note: Trading is risky.</div>
-        <div class="ads-vertical-stack">
-            <div id="homeTopAdSlot1" class="ad-slot-frame"></div>
-            <div id="homeTopAdSlot2" class="ad-slot-frame"></div>
-        </div>
-        <div class="tool-workspace-card">
-            <div class="tools-selection-container">
-                <h2>Select Tool</h2>
-                <select id="publicToolSelector" style="display: none;"></select>
-            </div>
-            <div id="publicWorkspaceEngine" style="min-height: 20px;"></div>
-        </div>
-        <div class="ads-vertical-stack">
-            <div id="homeBottomAdSlot1" class="ad-slot-frame"></div>
-            <div id="homeBottomAdSlot2" class="ad-slot-frame"></div>
-        </div>
-    </div>
-    <footer class="system-footer-block" id="publicFooterLegalTextDisplayBlock">© 2026 Binary Ruthless Trader. All Rights Reserved.</footer>
+    <footer id="publicFooterLegalTextDisplayBlock" style="margin-top:40px; text-align:center; color:var(--text-muted);"></footer>
 </div>
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g", authDomain: "binary-ruthless-trader-26654.firebaseapp.com", databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com", projectId: "binary-ruthless-trader-26654", storageBucket: "binary-ruthless-trader-26654.appspot.com", messagingSenderId: "533209261799", appId: "1:533209261799:web:a398ab21b0f913683ea442" };
+    const firebaseConfig = { apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g", authDomain: "binary-ruthless-trader-26654.firebaseapp.com", projectId: "binary-ruthless-trader-26654", storageBucket: "binary-ruthless-trader-26654.appspot.com", messagingSenderId: "533209261799", appId: "1:533209261799:web:a398ab21b0f913683ea442" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    
-    // Logic for loading tools and settings from Firestore will execute here...
-    // (Ensure you include the same logic from your original script here to keep site functional)
+    db.collection('settings').doc('brandingControl').onSnapshot(doc => {
+        if(doc.exists) {
+            const d = doc.data();
+            document.getElementById('publicRuntimeWarningBannerDisplay').innerText = d.warningText || "Note: Trading is risky.";
+            document.getElementById('publicFooterLegalTextDisplayBlock').innerText = d.footerText || "© 2026 Binary Ruthless Trader.";
+        }
+    });
 </script>
 </body>
 </html>
