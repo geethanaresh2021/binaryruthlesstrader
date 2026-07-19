@@ -3,298 +3,728 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <div id="ads-verify-meta-container"></div>
-
-    <meta name="8f628f2fa8293026c050fd16051acd04784a090a" content="8f628f2fa8293026c050fd16051acd04784a090a" />
-    
     <title>Binary Ruthless Trader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
     <style>
-        :root { 
-            --red: #ff0000; 
-            --white: #ffffff; 
-            --bg: #050505; 
-            --panel: #0a0a0a;
-            --neon: 0 0 15px var(--red); 
-            --input-green: #00ffcc;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000000;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-image: radial-gradient(circle at 50% 50%, #1a0a0a 0%, #000000 70%);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg) !important; 
-            color: #fff; 
-            font-family: 'Orbitron', sans-serif; 
-            overflow-x: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            touch-action: pan-x pan-y;
-        }
-
-        /* --- HEADER & BRANDING --- */
-        .header { 
-            width: 100%; padding: 40px 10px 20px 10px; position: relative; 
-            display: flex; flex-direction: column; align-items: center; 
-            background: #000; border-bottom: 1px solid #111; z-index: 100;
-        }
-        
-        .brand-img { 
-            width: 450px; 
-            max-width: 90%; 
-            filter: drop-shadow(var(--neon)); 
-            margin-bottom: 25px; 
-        }
-
-        .admin-btn { 
-            position: absolute; top: 15px; right: 15px; 
-            background: transparent; border: 1px solid #222; 
-            color: #444; padding: 6px 15px; font-size: 10px; 
-            cursor: pointer; border-radius: 4px; font-family: 'Roboto Mono';
-            transition: 0.3s;
-        }
-        .admin-btn:hover { border-color: var(--red); color: var(--red); }
-
-        .social-row { display: flex; gap: 30px; margin-bottom: 25px; }
-        .social-row a { color: #fff; font-size: 28px; transition: 0.3s; text-decoration: none; }
-        .social-row a:hover { color: var(--red); transform: scale(1.2); text-shadow: var(--neon); }
-
-        /* --- STRIPS --- */
-        .strip-container { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; padding: 0 10px; align-self: center; }
-        .top-strip { width: 100%; height: 44px; font-family: 'Roboto Mono', monospace; border-top: 2px solid var(--red); overflow: hidden; display: flex; align-items: center; }
-        .warning-strip { background: transparent; }
-        .announce-strip { background: transparent; border-bottom: 2px solid var(--red); }
-
-        @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .scroll-item { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); text-transform: uppercase; }
-
-        /* --- MAIN CONTENT LAYOUT --- */
-        .page-content { padding: 20px 10px; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        
-        .desktop-wrapper {
+        #app-container {
             width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .row-ads-top, .row-core, .row-ads-bottom {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 20px;
-            align-items: start;
-        }
-
-        .widget-column { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
-        
-        .ad-column { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            width: 100%; 
-            align-items: center; 
-        }
-
-        .ad-slot { 
-            width: 100%; 
-            min-height: 10px; 
-            height: auto; 
-            background: transparent; 
-            border: none; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            max-width: 600px;
+            background: #000000;
+            border: 2px solid #ff0033;
+            border-radius: 24px;
+            padding: 20px 16px;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.15);
+            position: relative;
             overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .header-icon-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            color: #ff0033;
+        }
+        .header-icon-left:hover {
+            transform: scale(1.3) rotate(45deg);
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.7);
+        }
+        .header-icon-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            color: #ff0033;
+        }
+        .header-icon-right:hover {
+            transform: scale(1.3) rotate(90deg);
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.7);
         }
 
-        .ruthless-select { 
-            width: 100%; padding: 16px; background: var(--panel); border: 1px solid #222; 
-            color: #fff; font-family: 'Roboto Mono'; font-weight: bold; border-radius: 6px; 
-            appearance: none; cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
-            background-repeat: no-repeat; background-position: right 15px center; 
+        .logo-symbol {
+            font-size: 46px;
+            color: #4a6cf7;
+            text-shadow: 0 0 50px rgba(74, 108, 247, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            width: fit-content;
+            transition: all 0.3s;
+        }
+        .logo-symbol:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 100px rgba(74, 108, 247, 0.6);
+        }
+        .logo-symbol img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 4px;
+            transition: all 0.3s;
         }
 
-        .display-box { 
-            width: 100%; 
-            height: 420px; 
-            background: #000 !important; 
-            border: 2px solid var(--red); 
-            box-shadow: var(--neon); 
-            border-radius: 8px; 
-            overflow: hidden; /* Important for internal scroll */
-            position: relative; 
+        .brand {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 0 20px rgba(255, 0, 51, 0.05);
+            transition: all 0.3s;
+        }
+        .brand .binary { color: #ffffff; }
+        .brand .ruthless { color: #ff0033; text-shadow: 0 0 30px rgba(255, 0, 51, 0.2); }
+        .brand .trader { color: #ffffff; }
+
+        .session-badge {
+            display: block;
+            margin: 0 auto 12px auto;
+            width: fit-content;
+            padding: 4px 14px;
+            border: none;
+            font-size: 11px;
+            color: #8892b0;
+            letter-spacing: 2px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .timer-container {
+            background: #0d0d0d;
+            border-radius: 16px;
+            padding: 10px 0;
+            margin-bottom: 16px;
+            border: 1px solid #ff0033;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .live-timer {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 3px;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+        }
+        .live-timer .hours, .live-timer .minutes { color: #ffffff; }
+        .live-timer .colon { color: rgba(255, 255, 255, 0.2); }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 0;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .btn:hover { 
+            transform: scale(1.03);
+            border-color: #888;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-auto.active {
+            border-color: #ff0033;
+            color: #ff0033;
+            background: rgba(255, 0, 51, 0.05);
+        }
+        .btn-signal.active {
+            border-color: #00ffcc;
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.05);
+        }
+        .btn-signal.waiting {
+            border-color: #ff0033;
+            color: #ff0033;
+            background: rgba(255, 0, 51, 0.05);
+            animation: pulseRed 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseRed {
+            0% { box-shadow: 0 0 0 rgba(255, 0, 51, 0); }
+            50% { box-shadow: 0 0 20px rgba(255, 0, 51, 0.15); }
+            100% { box-shadow: 0 0 0 rgba(255, 0, 51, 0); }
+        }
+
+        /* =========================================================== */
+        /* ===== SIGNAL BOX ===== */
+        /* =========================================================== */
+        .signal-box {
+            border: 1px solid #ff0033;
+            border-radius: 16px;
+            padding: 16px 16px 6px 16px;
+            text-align: center;
+            min-height: 240px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            background: rgba(255, 0, 51, 0.02);
+            position: relative;
+            width: 100%;
+            transition: all 0.5s ease;
+        }
+        .signal-box.has-data {
+            border-color: #00ffcc;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
         }
 
-        /* --- STICKY INTERNAL STATS --- */
-        .box-stats {
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 12px 5px; background: #080808; border-bottom: 1px solid #1a1a1a;
-            flex-shrink: 0;
+        /* ---- STATUS MESSAGES ---- */
+        .status-message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            flex-grow: 1;
         }
-        .b-stat { text-align: center; }
-        .b-label { color: #444; font-size: 8px; letter-spacing: 1px; margin-bottom: 3px; font-family: 'Roboto Mono'; }
-        .b-val { font-family: 'Roboto Mono'; font-weight: bold; font-size: 18px; }
-
-        #sigScreen { flex: 1; overflow-y: auto; overflow-x: hidden; }
-        #toolScreen { width: 100% !important; min-height: 100%; position: relative; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-
-        /* --- TOOL SPECIFIC FORMATTING --- */
-        #toolScreen input, #toolScreen select { 
-            color: var(--input-green) !important; 
-            font-weight: bold !important; 
-            font-family: 'Roboto Mono', monospace !important;
-            background: #111;
-            border: 1px solid #222;
-            padding: 8px;
-            margin-bottom: 10px;
+        .status-icon {
+            font-size: 36px;
+            color: #ff0033;
+            animation: spinPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes spinPulse {
+            0% { transform: rotate(0deg) scale(1); opacity: 0.6; }
+            50% { transform: rotate(180deg) scale(1.3); opacity: 1; text-shadow: 0 0 20px rgba(255,0,51,0.3); }
+            100% { transform: rotate(360deg) scale(1); opacity: 0.6; }
+        }
+        .status-main-text {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.3);
+            animation: textFade 2s ease-in-out infinite;
+        }
+        @keyframes textFade {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+            100% { opacity: 0.3; transform: scale(1); }
+        }
+        .status-detail-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
         }
 
-        .profit-num, .loss-num, .result-val, .profit-value, .loss-value { 
-            font-size: 32px !important; 
-            font-weight: bold !important; 
-            text-shadow: 0 0 10px var(--red) !important; 
-            font-family: 'Roboto Mono', monospace !important; 
-            color: #fff !important; 
+        /* ---- ERROR MESSAGES ---- */
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            flex-grow: 1;
+        }
+        .error-icon {
+            font-size: 36px;
+            color: #ff0033;
+        }
+        .error-main-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ff0033;
+            letter-spacing: 1px;
+        }
+        .error-detail-text {
+            font-size: 12px;
+            color: rgba(255, 0, 51, 0.7);
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            padding: 0 10px;
+            line-height: 1.5;
+        }
+
+        /* ---- COUNTDOWN ---- */
+        .countdown-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 8px;
+            flex-grow: 1;
+        }
+        .countdown-container.active {
+            display: flex;
+        }
+        .ready-text {
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffcc00;
+            text-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+            animation: readyPulse 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes readyPulse {
+            0% { transform: scale(1); opacity: 0.7; text-shadow: 0 0 15px rgba(255,204,0,0.2); }
+            100% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 30px rgba(255,204,0,0.3); }
+        }
+        .countdown-number {
+            font-size: 50px;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+            animation: countPop 0.6s ease-out;
+        }
+        @keyframes countPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ---- SIGNAL DATA ---- */
+        .signal-data { display: none; width: 100%; flex-grow: 1; }
+        .signal-data.active { display: block; }
+
+        .signal-item {
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .signal-item:last-child { margin-bottom: 0; }
+
+        .pair-container {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 10px;
+            white-space: nowrap;
+            width: 100%;
+        }
+        .signal-pair {
+            font-size: 26px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .signal-payout {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.08);
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 204, 0.15);
+            white-space: nowrap;
+        }
+
+        .signal-entry {
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffcc00;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+        }
+
+        .signal-accuracy {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .signal-accuracy.green { color: #00ff00; }
+        .signal-accuracy.yellow { color: #ffcc00; }
+        .signal-accuracy.red { color: #ff0033; }
+
+        .signal-trend {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .signal-trend.uptrend { color: #00ff00; }
+        .signal-trend.downtrend { color: #ff0033; }
+
+        .signal-direction {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 3px;
             display: inline-block;
-            margin: 10px 0;
+        }
+        .signal-direction.up {
+            color: #00ff00;
+            animation: pulseUp 1.2s ease-in-out infinite;
+        }
+        .signal-direction.down {
+            color: #ff0033;
+            animation: pulseDown 1.2s ease-in-out infinite;
         }
 
-        #sigScreen::-webkit-scrollbar, .display-box div::-webkit-scrollbar { width: 5px; }
-        #sigScreen::-webkit-scrollbar-thumb, .display-box div::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
-
-        .footer-mini { width: 100%; background: #000; border-top: 1px solid #111; padding: 30px; margin-top: 50px; text-align: center; }
-        .footer-links { display: flex; justify-content: center; gap: 30px; font-family: 'Roboto Mono'; font-size: 11px; margin-bottom: 15px; }
-        .footer-links a { color: #555; text-decoration: none; transition: 0.3s; }
-        .footer-links a:hover { color: var(--red); }
-        .trademark { font-size: 10px; color: #222; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* --- MOBILE LAYOUT REORDERING --- */
-        @media (max-width: 850px) {
-            .desktop-wrapper { display: flex; flex-direction: column; }
-            .row-ads-top, .row-core, .row-ads-bottom { display: contents; }
-            
-            #adSlot1 { order: 1; margin-bottom: 15px; }
-            #adSlot2 { order: 2; margin-bottom: 15px; }
-            #adSlot7 { order: 3; margin-bottom: 15px; }
-            #sigCol { order: 4; margin-bottom: 40px; }
-            #adSlot8 { order: 5; margin-bottom: 15px; }
-            #adSlot3 { order: 6; margin-bottom: 15px; }
-            #adSlot4 { order: 7; margin-bottom: 15px; }
-            #toolCol { order: 8; margin-bottom: 40px; }
-            #adSlot5 { order: 9; margin-bottom: 15px; }
-            #adSlot6 { order: 10; margin-bottom: 15px; }
-
-            .brand-img { width: 320px; }
-            .widget-column, .display-box, .ruthless-select, .ad-slot { width: 100% !important; max-width: none; }
-            .ad-column { display: contents; }
+        @keyframes pulseUp {
+            0% { transform: scale(1); text-shadow: 0 0 10px rgba(0,255,0,0.1); }
+            50% { transform: scale(1.05); text-shadow: 0 0 25px rgba(0,255,0,0.3); }
+            100% { transform: scale(1); text-shadow: 0 0 10px rgba(0,255,0,0.1); }
+        }
+        @keyframes pulseDown {
+            0% { transform: scale(1); text-shadow: 0 0 10px rgba(255,0,51,0.1); }
+            50% { transform: scale(1.05); text-shadow: 0 0 25px rgba(255,0,51,0.3); }
+            100% { transform: scale(1); text-shadow: 0 0 10px rgba(255,0,51,0.1); }
         }
 
-        .swal2-popup { background: #0a0a0a !important; border: 1px solid var(--red) !important; color: #fff !important; border-radius: 4px !important; box-shadow: var(--neon) !important; }
-        .swal2-title { font-family: 'Orbitron' !important; color: var(--red) !important; text-transform: uppercase; }
-        .swal2-confirm { background: var(--red) !important; border-radius: 4px !important; }
+        .signal-logic {
+            margin-top: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            line-height: 1.5;
+            width: 100%;
+        }
+
+        /* =========================================================== */
+        /* ===== SETTINGS MODAL ===== */
+        /* =========================================================== */
+        #settingsOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+            backdrop-filter: blur(6px);
+        }
+        #settingsOverlay.active { display: flex; }
+
+        .settings-panel {
+            background: #0a0a0a;
+            border: 1px solid #ff0033;
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.1);
+            animation: modalIn 0.4s ease-out;
+        }
+        @keyframes modalIn {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .settings-panel h2 {
+            color: #ff0033;
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 12px;
+        }
+        .settings-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            font-size: 22px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .settings-close:hover { color: #ff0033; transform: rotate(90deg); }
+
+        .setting-group {
+            margin-bottom: 20px;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s;
+        }
+        .setting-group:hover {
+            border-color: #333;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+        .setting-group label {
+            display: block;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .setting-group input, .setting-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: #00ffcc;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .setting-group input:focus, .setting-group textarea:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.05);
+        }
+        .setting-group textarea { min-height: 50px; resize: vertical; }
+        .setting-group input[type="file"] {
+            padding: 6px;
+            color: #555;
+            border: 1px dashed #222;
+        }
+        .setting-group .save-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: #00ffcc;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .setting-group .save-btn:hover { 
+            background: #00ddbb;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+        .setting-group .status-msg {
+            font-size: 11px;
+            color: #00ff00;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .setting-group.error {
+            border-color: #ff0033 !important;
+            box-shadow: 0 0 30px rgba(255, 0, 51, 0.2);
+        }
+        .setting-group.error input, .setting-group.error textarea {
+            border-color: #ff0033 !important;
+            color: #ff0033;
+        }
+        .setting-group .error-msg {
+            font-size: 11px;
+            color: #ff0033;
+            margin-top: 6px;
+            display: none;
+            line-height: 1.4;
+        }
+        .setting-group.error .error-msg {
+            display: block;
+        }
+
+        .settings-panel::-webkit-scrollbar { width: 3px; }
+        .settings-panel::-webkit-scrollbar-track { background: #0a0a0a; }
+        .settings-panel::-webkit-scrollbar-thumb { background: #ff0033; border-radius: 3px; }
+
+        @media (max-width: 500px) {
+            #app-container { max-width: 100%; padding: 12px 8px; }
+            .brand { font-size: 14px; }
+            .live-timer { font-size: 28px; letter-spacing: 2px; }
+            .btn { font-size: 10px; padding: 10px 0; }
+            .signal-box { min-height: 200px; padding: 12px 12px 4px 12px; }
+            .logo-symbol { font-size: 34px; }
+            .logo-symbol img { width: 34px; height: 34px; }
+            .signal-pair { font-size: 20px; }
+            .signal-direction { font-size: 26px; }
+            .signal-payout { font-size: 12px; padding: 2px 6px; }
+        }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <button class="admin-btn" onclick="adminLogin()">ADMIN</button>
-        <img src="brand-name.png" alt="RUTHLESS TRADER" class="brand-img">
-        
-        <div class="social-row">
-            <a href="#" id="link-Telegram"><i class="fab fa-telegram"></i></a>
-            <a href="#" id="link-Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" id="link-YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="#" id="link-Facebook"><i class="fab fa-facebook"></i></a>
+    <div id="app-container">
+        <div class="header">
+            <button class="header-icon-left" id="btnSettings">⚙️</button>
+            <div class="logo-symbol" id="appLogoDisplay">◆</div>
+            <button class="header-icon-right" id="btnClose">✕</button>
         </div>
 
-        <div class="strip-container">
-            <div class="top-strip warning-strip" id="warningNoteContainer"></div>
-            <div class="top-strip announce-strip" id="announceStrip"></div>
+        <div class="brand">
+            <span class="binary">BINARY</span>
+            <span class="ruthless">RUTHLESS</span>
+            <span class="trader">TRADER</span>
         </div>
-    </header>
 
-    <div class="page-content">
-        <div class="desktop-wrapper">
-            
-            <div class="row-ads-top">
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot1"></div>
-                    <div class="ad-slot" id="adSlot2"></div>
+        <div class="session-badge" id="sessionBadge">LONDON SESSION</div>
+
+        <div class="timer-container">
+            <div class="live-timer" id="liveTimer">
+                <span class="hours">00</span><span class="colon"> : </span>
+                <span class="minutes">00</span><span class="colon"> : </span>
+                <span class="seconds" id="secondsDisplay">00</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-auto" id="btnAuto">AUTO SIGNALS</button>
+            <button class="btn btn-signal" id="btnSignal">GET SIGNAL</button>
+        </div>
+
+        <div class="signal-box" id="signalBox">
+            <div class="status-message-container active" id="statusContainer">
+                <div class="status-icon">⟳</div>
+                <div class="status-main-text">WAIT FOR SIGNAL</div>
+                <div class="status-detail-text">Click GET SIGNAL to start.</div>
+            </div>
+            <div class="error-container" id="errorContainer">
+                <div class="error-icon">✖</div>
+                <div class="error-main-text">ERROR</div>
+                <div class="error-detail-text">No error details available.</div>
+            </div>
+            <div class="countdown-container" id="countdownContainer">
+                <div class="ready-text">READY</div>
+                <div class="countdown-number" id="countdownNumber">5</div>
+            </div>
+            <div class="signal-data" id="signalDataView">
+                <div class="pair-container">
+                    <span class="signal-pair" id="sigPair">--</span>
+                    <span class="signal-payout" id="sigPayout">--</span>
                 </div>
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot7"></div>
-                    <div class="ad-slot" id="adSlot8"></div>
-                </div>
+                <div class="signal-entry" id="sigEntry">--:--</div>
+                <div class="signal-accuracy green" id="sigAccuracy">--%</div>
+                <div class="signal-trend" id="sigTrend">--</div>
+                <div class="signal-direction" id="sigDirection">--</div>
+                <div class="signal-logic" id="sigLogic">Logic: --</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsOverlay">
+        <div class="settings-panel">
+            <span class="settings-close" id="closeSettings">✕</span>
+            <h2>⚙️ SETTINGS</h2>
+
+            <div class="setting-group" id="fbGroup">
+                <label>🔥 Firebase Config</label>
+                <input type="text" id="fbApiKey" placeholder="API Key">
+                <input type="text" id="fbAuthDomain" placeholder="Auth Domain" style="margin-top:8px;">
+                <input type="text" id="fbDatabaseURL" placeholder="Database URL" style="margin-top:8px;">
+                <input type="text" id="fbProjectId" placeholder="Project ID" style="margin-top:8px;">
+                <input type="text" id="fbStorageBucket" placeholder="Storage Bucket" style="margin-top:8px;">
+                <input type="text" id="fbMessagingSenderId" placeholder="Messaging Sender ID" style="margin-top:8px;">
+                <input type="text" id="fbAppId" placeholder="App ID" style="margin-top:8px;">
+                <div class="error-msg">❌ Firebase Error: Check your fields.</div>
+                <button class="save-btn" onclick="saveSetting('firebase')">Connect Firebase</button>
+                <div class="status-msg" id="statusFirebase">✅ Saved!</div>
             </div>
 
-            <div class="row-core">
-                <div class="widget-column" id="sigCol">
-                    <select class="ruthless-select" id="sigSelect">
-                        <option value="">-- SELECT SIGNAL --</option>
-                        <option value="QUOTEX">QUOTEX</option>
-                        <option value="TOXA">TOXA</option>
-                    </select>
-                    <div class="display-box">
-                        <div class="box-stats">
-                            <div class="b-stat">
-                                <div class="b-label">TOTAL</div>
-                                <div id="totalCount" class="b-val" style="color:#fff;">0</div>
-                            </div>
-                            <div class="b-stat">
-                                <div class="b-label" style="color:#00ffcc;">WINS</div>
-                                <div id="winCount" class="b-val" style="color:#00ffcc;">0</div>
-                            </div>
-                            <div class="b-stat">
-                                <div class="b-label" style="color:var(--red);">LOSS</div>
-                                <div id="lossCount" class="b-val" style="color:var(--red);">0</div>
-                            </div>
-                        </div>
-                        <div id="sigScreen"></div>
-                    </div>
-                </div>
-                <div class="widget-column" id="toolCol">
-                    <select class="ruthless-select" id="toolSelect">
-                        <option value="">-- SELECT TOOL --</option>
-                    </select>
-                    <div class="display-box">
-                        <div id="toolScreen"></div>
-                    </div>
-                </div>
+            <div class="setting-group" id="geminiGroup">
+                <label>🧠 Gemini API Key (OCR + Signal Analysis)</label>
+                <input type="text" id="geminiApiKey" placeholder="Enter your Gemini API Key">
+                <div class="error-msg">❌ Gemini API Error: Enter a valid Gemini API Key.</div>
+                <button class="save-btn" onclick="saveSetting('gemini')">Save Gemini API Key</button>
+                <div class="status-msg" id="statusGemini">✅ Saved!</div>
             </div>
 
-            <div class="row-ads-bottom">
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot3"></div>
-                    <div class="ad-slot" id="adSlot4"></div>
-                </div>
-                <div class="ad-column">
-                    <div class="ad-slot" id="adSlot5"></div>
-                    <div class="ad-slot" id="adSlot6"></div>
-                </div>
+            <div class="setting-group" id="tgGroup">
+                <label>📨 Telegram</label>
+                <input type="text" id="tgToken" placeholder="Bot Token">
+                <input type="text" id="tgChatId" placeholder="Chat ID" style="margin-top:8px;">
+                <div class="error-msg">❌ Telegram Error: Enter Bot Token and Chat ID.</div>
+                <button class="save-btn" onclick="saveSetting('telegram')">Save</button>
+                <div class="status-msg" id="statusTelegram">✅ Saved!</div>
+            </div>
+
+            <div class="setting-group">
+                <label>🖼️ Logo</label>
+                <input type="file" id="logoUpload" accept="image/*">
+                <button class="save-btn" onclick="saveSetting('logo')">Save</button>
+                <div class="status-msg" id="statusLogo">✅ Saved!</div>
+            </div>
+
+            <div class="setting-group">
+                <label>⏱️ Timer Settings</label>
+                <input type="number" id="captureSec" value="52" min="0" max="59">
+                <input type="number" id="signalSec" value="57" min="0" max="59" style="margin-top:8px;">
+                <input type="number" id="resetSec" value="1" min="0" max="59" style="margin-top:8px;">
+                <button class="save-btn" onclick="saveSetting('timer')">Save</button>
+                <div class="status-msg" id="statusTimer">✅ Saved!</div>
+            </div>
+
+            <div class="setting-group">
+                <label>🧠 Gemini AI Prompt</label>
+                <textarea id="geminiPrompt">Analyze this trading chart image. Extract the exact selected pair name (e.g. USD/IDR OTC), its payout percentage (e.g. 79%), and analyze the chart to determine if the signal should be UP or DOWN. Return ONLY a JSON object with these exact keys: "pair", "payout", "accuracy" (0-100), "direction" ("UP" or "DOWN"), "trend" ("UPTREND" or "DOWNTREND"), "logic" (short reason), and "nextEntryTime" (HH:MM format based on current time + 1 minute). Do not add any other text.</textarea>
+                <button class="save-btn" onclick="saveSetting('geminiPrompt')">Save Prompt</button>
+                <div class="status-msg" id="statusGeminiPrompt">✅ Saved!</div>
             </div>
 
         </div>
     </div>
 
-    <footer class="footer-mini">
-        <div class="footer-links">
-            <a href="#">CONTACT US</a> <a href="#">TRADEMARK</a> <a href="#">PRIVACY</a> <a href="#">TERMS</a>
-        </div>
-        <div class="trademark">BINARY RUTHLESS TRADER™ | ALL RIGHTS RESERVED © 2026</div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
+        // ============================================================
+        //  HARDCODED FIREBASE CONFIG (Auto Connect)
+        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
             authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -302,247 +732,575 @@
             projectId: "binary-ruthless-trader-26654",
             storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
             messagingSenderId: "533209261799",
-            appId: "1:533209261799:web:a398ab21b0f913683ea442"
+            appId: "1:533209261799:web:a398ab21b0f913683ea442",
+            measurementId: "G-WQCXCMV5PR"
         };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
 
-        function checkMidnightReset() {
-            const lastUpdate = localStorage.getItem('ruthless_last_date');
-            const todayStr = new Date().toDateString();
-            if (lastUpdate && lastUpdate !== todayStr) {
-                Object.keys(localStorage).forEach(key => { if (key.startsWith('tool_input_')) localStorage.removeItem(key); });
+        // ============================================================
+        //  HARDCODED GEMINI API KEY (Auto Connect)
+        // ============================================================
+        const GEMINI_API_KEY = "AQ.Ab8RN6JCH_8YZwVR8iSdkiRBZqi15mxwMmS2Q4ok3iMxtJB8hg";
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const liveTimer = document.getElementById('liveTimer');
+        const hoursSpan = liveTimer.querySelector('.hours');
+        const minutesSpan = liveTimer.querySelector('.minutes');
+        const secondsSpan = document.getElementById('secondsDisplay');
+        const btnAuto = document.getElementById('btnAuto');
+        const btnSignal = document.getElementById('btnSignal');
+        const btnClose = document.getElementById('btnClose');
+        const btnSettings = document.getElementById('btnSettings');
+        const signalBox = document.getElementById('signalBox');
+        
+        const statusContainer = document.getElementById('statusContainer');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusMainText = document.getElementById('statusMainText');
+        const statusDetailText = document.getElementById('statusDetailText');
+        
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMainText = document.getElementById('errorMainText');
+        const errorDetailText = document.getElementById('errorDetailText');
+        
+        const countdownContainer = document.getElementById('countdownContainer');
+        const readyText = document.getElementById('readyText');
+        const countdownNumber = document.getElementById('countdownNumber');
+        const signalDataView = document.getElementById('signalDataView');
+        
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeSettings = document.getElementById('closeSettings');
+        
+        const sigPair = document.getElementById('sigPair');
+        const sigPayout = document.getElementById('sigPayout');
+        const sigEntry = document.getElementById('sigEntry');
+        const sigAccuracy = document.getElementById('sigAccuracy');
+        const sigDirection = document.getElementById('sigDirection');
+        const sigTrend = document.getElementById('sigTrend');
+        const sigLogic = document.getElementById('sigLogic');
+
+        let autoMode = false;
+        let manualWait = false;
+        let signalLocked = false;
+        let lastSecond = -1;
+        let timerInterval = null;
+        let lastSignalData = null;
+        let firebaseInitialized = false;
+        let firebaseApp = null;
+        let firebaseDb = null;
+        let countdownActive = false;
+        let geminiApiKey = '';
+
+        let settings = {
+            geminiApiKey: '',
+            tgToken: '', tgChatId: '', logoData: '',
+            fbApiKey: '', fbAuthDomain: '', fbDatabaseURL: '', fbProjectId: '', fbStorageBucket: '', fbMessagingSenderId: '', fbAppId: '',
+            captureSec: 52, signalSec: 57, resetSec: 1,
+            geminiPrompt: 'Analyze this trading chart image. Extract the exact selected pair name (e.g. USD/IDR OTC), its payout percentage (e.g. 79%), and analyze the chart to determine if the signal should be UP or DOWN. Return ONLY a JSON object with these exact keys: "pair", "payout", "accuracy" (0-100), "direction" ("UP" or "DOWN"), "trend" ("UPTREND" or "DOWNTREND"), "logic" (short reason), and "nextEntryTime" (HH:MM format based on current time + 1 minute). Do not add any other text.'
+        };
+
+        // ============================================================
+        //  AUTO INITIALIZE FIREBASE
+        // ============================================================
+        function initFirebase() {
+            try {
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+                firebaseDb = firebase.database();
+                firebaseInitialized = true;
+                console.log('🔥 Firebase Auto-Initialized Successfully!');
+                return true;
+            } catch (e) { 
+                console.error('Firebase Init Error:', e);
+                return false; 
             }
-            localStorage.setItem('ruthless_last_date', todayStr);
         }
 
-        function cleanToolCode(html) {
-            if (!html) return "";
-            let clean = html;
-            clean = clean.replace(/<(?:html|head|body)[^>]*>|<\/(?:html|head|body)>/gi, '');
-            clean = clean.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, function(match, css) {
-                const scopedCss = css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, function(selector) {
-                    let s = selector.trim();
-                    if (s === 'body' || s === 'html' || s === '*') return '#toolScreen';
-                    return '#toolScreen ' + s;
-                });
-                return '<style>' + scopedCss + '</style>';
-            });
-            return clean;
-        }
+        // ============================================================
+        //  STATUS UPDATE FUNCTIONS
+        // ============================================================
+        function updateStatus() {
+            const fbOk = firebaseInitialized && firebaseDb;
+            const apiOk = geminiApiKey && geminiApiKey.length > 10;
 
-        function saveToolInputs() {
-            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
-            inputs.forEach((input, index) => {
-                const storageId = input.id || `auto_val_${index}`;
-                localStorage.setItem('tool_input_' + storageId, input.value);
-            });
-        }
-
-        function restoreToolInputs() {
-            const inputs = document.querySelectorAll('#toolScreen input, #toolScreen select');
-            inputs.forEach((input, index) => {
-                const storageId = input.id || `auto_val_${index}`;
-                const savedValue = localStorage.getItem('tool_input_' + storageId);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            });
-        }
-
-        function applySmoothScroll(containerId, text, speed, color) {
-            const container = document.getElementById(containerId); if (!container) return;
-            container.innerHTML = ""; container.style.color = color; container.style.fontSize = "20px"; container.style.fontWeight = "900"; container.style.display = "flex"; container.style.overflow = "hidden"; container.style.whiteSpace = "nowrap";
-            const spd = parseInt(speed) || 0;
-            if (spd === 0) {
-                container.style.justifyContent = "center";
-                container.innerHTML = `<span class="scroll-item">${text}</span>`;
+            if (fbOk) {
+                fbStatusDot.className = 'status-dot green';
+                fbStatusLabel.className = 'status-label green';
             } else {
-                container.style.justifyContent = "flex-start";
-                const duration = 35 / spd;
-                container.innerHTML = `<div style="display: flex; animation: scrollText ${duration}s linear infinite;"><span class="scroll-item" style="padding-right: 80px;">${text}</span><span class="scroll-item" style="padding-right: 80px;">${text}</span></div>`;
+                fbStatusDot.className = 'status-dot red';
+                fbStatusLabel.className = 'status-label red';
+            }
+
+            if (apiOk) {
+                apiStatusDot.className = 'status-dot green';
+                apiStatusLabel.className = 'status-label green';
+            } else {
+                apiStatusDot.className = 'status-dot red';
+                apiStatusLabel.className = 'status-label red';
             }
         }
 
-        function loadVerificationData() {
-            db.ref('site_settings/verification').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                if (data.meta && data.meta.data) {
-                    const container = document.getElementById('ads-verify-meta-container');
-                    container.innerHTML = data.meta.data;
-                }
-            });
+        // ============================================================
+        //  UI FUNCTIONS
+        // ============================================================
+        function showStatus(mainText, detailText, icon = '⟳') {
+            statusContainer.className = 'status-message-container active';
+            errorContainer.className = 'error-container';
+            countdownContainer.className = 'countdown-container';
+            signalDataView.className = 'signal-data';
+            statusIcon.textContent = icon;
+            statusMainText.textContent = mainText;
+            statusDetailText.textContent = detailText;
+            signalBox.classList.remove('has-data');
+            updateStatus();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            checkMidnightReset();
-            loadVerificationData();
+        function showError(mainText, detailText) {
+            statusContainer.className = 'status-message-container';
+            countdownContainer.className = 'countdown-container';
+            signalDataView.className = 'signal-data';
+            errorContainer.className = 'error-container active';
+            errorMainText.textContent = mainText;
+            errorDetailText.textContent = detailText;
+            signalBox.classList.remove('has-data');
+            updateStatus();
+        }
 
-            const sigSelect = document.getElementById('sigSelect');
-            const savedSignal = localStorage.getItem('ruthless_signal');
-            
-            if(savedSignal) {
-                sigSelect.value = savedSignal;
-                listenToSignals(savedSignal);
+        function showCountdown() {
+            statusContainer.className = 'status-message-container';
+            errorContainer.className = 'error-container';
+            countdownContainer.className = 'countdown-container active';
+            signalDataView.className = 'signal-data';
+            signalBox.classList.remove('has-data');
+            updateStatus();
+        }
+
+        function showSignalData() {
+            statusContainer.className = 'status-message-container';
+            errorContainer.className = 'error-container';
+            countdownContainer.className = 'countdown-container';
+            signalDataView.className = 'signal-data active';
+            signalBox.classList.add('has-data');
+            updateStatus();
+        }
+
+        function showWait() {
+            showStatus('WAIT FOR SIGNAL', 'Click GET SIGNAL to start.', '⟳');
+            sigPair.textContent = '--';
+            sigPayout.textContent = '--';
+            sigEntry.textContent = '--:--';
+            sigAccuracy.textContent = '--%';
+            sigTrend.textContent = '--';
+            sigDirection.textContent = '--';
+            sigLogic.textContent = 'Logic: --';
+            updateStatus();
+        }
+
+        // ============================================================
+        //  STORAGE
+        // ============================================================
+        function saveToStorage(key, value) {
+            try {
+                const localData = JSON.parse(localStorage.getItem('ruthlessTraderLocal') || '{}');
+                localData[key] = value;
+                localStorage.setItem('ruthlessTraderLocal', JSON.stringify(localData));
+            } catch(e) {}
+            if (firebaseInitialized && firebaseDb) {
+                firebaseDb.ref('ruthlessTrader/' + key).set(value);
             }
+        }
 
-            sigSelect.addEventListener('change', (e) => {
-                const broker = e.target.value;
-                localStorage.setItem('ruthless_signal', broker);
-                listenToSignals(broker);
-            });
+        function loadFromStorage() {
+            let localData = {};
+            try { localData = JSON.parse(localStorage.getItem('ruthlessTraderLocal') || '{}'); } catch(e) {}
+            settings = { ...settings, ...localData };
+            geminiApiKey = settings.geminiApiKey || '';
 
-            db.ref('site_settings/giveaway').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('announceStrip', d.winner, d.speed, d.color); });
-            db.ref('site_settings/warning_note').on('value', snap => { const d = snap.val(); if(d) applySmoothScroll('warningNoteContainer', d.text, d.speed, d.color); });
-            
-            db.ref('site_settings/socials').on('value', snap => {
-                const links = snap.val() || {};
-                ['Telegram', 'Instagram', 'YouTube', 'Facebook'].forEach(p => {
-                    const el = document.getElementById(`link-${p}`);
-                    if (el && links[p]) { el.href = links[p]; el.target = "_blank"; }
-                });
-            });
-
-            db.ref('site_settings/ads').on('value', snap => {
-                const ads = snap.val(); if (!ads) return;
-                for (let i = 1; i <= 8; i++) {
-                    const id = `adSlot${i}`; const d = ads[id]; const el = document.getElementById(id);
-                    if (el && d) {
-                        if (d.visible === false) { 
-                            el.style.display = "none"; 
-                            el.innerHTML = '';
-                            el.setAttribute('data-snippet', '');
-                        } 
-                        else {
-                            el.style.display = "flex"; 
-                            el.style.width = d.width || "100%"; 
-                            el.style.height = d.height || "auto";
-
-                            if (el.getAttribute('data-snippet') !== d.snippet) {
-                                el.setAttribute('data-snippet', d.snippet);
-                                el.innerHTML = ''; 
-                                const iframe = document.createElement('iframe');
-                                iframe.style.width = "100%";
-                                iframe.style.height = d.height || "100%";
-                                iframe.style.border = "none";
-                                iframe.scrolling = "no";
-                                el.appendChild(iframe);
-                                const doc = iframe.contentWindow.document;
-                                doc.open();
-                                doc.write(`<style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }</style><div>${d.snippet}</div>`);
-                                doc.close();
-                            }
-                        }
+            if (firebaseInitialized && firebaseDb) {
+                firebaseDb.ref('ruthlessTrader').once('value').then((snapshot) => {
+                    const fbData = snapshot.val();
+                    if (fbData) {
+                        settings = { ...settings, ...fbData };
+                        geminiApiKey = settings.geminiApiKey || '';
+                        applySettingsToUI();
+                        console.log('📥 Loaded from Firebase');
                     }
+                }).catch(() => { applySettingsToUI(); });
+            } else {
+                applySettingsToUI();
+                console.log('📥 Loaded from LocalStorage');
+            }
+        }
+
+        function applySettingsToUI() {
+            document.getElementById('fbApiKey').value = settings.fbApiKey || '';
+            document.getElementById('fbAuthDomain').value = settings.fbAuthDomain || '';
+            document.getElementById('fbDatabaseURL').value = settings.fbDatabaseURL || '';
+            document.getElementById('fbProjectId').value = settings.fbProjectId || '';
+            document.getElementById('fbStorageBucket').value = settings.fbStorageBucket || '';
+            document.getElementById('fbMessagingSenderId').value = settings.fbMessagingSenderId || '';
+            document.getElementById('fbAppId').value = settings.fbAppId || '';
+            document.getElementById('geminiApiKey').value = settings.geminiApiKey || '';
+            document.getElementById('tgToken').value = settings.tgToken || '';
+            document.getElementById('tgChatId').value = settings.tgChatId || '';
+            document.getElementById('captureSec').value = settings.captureSec || 52;
+            document.getElementById('signalSec').value = settings.signalSec || 57;
+            document.getElementById('resetSec').value = settings.resetSec || 1;
+            document.getElementById('geminiPrompt').value = settings.geminiPrompt || '';
+            if (settings.logoData) {
+                document.getElementById('appLogoDisplay').innerHTML = `<img src="${settings.logoData}" style="width:50px;height:50px;object-fit:contain;">`;
+            }
+        }
+
+        function initFirebase() {
+            try {
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+                firebaseDb = firebase.database();
+                firebaseInitialized = true;
+                return true;
+            } catch (e) { return false; }
+        }
+
+        function saveSetting(type) {
+            document.querySelectorAll('.setting-group').forEach(el => el.classList.remove('error'));
+            
+            switch(type) {
+                case 'firebase':
+                    settings.fbApiKey = document.getElementById('fbApiKey').value;
+                    settings.fbAuthDomain = document.getElementById('fbAuthDomain').value;
+                    settings.fbDatabaseURL = document.getElementById('fbDatabaseURL').value;
+                    settings.fbProjectId = document.getElementById('fbProjectId').value;
+                    settings.fbStorageBucket = document.getElementById('fbStorageBucket').value;
+                    settings.fbMessagingSenderId = document.getElementById('fbMessagingSenderId').value;
+                    settings.fbAppId = document.getElementById('fbAppId').value;
+                    
+                    if (!settings.fbApiKey || !settings.fbDatabaseURL || !settings.fbProjectId) {
+                        document.getElementById('fbGroup').classList.add('error');
+                        return;
+                    }
+                    
+                    Object.keys(settings).filter(k => k.startsWith('fb')).forEach(k => saveToStorage(k, settings[k]));
+                    if (initFirebase()) { 
+                        showStatus('Connected', 'Firebase is ready.', '✓'); 
+                        loadFromStorage(); 
+                    } else {
+                        document.getElementById('fbGroup').classList.add('error');
+                    }
+                    break;
+                case 'gemini':
+                    settings.geminiApiKey = document.getElementById('geminiApiKey').value;
+                    if (!settings.geminiApiKey || settings.geminiApiKey.length < 10) {
+                        document.getElementById('geminiGroup').classList.add('error');
+                        return;
+                    }
+                    geminiApiKey = settings.geminiApiKey;
+                    saveToStorage('geminiApiKey', settings.geminiApiKey);
+                    showStatus('API Saved', 'Gemini API Key updated.', '✓');
+                    break;
+                case 'telegram':
+                    settings.tgToken = document.getElementById('tgToken').value;
+                    settings.tgChatId = document.getElementById('tgChatId').value;
+                    if (!settings.tgToken || !settings.tgChatId) {
+                        document.getElementById('tgGroup').classList.add('error');
+                        return;
+                    }
+                    saveToStorage('tgToken', settings.tgToken);
+                    saveToStorage('tgChatId', settings.tgChatId);
+                    break;
+                case 'logo':
+                    const file = document.getElementById('logoUpload').files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            settings.logoData = e.target.result;
+                            document.getElementById('appLogoDisplay').innerHTML = `<img src="${settings.logoData}" style="width:50px;height:50px;object-fit:contain;">`;
+                            saveToStorage('logoData', settings.logoData);
+                        };
+                        reader.readAsDataURL(file);
+                    } else alert('Select a file');
+                    return;
+                case 'timer':
+                    settings.captureSec = parseInt(document.getElementById('captureSec').value) || 52;
+                    settings.signalSec = parseInt(document.getElementById('signalSec').value) || 57;
+                    settings.resetSec = parseInt(document.getElementById('resetSec').value) || 1;
+                    saveToStorage('captureSec', settings.captureSec);
+                    saveToStorage('signalSec', settings.signalSec);
+                    saveToStorage('resetSec', settings.resetSec);
+                    resetTimerLogic();
+                    break;
+                case 'geminiPrompt':
+                    settings.geminiPrompt = document.getElementById('geminiPrompt').value;
+                    saveToStorage('geminiPrompt', settings.geminiPrompt);
+                    break;
+            }
+        }
+
+        btnSettings.onclick = () => {
+            settingsOverlay.classList.add('active');
+            document.querySelectorAll('.setting-group').forEach(el => el.classList.remove('error'));
+            ['fbApiKey','fbAuthDomain','fbDatabaseURL','fbProjectId','fbStorageBucket','fbMessagingSenderId','fbAppId','geminiApiKey','tgToken','tgChatId','captureSec','signalSec','resetSec','geminiPrompt'].forEach(id => {
+                document.getElementById(id).value = settings[id] || '';
+            });
+        };
+        closeSettings.onclick = () => settingsOverlay.classList.remove('active');
+        settingsOverlay.onclick = (e) => { if (e.target === settingsOverlay) settingsOverlay.classList.remove('active'); };
+
+        // ============================================================
+        //  TIMER
+        // ============================================================
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const ist = new Date(now.getTime() + (now.getTimezoneOffset()*60000) + 19800000);
+                const h = String(ist.getHours()).padStart(2,'0');
+                const m = String(ist.getMinutes()).padStart(2,'0');
+                const s = String(ist.getSeconds()).padStart(2,'0');
+                hoursSpan.textContent = h; minutesSpan.textContent = m; secondsSpan.textContent = s;
+                const sec = parseInt(s);
+                
+                if (sec >= 1 && sec <= 49) {
+                    secondsSpan.style.color = '#00ff00';
+                    secondsSpan.style.textShadow = '0 0 20px rgba(0, 255, 0, 0.3)';
+                } else {
+                    secondsSpan.style.color = '#ff0033';
+                    secondsSpan.style.textShadow = '0 0 30px rgba(255, 0, 51, 0.4)';
                 }
-            });
 
-            listenToTools();
-        });
+                const captureSec = settings.captureSec;
+                const signalSec = settings.signalSec;
+                const resetSec = settings.resetSec;
 
-        let signalRef = null;
-        let statsRef = null;
-        let lastSignalMsg = "";
+                if (sec === signalSec - 5 && lastSecond !== signalSec - 5 && (autoMode || manualWait)) {
+                    startCountdown();
+                }
 
-        function listenToSignals(broker) {
-            const sigScreen = document.getElementById('sigScreen');
-            const winD = document.getElementById('winCount');
-            const lossD = document.getElementById('lossCount');
-            const totalD = document.getElementById('totalCount');
+                if (sec === captureSec && lastSecond !== captureSec && (autoMode || manualWait)) {
+                    captureFullScreenAndAnalyze();
+                }
 
-            if (signalRef) signalRef.off();
-            if (statsRef) statsRef.off();
-            if (!broker) { sigScreen.innerHTML = ''; return; }
+                if (sec === signalSec && lastSecond !== signalSec && (autoMode || manualWait)) {
+                    displaySignalFromAI();
+                    if (manualWait) { manualWait = false; btnSignal.textContent = 'GET SIGNAL'; btnSignal.className = 'btn btn-signal'; btnSignal.disabled = false; }
+                    signalLocked = false;
+                    countdownActive = false;
+                }
 
-            sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:var(--red);">SYNCING...</div>';
-            const key = broker.toLowerCase();
+                if (sec === resetSec && lastSecond !== resetSec && !autoMode) {
+                    btnSignal.textContent = 'GET SIGNAL'; btnSignal.className = 'btn btn-signal'; btnSignal.disabled = false; signalLocked = false; manualWait = false;
+                }
 
-            // Stats Sync
-            statsRef = db.ref('stats_storage/' + key);
-            statsRef.on('value', snap => {
-                const s = snap.val() || { wins: 0, loss: 0 };
-                winD.innerText = s.wins;
-                lossD.innerText = s.loss;
-                totalD.innerText = s.wins + s.loss;
-            });
+                lastSecond = sec;
+            }, 1000);
+        }
 
-            // Signal Sync
-            signalRef = db.ref('signals/' + key);
-            signalRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) {
-                    sigScreen.innerHTML = '<div style="text-align:center; padding:20px; color:#333;">NO ACTIVE SIGNAL</div>';
+        function resetTimerLogic() { startTimer(); }
+
+        function startCountdown() {
+            if (countdownActive) return;
+            countdownActive = true;
+            showCountdown();
+            let count = 5;
+            readyText.textContent = 'READY';
+            countdownNumber.textContent = count;
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownNumber.textContent = count;
+                    countdownNumber.style.animation = 'none';
+                    setTimeout(() => { countdownNumber.style.animation = 'countPop 0.6s ease-out'; }, 10);
+                } else {
+                    clearInterval(countInterval);
+                }
+            }, 1000);
+        }
+
+        btnAuto.onclick = () => {
+            autoMode = !autoMode;
+            if (autoMode) {
+                btnAuto.textContent = 'PAUSE SIGNALS'; btnAuto.className = 'btn btn-auto active';
+                btnSignal.disabled = true; btnSignal.textContent = 'AUTO MODE'; btnSignal.className = 'btn btn-signal';
+                showStatus('AUTO MODE', 'Waiting for next cycle...', '⏳');
+            } else {
+                btnAuto.textContent = 'AUTO SIGNALS'; btnAuto.className = 'btn btn-auto';
+                btnSignal.disabled = false; btnSignal.textContent = 'GET SIGNAL'; btnSignal.className = 'btn btn-signal';
+                showWait();
+            }
+        };
+        btnSignal.onclick = () => {
+            if (autoMode || signalLocked) return;
+            manualWait = true; signalLocked = true;
+            btnSignal.textContent = 'WAIT FOR SIGNAL'; btnSignal.className = 'btn btn-signal waiting'; btnSignal.disabled = true;
+            showStatus('WAITING', 'Starting capture at next cycle...', '⏳');
+        };
+
+        // ============================================================
+        //  CAPTURE + AI
+        // ============================================================
+
+        async function captureFullScreenAndAnalyze() {
+            if (!navigator.mediaDevices || typeof navigator.mediaDevices.getDisplayMedia !== 'function') {
+                showError('CAPTURE FAILED', 'Your device does not support screen capture.');
+                return;
+            }
+
+            showStatus('CAPTURING', 'Please allow screen sharing permission...', '📸');
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+                if (!stream) {
+                    showError('CAPTURE CANCELLED', 'You cancelled the screen share.');
                     return;
                 }
+                
+                const track = stream.getVideoTracks()[0];
+                const imageCapture = new ImageCapture(track);
+                const bitmap = await imageCapture.grabFrame();
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = bitmap.width;
+                canvas.height = bitmap.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(bitmap, 0, 0);
+                const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
+                
+                track.stop();
+                stream.getTracks().forEach(t => t.stop());
 
-                const currentMsg = (data.updatedAt || "").toUpperCase();
-                // Avoid double counting same signal
-                if (currentMsg !== lastSignalMsg && !currentMsg.includes("ANALYZING")) {
-                    lastSignalMsg = currentMsg;
-                    if (currentMsg.includes("WIN")) db.ref('stats_storage/'+key+'/wins').transaction(c => (c||0)+1);
-                    if (currentMsg.includes("LOSS")) db.ref('stats_storage/'+key+'/loss').transaction(c => (c||0)+1);
+                showStatus('ANALYZING', 'Sending image to Gemini AI...', '🧠');
+                const signalData = await callGeminiAI(blob);
+                if (signalData) {
+                    lastSignalData = signalData;
+                } else {
+                    lastSignalData = null;
                 }
 
-                sigScreen.innerHTML = `
-                    <div style="padding:15px; border-bottom:1px solid #111; background:rgba(255,0,0,0.05);">
-                        <div style="font-family:'Roboto Mono'; font-size:10px; color:var(--red); margin-bottom:5px;">● LIVE SIGNAL</div>
-                        <div style="font-size:20px; font-weight:bold; color:#fff; text-shadow:var(--neon); font-family:'Roboto Mono';">
-                            ${data.updatedAt || 'WAITING...'}
-                        </div>
-                        <div style="font-size:9px; color:#444; margin-top:10px; word-break:break-all;">REF: ${data.url || ''}</div>
-                    </div>
-                `;
-            });
+            } catch (err) {
+                console.error(err);
+                if (err.name === 'NotAllowedError' || err.message.includes('Permission denied')) {
+                    showError('PERMISSION DENIED', 'You denied screen sharing permission.');
+                } else if (err.name === 'NotAllowedError' || err.message.includes('canceled')) {
+                    showError('CAPTURE CANCELLED', 'You cancelled the screen share.');
+                } else {
+                    showError('CAPTURE FAILED', err.message || 'Unknown capture error.');
+                }
+            }
         }
 
-        function listenToTools() {
-            const dropdown = document.getElementById('toolSelect');
-            const displayArea = document.getElementById('toolScreen');
-            db.ref('site_settings/tools').on('value', snapshot => {
-                const tools = snapshot.val();
-                let options = '<option value="">-- SELECT TOOL --</option>';
-                if (tools) Object.keys(tools).forEach(id => { if (tools[id].visible) options += `<option value="${id}">${tools[id].name}</option>`; });
-                dropdown.innerHTML = options;
+        async function callGeminiAI(imageBlob) {
+            if (!geminiApiKey || geminiApiKey.length < 10) {
+                showError('GEMINI KEY MISSING', 'Gemini API Key is invalid or missing.');
+                return null;
+            }
 
-                const loadTool = (selectedId) => {
-                    if (selectedId && tools[selectedId]) {
-                        displayArea.innerHTML = cleanToolCode(tools[selectedId].code);
-                        const scripts = displayArea.getElementsByTagName('script');
-                        for (let s of Array.from(scripts)) {
-                            const ns = document.createElement('script');
-                            if (s.src) ns.src = s.src; ns.textContent = s.textContent;
-                            s.parentNode.replaceChild(ns, s);
-                        }
-                        setTimeout(() => { 
-                            restoreToolInputs(); 
-                            displayArea.addEventListener('input', saveToolInputs);
-                            displayArea.addEventListener('change', saveToolInputs);
-                        }, 400);
-                    } else { displayArea.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;color:#222;font-size:11px;">READY...</div>'; }
-                };
-
-                const saved = localStorage.getItem('ruthless_tool');
-                if(saved && tools[saved] && tools[saved].visible) { dropdown.value = saved; loadTool(saved); }
-                dropdown.onchange = (e) => { localStorage.setItem('ruthless_tool', e.target.value); loadTool(e.target.value); };
+            const base64Image = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.readAsDataURL(imageBlob);
             });
+
+            const requestBody = {
+                contents: [{
+                    parts: [
+                        { text: settings.geminiPrompt },
+                        { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                    ]
+                }]
+            };
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiApiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    if (response.status === 403) {
+                        showError('INVALID GEMINI KEY', 'Your Gemini API Key is invalid or expired.');
+                    } else if (response.status === 429) {
+                        showError('GEMINI RATE LIMIT', 'Daily Gemini API limit reached. Try again tomorrow.');
+                    } else {
+                        showError('GEMINI API ERROR', `Gemini API returned error ${response.status}.`);
+                    }
+                    return null;
+                }
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    const jsonMatch = aiText.replace(/```json/g, '').replace(/```/g, '').match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const parsedData = JSON.parse(jsonMatch[0]);
+                        return parsedData;
+                    } else {
+                        showError('INVALID RESPONSE', 'Gemini did not return valid JSON. Check your AI Prompt.');
+                        return null;
+                    }
+                } else {
+                    showError('INVALID RESPONSE', 'Gemini returned an unexpected response structure.');
+                    return null;
+                }
+            } catch (error) {
+                showError('NETWORK ERROR', `Failed to connect to Gemini API: ${error.message}`);
+                return null;
+            }
         }
 
-        const today = new Date().toISOString().split('T')[0];
-        const statsRefVisit = db.ref(`stats/${today}`);
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('last_visit') !== today) { statsRefVisit.child('unique').transaction(c => (c || 0) + 1); localStorage.setItem('last_visit', today); }
-            if (!sessionStorage.getItem('active_session')) { statsRefVisit.child('visits').transaction(c => (c || 0) + 1); sessionStorage.setItem('active_session', 'true'); }
-        });
+        function displaySignalFromAI() {
+            if (!lastSignalData) {
+                showError('NO DATA', 'AI did not return any signal data. Please try again.');
+                return;
+            }
 
-        function adminLogin() {
-            Swal.fire({ title: 'Ruthless Access', input: 'password', confirmButtonText: 'UNLOCK', confirmButtonColor: '#ff0000' }).then((res) => {
-                if (res.isConfirmed && res.value === "0000") window.location.href = "admin.html";
-                else if (res.isConfirmed) Swal.fire({ icon: 'error', title: 'DENIED', background: '#0a0a0a', color: '#fff' });
-            });
+            const d = lastSignalData;
+            showSignalData();
+            
+            sigPair.textContent = d.pair || '--';
+            sigPayout.textContent = d.payout || '--';
+            sigEntry.textContent = d.nextEntryTime || '--:--';
+            
+            const acc = d.accuracy || 0;
+            let col = 'green'; if (acc<=75) col='red'; else if (acc<=85) col='yellow';
+            sigAccuracy.textContent = acc+'%';
+            sigAccuracy.className = `signal-accuracy ${col}`;
+            
+            sigTrend.textContent = d.trend || '--';
+            sigTrend.className = `signal-trend ${(d.trend || '').toLowerCase()}`;
+            
+            sigDirection.textContent = d.direction || '--';
+            sigDirection.className = `signal-direction ${(d.direction || '').toLowerCase()}`;
+            
+            sigLogic.textContent = `Logic: ${d.logic || '--'}`;
+            
+            sendTelegram(d);
         }
+
+        function sendTelegram(d) {
+            if (!settings.tgToken || !settings.tgChatId) return;
+            const emoji = d.accuracy<=75?'🔴':d.accuracy<=85?'🟡':'🟢';
+            const msg = `🚨 RUTHLESS SIGNAL 🚨\n` +
+                `-----------------------------\n` +
+                `Pair: ${d.pair}\nPayout: ${d.payout}\n` +
+                `Entry Time: ${d.nextEntryTime || 'N/A'}\n` +
+                `Accuracy: ${d.accuracy}% ${emoji}\nSignal: ${d.direction}\nTrend: ${d.trend}\n` +
+                `Logic: ${d.logic}\n` +
+                `-----------------------------`;
+            fetch(`https://api.telegram.org/bot${settings.tgToken}/sendMessage`, {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({chat_id: settings.tgChatId, text: msg})
+            }).catch(console.error);
+        }
+        
+        // ============================================================
+        //  INITIALIZATION
+        // ============================================================
+        initFirebase();
+        loadFromStorage();
+        startTimer();
+        showWait();
+        updateStatus();
+        console.log('🚀 FINAL VERSION LOADED!');
     </script>
 </body>
 </html>
