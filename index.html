@@ -48,9 +48,74 @@
         .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.3); }
         .brand-name .trader { color: #fff; }
         .brand-tagline { color: #888; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-top: 2px; }
+        
         .social-icons { display: flex; gap: 14px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
         .social-icons a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,0,51,0.1); color: #888; font-size: 0.85rem; text-decoration: none; transition: all 0.3s ease; }
         .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px); }
+        
+        /* ===== ADMIN NAV BAR (only visible when admin logged in) ===== */
+        .admin-nav-bar {
+            display: none;
+            background: rgba(255,0,51,0.04);
+            border: 1px solid rgba(255,0,51,0.08);
+            border-radius: 14px;
+            padding: 6px 14px;
+            margin: 4px 0 8px;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        .admin-nav-bar:hover {
+            border-color: rgba(255,0,51,0.15);
+        }
+        .admin-nav-bar.visible { display: flex; }
+        .admin-nav-bar .nav-label {
+            font-size: 0.55rem;
+            color: #888;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .admin-nav-bar .nav-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .admin-nav-bar .nav-buttons button {
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,0,51,0.12);
+            background: rgba(255,255,255,0.02);
+            color: #aaa;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .admin-nav-bar .nav-buttons button:hover {
+            border-color: #FF0033;
+            color: #fff;
+            background: rgba(255,0,51,0.05);
+            transform: scale(1.05);
+        }
+        .admin-nav-bar .nav-buttons button:active { transform: scale(0.95); }
+        .admin-nav-bar .nav-buttons button.active {
+            border-color: #FF0033;
+            color: #FF0033;
+            background: rgba(255,0,51,0.06);
+        }
+        .admin-nav-bar .nav-buttons .logout-btn {
+            border-color: rgba(255,0,51,0.2);
+            color: #FF0033;
+        }
+        .admin-nav-bar .nav-buttons .logout-btn:hover {
+            background: rgba(255,0,51,0.1);
+            box-shadow: 0 0 30px rgba(255,0,51,0.05);
+        }
+        
         .offer-banner { background: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03)); border: 1.5px solid rgba(255,215,0,0.12); border-radius: 14px; padding: 10px 18px; text-align: center; margin: 2px 0 6px; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         .offer-banner:hover { border-color: #FFD700; box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
         .offer-banner:active { transform: scale(0.98); }
@@ -118,14 +183,25 @@
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; min-height: 16px; }
         .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; }
-        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .user-card { min-width: 100%; max-width: 100%; } .user-section { flex-direction: column; gap: 8px; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .modal { padding: 16px 12px; max-width: 100%; } .stats-row { gap: 12px; } }
-        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .user-card .btn { font-size: 0.65rem; padding: 6px; } .feature-card { flex: 0 0 75px; } .feature-card h4 { font-size: 0.45rem; } }
+        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .user-card { min-width: 100%; max-width: 100%; } .user-section { flex-direction: column; gap: 8px; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .modal { padding: 16px 12px; max-width: 100%; } .stats-row { gap: 12px; } .admin-nav-bar { padding: 4px 10px; flex-direction: column; align-items: stretch; gap: 4px; } .admin-nav-bar .nav-buttons { justify-content: center; } }
+        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .user-card .btn { font-size: 0.65rem; padding: 6px; } .feature-card { flex: 0 0 75px; } .feature-card h4 { font-size: 0.45rem; } .admin-nav-bar .nav-buttons button { font-size: 0.45rem; padding: 3px 10px; } }
     </style>
 </head>
 <body>
 
 <div class="app zoom-trigger" id="mainApp">
     <div class="scroll-content">
+        
+        <!-- ===== ADMIN NAV BAR (Only visible when admin logged in) ===== -->
+        <div class="admin-nav-bar" id="adminNavBar">
+            <span class="nav-label">🔐 Admin Panel</span>
+            <div class="nav-buttons">
+                <button onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
+                <button onclick="window.location.href='admin.html'" class="active">⚙️ Admin</button>
+                <button class="logout-btn" id="homeAdminLogoutBtn">🚪 Logout</button>
+            </div>
+        </div>
+        
         <!-- RED CONTAINER -->
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
@@ -138,16 +214,13 @@
                     <span class="trader">TRADER</span>
                 </div>
                 <div class="brand-tagline">AI POWERED TRADING</div>
-                <div class="social-icons">
-                    <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                <div class="social-icons" id="socialIconsContainer">
+                    <!-- Will be filled by JavaScript -->
                 </div>
             </div>
         </div>
         
-        <!-- OFFER BANNER - Sync with Admin Offer Settings -->
+        <!-- OFFER BANNER -->
         <div class="offer-banner" id="offerBanner">
             <h4>🎁 FREE SIGNAL OFFER</h4>
             <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals when you deposit via our affiliate links!</p>
@@ -312,10 +385,90 @@ let appState = {
     ],
     verificationRequests: [],
     currentUser: null,
-    logoClickCount: 2 // Default, will be synced from admin
+    logoClickCount: 2,
+    socialMedia: []
 };
 
 let isFirebaseConnected = false;
+
+// ---------- Check Admin Session ----------
+function checkAdminSession() {
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const navBar = document.getElementById('adminNavBar');
+    if (adminLoggedIn) {
+        navBar.classList.add('visible');
+    } else {
+        navBar.classList.remove('visible');
+    }
+    return adminLoggedIn;
+}
+
+// ---------- Admin Logout from Home ----------
+document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
+    sessionStorage.removeItem('admin_logged_in');
+    document.getElementById('adminNavBar').classList.remove('visible');
+    alert('🚪 Admin logged out successfully!');
+});
+
+// ---------- Render Social Media ----------
+function renderSocialMedia() {
+    const container = document.getElementById('socialIconsContainer');
+    if (!container) return;
+    
+    let socials = appState.socialMedia || [];
+    if (socials.length === 0) {
+        const localSocial = localStorage.getItem('brt_social');
+        if (localSocial) {
+            try {
+                socials = JSON.parse(localSocial);
+            } catch(e) {}
+        }
+    }
+    
+    const visibleSocials = socials.filter(s => s.visibility === 'visible');
+    
+    if (visibleSocials.length === 0) {
+        container.innerHTML = `
+            <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+        `;
+        container.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const platform = this.classList.contains('telegram') ? 'Telegram' :
+                               this.classList.contains('instagram') ? 'Instagram' :
+                               this.classList.contains('youtube') ? 'YouTube' : 'Twitter';
+                alert('📱 ' + platform + ' - Configure in Admin');
+            });
+        });
+        return;
+    }
+    
+    container.innerHTML = '';
+    visibleSocials.forEach(social => {
+        const iconClass = social.icon || 'fas fa-link';
+        const url = social.url || '#';
+        const name = social.name || 'Link';
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.title = name;
+        a.innerHTML = `<i class="${iconClass}"></i>`;
+        if (name.toLowerCase().includes('telegram')) a.classList.add('telegram');
+        else if (name.toLowerCase().includes('instagram')) a.classList.add('instagram');
+        else if (name.toLowerCase().includes('youtube')) a.classList.add('youtube');
+        else if (name.toLowerCase().includes('twitter')) a.classList.add('twitter');
+        a.addEventListener('click', function(e) {
+            if (url === '#') {
+                e.preventDefault();
+                alert('📱 ' + name + ' - Configure URL in Admin');
+            }
+        });
+        container.appendChild(a);
+    });
+}
 
 // ---------- Firebase Listener ----------
 onValue(dbRef, (snapshot) => {
@@ -325,17 +478,13 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
-        // Sync logoClickCount from admin settings
-        if (val.logoClickCount !== undefined) {
-            appState.logoClickCount = val.logoClickCount;
-        }
-        // Sync offer credits from admin settings
-        if (val.offerCredits !== undefined) {
-            appState.offerCredits = val.offerCredits;
-        }
-        // Sync logo from admin
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-            applyLogo(val.logoBase64);
+        if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
+        if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') applyLogo(val.logoBase64);
+        if (val.socialMedia !== undefined) {
+            appState.socialMedia = val.socialMedia;
+            localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
+            renderSocialMedia();
         }
         if (currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
@@ -364,12 +513,18 @@ function loadLocalState() {
             appState = { ...appState, ...parsed };
         } catch(e) { console.error(e); }
     }
-    // Load logo from localStorage
     const logoData = localStorage.getItem('brt_logo');
-    if (logoData) {
-        applyLogo(logoData);
+    if (logoData) applyLogo(logoData);
+    const socialData = localStorage.getItem('brt_social');
+    if (socialData) {
+        try {
+            const parsed = JSON.parse(socialData);
+            if (parsed.length > 0) appState.socialMedia = parsed;
+        } catch(e) {}
     }
     updateUI();
+    renderSocialMedia();
+    checkAdminSession();
 }
 
 function applyLogo(logoBase64) {
@@ -395,7 +550,6 @@ function updateUI() {
         opt.textContent = b.name;
         brokerSelect.appendChild(opt);
     });
-
     const verifyBroker = document.getElementById('verifyBroker');
     verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
     appState.brokers.forEach(b => {
@@ -487,7 +641,7 @@ window.handleSignup = function() {
     setTimeout(() => { closeModal('signupModal'); }, 1500);
 };
 
-// ---------- Verify (Sends request to Admin) ----------
+// ---------- Verify ----------
 document.getElementById('verifySubmitBtn').addEventListener('click', function() {
     window.handleVerify();
 });
@@ -527,7 +681,7 @@ window.handleVerify = function() {
         broker: broker, 
         status: 'pending', 
         date: new Date().toISOString(),
-        freeCredits: appState.offerCredits || 10 // Track how many free credits they will get
+        freeCredits: appState.offerCredits || 10
     };
     if (!appState.verificationRequests) appState.verificationRequests = [];
     appState.verificationRequests.push(newRequest);
@@ -559,14 +713,7 @@ document.getElementById('signupBroker').addEventListener('change', function() {
     }
 });
 
-document.querySelectorAll('.social-icons a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('📱 Social media - Configure in Admin');
-    });
-});
-
-// ---------- Admin Access (Logo Click - Sync with Admin Settings) ----------
+// ---------- Admin Access (Logo Click) ----------
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault();
@@ -604,6 +751,7 @@ console.log('🔑 Admin Password: ' + appState.password);
 console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
 console.log('✅ Only Admin Approved/Added users can login.');
 console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
+console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' : 'Logged Out ❌'));
 </script>
 </body>
 </html>
