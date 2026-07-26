@@ -1600,20 +1600,7 @@
                 { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
                     rules: 'Verify phone, deposit ₹500' }
             ],
-            users: [{
-                email: 'demo@binaryruthless.com',
-                accountId: 'DEMO123',
-                broker: 'Quotex',
-                name: 'DemoUser',
-                verified: true,
-                deposit: 1000,
-                requiredDeposit: 1000,
-                credits: 25,
-                signalsUsed: 5,
-                todayUsed: 2,
-                blocked: false,
-                registeredAt: new Date().toISOString()
-            }],
+            
             verificationRequests: [],
             currentUser: null,
             logoClickCount: 2,
@@ -2081,7 +2068,7 @@
         loadLocalState();
         console.log('🏠 Home Page Loaded');
         console.log('🔑 Admin Password: ' + appState.password);
-        console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
+        
         console.log('✅ Only Admin Approved/Added users can login.');
         console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
         console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' :
