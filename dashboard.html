@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binary Ruthless Trader - Dashboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+            }
+        }
+    </script>
+    
+    <style>
+        /* ===== All dashboard styles ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
+        input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
+        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%); position: relative; }
+        .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; }
+        .red-container { background: rgba(255, 0, 51, 0.04); border: 1px solid rgba(255, 0, 51, 0.15); border-radius: 18px; padding: 10px 20px 8px; margin: 8px 0 6px; transition: all 0.3s ease; position: relative; }
+        .red-container:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 0 40px rgba(255, 0, 51, 0.05); }
+        .fb-status-dot { position: absolute; top: 10px; left: 14px; width: 10px; height: 10px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 2; }
+        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 15px rgba(0,255,102,0.5); }
+        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 15px rgba(255,0,51,0.5); animation: pulseRed 1.5s ease-in-out infinite; }
+        @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .logout-btn-top { position: absolute; top: 10px; right: 14px; padding: 3px 12px; background: rgba(255,0,51,0.08); border: 1px solid rgba(255,0,51,0.15); border-radius: 12px; color: #FF0033; font-size: 0.5rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; z-index: 5; }
+        .logout-btn-top:hover { background: rgba(255,0,51,0.15); box-shadow: 0 0 20px rgba(255,0,51,0.05); }
+        .logout-btn-top:active { transform: scale(0.95); }
+        .brand-section { text-align: center; padding: 2px 0; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
+        .brand-section:active .logo-icon { animation: zoomIn 0.4s ease; }
+        .brand-section:active .logo-img { animation: zoomIn 0.4s ease; }
+        .brand-section:active .brand-name { animation: zoomOut 0.4s ease; }
+        @keyframes zoomIn { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+        @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.75); } 100% { transform: scale(1); } }
+        .logo-icon { font-size: clamp(3.5rem, 6vw, 5.5rem); color: #FF0033; text-shadow: 0 0 60px rgba(255,0,51,0.3); animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1; }
+        .logo-img { max-height: clamp(3.5rem, 6vw, 5.5rem); max-width: 250px; object-fit: contain; display: none; margin: 0 auto; }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.85; } }
+        .brand-name { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 4vw, 3.8rem); letter-spacing: 3px; line-height: 1.1; white-space: nowrap; }
+        .brand-name .binary { color: #fff; }
+        .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.3); }
+        .brand-name .trader { color: #fff; }
+        .brand-tagline { color: #888; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-top: 2px; }
+        .social-icons { display: flex; gap: 14px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
+        .social-icons a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,0,51,0.1); color: #888; font-size: 0.85rem; text-decoration: none; transition: all 0.3s ease; }
+        .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px); }
+        .user-info-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 10px 16px; margin: 4px 0 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .user-info-container .user-name { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 1.2vw, 1.1rem); color: #fff; font-weight: 700; letter-spacing: 1px; }
+        .user-info-container .user-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .user-info-container .user-actions .btn-sm { padding: 4px 14px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+        .user-info-container .user-actions .btn-sm:hover { transform: scale(1.05); }
+        .user-info-container .user-actions .btn-sm:active { transform: scale(0.95); }
+        .user-info-container .user-actions .btn-gold { background: #FFD700; color: #000; }
+        .user-info-container .user-actions .btn-green { background: #00FF66; color: #000; }
+        .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
+        .btn-chat-wrapper { position: relative; display: inline-block; }
+        .chat-badge { position: absolute; top: -4px; right: -4px; width: 12px; height: 12px; background: #FF0033; border-radius: 50%; border: 2px solid #000; display: none; }
+        .chat-badge.active { display: block; animation: pulseRed 1s ease-in-out infinite; }
+        .credits-container { background: rgba(0, 255, 102, 0.02); border: 1px solid rgba(0, 255, 102, 0.06); border-radius: 14px; padding: 8px 16px; margin: 2px 0 6px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 8px; }
+        .credits-container .credit-item { text-align: center; }
+        .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700; }
+        .credits-container .credit-item .label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; }
+        .credits-container .credit-item .number.green { color: #00FF66; }
+        .dash-main-btn { width: 100%; padding: 14px 10px; background: rgba(255,215,0,0.04); border: 2px solid #FFD700; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center; margin: 4px 0 6px 0; }
+        .dash-main-btn:hover { background: rgba(255,215,0,0.08); box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
+        .dash-main-btn:active { transform: scale(0.97); }
+        .dash-main-btn .main-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.2rem, 2.5vw, 2.2rem); letter-spacing: 2px; }
+        .dash-main-btn .main-title .binary { color: #fff; }
+        .dash-main-btn .main-title .ruthless { color: #FF0033; text-shadow: 0 0 20px rgba(255,0,51,0.2); }
+        .dash-main-btn .main-title .signals { color: #ffffff; }
+        .dash-main-btn .sub-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.5rem, 0.8vw, 0.65rem); color: #FFD700; letter-spacing: 2px; margin-top: 4px; opacity: 0.7; }
+        .signals-fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; flex-direction: column; padding: 10px; }
+        .signals-fullscreen-overlay.active { display: flex; }
+        .signals-fullscreen-header { display: flex; justify-content: flex-end; padding: 4px 0; flex-shrink: 0; }
+        .signals-fullscreen-close { font-size: 1.8rem; color: #FF0033; cursor: pointer; background: none; border: none; font-weight: 700; transition: all 0.3s ease; padding: 4px 14px; }
+        .signals-fullscreen-close:hover { transform: scale(1.2) rotate(90deg); text-shadow: 0 0 30px rgba(255,0,51,0.3); }
+        .signals-fullscreen-content { flex: 1; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,215,0,0.1); }
+        .signals-fullscreen-content iframe { width: 100%; height: 100%; border: none; background: #0a0a0a; }
+        .features-section { padding: 6px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 10px; }
+        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.65rem, 0.9vw, 0.9rem); font-weight: 700; margin-bottom: 4px; }
+        .features-title .neon { color: #FF0033; }
+        .features-title .gold { color: #FFD700; }
+        .features-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; }
+        .features-scroll::-webkit-scrollbar { height: 3px; }
+        .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
+        .feature-card { flex: 0 0 100px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 8px 6px; border: 1px solid rgba(255,0,51,0.04); text-align: center; transition: all 0.3s ease; }
+        .feature-card:hover { border-color: #FF0033; }
+        .feature-card .icon { font-size: 1.2rem; display: block; }
+        .feature-card h4 { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
+        .feature-card p { color: #666; font-size: 0.45rem; margin-top: 2px; }
+        .stats-row { display: flex; justify-content: center; gap: 24px; padding: 4px 0; flex-shrink: 0; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-item .number { font-size: clamp(0.85rem, 1.2vw, 1.1rem); font-weight: 700; font-family: 'Roboto Mono', monospace; }
+        .stat-item .number.red { color: #FF0033; }
+        .stat-item .number.gold { color: #FFD700; }
+        .stat-item .label { color: #666; font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase; }
+        .footer { padding: 4px 0 8px; text-align: center; border-top: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
+        .footer p { color: #444; font-size: 0.5rem; letter-spacing: 1px; }
+        .footer .brand { color: #FF0033; font-weight: 700; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(10px); }
+        .overlay.active { display: flex; }
+        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); }
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
+        .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
+        .modal-close:hover { transform: scale(1.2) rotate(90deg); }
+        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 12px; letter-spacing: 2px; }
+        .modal label { display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: all 0.3s ease; }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
+        .modal .btn-submit { width: 100%; padding: 9px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.75rem; }
+        .modal .btn-submit:hover { transform: scale(1.02); }
+        .modal .btn-submit:active { transform: scale(0.97); }
+        .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; min-height: 16px; }
+        .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; }
+        .credit-packs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 6px 0; }
+        .credit-pack { flex: 1; min-width: 100px; max-width: 150px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 10px; text-align: center; border: 1px solid rgba(255,0,51,0.08); transition: all 0.3s ease; cursor: pointer; }
+        .credit-pack:hover { border-color: #FF0033; transform: translateY(-3px); box-shadow: 0 0 30px rgba(255,0,51,0.05); }
+        .credit-pack.selected { border-color: #FFD700; box-shadow: 0 0 40px rgba(255,215,0,0.1); }
+        .credit-pack .credits { font-size: 1.2rem; font-weight: 700; color: #FFD700; font-family: 'Roboto Mono', monospace; }
+        .credit-pack .price { font-size: 0.8rem; color: #888; }
+        .credit-pack .per-credit { font-size: 0.55rem; color: #666; }
+        .selected-pack-display { display: none; margin-top: 8px; padding: 10px; background: rgba(255,215,0,0.05); border-radius: 8px; border: 1px solid rgba(255,215,0,0.15); text-align: center; }
+        .selected-pack-display.active { display: block; }
+        .selected-pack-display .pack-title { color: #FFD700; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; }
+        .selected-pack-display .pack-details { color: #fff; font-size: 0.9rem; margin-top: 4px; }
+        .selected-pack-display .pack-details span { color: #FFD700; font-weight: 700; }
+        .payment-instructions { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; padding: 12px; margin: 6px 0; }
+        .payment-instructions h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 4px; font-family: 'Orbitron', sans-serif; }
+        .payment-instructions p { color: #aaa; font-size: 0.6rem; }
+        .qr-container { text-align: center; padding: 10px; background: #fff; border-radius: 12px; margin: 6px 0; }
+        .qr-container img { max-width: 200px; max-height: 200px; border-radius: 8px; }
+        .qr-container .qr-placeholder { color: #666; font-size: 0.5rem; padding: 20px; text-align: center; }
+        .history-list { max-height: 300px; overflow-y: auto; }
+        .history-list::-webkit-scrollbar { width: 3px; }
+        .history-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
+        .history-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.55rem; align-items: center; }
+        .history-item .status-success { color: #00FF66; }
+        .history-item .status-failed { color: #FF0033; }
+        .history-item .status-pending { color: #FFD700; }
+        .history-item .amount { color: #FFD700; }
+        .history-item .date { color: #666; font-size: 0.45rem; }
+        .history-empty { text-align: center; color: #666; font-size: 0.5rem; padding: 20px; }
+        .chat-container { max-height: 300px; overflow-y: auto; margin: 6px 0; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; }
+        .chat-container::-webkit-scrollbar { width: 3px; }
+        .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
+        .chat-message { padding: 6px 10px; margin: 3px 0; border-radius: 8px; font-size: 0.65rem; max-width: 80%; word-wrap: break-word; }
+        .chat-message.admin { background: rgba(255,0,51,0.12); color: #FF0033; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .chat-message.user { background: rgba(0,255,102,0.08); color: #00FF66; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-message .time { font-size: 0.4rem; color: #666; margin-left: 8px; }
+        .chat-input-area { display: flex; gap: 6px; margin-top: 6px; }
+        .chat-input-area input { flex: 1; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-size: 0.7rem; outline: none; }
+        .chat-input-area input:focus { border-color: #FF0033; }
+        .chat-input-area button { padding: 6px 16px; border-radius: 8px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.6rem; transition: all 0.3s ease; }
+        .chat-input-area button:hover { transform: scale(1.02); }
+        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .modal { padding: 16px 12px; max-width: 100%; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .stats-row { gap: 12px; } .credit-pack { min-width: 80px; max-width: 120px; } .user-info-container { flex-direction: column; align-items: stretch; gap: 6px; } .user-info-container .user-actions { justify-content: center; } .credits-container { flex-direction: column; gap: 4px; } .signals-fullscreen-content iframe { height: 80vh; } }
+        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .credit-pack { min-width: 70px; max-width: 100px; padding: 6px; } .credit-pack .credits { font-size: 0.85rem; } .credit-pack .price { font-size: 0.65rem; } .user-info-container .user-name { font-size: 0.7rem; } .user-info-container .user-actions .btn-sm { font-size: 0.5rem; padding: 3px 10px; } .credits-container .credit-item .number { font-size: 1rem; } .signals-fullscreen-content iframe { height: 70vh; } .signals-fullscreen-close { font-size: 1.4rem; padding: 4px 10px; } }
+    </style>
+</head>
+<body>
+
+<div class="app zoom-trigger" id="mainApp">
+    <div class="scroll-content">
+        <div class="red-container">
+            <span class="fb-status-dot red" id="firebaseStatusDot"></span>
+            <button class="logout-btn-top" id="logoutBtnTop">🚪 Logout</button>
+            <div class="brand-section" id="brandSection">
+                <span class="logo-icon" id="logoIcon">◆</span>
+                <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
+                <div class="brand-name">
+                    <span class="binary">BINARY</span>
+                    <span class="ruthless">RUTHLESS</span>
+                    <span class="trader">TRADER</span>
+                </div>
+                <div class="brand-tagline">AI POWERED TRADING</div>
+                <div class="social-icons">
+                    <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="user-info-container" id="userInfoContainer">
+            <span class="user-name" id="dashUserName">User</span>
+            <div class="user-actions">
+                <button class="btn-sm btn-gold" onclick="openAddCreditsModal()">💳 Add Credits</button>
+                <button class="btn-sm btn-green" onclick="openPaymentHistoryModal()">📜 History</button>
+                <div class="btn-chat-wrapper">
+                    <button class="btn-sm btn-chat" onclick="openChatModal()">💬 Chat</button>
+                    <span class="chat-badge" id="chatBadge"></span>
+                </div>
+            </div>
+        </div>
+        <div class="credits-container" id="creditsContainer">
+            <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
+            <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
+        </div>
+        <button class="dash-main-btn" id="dashMainBtn">
+            <div class="main-title"><span class="binary">BINARY</span><span class="ruthless">RUTHLESS</span><span class="signals">SIGNALS</span></div>
+            <div class="sub-title">⚡ AI SIGNAL GENERATOR</div>
+        </button>
+        <div class="features-section">
+            <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
+            <div class="features-scroll">
+                <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
+                <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
+                <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
+                <div class="feature-card"><span class="icon">💰</span><h4>Money Mgmt</h4><p>Risk & position size</p></div>
+                <div class="feature-card"><span class="icon">📊</span><h4>Risk Manager</h4><p>Stop-loss tools</p></div>
+                <div class="feature-card"><span class="icon">☁️</span><h4>Cloud Sync</h4><p>All devices sync</p></div>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
+            <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
+            <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
+        </div>
+        <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p></div>
+    </div>
+</div>
+
+<!-- FULLSCREEN SIGNAL OVERLAY -->
+<div class="signals-fullscreen-overlay" id="signalsFullscreen">
+    <div class="signals-fullscreen-header"><button class="signals-fullscreen-close" id="signalsFullscreenClose">✕</button></div>
+    <div class="signals-fullscreen-content"><iframe id="signalsFullscreenIframe" src="about:blank"></iframe></div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="addCreditsModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('addCreditsModal')">✕</button>
+        <h2>💳 ADD CREDITS</h2>
+        <div id="creditPacksContainer"><div class="credit-packs" id="creditPacksList"></div></div>
+        <button class="btn-submit" id="proceedToPayBtn" style="background:#FFD700;color:#000;margin-top:10px;display:none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
+        <div class="selected-pack-display" id="selectedPackDisplay"><div class="pack-title">📦 Selected Pack</div><div class="pack-details"><span id="selectedPackCredits">0</span> Credits - ₹<span id="selectedPackPrice">0</span></div></div>
+        <div id="paymentOptionsContainer" style="display:none;margin-top:10px;">
+            <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:4px;color:#FFD700;font-size:0.7rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
+            <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
+            <label>Transaction ID / UTR</label><input type="text" id="transactionIdInput" placeholder="Enter UPI Transaction ID">
+            <label style="margin-top:6px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
+            <button class="btn-submit" style="background:#FFD700;color:#000;margin-top:8px;" onclick="submitManualPayment()">📤 Submit Payment</button>
+        </div>
+        <div class="error-msg" id="addCreditsError"></div><div class="success-msg" id="addCreditsSuccess"></div>
+    </div>
+</div>
+
+<div class="overlay" id="paymentHistoryModal">
+    <div class="modal"><button class="modal-close" onclick="closeModal('paymentHistoryModal')">✕</button><h2>📜 PAYMENT HISTORY</h2><div class="history-list" id="paymentHistoryList"></div></div>
+</div>
+
+<div class="overlay" id="chatModal">
+    <div class="modal"><button class="modal-close" onclick="closeModal('chatModal')">✕</button><h2>💬 Chat with Admin</h2><div class="chat-container" id="chatContainer"></div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message..."><button onclick="sendChatMessage()">Send</button></div></div>
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+    }
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getAnalytics } from "firebase/analytics";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
+    authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
+    databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
+    projectId: "binary-ruthless-trader-26654",
+    storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
+    messagingSenderId: "533209261799",
+    appId: "1:533209261799:web:a398ab21b0f913683ea442",
+    measurementId: "G-WQCXCMV5PR"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+const dbRef = ref(database, 'brt_data');
+
+let appState = {
+    offerCredits: 10, upiId: 'binary@ruthless', paymentInstructions: 'Please transfer the amount to the UPI ID below.',
+    qrCodeBase64: '', creditPrice: 2, paymentApprovalMode: 'manual', paymentGateway: 'none', paymentEnvironment: 'test',
+    creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
+    users: [], currentUser: null,
+    signalSettings: { toolName: 'AI Signal Generator', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' },
+    logoBase64: '', payments: [], chats: {}
+};
+
+let isFirebaseConnected = false, selectedCreditPack = null;
+
+onValue(dbRef, (snapshot) => {
+    isFirebaseConnected = true; document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
+    const val = snapshot.val();
+    if (val) {
+        const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
+        appState = { ...appState, ...val };
+        if (currentUserEmail) {
+            const found = appState.users.find(u => u.email === currentUserEmail);
+            if (found) appState.currentUser = found;
+            else { appState.currentUser = null; window.location.href = 'index.html'; }
+        }
+        saveLocalState(); updateUI(); applySignalSettings(); applyLogo(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+    }
+}, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
+
+function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
+function loadLocalState() {
+    const local = localStorage.getItem('brt_data');
+    if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) { console.error(e); } }
+    const logoData = localStorage.getItem('brt_logo'); if (logoData) appState.logoBase64 = logoData;
+    if (!appState.currentUser) { window.location.href = 'index.html'; return; }
+    updateUI(); applySignalSettings(); applyLogo(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+}
+function updateUI() { const user = appState.currentUser; if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; document.getElementById('dashCredits').textContent = user.credits || 0; document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; } }
+function applySignalSettings() { document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || ''; }
+function applyLogo() { const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage'); if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; } else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; } }
+
+// Chat System
+function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
+function updateChatBadge() {
+    const badge = document.getElementById('chatBadge'); if (!appState.currentUser) return;
+    const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+    const unread = msgs.filter(m => m.sender === 'admin' && !m.read); badge.classList.toggle('active', unread.length > 0);
+}
+function renderChatMessages() {
+    const container = document.getElementById('chatContainer'); if (!container || !appState.currentUser) return; container.innerHTML = '';
+    const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+    if (msgs.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.5rem;text-align:center;padding:10px;">No messages yet</div>'; return; }
+    msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'admin' && !c.read) c.read = true; });
+    container.scrollTop = container.scrollHeight; saveLocalState();
+}
+window.openChatModal = function() { if (!appState.currentUser) return; renderChatMessages(); openModal('chatModal'); };
+window.sendChatMessage = function() {
+    const input = document.getElementById('chatInput'); const msg = input.value.trim(); if (!msg || !appState.currentUser) return;
+    const key = getChatKey(appState.currentUser.email); if (!appState.chats) appState.chats = {}; if (!appState.chats[key]) appState.chats[key] = [];
+    appState.chats[key].push({ sender: 'user', message: msg, timestamp: new Date().toISOString(), read: false }); saveLocalState(); input.value = ''; renderChatMessages();
+};
+
+// Payment History
+function renderPaymentHistory() {
+    const container = document.getElementById('paymentHistoryList'); if (!container) return; container.innerHTML = '';
+    const payments = appState.payments || []; const userPayments = payments.filter(p => p.userEmail === appState.currentUser?.email);
+    if (userPayments.length === 0) { container.innerHTML = '<div class="history-empty">No payment history</div>'; return; }
+    userPayments.reverse().forEach(p => {
+        const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
+        const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
+        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:#666;font-size:0.4rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
+    });
+}
+window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
+
+// Add Credits
+function renderCreditPacks() {
+    const container = document.getElementById('creditPacksList'); if (!container) return; container.innerHTML = '';
+    const packs = appState.creditPacks || []; packs.forEach((pack, idx) => {
+        const perCredit = (pack.price / pack.credits).toFixed(2);
+        container.innerHTML += `<div class="credit-pack" onclick="window.selectCreditPack(${idx})" data-index="${idx}"><div class="credits">${pack.credits}</div><div class="price">₹${pack.price}</div><div class="per-credit">₹${perCredit}/credit</div></div>`;
+    });
+}
+window.selectCreditPack = function(idx) {
+    document.querySelectorAll('.credit-pack').forEach(p => p.classList.remove('selected')); document.querySelectorAll('.credit-pack')[idx].classList.add('selected');
+    selectedCreditPack = appState.creditPacks[idx]; document.getElementById('selectedPackDisplay').classList.add('active');
+    document.getElementById('selectedPackCredits').textContent = selectedCreditPack.credits; document.getElementById('selectedPackPrice').textContent = selectedCreditPack.price;
+    document.getElementById('proceedToPayBtn').style.display = 'block'; document.getElementById('paymentOptionsContainer').style.display = 'none';
+    document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = '';
+};
+window.openAddCreditsModal = function() { if (!appState.currentUser) return; selectedCreditPack = null; document.getElementById('selectedPackDisplay').classList.remove('active'); document.getElementById('proceedToPayBtn').style.display = 'none'; document.getElementById('paymentOptionsContainer').style.display = 'none'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = ''; document.getElementById('transactionIdInput').value = ''; renderCreditPacks(); openModal('addCreditsModal'); };
+window.showPaymentOptions = function() {
+    if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
+    document.getElementById('creditPacksContainer').style.display = 'none'; document.getElementById('proceedToPayBtn').style.display = 'none';
+    document.getElementById('selectedPackDisplay').classList.add('active'); document.getElementById('paymentOptionsContainer').style.display = 'block';
+    document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = '';
+    document.getElementById('paymentUpiDisplay').textContent = appState.upiId || 'binary@ruthless';
+    document.getElementById('paymentInstructionsText').textContent = appState.paymentInstructions || 'Please transfer the amount to the UPI ID below.';
+    loadQRPreview();
+};
+function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:200px;max-height:200px;border-radius:8px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
+window.submitManualPayment = function() {
+    if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
+    const txId = document.getElementById('transactionIdInput').value.trim(); if (!txId || txId.length < 6) { document.getElementById('addCreditsError').textContent = '❌ Enter valid Transaction ID (min 6 chars)'; return; }
+    const paymentRecord = { userEmail: appState.currentUser.email, credits: selectedCreditPack.credits, amount: selectedCreditPack.price, transactionId: txId, status: 'pending', paymentMode: 'manual', date: new Date().toISOString(), screenshot: 'none' };
+    if (!appState.payments) appState.payments = []; appState.payments.push(paymentRecord); saveLocalState(); updateUI();
+    document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('transactionIdInput').value = '';
+    setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
+};
+
+// Signal Generator
+document.getElementById('dashMainBtn').addEventListener('click', function() {
+    const user = appState.currentUser; if (!user) { alert('Please login first!'); return; } if (user.blocked) { alert('🚫 Account blocked'); return; }
+    if (user.credits < 1) { this.style.borderColor = '#FF0033'; setTimeout(() => { this.style.borderColor = '#FFD700'; }, 2000); alert('❌ Insufficient credits! Please add credits.'); return; }
+    document.getElementById('signalsFullscreen').classList.add('active'); document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || '';
+});
+document.getElementById('signalsFullscreenClose').addEventListener('click', function() { document.getElementById('signalsFullscreen').classList.remove('active'); });
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'signalGenerated') {
+        if (appState.currentUser && appState.currentUser.credits > 0) {
+            appState.currentUser.credits -= 1; appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
+            saveLocalState(); updateUI();
+            document.getElementById('signalsFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
+            alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
+        } else {
+            document.getElementById('signalsFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, message: 'Insufficient credits!' }, '*');
+            alert('❌ Insufficient credits! Please add credits.');
+        }
+    }
+});
+
+// Logout
+document.getElementById('logoutBtnTop').addEventListener('click', function() { appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+window.openModal = openModal; window.closeModal = closeModal;
+
+document.querySelectorAll('.social-icons a').forEach(link => { link.addEventListener('click', function(e) { e.preventDefault(); alert('📱 Social media - Configure in Admin'); }); });
+loadLocalState();
+console.log('📊 Dashboard Loaded'); console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
+</script>
+</body>
+</html>
