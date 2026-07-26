@@ -43,7 +43,9 @@
         /* ===== PASSWORD POPUP - Matching Theme ===== */
         .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
         .password-overlay.active { display: flex; }
-        .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 35px 28px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08), inset 0 0 60px rgba(255,0,51,0.02); }
+        .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 35px 28px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08), inset 0 0 60px rgba(255,0,51,0.02); position: relative; }
+        .password-modal .close-btn { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
+        .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
         .password-modal .lock-icon { font-size: 2.8rem; color: #FF0033; margin-bottom: 10px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 18px; letter-spacing: 2px; }
         .password-modal input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.15); border-radius: 8px; color: #fff; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; text-align: center; outline: none; transition: all 0.3s ease; }
@@ -104,7 +106,7 @@
         }
         .admin-dash-card .badge.gold { background: #FFD700; color: #000; }
         
-        /* ===== ADMIN SECTION (for settings below) ===== */
+        /* ===== ADMIN SECTION ===== */
         .admin-section { 
             border: 1px solid rgba(255,0,51,0.06); 
             border-radius: 14px; 
@@ -152,7 +154,6 @@
         .admin-section .field-group input:disabled, 
         .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
         
-        /* Edit Button - White */
         .admin-section .btn-edit { 
             width: 100%; 
             padding: 8px; 
@@ -172,7 +173,6 @@
         .admin-section .btn-edit:hover { box-shadow: 0 0 30px rgba(255,255,255,0.15); transform: scale(1.02); }
         .admin-section .btn-edit:active { transform: scale(0.97); }
         
-        /* Save Button - Red */
         .admin-section .btn-save { 
             width: 100%; 
             padding: 8px; 
@@ -224,7 +224,7 @@
         .payment-settings-grid .field-group.full-width { grid-column: 1 / -1; }
         .qr-preview { max-width: 150px; max-height: 150px; border-radius: 8px; margin-top: 4px; border: 1px solid rgba(255,215,0,0.1); }
         
-        /* ===== OVERLAYS - Larger Size ===== */
+        /* ===== OVERLAYS ===== */
         .overlay { 
             position: fixed; 
             top: 0; 
@@ -371,7 +371,6 @@
         .modal .user-detail-row .label { color: #888; }
         .modal .user-detail-row .value { color: #FFD700; }
         
-        /* Chat in Popup - Full Width */
         .modal .chat-msg-list { 
             max-height: 280px; 
             overflow-y: auto; 
@@ -457,7 +456,7 @@
         .modal .btn-group .btn-remove { background: #FFD700; color: #000; }
         .modal .btn-group .btn-chat { background: #0088cc; color: #fff; }
         
-        /* Tools List - For Signal Tools */
+        /* Tools List */
         .tools-list .tool-item {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,0,51,0.06);
@@ -558,6 +557,17 @@
         <!-- ===== ADMIN AREA (Settings below) ===== -->
         <div id="adminArea" style="display:none;">
             
+            <!-- OFFER SETTINGS - Moved to Top -->
+            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
+                <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
+                <div class="field-group">
+                    <label>Free Credits for New Verified Users</label>
+                    <input type="number" id="adminOfferCredits" value="10" disabled>
+                </div>
+                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
+            </div>
+            
             <!-- PAYMENT SETTINGS -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">💳 Payment Settings</h4>
@@ -588,7 +598,7 @@
                 <div id="creditPackList" class="item-list" style="max-height:150px;margin-top:6px;"></div>
             </div>
             
-            <!-- TOOLS SECTION (Signal Tools) -->
+            <!-- TOOLS SECTION -->
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
                 <div id="toolsList" class="tools-list"></div>
@@ -640,14 +650,6 @@
                 <div id="brokerList" class="item-list"></div>
             </div>
             
-            <!-- OFFER SETTINGS -->
-            <div class="admin-section">
-                <h4>🎁 Offer Settings</h4>
-                <div class="field-group"><label>Free Credits</label><input type="number" id="adminOfferCredits" value="10" disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
-            </div>
-            
             <!-- FIREBASE CONFIG -->
             <div class="admin-section">
                 <h4>🔥 Firebase Config</h4>
@@ -679,6 +681,7 @@
 <!-- ===== PASSWORD POPUP ===== -->
 <div class="password-overlay" id="passwordOverlay">
     <div class="password-modal">
+        <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
         <div class="lock-icon">🔐</div>
         <h2>ENTER ADMIN PASSWORD</h2>
         <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
@@ -687,7 +690,7 @@
     </div>
 </div>
 
-<!-- ===== POPUP MODALS (Large Size) ===== -->
+<!-- ===== POPUP MODALS ===== -->
 
 <!-- PENDING PAYMENTS POPUP -->
 <div class="overlay" id="pendingPaymentsPopup">
@@ -744,7 +747,7 @@
     </div>
 </div>
 
-<!-- CHAT POPUP (Large, Search + Recent Chats) -->
+<!-- CHAT POPUP -->
 <div class="overlay" id="chatPopup">
     <div class="modal" style="max-width:720px;">
         <button class="modal-close" onclick="closeModal('chatPopup')">✕</button>
@@ -840,6 +843,7 @@ let adminLoggedIn = false;
 let selectedUserDetail = null;
 let chatSelectedUser = null;
 let editingToolIndex = -1;
+let logoClickCounter = 0;
 
 // ===== FIREBASE LISTENER =====
 onValue(dbRef, (snapshot) => {
@@ -860,6 +864,29 @@ onValue(dbRef, (snapshot) => {
         renderToolsList();
         updateChatNotification();
         if (adminLoggedIn) loadAdminData();
+        // Update home page and dashboard via localStorage sync
+        if (val.offerCredits !== undefined) {
+            localStorage.setItem('brt_offer_credits', val.offerCredits);
+        }
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            localStorage.setItem('brt_logo', val.logoBase64);
+        }
+        // Update tools in localStorage for dashboard
+        if (val.tools !== undefined) {
+            localStorage.setItem('brt_tools', JSON.stringify(val.tools));
+        }
+        // Update users in localStorage
+        if (val.users !== undefined) {
+            localStorage.setItem('brt_users', JSON.stringify(val.users));
+        }
+        // Update credit packs in localStorage
+        if (val.creditPacks !== undefined) {
+            localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
+        }
+        // Update brokers in localStorage
+        if (val.brokers !== undefined) {
+            localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+        }
     }
 }, (error) => {
     isFirebaseConnected = false;
@@ -926,9 +953,9 @@ function showPasswordPopup() {
     setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
 }
 
-function hidePasswordPopup() {
+window.hidePasswordPopup = function() {
     document.getElementById('passwordOverlay').classList.remove('active');
-}
+};
 
 window.checkAdminPassword = function() {
     const pass = document.getElementById('adminPassInput').value;
@@ -963,7 +990,7 @@ window.adminLogin = function() {
         document.getElementById('adminArea').style.display = 'block';
         document.getElementById('adminPassInput').value = '';
         loadAdminData();
-        alert('✅ Admin login successful!');
+        // No alert - silent login
     }
 };
 
@@ -1041,7 +1068,7 @@ window.adminApprovePayment = function(idx) {
         renderPendingPayments();
         renderUsersList();
         updateUI();
-        alert('✅ Payment approved!');
+        // No alert - silent
     }
 };
 
@@ -1052,7 +1079,7 @@ window.adminRejectPayment = function(idx) {
         payment.status = 'failed';
         saveLocalState();
         renderPendingPayments();
-        alert('❌ Payment rejected.');
+        // No alert - silent
     }
 };
 
@@ -1082,6 +1109,9 @@ function renderPendingVerifications() {
                     <span style="color:#888;">Broker:</span><span style="color:#00FF66;">${req.broker || 'N/A'}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#aaa;padding:3px 0;">
+                    <span style="color:#888;">Free Credits:</span><span style="color:#FFD700;">${appState.offerCredits || 10}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#aaa;padding:3px 0;">
                     <span style="color:#888;">Date:</span><span style="color:#FFD700;">${req.date ? new Date(req.date).toLocaleString() : ''}</span>
                 </div>
                 <div style="display:flex;gap:8px;margin-top:6px;">
@@ -1101,13 +1131,16 @@ window.adminApproveVerification = function(idx) {
         const user = appState.users.find(u => u.email === request.userEmail);
         if (user) {
             user.verified = true;
-            user.credits = (user.credits || 0) + (appState.offerCredits || 10);
+            // Add offer credits
+            const offerCredits = appState.offerCredits || 10;
+            user.credits = (user.credits || 0) + offerCredits;
+            user.freeCredits = (user.freeCredits || 0) + offerCredits;
         }
         saveLocalState();
         renderPendingVerifications();
         renderUsersList();
         updateUI();
-        alert(`✅ ${request.userEmail} verified successfully!`);
+        // No alert - silent
     }
 };
 
@@ -1118,7 +1151,7 @@ window.adminRejectVerification = function(idx) {
         request.status = 'rejected';
         saveLocalState();
         renderPendingVerifications();
-        alert(`❌ Verification rejected.`);
+        // No alert - silent
     }
 };
 
@@ -1267,7 +1300,7 @@ window.giveFreeCredits = function() {
     saveLocalState();
     renderUsersList();
     updateUI();
-    alert('✅ ' + credits + ' free credits added to ' + selectedUserDetail.email);
+    // No alert - silent
     document.getElementById('detailFreeCreditsInput').value = '';
     const idx = appState.users.indexOf(selectedUserDetail);
     if (idx !== -1) openUserDetailPopup(idx);
@@ -1281,7 +1314,7 @@ window.blockUser = function() {
         saveLocalState();
         renderUsersList();
         updateUI();
-        alert('✅ User ' + (selectedUserDetail.blocked ? 'blocked' : 'unblocked'));
+        // No alert - silent
         const idx = appState.users.indexOf(selectedUserDetail);
         if (idx !== -1) openUserDetailPopup(idx);
     }
@@ -1298,7 +1331,7 @@ window.removeUser = function() {
             saveLocalState();
             renderUsersList();
             updateUI();
-            alert('✅ User removed!');
+            // No alert - silent
         }
     }
 };
@@ -1330,7 +1363,6 @@ function renderChatUserList(filter = '') {
     if (!container) return;
     container.innerHTML = '';
     
-    // Get users who have chatted
     const chatUsers = [];
     const chatKeys = Object.keys(appState.chats || {});
     chatKeys.forEach(key => {
@@ -1344,7 +1376,6 @@ function renderChatUserList(filter = '') {
         }
     });
     
-    // Sort by last message time
     chatUsers.sort((a, b) => {
         const timeA = a.lastMsg?.timestamp || 0;
         const timeB = b.lastMsg?.timestamp || 0;
@@ -1398,7 +1429,6 @@ function loadChatMessages() {
         const cls = c.sender === 'admin' ? 'admin' : 'user';
         const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : '';
         box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`;
-        // Mark user messages as read
         if (c.sender === 'user' && !c.read) c.read = true;
     });
     box.scrollTop = box.scrollHeight;
@@ -1489,14 +1519,12 @@ window.adminSavePaymentSettings = function() {
             appState.qrCodeBase64 = e.target.result;
             saveLocalState();
             loadQRPreview();
-            alert('✅ Payment Settings Saved!');
             disableEditFields(document.querySelector('.admin-section'));
         };
         reader.readAsDataURL(fileInput.files[0]);
     } else {
         saveLocalState();
         loadQRPreview();
-        alert('✅ Payment Settings Saved!');
         disableEditFields(document.querySelector('.admin-section'));
     }
 };
@@ -1533,7 +1561,6 @@ window.adminAddCreditPack = function() {
     renderCreditPackList();
     document.getElementById('packCredits').value = '';
     document.getElementById('packPrice').value = '';
-    alert('✅ Credit pack added!');
     disableEditFields(document.querySelector('.admin-section'));
 };
 
@@ -1564,6 +1591,18 @@ function renderCreditPackList() {
         `;
     });
 }
+
+// ===== OFFER SETTINGS =====
+window.adminSaveOffer = function() {
+    const credits = parseInt(document.getElementById('adminOfferCredits').value);
+    if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
+    appState.offerCredits = credits;
+    saveLocalState();
+    updateUI();
+    // Update home page via localStorage
+    localStorage.setItem('brt_offer_credits', credits);
+    disableEditFields(document.querySelector('.admin-section'));
+};
 
 // ===== TOOLS MANAGER =====
 function renderToolsList() {
@@ -1603,7 +1642,6 @@ window.editTool = function(idx) {
     document.getElementById('editToolStatus').value = tool.visibility || 'visible';
     document.getElementById('editToolForm').style.display = 'block';
     document.getElementById('addToolForm').style.display = 'none';
-    // Scroll to edit form
     document.getElementById('editToolForm').scrollIntoView({ behavior: 'smooth' });
 };
 
@@ -1624,9 +1662,10 @@ window.adminUpdateTool = function() {
     
     appState.tools[idx] = { ...appState.tools[idx], name, htmlCode, visibility };
     saveLocalState();
+    // Update localStorage for dashboard
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('editToolForm').style.display = 'none';
-    alert('✅ Tool updated successfully!');
 };
 
 window.toggleToolVisibility = function(idx) {
@@ -1634,16 +1673,16 @@ window.toggleToolVisibility = function(idx) {
     if (!tool) return;
     tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible';
     saveLocalState();
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
-    alert('✅ Tool visibility toggled!');
 };
 
 window.deleteTool = function(idx) {
     if (confirm('Delete this tool permanently?')) {
         appState.tools.splice(idx, 1);
         saveLocalState();
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
         renderToolsList();
-        alert('✅ Tool deleted!');
     }
 };
 
@@ -1678,9 +1717,9 @@ window.adminAddTool = function() {
         visibility
     });
     saveLocalState();
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('addToolForm').style.display = 'none';
-    alert('✅ New tool added successfully!');
 };
 
 // ===== LOGO =====
@@ -1692,7 +1731,6 @@ window.adminSaveLogo = function() {
             appState.logoBase64 = e.target.result;
             localStorage.setItem('brt_logo', appState.logoBase64);
             saveLocalState();
-            alert('✅ Logo Updated!');
             disableEditFields(document.querySelector('.admin-section'));
         };
         reader.readAsDataURL(file);
@@ -1748,7 +1786,6 @@ window.adminAddBroker = function() {
     appState.brokers.push({ name, link, minDeposit, rules });
     saveLocalState();
     renderBrokerList();
-    alert('✅ Broker added!');
     disableEditFields(document.querySelector('.admin-section'));
 };
 
@@ -1760,17 +1797,7 @@ window.adminDeleteBroker = function(idx) {
     }
 };
 
-// ===== OFFER, FIREBASE, ADMIN SETTINGS =====
-window.adminSaveOffer = function() {
-    const credits = parseInt(document.getElementById('adminOfferCredits').value);
-    if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
-    appState.offerCredits = credits;
-    saveLocalState();
-    updateUI();
-    alert('✅ Offer updated!');
-    disableEditFields(document.querySelector('.admin-section'));
-};
-
+// ===== FIREBASE CONFIG =====
 window.adminSaveFirebase = function() {
     if (!appState.firebaseConfig) appState.firebaseConfig = {};
     appState.firebaseConfig.apiKey = document.getElementById('fbApiKey').value.trim();
@@ -1780,16 +1807,15 @@ window.adminSaveFirebase = function() {
     appState.firebaseConfig.storageBucket = document.getElementById('fbStorageBucket').value.trim();
     appState.firebaseConfig.appId = document.getElementById('fbAppId').value.trim();
     saveLocalState();
-    alert('✅ Firebase Saved!');
     disableEditFields(document.querySelector('.admin-section'));
 };
 
+// ===== ADMIN ACCESS =====
 window.saveAdminSettings = function() {
     appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
     appState.notificationMobile = document.getElementById('notificationMobile').value.trim();
     appState.notificationEmail = document.getElementById('notificationEmail').value.trim();
     saveLocalState();
-    alert('✅ Admin Settings Saved!');
     disableEditFields(document.querySelector('.admin-section'));
 };
 
@@ -1808,6 +1834,12 @@ function disableEditFields(section) {
     section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
     section.querySelectorAll('.btn-edit').forEach(b => b.style.display = 'block');
 }
+
+// ===== LOGO CLICK FOR ADMIN ACCESS =====
+document.addEventListener('DOMContentLoaded', function() {
+    // This will be used by home page and dashboard via localStorage
+    // The actual click logic is in home page and dashboard
+});
 
 // ===== INIT =====
 showPasswordPopup();
@@ -1853,6 +1885,8 @@ window.adminAddTool = adminAddTool;
 window.selectChatUser = selectChatUser;
 window.sendChatMessage = sendChatMessage;
 window.filterChatUsers = filterChatUsers;
+window.hidePasswordPopup = hidePasswordPopup;
+window.adminLogin = adminLogin;
 </script>
 </body>
 </html>
