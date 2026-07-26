@@ -331,7 +331,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 75px;
+            min-height: 85px;
             position: relative;
             overflow: hidden;
         }
@@ -354,29 +354,29 @@
         .tool-btn:active { transform: scale(0.97); }
         .tool-btn .tool-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+            font-size: clamp(1.3rem, 2.2vw, 2rem);
             color: #ffffff;
             font-weight: 900;
             letter-spacing: 1.5px;
             position: relative;
             z-index: 1;
-            text-shadow: 0 0 20px rgba(255,255,255,0.05);
+            text-shadow: 0 0 30px rgba(255,255,255,0.08);
         }
         .tool-btn .tool-subname {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(0.6rem, 0.9vw, 0.8rem);
+            font-size: clamp(0.65rem, 1vw, 0.85rem);
             color: #FF0033;
-            margin-top: 4px;
+            margin-top: 5px;
             font-weight: 600;
             letter-spacing: 0.5px;
             position: relative;
             z-index: 1;
         }
         .tool-btn .tool-sticker {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             display: inline-block;
             animation: stickerFloat 3s ease-in-out infinite;
-            margin-right: 10px;
+            margin-right: 12px;
             position: relative;
             z-index: 1;
         }
@@ -565,9 +565,9 @@
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
             .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
-            .tool-btn { padding: 14px 16px; min-height: 60px; }
-            .tool-btn .tool-name { font-size: 0.95rem; }
-            .tool-btn .tool-subname { font-size: 0.55rem; }
+            .tool-btn { padding: 14px 16px; min-height: 65px; }
+            .tool-btn .tool-name { font-size: 1.1rem; }
+            .tool-btn .tool-subname { font-size: 0.6rem; }
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
         }
         @media (max-width: 480px) {
@@ -586,9 +586,9 @@
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
-            .tool-btn { padding: 12px 14px; min-height: 55px; }
-            .tool-btn .tool-name { font-size: 0.85rem; }
-            .tool-btn .tool-subname { font-size: 0.5rem; }
+            .tool-btn { padding: 12px 14px; min-height: 60px; }
+            .tool-btn .tool-name { font-size: 0.95rem; }
+            .tool-btn .tool-subname { font-size: 0.55rem; }
             .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
         }
         
@@ -802,32 +802,79 @@ let appState = {
 let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
 
-// Cursor Glow
-const glow = document.getElementById('cursorGlow');
-if (window.matchMedia('(hover: hover)').matches) {
-    document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
-    document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
+// ─── CHECK WHICH SESSION IS ACTIVE ───
+function getActiveSession() {
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    
+    // Admin takes priority - if admin is logged in, show admin data
+    if (adminLoggedIn) {
+        return { type: 'admin', loggedIn: true };
+    }
+    // If user is logged in, show user data
+    if (userLoggedIn) {
+        return { type: 'user', loggedIn: true };
+    }
+    return { type: 'none', loggedIn: false };
+}
+
+// ─── GET CURRENT USER BASED ON SESSION ───
+function getCurrentUser() {
+    const session = getActiveSession();
+    if (session.type === 'admin') {
+        // Find admin user in users list (look for user with email containing 'admin')
+        const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
+        if (adminUser) {
+            return adminUser;
+        }
+        // If no admin user found, create a default admin user
+        const defaultAdmin = {
+            email: 'admin@binaryruthless.com',
+            accountId: 'ADMIN001',
+            name: 'Admin',
+            verified: true,
+            adminAdded: true,
+            deposit: 0,
+            requiredDeposit: 0,
+            credits: 999,
+            signalsUsed: 0,
+            todayUsed: 0,
+            blocked: false,
+            registeredAt: new Date().toISOString()
+        };
+        // Check if already exists
+        const existing = appState.users.find(u => u.email === defaultAdmin.email);
+        if (!existing) {
+            appState.users.push(defaultAdmin);
+            saveLocalState();
+        }
+        return defaultAdmin;
+    } else if (session.type === 'user') {
+        return appState.currentUser;
+    }
+    return null;
 }
 
 // ─── CHECK USER SESSION ───
 function checkUserSession() {
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const session = getActiveSession();
     const userLogoutBtn = document.getElementById('userLogoutBtn');
     const adminNavBar = document.getElementById('adminNavBar');
-    if (userLoggedIn) {
-        userLogoutBtn.classList.add('visible');
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        if (!adminLoggedIn) {
-            adminNavBar.classList.remove('visible');
-        }
-    } else {
+    
+    if (session.type === 'admin') {
+        adminNavBar.classList.add('visible');
         userLogoutBtn.classList.remove('visible');
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        if (!adminLoggedIn) {
-            window.location.href = 'index.html';
-        }
+        return true;
+    } else if (session.type === 'user') {
+        adminNavBar.classList.remove('visible');
+        userLogoutBtn.classList.add('visible');
+        return true;
+    } else {
+        adminNavBar.classList.remove('visible');
+        userLogoutBtn.classList.remove('visible');
+        window.location.href = 'index.html';
+        return false;
     }
-    return userLoggedIn;
 }
 
 // ─── USER LOGOUT ───
@@ -840,29 +887,20 @@ document.getElementById('userLogoutBtn').addEventListener('click', function() {
 
 // ─── ADMIN SESSION ───
 function checkAdminSession() {
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    const navBar = document.getElementById('adminNavBar');
-    const userLogoutBtn = document.getElementById('userLogoutBtn');
-    if (adminLoggedIn) {
-        navBar.classList.add('visible');
-        userLogoutBtn.classList.remove('visible');
-    } else {
-        navBar.classList.remove('visible');
-        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-        if (userLoggedIn) {
-            userLogoutBtn.classList.add('visible');
-        }
-    }
-    return adminLoggedIn;
+    return sessionStorage.getItem('admin_logged_in') === 'true';
 }
 
 // ─── ADMIN LOGOUT FROM DASHBOARD ───
 document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
     sessionStorage.removeItem('admin_logged_in');
-    sessionStorage.removeItem('user_logged_in');
-    appState.currentUser = null;
-    saveLocalState();
-    window.location.href = 'index.html';
+    // If user is also logged in, keep user session
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    if (userLoggedIn) {
+        // Reload to show user data
+        window.location.reload();
+    } else {
+        window.location.href = 'index.html';
+    }
 });
 
 onValue(dbRef, (snapshot) => {
@@ -875,11 +913,21 @@ onValue(dbRef, (snapshot) => {
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(); }
         if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
         if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); }
-        if (currentUserEmail) {
+        
+        // Update current user based on session
+        const session = getActiveSession();
+        if (session.type === 'user' && currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
             else { appState.currentUser = null; sessionStorage.removeItem('user_logged_in'); }
+        } else if (session.type === 'admin') {
+            // Keep admin user
+            const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
+            if (adminUser) {
+                appState.currentUser = adminUser;
+            }
         }
+        
         // Check chat messages for unread
         if (appState.currentUser) {
             const key = getChatKey(appState.currentUser.email);
@@ -888,7 +936,7 @@ onValue(dbRef, (snapshot) => {
             chatUnreadCount = unread;
             updateChatBadge();
         }
-        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession(); checkUserSession();
+        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
@@ -902,24 +950,48 @@ function loadLocalState() {
     const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-    if (!userLoggedIn) {
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        if (!adminLoggedIn) {
-            window.location.href = 'index.html';
-            return;
+    
+    const session = getActiveSession();
+    if (session.type === 'admin') {
+        // Set admin user
+        const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
+        if (adminUser) {
+            appState.currentUser = adminUser;
+        } else {
+            // Create default admin
+            const defaultAdmin = {
+                email: 'admin@binaryruthless.com',
+                accountId: 'ADMIN001',
+                name: 'Admin',
+                verified: true,
+                adminAdded: true,
+                deposit: 0,
+                requiredDeposit: 0,
+                credits: 999,
+                signalsUsed: 0,
+                todayUsed: 0,
+                blocked: false,
+                registeredAt: new Date().toISOString()
+            };
+            appState.users.push(defaultAdmin);
+            appState.currentUser = defaultAdmin;
+            saveLocalState();
         }
-    } else {
+    } else if (session.type === 'user') {
         if (!appState.currentUser) {
             window.location.href = 'index.html';
             return;
         }
+        // Check chat unread
         const key = getChatKey(appState.currentUser.email);
         const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
         const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
         chatUnreadCount = unread;
+    } else {
+        window.location.href = 'index.html';
+        return;
     }
-    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession(); checkUserSession();
+    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
 }
 
 function applyLogo() {
@@ -974,7 +1046,11 @@ document.getElementById('toolFullscreenClose').addEventListener('click', functio
 
 function updateUI() {
     const user = appState.currentUser;
-    if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; document.getElementById('dashCredits').textContent = user.credits || 0; document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; }
+    if (user) { 
+        document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; 
+        document.getElementById('dashCredits').textContent = user.credits || 0; 
+        document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; 
+    }
 }
 function applySignalSettings() { document.getElementById('toolFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || ''; }
 
