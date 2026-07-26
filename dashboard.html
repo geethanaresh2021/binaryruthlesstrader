@@ -98,6 +98,33 @@
         .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .admin-nav-bar .nav-buttons .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
         
+        /* ─── USER LOGOUT BUTTON (for logged-in users) ─── */
+        .user-logout-btn {
+            display: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 51, 0.12);
+            border-radius: 8px;
+            padding: 2px 8px;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+            font-size: 0.4rem;
+            color: #FF0033;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            border-color: rgba(255, 0, 51, 0.2);
+        }
+        .user-logout-btn.visible { display: flex; }
+        .user-logout-btn:hover { border-color: #FF0033; background: rgba(255, 0, 51, 0.08); transform: scale(1.04); }
+        .user-logout-btn:active { transform: scale(0.93); }
+        
         /* ─── BRAND SECTION ─── */
         .brand-section { text-align: center; padding: 2px 0 1px 0; flex-shrink: 0; cursor: pointer; position: relative; z-index: 1; }
         .brand-section:active .logo-icon { animation: zoomInSlow 0.7s ease forwards; }
@@ -431,6 +458,7 @@
             .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
             .admin-nav-bar .nav-label { font-size: 0.35rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
+            .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
             .tool-btn { padding: 10px 14px; min-height: 50px; }
             .tool-btn .tool-name { font-size: 0.6rem; }
@@ -448,6 +476,7 @@
             .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
             .credits-container .credit-item .number { font-size: 0.85rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
+            .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
@@ -465,7 +494,7 @@
         .red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
         .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
         .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
-        .tool-btn, .dash-main-btn {
+        .tool-btn, .dash-main-btn, .user-logout-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -474,7 +503,7 @@
         .feature-card:hover, .stat-item:hover, .social-icons a:hover,
         .admin-nav-bar .nav-buttons button:hover, .modal .btn-submit:hover,
         .modal-close:hover, .user-info-container:hover, .credits-container:hover,
-        .tool-btn:hover, .dash-main-btn:hover {
+        .tool-btn:hover, .dash-main-btn:hover, .user-logout-btn:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover, .admin-nav-bar .nav-buttons button:hover,
@@ -485,7 +514,7 @@
         .feature-card:active, .stat-item:active, .social-icons a:active,
         .admin-nav-bar .nav-buttons button:active, .modal .btn-submit:active,
         .modal-close:active, .user-info-container:active, .credits-container:active,
-        .tool-btn:active, .dash-main-btn:active {
+        .tool-btn:active, .dash-main-btn:active, .user-logout-btn:active {
             transform: scale(0.97);
         }
     </style>
@@ -503,11 +532,14 @@
             <div class="admin-nav-bar" id="adminNavBar">
                 <span class="nav-label">🔐</span>
                 <div class="nav-buttons">
-                    <button onclick="window.location.href='dashboard.html'" class="active">📊 Dashboard</button>
+                    <button onclick="window.location.href='index.html'">🏠 Home</button>
                     <button onclick="window.location.href='admin.html'">⚙️ Admin</button>
-                    <button class="logout-btn" id="dashLogoutBtn">🚪 Logout</button>
+                    <button class="logout-btn" id="dashAdminLogoutBtn">🚪 Logout</button>
                 </div>
             </div>
+            
+            <!-- User Logout Button -->
+            <button class="user-logout-btn" id="userLogoutBtn">🚪 Logout</button>
             
             <div class="brand-section" id="brandSection">
                 <span class="logo-icon" id="logoIcon">◆</span>
@@ -657,6 +689,7 @@ let appState = {
 };
 
 let isFirebaseConnected = false, selectedCreditPack = null;
+let chatUnreadCount = 0;
 
 // Cursor Glow
 const glow = document.getElementById('cursorGlow');
@@ -664,6 +697,63 @@ if (window.matchMedia('(hover: hover)').matches) {
     document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
     document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
 }
+
+// ─── CHECK USER SESSION ───
+function checkUserSession() {
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const userLogoutBtn = document.getElementById('userLogoutBtn');
+    const adminNavBar = document.getElementById('adminNavBar');
+    if (userLoggedIn) {
+        userLogoutBtn.classList.add('visible');
+        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        if (!adminLoggedIn) {
+            adminNavBar.classList.remove('visible');
+        }
+    } else {
+        userLogoutBtn.classList.remove('visible');
+        // If no user and no admin, redirect to home
+        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        if (!adminLoggedIn) {
+            window.location.href = 'index.html';
+        }
+    }
+    return userLoggedIn;
+}
+
+// ─── USER LOGOUT ───
+document.getElementById('userLogoutBtn').addEventListener('click', function() {
+    sessionStorage.removeItem('user_logged_in');
+    appState.currentUser = null;
+    saveLocalState();
+    window.location.href = 'index.html';
+});
+
+// ─── ADMIN SESSION ───
+function checkAdminSession() {
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const navBar = document.getElementById('adminNavBar');
+    const userLogoutBtn = document.getElementById('userLogoutBtn');
+    if (adminLoggedIn) {
+        navBar.classList.add('visible');
+        userLogoutBtn.classList.remove('visible');
+    } else {
+        navBar.classList.remove('visible');
+        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+        if (userLoggedIn) {
+            userLogoutBtn.classList.add('visible');
+        }
+    }
+    return adminLoggedIn;
+}
+
+// ─── ADMIN LOGOUT FROM DASHBOARD ───
+document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
+    sessionStorage.removeItem('admin_logged_in');
+    sessionStorage.removeItem('user_logged_in');
+    appState.currentUser = null;
+    saveLocalState();
+    window.location.href = 'index.html';
+});
 
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
@@ -678,22 +768,19 @@ onValue(dbRef, (snapshot) => {
         if (currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
-            else { appState.currentUser = null; window.location.href = 'index.html'; }
+            else { appState.currentUser = null; sessionStorage.removeItem('user_logged_in'); }
         }
-        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession();
+        // Check chat messages for unread
+        if (appState.currentUser) {
+            const key = getChatKey(appState.currentUser.email);
+            const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+            const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
+            chatUnreadCount = unread;
+            updateChatBadge();
+        }
+        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession(); checkUserSession();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
-
-function checkAdminSession() {
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    const navBar = document.getElementById('adminNavBar');
-    if (adminLoggedIn) { navBar.classList.add('visible'); } else { navBar.classList.remove('visible'); }
-}
-
-document.getElementById('dashLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('admin_logged_in');
-    appState.currentUser = null; saveLocalState(); window.location.href = 'index.html';
-});
 
 function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
 
@@ -705,8 +792,27 @@ function loadLocalState() {
     const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
-    if (!appState.currentUser) { window.location.href = 'index.html'; return; }
-    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession();
+    // Check if user is logged in
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    if (!userLoggedIn) {
+        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        if (!adminLoggedIn) {
+            window.location.href = 'index.html';
+            return;
+        }
+    } else {
+        // Find user
+        if (!appState.currentUser) {
+            window.location.href = 'index.html';
+            return;
+        }
+        // Check chat unread
+        const key = getChatKey(appState.currentUser.email);
+        const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+        const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
+        chatUnreadCount = unread;
+    }
+    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession(); checkUserSession();
 }
 
 function applyLogo() {
@@ -720,7 +826,6 @@ function renderTools() {
     container.innerHTML = '';
     const tools = appState.tools || [];
     if (tools.length === 0) {
-        // Add default Binary Ruthless Signals tool
         container.innerHTML = '';
         return;
     }
@@ -755,7 +860,6 @@ function openToolFullscreen(tool) {
     window._currentTool = tool;
 }
 
-// Close tool fullscreen
 document.getElementById('toolFullscreenClose').addEventListener('click', function() {
     document.getElementById('toolFullscreen').classList.remove('active');
     window._currentTool = null;
@@ -769,16 +873,33 @@ function applySignalSettings() { document.getElementById('toolFullscreenIframe')
 
 function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
 function updateChatBadge() {
-    const badge = document.getElementById('chatBadge'); if (!appState.currentUser) return;
-    const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    const unread = msgs.filter(m => m.sender === 'admin' && !m.read); badge.classList.toggle('active', unread.length > 0);
+    const badge = document.getElementById('chatBadge');
+    if (!badge) return;
+    if (chatUnreadCount > 0) {
+        badge.classList.add('active');
+        badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
+        badge.style.width = 'auto';
+        badge.style.padding = '0 4px';
+        badge.style.fontSize = '0.35rem';
+        badge.style.borderRadius = '10px';
+        badge.style.minWidth = '14px';
+        badge.style.height = '14px';
+        badge.style.display = 'block';
+    } else {
+        badge.classList.remove('active');
+        badge.style.display = 'none';
+    }
 }
+
 function renderChatMessages() {
     const container = document.getElementById('chatContainer'); if (!container || !appState.currentUser) return; container.innerHTML = '';
     const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
     if (msgs.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:8px;">No messages yet</div>'; return; }
     msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'admin' && !c.read) c.read = true; });
     container.scrollTop = container.scrollHeight; saveLocalState();
+    // Reset unread count
+    chatUnreadCount = 0;
+    updateChatBadge();
 }
 window.openChatModal = function() { if (!appState.currentUser) return; renderChatMessages(); openModal('chatModal'); };
 window.sendChatMessage = function() {
@@ -833,7 +954,6 @@ window.submitManualPayment = function() {
     setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
-// Handle signal generation from iframe
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'signalGenerated') {
         if (appState.currentUser && appState.currentUser.credits > 0) {
@@ -872,7 +992,6 @@ document.getElementById('brandSection').addEventListener('click', function(e) {
     }
 });
 
-// Keyboard shortcut: ESC to close modals and fullscreen
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
@@ -884,6 +1003,7 @@ loadLocalState();
 console.log('📊 Dashboard Loaded');
 console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
 console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
+console.log('💬 Unread Chats: ' + chatUnreadCount);
 </script>
 </body>
 </html>
