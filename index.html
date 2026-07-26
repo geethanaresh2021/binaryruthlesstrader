@@ -274,6 +274,41 @@
             box-shadow: 0 0 20px rgba(255, 0, 51, 0.08);
         }
 
+        /* ─── USER LOGOUT BUTTON (for logged-in users) ─── */
+        .user-logout-btn {
+            display: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 51, 0.12);
+            border-radius: 8px;
+            padding: 2px 8px;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+            font-size: 0.4rem;
+            color: #FF0033;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            border-color: rgba(255, 0, 51, 0.2);
+        }
+        .user-logout-btn.visible {
+            display: flex;
+        }
+        .user-logout-btn:hover {
+            border-color: #FF0033;
+            background: rgba(255, 0, 51, 0.08);
+            transform: scale(1.04);
+        }
+        .user-logout-btn:active {
+            transform: scale(0.93);
+        }
+
         /* ─── BRAND SECTION ─── */
         .brand-section {
             text-align: center;
@@ -1186,6 +1221,12 @@
                 font-size: 0.35rem;
                 padding: 1px 6px;
             }
+            .user-logout-btn {
+                top: 2px;
+                right: 6px;
+                padding: 1px 6px;
+                font-size: 0.35rem;
+            }
             .fb-status-dot {
                 top: 3px;
                 left: 6px;
@@ -1226,6 +1267,10 @@
                 font-size: 0.37rem;
             }
             .admin-nav-bar .nav-buttons button {
+                font-size: 0.3rem;
+                padding: 1px 4px;
+            }
+            .user-logout-btn {
                 font-size: 0.3rem;
                 padding: 1px 4px;
             }
@@ -1304,7 +1349,8 @@
         .social-icons a,
         .admin-nav-bar .nav-buttons button,
         .modal .btn-submit,
-        .modal-close {
+        .modal-close,
+        .user-logout-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease,
                 border-color 0.4s ease;
@@ -1319,7 +1365,8 @@
         .social-icons a:hover,
         .admin-nav-bar .nav-buttons button:hover,
         .modal .btn-submit:hover,
-        .modal-close:hover {
+        .modal-close:hover,
+        .user-logout-btn:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover,
@@ -1336,7 +1383,8 @@
         .social-icons a:active,
         .admin-nav-bar .nav-buttons button:active,
         .modal .btn-submit:active,
-        .modal-close:active {
+        .modal-close:active,
+        .user-logout-btn:active {
             transform: scale(0.97);
         }
 
@@ -1379,6 +1427,9 @@
                         <button class="logout-btn" id="homeAdminLogoutBtn">🚪 Logout</button>
                     </div>
                 </div>
+
+                <!-- User Logout Button (for logged-in users) -->
+                <button class="user-logout-btn" id="userLogoutBtn">🚪 Logout</button>
 
                 <!-- Status Dot – top-left -->
                 <span class="fb-status-dot red" id="firebaseStatusDot"></span>
@@ -1585,22 +1636,59 @@
             });
         }
 
+        // ─── CHECK LOGGED IN USER ───
+        function checkUserSession() {
+            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+            const userLogoutBtn = document.getElementById('userLogoutBtn');
+            const adminNavBar = document.getElementById('adminNavBar');
+            if (userLoggedIn) {
+                userLogoutBtn.classList.add('visible');
+                // Hide admin nav if admin is not logged in
+                const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+                if (!adminLoggedIn) {
+                    adminNavBar.classList.remove('visible');
+                }
+            } else {
+                userLogoutBtn.classList.remove('visible');
+            }
+            return userLoggedIn;
+        }
+
+        // ─── USER LOGOUT ───
+        document.getElementById('userLogoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('user_logged_in');
+            appState.currentUser = null;
+            saveLocalState();
+            window.location.href = 'index.html';
+        });
+
         // ─── ADMIN SESSION ───
         function checkAdminSession() {
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
             const navBar = document.getElementById('adminNavBar');
+            const userLogoutBtn = document.getElementById('userLogoutBtn');
             if (adminLoggedIn) {
                 navBar.classList.add('visible');
+                userLogoutBtn.classList.remove('visible');
             } else {
                 navBar.classList.remove('visible');
+                // Check if user is logged in
+                const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+                if (userLoggedIn) {
+                    userLogoutBtn.classList.add('visible');
+                }
             }
             return adminLoggedIn;
         }
 
         document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
             sessionStorage.removeItem('admin_logged_in');
+            sessionStorage.removeItem('user_logged_in');
+            appState.currentUser = null;
+            saveLocalState();
             document.getElementById('adminNavBar').classList.remove('visible');
-            alert('🚪 Admin logged out successfully!');
+            document.getElementById('userLogoutBtn').classList.remove('visible');
+            window.location.href = 'index.html';
         });
 
         // ─── SOCIAL MEDIA ───
@@ -1723,6 +1811,7 @@
             updateUI();
             renderSocialMedia();
             checkAdminSession();
+            checkUserSession();
         }
 
         function applyLogo(logoBase64) {
@@ -1801,6 +1890,7 @@
                 return;
             }
             appState.currentUser = user;
+            sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
             closeModal('loginModal');
             errorEl.textContent = '';
@@ -1947,6 +2037,7 @@
             if (e.target.closest('.overlay')) return;
             if (e.target.closest('.modal')) return;
             if (e.target.closest('.admin-nav-bar')) return;
+            if (e.target.closest('.user-logout-btn')) return;
 
             // ── Trigger logo glow ──
             logoGlow.classList.remove('active');
@@ -1994,6 +2085,8 @@
         console.log('✅ Only Admin Approved/Added users can login.');
         console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
         console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' :
+            'Logged Out ❌'));
+        console.log('👤 User Session: ' + (sessionStorage.getItem('user_logged_in') === 'true' ? 'Logged In ✅' :
             'Logged Out ❌'));
 
         // ─── KEYBOARD SHORTCUT: ESC to close modals ───
