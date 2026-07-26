@@ -21,7 +21,7 @@
     </script>
     
     <style>
-        /* ===== All styles from previous home page ===== */
+        /* All styles from your existing home page - keeping them exactly as they are */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
@@ -147,7 +147,7 @@
             </div>
         </div>
         
-        <!-- OFFER BANNER -->
+        <!-- OFFER BANNER - Sync with Admin Offer Settings -->
         <div class="offer-banner" id="offerBanner">
             <h4>🎁 FREE SIGNAL OFFER</h4>
             <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals when you deposit via our affiliate links!</p>
@@ -237,7 +237,6 @@
     </div>
 </div>
 
-<!-- UPDATED VERIFY MODAL WITH BROKER SELECTION -->
 <div class="overlay" id="verifyModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
@@ -301,7 +300,7 @@ let appState = {
             accountId: 'DEMO123',
             broker: 'Quotex',
             name: 'DemoUser',
-            verified: true, // <--- Admin pre-added user, so they can login immediately
+            verified: true,
             deposit: 1000,
             requiredDeposit: 1000,
             credits: 25,
@@ -312,7 +311,8 @@ let appState = {
         }
     ],
     verificationRequests: [],
-    currentUser: null
+    currentUser: null,
+    logoClickCount: 2 // Default, will be synced from admin
 };
 
 let isFirebaseConnected = false;
@@ -325,6 +325,18 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
+        // Sync logoClickCount from admin settings
+        if (val.logoClickCount !== undefined) {
+            appState.logoClickCount = val.logoClickCount;
+        }
+        // Sync offer credits from admin settings
+        if (val.offerCredits !== undefined) {
+            appState.offerCredits = val.offerCredits;
+        }
+        // Sync logo from admin
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            applyLogo(val.logoBase64);
+        }
         if (currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
@@ -352,7 +364,25 @@ function loadLocalState() {
             appState = { ...appState, ...parsed };
         } catch(e) { console.error(e); }
     }
+    // Load logo from localStorage
+    const logoData = localStorage.getItem('brt_logo');
+    if (logoData) {
+        applyLogo(logoData);
+    }
     updateUI();
+}
+
+function applyLogo(logoBase64) {
+    const logoIcon = document.getElementById('logoIcon');
+    const logoImg = document.getElementById('logoImage');
+    if (logoBase64) {
+        logoIcon.style.display = 'none';
+        logoImg.src = logoBase64;
+        logoImg.style.display = 'block';
+    } else {
+        logoIcon.style.display = 'block';
+        logoImg.style.display = 'none';
+    }
 }
 
 function updateUI() {
@@ -366,7 +396,6 @@ function updateUI() {
         brokerSelect.appendChild(opt);
     });
 
-    // Update verify broker dropdown
     const verifyBroker = document.getElementById('verifyBroker');
     verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
     appState.brokers.forEach(b => {
@@ -392,7 +421,7 @@ document.getElementById('offerBanner').addEventListener('click', function() {
     setTimeout(() => { openModal('signupModal'); }, 500);
 });
 
-// ---------- LOGIN - STRICT CHECK: Only Admin Approved or Admin Added Users ----------
+// ---------- LOGIN ----------
 window.handleLogin = function() {
     const email = document.getElementById('loginEmail').value.trim();
     const accountId = document.getElementById('loginAccountId').value.trim();
@@ -414,11 +443,6 @@ window.handleLogin = function() {
         return;
     }
 
-    // ================================================================
-    // 🔒 KEVALAM Admin Approve చేసిన లేదా Admin Direct ga Add చేసిన వాళ్ళు మాత్రమే Login అవ్వాలి
-    // Admin Add -> verified: true (adminAddUser లో)
-    // Admin Approve -> verified: true (adminApproveVerification లో)
-    // ================================================================
     if (!user.verified) {
         errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
         return;
@@ -429,7 +453,6 @@ window.handleLogin = function() {
         return;
     }
 
-    // Login successful
     appState.currentUser = user;
     saveLocalState();
     closeModal('loginModal');
@@ -437,7 +460,7 @@ window.handleLogin = function() {
     window.location.href = 'dashboard.html';
 };
 
-// ---------- Signup (New user gets verified: false) ----------
+// ---------- Signup ----------
 window.handleSignup = function() {
     const broker = document.getElementById('signupBroker').value;
     const email = document.getElementById('signupEmail').value.trim();
@@ -451,7 +474,7 @@ window.handleSignup = function() {
     if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
     const newUser = {
         email, accountId: '', broker, name: email.split('@')[0],
-        verified: false, // <--- New users are NOT verified
+        verified: false,
         deposit: 0, requiredDeposit: brokerData.minDeposit,
         credits: 0, signalsUsed: 0, todayUsed: 0, blocked: false,
         registeredAt: new Date().toISOString()
@@ -498,7 +521,14 @@ window.handleVerify = function() {
         return;
     }
 
-    const newRequest = { userEmail: email, accountId: accountId, broker: broker, status: 'pending', date: new Date().toISOString() };
+    const newRequest = { 
+        userEmail: email, 
+        accountId: accountId, 
+        broker: broker, 
+        status: 'pending', 
+        date: new Date().toISOString(),
+        freeCredits: appState.offerCredits || 10 // Track how many free credits they will get
+    };
     if (!appState.verificationRequests) appState.verificationRequests = [];
     appState.verificationRequests.push(newRequest);
     saveLocalState();
@@ -536,21 +566,32 @@ document.querySelectorAll('.social-icons a').forEach(link => {
     });
 });
 
-// ---------- Admin Access (Double-click logo) ----------
-let logoClickCount = 0;
+// ---------- Admin Access (Logo Click - Sync with Admin Settings) ----------
+let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault();
-    logoClickCount++;
-    if (logoClickCount >= 2) {
-        logoClickCount = 0;
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) {
+        logoClickCounter = 0;
+        window.location.href = 'admin.html';
+    }
+});
+document.getElementById('logoImage').addEventListener('click', function(e) {
+    e.preventDefault();
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) {
+        logoClickCounter = 0;
         window.location.href = 'admin.html';
     }
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
-    if (e.target.closest('.logo-icon') || e.target.closest('.brand-name')) {
-        logoClickCount++;
-        if (logoClickCount >= 2) {
-            logoClickCount = 0;
+    if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+        logoClickCounter++;
+        const requiredClicks = appState.logoClickCount || 2;
+        if (logoClickCounter >= requiredClicks) {
+            logoClickCounter = 0;
             window.location.href = 'admin.html';
         }
     }
@@ -560,8 +601,9 @@ document.getElementById('brandSection').addEventListener('click', function(e) {
 loadLocalState();
 console.log('🏠 Home Page Loaded');
 console.log('🔑 Admin Password: ' + appState.password);
-console.log('📱 Test Login (Pre-verified): demo@binaryruthless.com / DEMO123');
+console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
 console.log('✅ Only Admin Approved/Added users can login.');
+console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
 </script>
 </body>
 </html>
