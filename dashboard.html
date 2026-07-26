@@ -23,188 +23,492 @@
     </script>
     
     <style>
-        /* All styles from your existing dashboard */
+        /* ─── RESET & BASE ─── */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        
         .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%); position: relative; }
         .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; }
-        .red-container { background: rgba(255, 0, 51, 0.04); border: 1px solid rgba(255, 0, 51, 0.15); border-radius: 18px; padding: 10px 20px 8px; margin: 8px 0 6px; transition: all 0.3s ease; position: relative; }
-        .red-container:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 0 40px rgba(255, 0, 51, 0.05); }
-        .fb-status-dot { position: absolute; top: 10px; left: 14px; width: 10px; height: 10px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 2; }
-        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 15px rgba(0,255,102,0.5); }
-        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 15px rgba(255,0,51,0.5); animation: pulseRed 1.5s ease-in-out infinite; }
-        @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .logout-btn-top { position: absolute; top: 10px; right: 14px; padding: 3px 12px; background: rgba(255,0,51,0.08); border: 1px solid rgba(255,0,51,0.15); border-radius: 12px; color: #FF0033; font-size: 0.5rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; z-index: 5; }
-        .logout-btn-top:hover { background: rgba(255,0,51,0.15); box-shadow: 0 0 20px rgba(255,0,51,0.05); }
-        .logout-btn-top:active { transform: scale(0.95); }
-        .brand-section { text-align: center; padding: 2px 0; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
-        .brand-section:active .logo-icon { animation: zoomIn 0.4s ease; }
-        .brand-section:active .logo-img { animation: zoomIn 0.4s ease; }
-        .brand-section:active .brand-name { animation: zoomOut 0.4s ease; }
-        @keyframes zoomIn { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
-        @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.75); } 100% { transform: scale(1); } }
-        .logo-icon { font-size: clamp(3.5rem, 6vw, 5.5rem); color: #FF0033; text-shadow: 0 0 60px rgba(255,0,51,0.3); animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1; }
-        .logo-img { max-height: clamp(3.5rem, 6vw, 5.5rem); max-width: 250px; object-fit: contain; display: none; margin: 0 auto; }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.85; } }
-        .brand-name { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 4vw, 3.8rem); letter-spacing: 3px; line-height: 1.1; white-space: nowrap; }
+        
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 0, 51, 0.03); }
+        ::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
+        
+        .app::before { content: ''; position: fixed; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 18s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
+        .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
+        @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
+        
+        /* ─── RED CONTAINER ─── compact ─── */
+        .red-container {
+            background: rgba(255, 0, 51, 0.04);
+            border: 1px solid rgba(255, 0, 51, 0.15);
+            border-radius: 18px;
+            padding: 4px 12px 3px 12px;
+            margin: 6px 0 4px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            will-change: transform;
+        }
+        .red-container:hover {
+            border-color: rgba(255, 0, 51, 0.4);
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+            transform: scale(1.012) translateY(-1px);
+        }
+        .red-container::after { content: ''; position: absolute; inset: -1px; border-radius: 18px; padding: 1px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
+        .red-container:hover::after { opacity: 1; }
+        
+        .fb-status-dot { position: absolute; top: 4px; left: 8px; width: 7px; height: 7px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 5; }
+        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 14px rgba(0,255,102,0.6); animation: dotPulse 2s ease-in-out infinite; }
+        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 14px rgba(255,0,51,0.6); animation: pulseRed 1.5s ease-in-out infinite; }
+        @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } }
+        @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 14px rgba(0,255,102,0.6); } 50% { box-shadow: 0 0 28px rgba(0,255,102,0.9), 0 0 50px rgba(0,255,102,0.2); } }
+        
+        /* ─── ADMIN NAV – inside red-container, top-right ─── */
+        .admin-nav-bar {
+            display: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 51, 0.12);
+            border-radius: 8px;
+            padding: 2px 6px;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+        }
+        .admin-nav-bar.visible { display: flex; }
+        .admin-nav-bar:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 2px 24px rgba(255, 0, 51, 0.06); transform: scale(1.04); }
+        .admin-nav-bar .nav-label { font-size: 0.4rem; color: #888; letter-spacing: 0.3px; text-transform: uppercase; font-weight: 600; margin-right: 1px; }
+        .admin-nav-bar .nav-buttons { display: flex; gap: 2px; flex-wrap: wrap; }
+        .admin-nav-bar .nav-buttons button {
+            padding: 1px 8px; border-radius: 12px; border: 1px solid rgba(255,0,51,0.08);
+            background: rgba(255,255,255,0.02); color: #aaa; font-size: 0.4rem; font-weight: 600;
+            cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
+        }
+        .admin-nav-bar .nav-buttons button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); transform: scale(1.1); box-shadow: 0 2px 14px rgba(255,0,51,0.06); }
+        .admin-nav-bar .nav-buttons button:active { transform: scale(0.93); }
+        .admin-nav-bar .nav-buttons button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
+        .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
+        .admin-nav-bar .nav-buttons .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
+        
+        /* ─── BRAND SECTION ─── */
+        .brand-section { text-align: center; padding: 2px 0 1px 0; flex-shrink: 0; cursor: pointer; position: relative; z-index: 1; }
+        .brand-section:active .logo-icon { animation: zoomInSlow 0.7s ease forwards; }
+        .brand-section:active .logo-img { animation: zoomInSlow 0.7s ease forwards; }
+        .brand-section:active .brand-name { animation: zoomOutSlow 0.7s ease forwards; }
+        @keyframes zoomInSlow { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        @keyframes zoomOutSlow { 0% { transform: scale(1); } 40% { transform: scale(0.8); } 100% { transform: scale(1); } }
+        
+        .logo-icon {
+            font-size: clamp(2.6rem, 5vw, 4.6rem);
+            color: #FF0033; text-shadow: 0 0 40px rgba(255,0,51,0.3);
+            animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1.05;
+            transition: all 0.4s ease; position: relative; z-index: 1;
+        }
+        .brand-section:hover .logo-icon { text-shadow: 0 0 60px rgba(255,0,51,0.5), 0 0 80px rgba(255,0,51,0.2); transform: scale(1.03) rotate(-1deg); }
+        .logo-img { max-height: clamp(2.6rem, 5vw, 4.6rem); max-width: 200px; object-fit: contain; display: none; margin: 0 auto; transition: all 0.4s ease; position: relative; z-index: 1; }
+        .brand-section:hover .logo-img { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(255,0,51,0.2)); }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.85; } }
+        
+        .brand-name {
+            font-family: 'Orbitron', sans-serif; font-weight: 900;
+            font-size: clamp(1.1rem, 3.2vw, 3rem); letter-spacing: 2px; line-height: 1.05;
+            white-space: nowrap; transition: all 0.3s ease; position: relative; z-index: 1;
+        }
+        .brand-section:hover .brand-name { letter-spacing: 3px; }
         .brand-name .binary { color: #fff; }
-        .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.3); }
+        .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 20px rgba(255,0,51,0.3); transition: all 0.3s ease; }
+        .brand-section:hover .brand-name .ruthless { text-shadow: 0 0 40px rgba(255,0,51,0.5); }
         .brand-name .trader { color: #fff; }
-        .brand-tagline { color: #888; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-top: 2px; }
-        .social-icons { display: flex; gap: 14px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
-        .social-icons a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,0,51,0.1); color: #888; font-size: 0.85rem; text-decoration: none; transition: all 0.3s ease; }
-        .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px); }
-        .user-info-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 10px 16px; margin: 4px 0 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-        .user-info-container .user-name { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 1.2vw, 1.1rem); color: #fff; font-weight: 700; letter-spacing: 1px; }
-        .user-info-container .user-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .user-info-container .user-actions .btn-sm { padding: 4px 14px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
-        .user-info-container .user-actions .btn-sm:hover { transform: scale(1.05); }
+        
+        .brand-tagline { color: #888; font-size: 0.45rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 1; }
+        .brand-section:hover .brand-tagline { color: #aaa; letter-spacing: 4px; }
+        
+        .social-icons { display: flex; gap: 10px; justify-content: center; margin-top: 2px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .social-icons a {
+            display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;
+            border-radius: 50%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,0,51,0.08);
+            color: #888; font-size: 0.65rem; text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden;
+        }
+        .social-icons a::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at center, rgba(255,0,51,0.12), transparent 70%); opacity: 0; transition: opacity 0.4s ease; }
+        .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px) scale(1.12); box-shadow: 0 6px 20px rgba(255,0,51,0.12); }
+        .social-icons a:hover::before { opacity: 1; }
+        .social-icons a:active { transform: scale(0.9); }
+        
+        /* ─── USER INFO ─── */
+        .user-info-container {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .user-info-container:hover { border-color: rgba(255,255,255,0.12); transform: scale(1.01); }
+        .user-info-container .user-name { font-family: 'Orbitron', sans-serif; font-size: clamp(0.7rem, 1.1vw, 1rem); color: #fff; font-weight: 700; letter-spacing: 1px; }
+        .user-info-container .user-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .user-info-container .user-actions .btn-sm {
+            padding: 3px 12px; border-radius: 16px; font-size: 0.55rem; font-weight: 700;
+            border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+        }
+        .user-info-container .user-actions .btn-sm:hover { transform: scale(1.06); }
         .user-info-container .user-actions .btn-sm:active { transform: scale(0.95); }
         .user-info-container .user-actions .btn-gold { background: #FFD700; color: #000; }
         .user-info-container .user-actions .btn-green { background: #00FF66; color: #000; }
         .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
         .btn-chat-wrapper { position: relative; display: inline-block; }
-        .chat-badge { position: absolute; top: -4px; right: -4px; width: 12px; height: 12px; background: #FF0033; border-radius: 50%; border: 2px solid #000; display: none; }
+        .chat-badge { position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; background: #FF0033; border-radius: 50%; border: 2px solid #000; display: none; }
         .chat-badge.active { display: block; animation: pulseRed 1s ease-in-out infinite; }
-        .credits-container { background: rgba(0, 255, 102, 0.02); border: 1px solid rgba(0, 255, 102, 0.06); border-radius: 14px; padding: 8px 16px; margin: 2px 0 6px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 8px; }
+        
+        .credits-container {
+            background: rgba(0,255,102,0.02); border: 1px solid rgba(0,255,102,0.06);
+            border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px;
+            display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 4px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .credits-container:hover { border-color: rgba(0,255,102,0.12); transform: scale(1.01); }
         .credits-container .credit-item { text-align: center; }
-        .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700; }
-        .credits-container .credit-item .label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; }
+        .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1rem, 1.6vw, 1.6rem); font-weight: 700; color: #FFD700; }
+        .credits-container .credit-item .label { font-size: 0.48rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
         
-        /* ===== TOOLS CONTAINER ===== */
+        /* ─── TOOLS ─── */
         .tools-container {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 8px;
-            margin: 6px 0;
-            justify-content: center;
+            margin: 4px 0 6px 0;
+            padding: 0 2px;
         }
-        .tools-container .tool-btn {
-            padding: 8px 16px;
-            background: rgba(255,215,0,0.04);
-            border: 1px solid rgba(255,215,0,0.08);
+        .tool-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 215, 0, 0.04);
+            border: 1.5px solid rgba(255, 215, 0, 0.12);
             border-radius: 10px;
-            color: #FFD700;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            position: relative;
+            overflow: hidden;
         }
-        .tools-container .tool-btn:hover {
+        .tool-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.04), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 10px;
+        }
+        .tool-btn:hover {
             border-color: #FFD700;
-            background: rgba(255,215,0,0.06);
-            transform: scale(1.03);
+            background: rgba(255, 215, 0, 0.06);
+            transform: scale(1.015);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.04);
         }
-        .tools-container .tool-btn:active { transform: scale(0.97); }
+        .tool-btn:hover::before { opacity: 1; }
+        .tool-btn:active { transform: scale(0.97); }
+        .tool-btn .tool-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.7rem, 1.1vw, 0.95rem);
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .tool-btn .tool-subname {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.45rem, 0.7vw, 0.6rem);
+            color: #FF0033;
+            margin-top: 2px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+        .tool-btn .tool-sticker {
+            font-size: 1.2rem;
+            display: inline-block;
+            animation: stickerFloat 3s ease-in-out infinite;
+            margin-right: 6px;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes stickerFloat {
+            0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+            25% { transform: translateY(-3px) rotateX(5deg) rotateY(-5deg); }
+            75% { transform: translateY(3px) rotateX(-5deg) rotateY(5deg); }
+        }
         
-        .dash-main-btn { width: 100%; padding: 14px 10px; background: rgba(255,215,0,0.04); border: 2px solid #FFD700; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center; margin: 4px 0 6px 0; }
-        .dash-main-btn:hover { background: rgba(255,215,0,0.08); box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
+        .dash-main-btn {
+            width: 100%; padding: 10px 8px; background: rgba(255,215,0,0.04);
+            border: 2px solid #FFD700; border-radius: 14px; cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; margin: 4px 0 4px;
+        }
+        .dash-main-btn:hover { background: rgba(255,215,0,0.08); box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.015); }
         .dash-main-btn:active { transform: scale(0.97); }
-        .dash-main-btn .main-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.2rem, 2.5vw, 2.2rem); letter-spacing: 2px; }
+        .dash-main-btn .main-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1rem, 2.2vw, 2rem); letter-spacing: 2px; }
         .dash-main-btn .main-title .binary { color: #fff; }
         .dash-main-btn .main-title .ruthless { color: #FF0033; text-shadow: 0 0 20px rgba(255,0,51,0.2); }
         .dash-main-btn .main-title .signals { color: #ffffff; }
-        .dash-main-btn .sub-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.5rem, 0.8vw, 0.65rem); color: #FFD700; letter-spacing: 2px; margin-top: 4px; opacity: 0.7; }
+        .dash-main-btn .sub-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.45rem, 0.7vw, 0.6rem); color: #FFD700; letter-spacing: 2px; margin-top: 2px; opacity: 0.7; }
         
-        .signals-fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; flex-direction: column; padding: 10px; }
-        .signals-fullscreen-overlay.active { display: flex; }
-        .signals-fullscreen-header { display: flex; justify-content: flex-end; padding: 4px 0; flex-shrink: 0; }
-        .signals-fullscreen-close { font-size: 1.8rem; color: #FF0033; cursor: pointer; background: none; border: none; font-weight: 700; transition: all 0.3s ease; padding: 4px 14px; }
-        .signals-fullscreen-close:hover { transform: scale(1.2) rotate(90deg); text-shadow: 0 0 30px rgba(255,0,51,0.3); }
-        .signals-fullscreen-content { flex: 1; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,215,0,0.1); }
-        .signals-fullscreen-content iframe { width: 100%; height: 100%; border: none; background: #0a0a0a; }
-        .features-section { padding: 6px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 10px; }
-        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.65rem, 0.9vw, 0.9rem); font-weight: 700; margin-bottom: 4px; }
-        .features-title .neon { color: #FF0033; }
-        .features-title .gold { color: #FFD700; }
-        .features-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; }
+        /* ─── FULLSCREEN TOOL OVERLAY ─── */
+        .tool-fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            padding: 0;
+        }
+        .tool-fullscreen-overlay.active { display: flex; }
+        .tool-fullscreen-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 4px 8px;
+            flex-shrink: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1;
+            position: relative;
+        }
+        .tool-fullscreen-close {
+            font-size: 1.6rem;
+            color: #FF0033;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 4px 12px;
+        }
+        .tool-fullscreen-close:hover { transform: scale(1.2) rotate(90deg); text-shadow: 0 0 30px rgba(255,0,51,0.3); }
+        .tool-fullscreen-content {
+            flex: 1;
+            overflow: hidden;
+        }
+        .tool-fullscreen-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #0a0a0a;
+        }
+        
+        .features-section { padding: 4px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
+        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.55rem, 0.8vw, 0.8rem); font-weight: 700; margin-bottom: 3px; transition: all 0.3s ease; }
+        .features-title .neon { color: #FF0033; transition: all 0.3s ease; }
+        .features-title .gold { color: #FFD700; transition: all 0.3s ease; }
+        .features-section:hover .features-title .neon { text-shadow: 0 0 28px rgba(255,0,51,0.2); }
+        .features-section:hover .features-title .gold { text-shadow: 0 0 28px rgba(255,215,0,0.2); }
+        .features-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 3px 2px 5px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; flex-wrap: wrap; }
         .features-scroll::-webkit-scrollbar { height: 3px; }
         .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .feature-card { flex: 0 0 100px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 8px 6px; border: 1px solid rgba(255,0,51,0.04); text-align: center; transition: all 0.3s ease; }
-        .feature-card:hover { border-color: #FF0033; }
-        .feature-card .icon { font-size: 1.2rem; display: block; }
-        .feature-card h4 { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
-        .feature-card p { color: #666; font-size: 0.45rem; margin-top: 2px; }
-        .stats-row { display: flex; justify-content: center; gap: 24px; padding: 4px 0; flex-shrink: 0; flex-wrap: wrap; }
-        .stat-item { text-align: center; }
-        .stat-item .number { font-size: clamp(0.85rem, 1.2vw, 1.1rem); font-weight: 700; font-family: 'Roboto Mono', monospace; }
+        .feature-card {
+            flex: 0 0 82px; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 5px 4px;
+            border: 1px solid rgba(255,0,51,0.04); text-align: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; cursor: default; will-change: transform;
+        }
+        .feature-card::before { content: ''; position: absolute; inset: 0; border-radius: 10px; background: radial-gradient(circle at center, rgba(255,0,51,0.06), transparent 70%); opacity: 0; transition: opacity 0.5s ease; }
+        .feature-card:hover { border-color: #FF0033; transform: scale(1.06) translateY(-3px); box-shadow: 0 10px 28px rgba(255,0,51,0.06); background: rgba(255,255,255,0.04); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:active { transform: scale(0.95); }
+        .feature-card .icon { font-size: 1rem; display: block; transition: all 0.4s ease; }
+        .feature-card:hover .icon { transform: scale(1.15) rotate(-3deg); }
+        .feature-card h4 { color: #FFD700; font-size: 0.42rem; font-family: 'Orbitron', sans-serif; transition: all 0.3s ease; }
+        .feature-card:hover h4 { color: #fff; letter-spacing: 0.5px; }
+        .feature-card p { color: #666; font-size: 0.38rem; margin-top: 1px; transition: all 0.3s ease; }
+        .feature-card:hover p { color: #888; }
+        
+        .stats-row { display: flex; justify-content: center; gap: 18px; padding: 3px 0; flex-shrink: 0; flex-wrap: wrap; }
+        .stat-item { text-align: center; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 2px 6px; border-radius: 6px; cursor: default; will-change: transform; }
+        .stat-item:hover { transform: scale(1.06) translateY(-2px); background: rgba(255,255,255,0.02); }
+        .stat-item .number { font-size: clamp(0.75rem, 1vw, 0.95rem); font-weight: 700; font-family: 'Roboto Mono', monospace; transition: all 0.3s ease; }
+        .stat-item:hover .number { transform: scale(1.04); }
         .stat-item .number.red { color: #FF0033; }
         .stat-item .number.gold { color: #FFD700; }
-        .stat-item .label { color: #666; font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase; }
-        .footer { padding: 4px 0 8px; text-align: center; border-top: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
-        .footer p { color: #444; font-size: 0.5rem; letter-spacing: 1px; }
-        .footer .brand { color: #FF0033; font-weight: 700; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(10px); }
+        .stat-item .label { color: #666; font-size: 0.4rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease; }
+        .stat-item:hover .label { color: #888; letter-spacing: 2px; }
+        
+        .footer { padding: 3px 0 5px; text-align: center; border-top: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 4px; }
+        .footer p { color: #444; font-size: 0.4rem; letter-spacing: 1px; transition: all 0.3s ease; }
+        .footer:hover p { color: #666; letter-spacing: 2px; }
+        .footer .brand { color: #FF0033; font-weight: 700; transition: all 0.3s ease; }
+        .footer:hover .brand { text-shadow: 0 0 20px rgba(255,0,51,0.1); }
+        
+        /* ─── MODALS ─── */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(10px); animation: fadeIn 0.3s ease; }
         .overlay.active { display: flex; }
-        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
+        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 16px; padding: 18px 14px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes modalSlide { 0% { opacity: 0; transform: translateY(30px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .modal::-webkit-scrollbar { width: 4px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
-        .modal-close:hover { transform: scale(1.2) rotate(90deg); }
-        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 12px; letter-spacing: 2px; }
-        .modal label { display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: all 0.3s ease; }
-        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
-        .modal .btn-submit { width: 100%; padding: 9px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.75rem; }
-        .modal .btn-submit:hover { transform: scale(1.02); }
+        .modal-close { position: absolute; top: 6px; right: 10px; font-size: 1rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 2px 6px; border-radius: 6px; }
+        .modal-close:hover { transform: scale(1.3) rotate(90deg); color: #fff; background: rgba(255,0,51,0.06); }
+        .modal-close:active { transform: scale(0.8); }
+        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; margin-bottom: 8px; letter-spacing: 2px; }
+        .modal label { display: block; font-size: 0.48rem; color: #FFD700; margin: 4px 0 2px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 5px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.7rem; outline: none; transition: all 0.4s ease; }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.04), inset 0 0 20px rgba(255,0,51,0.02); transform: scale(1.01); }
+        .modal textarea { height: 40px; resize: vertical; font-size: 0.6rem; }
+        .modal .btn-submit { width: 100%; padding: 7px; margin-top: 6px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.65rem; position: relative; overflow: hidden; will-change: transform; }
+        .modal .btn-submit::after { content: ''; position: absolute; inset: 0; border-radius: 30px; background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%); opacity: 0; transition: opacity 0.4s ease; }
+        .modal .btn-submit:hover { transform: scale(1.03); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+        .modal .btn-submit:hover::after { opacity: 1; }
         .modal .btn-submit:active { transform: scale(0.97); }
-        .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; min-height: 16px; }
-        .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; }
-        .credit-packs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 6px 0; }
-        .credit-pack { flex: 1; min-width: 100px; max-width: 150px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 10px; text-align: center; border: 1px solid rgba(255,0,51,0.08); transition: all 0.3s ease; cursor: pointer; }
-        .credit-pack:hover { border-color: #FF0033; transform: translateY(-3px); box-shadow: 0 0 30px rgba(255,0,51,0.05); }
-        .credit-pack.selected { border-color: #FFD700; box-shadow: 0 0 40px rgba(255,215,0,0.1); }
-        .credit-pack .credits { font-size: 1.2rem; font-weight: 700; color: #FFD700; font-family: 'Roboto Mono', monospace; }
-        .credit-pack .price { font-size: 0.8rem; color: #888; }
-        .credit-pack .per-credit { font-size: 0.55rem; color: #666; }
-        .selected-pack-display { display: none; margin-top: 8px; padding: 10px; background: rgba(255,215,0,0.05); border-radius: 8px; border: 1px solid rgba(255,215,0,0.15); text-align: center; }
+        .modal .error-msg { color: #FF0033; font-size: 0.55rem; margin-top: 2px; font-family: 'Roboto Mono', monospace; min-height: 14px; }
+        .modal .success-msg { color: #00FF66; font-size: 0.55rem; margin-top: 2px; font-family: 'Roboto Mono', monospace; }
+        .credit-packs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 4px 0; }
+        .credit-pack { flex: 1; min-width: 80px; max-width: 120px; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 8px; text-align: center; border: 1px solid rgba(255,0,51,0.08); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
+        .credit-pack:hover { border-color: #FF0033; transform: translateY(-3px) scale(1.03); box-shadow: 0 0 24px rgba(255,0,51,0.05); }
+        .credit-pack.selected { border-color: #FFD700; box-shadow: 0 0 32px rgba(255,215,0,0.1); }
+        .credit-pack .credits { font-size: 1rem; font-weight: 700; color: #FFD700; font-family: 'Roboto Mono', monospace; }
+        .credit-pack .price { font-size: 0.7rem; color: #888; }
+        .credit-pack .per-credit { font-size: 0.45rem; color: #666; }
+        .selected-pack-display { display: none; margin-top: 6px; padding: 8px; background: rgba(255,215,0,0.05); border-radius: 6px; border: 1px solid rgba(255,215,0,0.15); text-align: center; }
         .selected-pack-display.active { display: block; }
-        .selected-pack-display .pack-title { color: #FFD700; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; }
-        .selected-pack-display .pack-details { color: #fff; font-size: 0.9rem; margin-top: 4px; }
+        .selected-pack-display .pack-title { color: #FFD700; font-size: 0.55rem; font-family: 'Orbitron', sans-serif; }
+        .selected-pack-display .pack-details { color: #fff; font-size: 0.8rem; margin-top: 2px; }
         .selected-pack-display .pack-details span { color: #FFD700; font-weight: 700; }
-        .payment-instructions { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 12px; padding: 12px; margin: 6px 0; }
-        .payment-instructions h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 4px; font-family: 'Orbitron', sans-serif; }
-        .payment-instructions p { color: #aaa; font-size: 0.6rem; }
-        .qr-container { text-align: center; padding: 10px; background: #fff; border-radius: 12px; margin: 6px 0; }
-        .qr-container img { max-width: 200px; max-height: 200px; border-radius: 8px; }
-        .qr-container .qr-placeholder { color: #666; font-size: 0.5rem; padding: 20px; text-align: center; }
-        .history-list { max-height: 300px; overflow-y: auto; }
+        .payment-instructions { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 10px; margin: 4px 0; }
+        .payment-instructions h4 { color: #FFD700; font-size: 0.6rem; margin-bottom: 2px; font-family: 'Orbitron', sans-serif; }
+        .payment-instructions p { color: #aaa; font-size: 0.5rem; }
+        .qr-container { text-align: center; padding: 8px; background: #fff; border-radius: 10px; margin: 4px 0; }
+        .qr-container img { max-width: 160px; max-height: 160px; border-radius: 6px; }
+        .qr-container .qr-placeholder { color: #666; font-size: 0.45rem; padding: 16px; text-align: center; }
+        .history-list { max-height: 280px; overflow-y: auto; }
         .history-list::-webkit-scrollbar { width: 3px; }
         .history-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .history-item { display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.55rem; align-items: center; }
+        .history-item { display: flex; justify-content: space-between; padding: 4px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.5rem; align-items: center; }
         .history-item .status-success { color: #00FF66; }
         .history-item .status-failed { color: #FF0033; }
         .history-item .status-pending { color: #FFD700; }
         .history-item .amount { color: #FFD700; }
-        .history-item .date { color: #666; font-size: 0.45rem; }
-        .history-empty { text-align: center; color: #666; font-size: 0.5rem; padding: 20px; }
-        .chat-container { max-height: 300px; overflow-y: auto; margin: 6px 0; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; }
+        .history-item .date { color: #666; font-size: 0.4rem; }
+        .history-empty { text-align: center; color: #666; font-size: 0.45rem; padding: 16px; }
+        .chat-container { max-height: 280px; overflow-y: auto; margin: 4px 0; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; }
         .chat-container::-webkit-scrollbar { width: 3px; }
         .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .chat-message { padding: 6px 10px; margin: 3px 0; border-radius: 8px; font-size: 0.65rem; max-width: 80%; word-wrap: break-word; }
+        .chat-message { padding: 4px 8px; margin: 2px 0; border-radius: 6px; font-size: 0.55rem; max-width: 80%; word-wrap: break-word; }
         .chat-message.admin { background: rgba(255,0,51,0.12); color: #FF0033; align-self: flex-start; border-bottom-left-radius: 2px; }
         .chat-message.user { background: rgba(0,255,102,0.08); color: #00FF66; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-message .time { font-size: 0.4rem; color: #666; margin-left: 8px; }
-        .chat-input-area { display: flex; gap: 6px; margin-top: 6px; }
-        .chat-input-area input { flex: 1; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-size: 0.7rem; outline: none; }
+        .chat-message .time { font-size: 0.35rem; color: #666; margin-left: 6px; }
+        .chat-input-area { display: flex; gap: 4px; margin-top: 4px; }
+        .chat-input-area input { flex: 1; padding: 4px 8px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.6rem; outline: none; }
         .chat-input-area input:focus { border-color: #FF0033; }
-        .chat-input-area button { padding: 6px 16px; border-radius: 8px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.6rem; transition: all 0.3s ease; }
-        .chat-input-area button:hover { transform: scale(1.02); }
-        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .modal { padding: 16px 12px; max-width: 100%; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .stats-row { gap: 12px; } .credit-pack { min-width: 80px; max-width: 120px; } .user-info-container { flex-direction: column; align-items: stretch; gap: 6px; } .user-info-container .user-actions { justify-content: center; } .credits-container { flex-direction: column; gap: 4px; } .signals-fullscreen-content iframe { height: 80vh; } .tools-container .tool-btn { font-size: 0.55rem; padding: 6px 12px; } }
-        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .credit-pack { min-width: 70px; max-width: 100px; padding: 6px; } .credit-pack .credits { font-size: 0.85rem; } .credit-pack .price { font-size: 0.65rem; } .user-info-container .user-name { font-size: 0.7rem; } .user-info-container .user-actions .btn-sm { font-size: 0.5rem; padding: 3px 10px; } .credits-container .credit-item .number { font-size: 1rem; } .signals-fullscreen-content iframe { height: 70vh; } .signals-fullscreen-close { font-size: 1.4rem; padding: 4px 10px; } .tools-container .tool-btn { font-size: 0.5rem; padding: 4px 10px; } }
+        .chat-input-area button { padding: 4px 12px; border-radius: 6px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.55rem; transition: all 0.3s ease; }
+        .chat-input-area button:hover { transform: scale(1.04); }
+        
+        @media (max-width: 768px) {
+            .scroll-content { padding: 0 12px; }
+            .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
+            .modal { padding: 14px 12px; max-width: 100%; }
+            .feature-card { flex: 0 0 72px; padding: 4px 3px; }
+            .feature-card .icon { font-size: 0.9rem; }
+            .stats-row { gap: 10px; }
+            .credit-pack { min-width: 70px; max-width: 100px; }
+            .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
+            .user-info-container .user-actions { justify-content: center; }
+            .credits-container { flex-direction: column; gap: 2px; }
+            .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
+            .admin-nav-bar .nav-label { font-size: 0.35rem; }
+            .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
+            .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
+            .tool-btn { padding: 10px 14px; min-height: 50px; }
+            .tool-btn .tool-name { font-size: 0.6rem; }
+            .tool-btn .tool-subname { font-size: 0.4rem; }
+        }
+        @media (max-width: 480px) {
+            .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
+            .logo-icon { font-size: clamp(2rem, 10vw, 3rem); }
+            .logo-img { max-height: clamp(2rem, 10vw, 3rem); }
+            .social-icons a { width: 20px; height: 20px; font-size: 0.55rem; }
+            .credit-pack { min-width: 60px; max-width: 90px; padding: 4px; }
+            .credit-pack .credits { font-size: 0.75rem; }
+            .credit-pack .price { font-size: 0.55rem; }
+            .user-info-container .user-name { font-size: 0.6rem; }
+            .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
+            .credits-container .credit-item .number { font-size: 0.85rem; }
+            .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
+            .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
+            .brand-section { padding: 1px 0 1px 0; }
+            .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
+            .tool-btn { padding: 8px 12px; min-height: 44px; }
+            .tool-btn .tool-name { font-size: 0.55rem; }
+            .tool-btn .tool-subname { font-size: 0.35rem; }
+        }
+        
+        /* ─── CURSOR GLOW ─── */
+        .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
+        .cursor-glow.active { opacity: 1; }
+        @media (hover: none) { .cursor-glow { display: none !important; } }
+        
+        /* ─── GLOBAL ZOOM ON HOVER (no tilt) ─── */
+        .red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
+        .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
+        .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
+        .tool-btn, .dash-main-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease, border-color 0.4s ease;
+            will-change: transform;
+        }
+        .red-container:hover, .offer-banner:hover, .user-card:hover, .user-card .btn:hover,
+        .feature-card:hover, .stat-item:hover, .social-icons a:hover,
+        .admin-nav-bar .nav-buttons button:hover, .modal .btn-submit:hover,
+        .modal-close:hover, .user-info-container:hover, .credits-container:hover,
+        .tool-btn:hover, .dash-main-btn:hover {
+            transform: scale(1.04) translateY(-2px);
+        }
+        .user-card .btn:hover, .admin-nav-bar .nav-buttons button:hover,
+        .modal .btn-submit:hover, .tool-btn:hover {
+            transform: scale(1.06) translateY(-2px);
+        }
+        .red-container:active, .offer-banner:active, .user-card:active, .user-card .btn:active,
+        .feature-card:active, .stat-item:active, .social-icons a:active,
+        .admin-nav-bar .nav-buttons button:active, .modal .btn-submit:active,
+        .modal-close:active, .user-info-container:active, .credits-container:active,
+        .tool-btn:active, .dash-main-btn:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
 
 <div class="app zoom-trigger" id="mainApp">
     <div class="scroll-content">
+        
+        <!-- ─── RED CONTAINER ─── compact ─── -->
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-            <button class="logout-btn-top" id="logoutBtnTop">🚪 Logout</button>
+            
+            <!-- Admin Nav – inside red-container, top-right -->
+            <div class="admin-nav-bar" id="adminNavBar">
+                <span class="nav-label">🔐</span>
+                <div class="nav-buttons">
+                    <button onclick="window.location.href='dashboard.html'" class="active">📊 Dashboard</button>
+                    <button onclick="window.location.href='admin.html'">⚙️ Admin</button>
+                    <button class="logout-btn" id="dashLogoutBtn">🚪 Logout</button>
+                </div>
+            </div>
+            
             <div class="brand-section" id="brandSection">
                 <span class="logo-icon" id="logoIcon">◆</span>
                 <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
@@ -222,6 +526,8 @@
                 </div>
             </div>
         </div>
+        
+        <!-- ─── USER INFO ─── -->
         <div class="user-info-container" id="userInfoContainer">
             <span class="user-name" id="dashUserName">User</span>
             <div class="user-actions">
@@ -233,20 +539,17 @@
                 </div>
             </div>
         </div>
+        
+        <!-- ─── CREDITS ─── -->
         <div class="credits-container" id="creditsContainer">
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
             <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
         </div>
         
-        <!-- ===== TOOLS CONTAINER - Dynamically loaded from Admin ===== -->
+        <!-- ─── TOOLS ─── -->
         <div class="tools-container" id="toolsContainer"></div>
         
-        <!-- ===== BINARY RUTHLESS SIGNALS BUTTON ===== -->
-        <button class="dash-main-btn" id="dashMainBtn">
-            <div class="main-title"><span class="binary">BINARY</span><span class="ruthless">RUTHLESS</span><span class="signals">SIGNALS</span></div>
-            <div class="sub-title">⚡ AI SIGNAL GENERATOR</div>
-        </button>
-        
+        <!-- ─── FEATURES ─── -->
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
             <div class="features-scroll">
@@ -258,19 +561,28 @@
                 <div class="feature-card"><span class="icon">☁️</span><h4>Cloud Sync</h4><p>All devices sync</p></div>
             </div>
         </div>
+        
+        <!-- ─── STATS ─── -->
         <div class="stats-row">
             <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
             <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
             <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
         </div>
+        
+        <!-- ─── FOOTER ─── -->
         <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p></div>
+        
     </div>
 </div>
 
-<!-- FULLSCREEN SIGNAL OVERLAY -->
-<div class="signals-fullscreen-overlay" id="signalsFullscreen">
-    <div class="signals-fullscreen-header"><button class="signals-fullscreen-close" id="signalsFullscreenClose">✕</button></div>
-    <div class="signals-fullscreen-content"><iframe id="signalsFullscreenIframe" src="about:blank"></iframe></div>
+<!-- FULLSCREEN TOOL OVERLAY -->
+<div class="tool-fullscreen-overlay" id="toolFullscreen">
+    <div class="tool-fullscreen-header">
+        <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
+    </div>
+    <div class="tool-fullscreen-content">
+        <iframe id="toolFullscreenIframe" src="about:blank"></iframe>
+    </div>
 </div>
 
 <!-- MODALS -->
@@ -279,14 +591,14 @@
         <button class="modal-close" onclick="closeModal('addCreditsModal')">✕</button>
         <h2>💳 ADD CREDITS</h2>
         <div id="creditPacksContainer"><div class="credit-packs" id="creditPacksList"></div></div>
-        <button class="btn-submit" id="proceedToPayBtn" style="background:#FFD700;color:#000;margin-top:10px;display:none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
+        <button class="btn-submit" id="proceedToPayBtn" style="background:#FFD700;color:#000;margin-top:8px;display:none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
         <div class="selected-pack-display" id="selectedPackDisplay"><div class="pack-title">📦 Selected Pack</div><div class="pack-details"><span id="selectedPackCredits">0</span> Credits - ₹<span id="selectedPackPrice">0</span></div></div>
-        <div id="paymentOptionsContainer" style="display:none;margin-top:10px;">
-            <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:4px;color:#FFD700;font-size:0.7rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
+        <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
+            <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
             <label>Transaction ID / UTR</label><input type="text" id="transactionIdInput" placeholder="Enter UPI Transaction ID">
-            <label style="margin-top:6px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
-            <button class="btn-submit" style="background:#FFD700;color:#000;margin-top:8px;" onclick="submitManualPayment()">📤 Submit Payment</button>
+            <label style="margin-top:4px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
+            <button class="btn-submit" style="background:#FFD700;color:#000;margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
         </div>
         <div class="error-msg" id="addCreditsError"></div><div class="success-msg" id="addCreditsSuccess"></div>
     </div>
@@ -299,6 +611,9 @@
 <div class="overlay" id="chatModal">
     <div class="modal"><button class="modal-close" onclick="closeModal('chatModal')">✕</button><h2>💬 Chat with Admin</h2><div class="chat-container" id="chatContainer"></div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="Type your message..."><button onclick="sendChatMessage()">Send</button></div></div>
 </div>
+
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
 
 <script type="importmap">
 {
@@ -338,10 +653,17 @@ let appState = {
     users: [], currentUser: null,
     signalSettings: { toolName: 'AI Signal Generator', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' },
     logoBase64: '', payments: [], chats: {},
-    tools: [] // Will be synced from admin
+    tools: [], socialMedia: [], logoClickCount: 2
 };
 
 let isFirebaseConnected = false, selectedCreditPack = null;
+
+// Cursor Glow
+const glow = document.getElementById('cursorGlow');
+if (window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
+    document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
+}
 
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
@@ -349,68 +671,75 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
-        // Sync tools from admin
-        if (val.tools !== undefined) {
-            appState.tools = val.tools;
-            renderTools();
-        }
-        // Sync logo from admin
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-            appState.logoBase64 = val.logoBase64;
-            applyLogo();
-        }
+        if (val.tools !== undefined) { appState.tools = val.tools; renderTools(); localStorage.setItem('brt_tools', JSON.stringify(val.tools)); }
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(); }
+        if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
+        if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); }
         if (currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
             else { appState.currentUser = null; window.location.href = 'index.html'; }
         }
-        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
+function checkAdminSession() {
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const navBar = document.getElementById('adminNavBar');
+    if (adminLoggedIn) { navBar.classList.add('visible'); } else { navBar.classList.remove('visible'); }
+}
+
+document.getElementById('dashLogoutBtn').addEventListener('click', function() {
+    sessionStorage.removeItem('admin_logged_in');
+    appState.currentUser = null; saveLocalState(); window.location.href = 'index.html';
+});
+
 function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
+
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
     if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) { console.error(e); } }
-    // Check if tools exist in local storage
     const toolsData = localStorage.getItem('brt_tools');
-    if (toolsData) {
-        try {
-            const parsedTools = JSON.parse(toolsData);
-            if (parsedTools.length > 0) {
-                appState.tools = parsedTools;
-            }
-        } catch(e) {}
-    }
+    if (toolsData) { try { const parsedTools = JSON.parse(toolsData); if (parsedTools.length > 0) appState.tools = parsedTools; } catch(e) {} }
     const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
+    const socialData = localStorage.getItem('brt_social');
+    if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
     if (!appState.currentUser) { window.location.href = 'index.html'; return; }
-    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkAdminSession();
 }
 
-// ===== RENDER TOOLS FROM ADMIN =====
+function applyLogo() {
+    const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
+    if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; }
+    else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
+}
+
 function renderTools() {
-    const container = document.getElementById('toolsContainer');
-    if (!container) return;
+    const container = document.getElementById('toolsContainer'); if (!container) return;
     container.innerHTML = '';
     const tools = appState.tools || [];
     if (tools.length === 0) {
+        // Add default Binary Ruthless Signals tool
         container.innerHTML = '';
         return;
     }
-    tools.forEach((tool, idx) => {
+    tools.forEach(tool => {
         if (tool.visibility === 'hidden') return;
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
-        btn.textContent = tool.name || 'Tool';
-        btn.title = 'Click to open ' + (tool.name || 'Tool');
-        btn.addEventListener('click', function() {
-            openToolFullscreen(tool);
-        });
+        btn.innerHTML = `
+            <div class="tool-name">
+                ${tool.sticker ? `<span class="tool-sticker">${tool.sticker}</span>` : ''}
+                ${tool.name || 'Untitled Tool'}
+            </div>
+            ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
+        `;
+        btn.addEventListener('click', function() { openToolFullscreen(tool); });
         container.appendChild(btn);
     });
 }
 
-// ===== OPEN TOOL FULLSCREEN =====
 function openToolFullscreen(tool) {
     const user = appState.currentUser;
     if (!user) { alert('Please login first!'); return; }
@@ -419,19 +748,25 @@ function openToolFullscreen(tool) {
         alert('❌ Insufficient credits! Please add credits.');
         return;
     }
-    const overlay = document.getElementById('signalsFullscreen');
-    const iframe = document.getElementById('signalsFullscreenIframe');
+    const overlay = document.getElementById('toolFullscreen');
+    const iframe = document.getElementById('toolFullscreenIframe');
     overlay.classList.add('active');
     iframe.srcdoc = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    // Store current tool for credit deduction
     window._currentTool = tool;
 }
 
-function updateUI() { const user = appState.currentUser; if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; document.getElementById('dashCredits').textContent = user.credits || 0; document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; } }
-function applySignalSettings() { document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || ''; }
-function applyLogo() { const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage'); if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; } else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; } }
+// Close tool fullscreen
+document.getElementById('toolFullscreenClose').addEventListener('click', function() {
+    document.getElementById('toolFullscreen').classList.remove('active');
+    window._currentTool = null;
+});
 
-// Chat System
+function updateUI() {
+    const user = appState.currentUser;
+    if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; document.getElementById('dashCredits').textContent = user.credits || 0; document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; }
+}
+function applySignalSettings() { document.getElementById('toolFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || ''; }
+
 function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
 function updateChatBadge() {
     const badge = document.getElementById('chatBadge'); if (!appState.currentUser) return;
@@ -441,7 +776,7 @@ function updateChatBadge() {
 function renderChatMessages() {
     const container = document.getElementById('chatContainer'); if (!container || !appState.currentUser) return; container.innerHTML = '';
     const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    if (msgs.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.5rem;text-align:center;padding:10px;">No messages yet</div>'; return; }
+    if (msgs.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:8px;">No messages yet</div>'; return; }
     msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'admin' && !c.read) c.read = true; });
     container.scrollTop = container.scrollHeight; saveLocalState();
 }
@@ -452,7 +787,6 @@ window.sendChatMessage = function() {
     appState.chats[key].push({ sender: 'user', message: msg, timestamp: new Date().toISOString(), read: false }); saveLocalState(); input.value = ''; renderChatMessages();
 };
 
-// Payment History
 function renderPaymentHistory() {
     const container = document.getElementById('paymentHistoryList'); if (!container) return; container.innerHTML = '';
     const payments = appState.payments || []; const userPayments = payments.filter(p => p.userEmail === appState.currentUser?.email);
@@ -460,12 +794,11 @@ function renderPaymentHistory() {
     userPayments.reverse().forEach(p => {
         const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
         const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
-        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:#666;font-size:0.4rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
+        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:#666;font-size:0.35rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
     });
 }
 window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
 
-// Add Credits
 function renderCreditPacks() {
     const container = document.getElementById('creditPacksList'); if (!container) return; container.innerHTML = '';
     const packs = appState.creditPacks || []; packs.forEach((pack, idx) => {
@@ -490,7 +823,7 @@ window.showPaymentOptions = function() {
     document.getElementById('paymentInstructionsText').textContent = appState.paymentInstructions || 'Please transfer the amount to the UPI ID below.';
     loadQRPreview();
 };
-function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:200px;max-height:200px;border-radius:8px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
+function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:160px;max-height:160px;border-radius:6px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
 window.submitManualPayment = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
     const txId = document.getElementById('transactionIdInput').value.trim(); if (!txId || txId.length < 6) { document.getElementById('addCreditsError').textContent = '❌ Enter valid Transaction ID (min 6 chars)'; return; }
@@ -500,37 +833,20 @@ window.submitManualPayment = function() {
     setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
-// Signal Generator - Fullscreen
-document.getElementById('dashMainBtn').addEventListener('click', function() {
-    const user = appState.currentUser; if (!user) { alert('Please login first!'); return; } if (user.blocked) { alert('🚫 Account blocked'); return; }
-    if (user.credits < 1) { this.style.borderColor = '#FF0033'; setTimeout(() => { this.style.borderColor = '#FFD700'; }, 2000); alert('❌ Insufficient credits! Please add credits.'); return; }
-    document.getElementById('signalsFullscreen').classList.add('active'); 
-    document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || '';
-    window._currentTool = appState.signalSettings;
-});
-document.getElementById('signalsFullscreenClose').addEventListener('click', function() { 
-    document.getElementById('signalsFullscreen').classList.remove('active');
-    window._currentTool = null;
-});
+// Handle signal generation from iframe
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'signalGenerated') {
         if (appState.currentUser && appState.currentUser.credits > 0) {
-            // Deduct 1 credit for signal generation
-            appState.currentUser.credits -= 1; 
-            appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; 
-            appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
+            appState.currentUser.credits -= 1; appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
             saveLocalState(); updateUI();
-            document.getElementById('signalsFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
             alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
         } else {
-            document.getElementById('signalsFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, message: 'Insufficient credits!' }, '*');
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, message: 'Insufficient credits!' }, '*');
             alert('❌ Insufficient credits! Please add credits.');
         }
     }
 });
-
-// Logout
-document.getElementById('logoutBtnTop').addEventListener('click', function() { appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -538,42 +854,36 @@ window.openModal = openModal; window.closeModal = closeModal;
 
 document.querySelectorAll('.social-icons a').forEach(link => { link.addEventListener('click', function(e) { e.preventDefault(); alert('📱 Social media - Configure in Admin'); }); });
 
-// ---------- Admin Access (Logo Click - Sync with Admin Settings) ----------
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
-    e.preventDefault();
-    logoClickCounter++;
+    e.preventDefault(); logoClickCounter++;
     const requiredClicks = appState.logoClickCount || 2;
-    if (logoClickCounter >= requiredClicks) {
-        logoClickCounter = 0;
-        window.location.href = 'admin.html';
-    }
+    if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
-    e.preventDefault();
-    logoClickCounter++;
+    e.preventDefault(); logoClickCounter++;
     const requiredClicks = appState.logoClickCount || 2;
-    if (logoClickCounter >= requiredClicks) {
-        logoClickCounter = 0;
-        window.location.href = 'admin.html';
-    }
+    if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
     if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-        logoClickCounter++;
-        const requiredClicks = appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) {
-            logoClickCounter = 0;
-            window.location.href = 'admin.html';
-        }
+        logoClickCounter++; const requiredClicks = appState.logoClickCount || 2;
+        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+    }
+});
+
+// Keyboard shortcut: ESC to close modals and fullscreen
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
+        document.getElementById('toolFullscreen').classList.remove('active');
     }
 });
 
 loadLocalState();
-console.log('📊 Dashboard Loaded'); 
+console.log('📊 Dashboard Loaded');
 console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
 console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
-console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
 </script>
 </body>
 </html>
