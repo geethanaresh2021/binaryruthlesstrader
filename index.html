@@ -121,12 +121,12 @@
             z-index: 1;
         }
 
-        /* ─── RED CONTAINER ─── super compact ─── */
+        /* ─── RED CONTAINER ─── COMPACT ─── */
         .red-container {
             background: rgba(255, 0, 51, 0.04);
             border: 1px solid rgba(255, 0, 51, 0.15);
             border-radius: 18px;
-            padding: 3px 12px 3px 12px;
+            padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
@@ -155,7 +155,7 @@
             opacity: 1;
         }
 
-        /* status dot – top left */
+        /* status dot */
         .fb-status-dot {
             position: absolute;
             top: 4px;
@@ -221,6 +221,7 @@
         .admin-nav-bar:hover {
             border-color: rgba(255, 0, 51, 0.3);
             box-shadow: 0 2px 24px rgba(255, 0, 51, 0.06);
+            transform: scale(1.04);
         }
         .admin-nav-bar .nav-label {
             font-size: 0.4rem;
@@ -283,7 +284,7 @@
             z-index: 1;
         }
 
-        /* Logo glow – ONLY on home page, triggered by click via JS */
+        /* Logo glow – ONLY on home page */
         .logo-glow {
             position: absolute;
             top: 50%;
@@ -696,7 +697,6 @@
             transform: scale(0.95);
         }
 
-        /* login card */
         .user-card.login-card {
             background: rgba(255, 0, 51, 0.06);
             border: 1px solid rgba(255, 0, 51, 0.2);
@@ -718,7 +718,6 @@
             box-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
         }
 
-        /* signup card – border white */
         .user-card.signup-card {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -741,7 +740,6 @@
             transform: scale(1.06) translateY(-2px);
         }
 
-        /* verify card */
         .user-card.verify-card {
             background: rgba(255, 0, 51, 0.06);
             border: 1px solid rgba(255, 0, 51, 0.2);
@@ -1150,7 +1148,7 @@
                 padding: 0 12px;
             }
             .red-container {
-                padding: 2px 10px 2px 10px;
+                padding: 3px 8px 2px 8px;
                 border-radius: 14px;
             }
             .user-card {
@@ -1239,7 +1237,7 @@
                 height: clamp(70px, 32vw, 120px);
             }
             .red-container {
-                padding: 2px 6px 2px 6px;
+                padding: 2px 6px 1px 6px;
                 border-radius: 12px;
                 margin: 4px 0 3px;
             }
@@ -1369,7 +1367,7 @@
     <div class="app zoom-trigger" id="mainApp">
         <div class="scroll-content">
 
-            <!-- ─── RED CONTAINER ─── super compact ─── -->
+            <!-- ─── RED CONTAINER ─── compact ─── -->
             <div class="red-container" id="redContainer">
 
                 <!-- Admin Nav – inside red-container, top-right -->
@@ -1568,7 +1566,8 @@
             verificationRequests: [],
             currentUser: null,
             logoClickCount: 2,
-            socialMedia: []
+            socialMedia: [],
+            tools: []
         };
 
         let isFirebaseConnected = false;
@@ -1674,6 +1673,10 @@
                     localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
                     renderSocialMedia();
                 }
+                if (val.tools !== undefined) {
+                    appState.tools = val.tools;
+                    localStorage.setItem('brt_tools', JSON.stringify(val.tools));
+                }
                 if (currentUserEmail) {
                     const found = appState.users.find(u => u.email === currentUserEmail);
                     if (found) appState.currentUser = found;
@@ -1708,6 +1711,13 @@
                 try {
                     const parsed = JSON.parse(socialData);
                     if (parsed.length > 0) appState.socialMedia = parsed;
+                } catch (e) {}
+            }
+            const toolsData = localStorage.getItem('brt_tools');
+            if (toolsData) {
+                try {
+                    const parsed = JSON.parse(toolsData);
+                    if (parsed.length > 0) appState.tools = parsed;
                 } catch (e) {}
             }
             updateUI();
