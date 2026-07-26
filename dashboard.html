@@ -23,7 +23,7 @@
     </script>
     
     <style>
-        /* ===== All dashboard styles ===== */
+        /* All styles from your existing dashboard */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
@@ -73,6 +73,34 @@
         .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700; }
         .credits-container .credit-item .label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
+        
+        /* ===== TOOLS CONTAINER ===== */
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 6px 0;
+            justify-content: center;
+        }
+        .tools-container .tool-btn {
+            padding: 8px 16px;
+            background: rgba(255,215,0,0.04);
+            border: 1px solid rgba(255,215,0,0.08);
+            border-radius: 10px;
+            color: #FFD700;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .tools-container .tool-btn:hover {
+            border-color: #FFD700;
+            background: rgba(255,215,0,0.06);
+            transform: scale(1.03);
+        }
+        .tools-container .tool-btn:active { transform: scale(0.97); }
+        
         .dash-main-btn { width: 100%; padding: 14px 10px; background: rgba(255,215,0,0.04); border: 2px solid #FFD700; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center; margin: 4px 0 6px 0; }
         .dash-main-btn:hover { background: rgba(255,215,0,0.08); box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
         .dash-main-btn:active { transform: scale(0.97); }
@@ -81,6 +109,7 @@
         .dash-main-btn .main-title .ruthless { color: #FF0033; text-shadow: 0 0 20px rgba(255,0,51,0.2); }
         .dash-main-btn .main-title .signals { color: #ffffff; }
         .dash-main-btn .sub-title { font-family: 'Orbitron', sans-serif; font-size: clamp(0.5rem, 0.8vw, 0.65rem); color: #FFD700; letter-spacing: 2px; margin-top: 4px; opacity: 0.7; }
+        
         .signals-fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; flex-direction: column; padding: 10px; }
         .signals-fullscreen-overlay.active { display: flex; }
         .signals-fullscreen-header { display: flex; justify-content: flex-end; padding: 4px 0; flex-shrink: 0; }
@@ -165,8 +194,8 @@
         .chat-input-area input:focus { border-color: #FF0033; }
         .chat-input-area button { padding: 6px 16px; border-radius: 8px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.6rem; transition: all 0.3s ease; }
         .chat-input-area button:hover { transform: scale(1.02); }
-        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .modal { padding: 16px 12px; max-width: 100%; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .stats-row { gap: 12px; } .credit-pack { min-width: 80px; max-width: 120px; } .user-info-container { flex-direction: column; align-items: stretch; gap: 6px; } .user-info-container .user-actions { justify-content: center; } .credits-container { flex-direction: column; gap: 4px; } .signals-fullscreen-content iframe { height: 80vh; } }
-        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .credit-pack { min-width: 70px; max-width: 100px; padding: 6px; } .credit-pack .credits { font-size: 0.85rem; } .credit-pack .price { font-size: 0.65rem; } .user-info-container .user-name { font-size: 0.7rem; } .user-info-container .user-actions .btn-sm { font-size: 0.5rem; padding: 3px 10px; } .credits-container .credit-item .number { font-size: 1rem; } .signals-fullscreen-content iframe { height: 70vh; } .signals-fullscreen-close { font-size: 1.4rem; padding: 4px 10px; } }
+        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .modal { padding: 16px 12px; max-width: 100%; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .stats-row { gap: 12px; } .credit-pack { min-width: 80px; max-width: 120px; } .user-info-container { flex-direction: column; align-items: stretch; gap: 6px; } .user-info-container .user-actions { justify-content: center; } .credits-container { flex-direction: column; gap: 4px; } .signals-fullscreen-content iframe { height: 80vh; } .tools-container .tool-btn { font-size: 0.55rem; padding: 6px 12px; } }
+        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .credit-pack { min-width: 70px; max-width: 100px; padding: 6px; } .credit-pack .credits { font-size: 0.85rem; } .credit-pack .price { font-size: 0.65rem; } .user-info-container .user-name { font-size: 0.7rem; } .user-info-container .user-actions .btn-sm { font-size: 0.5rem; padding: 3px 10px; } .credits-container .credit-item .number { font-size: 1rem; } .signals-fullscreen-content iframe { height: 70vh; } .signals-fullscreen-close { font-size: 1.4rem; padding: 4px 10px; } .tools-container .tool-btn { font-size: 0.5rem; padding: 4px 10px; } }
     </style>
 </head>
 <body>
@@ -208,10 +237,16 @@
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
             <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
         </div>
+        
+        <!-- ===== TOOLS CONTAINER - Dynamically loaded from Admin ===== -->
+        <div class="tools-container" id="toolsContainer"></div>
+        
+        <!-- ===== BINARY RUTHLESS SIGNALS BUTTON ===== -->
         <button class="dash-main-btn" id="dashMainBtn">
             <div class="main-title"><span class="binary">BINARY</span><span class="ruthless">RUTHLESS</span><span class="signals">SIGNALS</span></div>
             <div class="sub-title">⚡ AI SIGNAL GENERATOR</div>
         </button>
+        
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
             <div class="features-scroll">
@@ -302,7 +337,8 @@ let appState = {
     creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
     users: [], currentUser: null,
     signalSettings: { toolName: 'AI Signal Generator', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' },
-    logoBase64: '', payments: [], chats: {}
+    logoBase64: '', payments: [], chats: {},
+    tools: [] // Will be synced from admin
 };
 
 let isFirebaseConnected = false, selectedCreditPack = null;
@@ -313,12 +349,22 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
+        // Sync tools from admin
+        if (val.tools !== undefined) {
+            appState.tools = val.tools;
+            renderTools();
+        }
+        // Sync logo from admin
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            appState.logoBase64 = val.logoBase64;
+            applyLogo();
+        }
         if (currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
             else { appState.currentUser = null; window.location.href = 'index.html'; }
         }
-        saveLocalState(); updateUI(); applySignalSettings(); applyLogo(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+        saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
@@ -326,10 +372,61 @@ function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appS
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
     if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) { console.error(e); } }
-    const logoData = localStorage.getItem('brt_logo'); if (logoData) appState.logoBase64 = logoData;
+    // Check if tools exist in local storage
+    const toolsData = localStorage.getItem('brt_tools');
+    if (toolsData) {
+        try {
+            const parsedTools = JSON.parse(toolsData);
+            if (parsedTools.length > 0) {
+                appState.tools = parsedTools;
+            }
+        } catch(e) {}
+    }
+    const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
     if (!appState.currentUser) { window.location.href = 'index.html'; return; }
-    updateUI(); applySignalSettings(); applyLogo(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
+    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge();
 }
+
+// ===== RENDER TOOLS FROM ADMIN =====
+function renderTools() {
+    const container = document.getElementById('toolsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    const tools = appState.tools || [];
+    if (tools.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    tools.forEach((tool, idx) => {
+        if (tool.visibility === 'hidden') return;
+        const btn = document.createElement('button');
+        btn.className = 'tool-btn';
+        btn.textContent = tool.name || 'Tool';
+        btn.title = 'Click to open ' + (tool.name || 'Tool');
+        btn.addEventListener('click', function() {
+            openToolFullscreen(tool);
+        });
+        container.appendChild(btn);
+    });
+}
+
+// ===== OPEN TOOL FULLSCREEN =====
+function openToolFullscreen(tool) {
+    const user = appState.currentUser;
+    if (!user) { alert('Please login first!'); return; }
+    if (user.blocked) { alert('🚫 Account blocked'); return; }
+    if (user.credits < 1) {
+        alert('❌ Insufficient credits! Please add credits.');
+        return;
+    }
+    const overlay = document.getElementById('signalsFullscreen');
+    const iframe = document.getElementById('signalsFullscreenIframe');
+    overlay.classList.add('active');
+    iframe.srcdoc = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
+    // Store current tool for credit deduction
+    window._currentTool = tool;
+}
+
 function updateUI() { const user = appState.currentUser; if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; document.getElementById('dashCredits').textContent = user.credits || 0; document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; } }
 function applySignalSettings() { document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || ''; }
 function applyLogo() { const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage'); if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; } else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; } }
@@ -403,17 +500,25 @@ window.submitManualPayment = function() {
     setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
-// Signal Generator
+// Signal Generator - Fullscreen
 document.getElementById('dashMainBtn').addEventListener('click', function() {
     const user = appState.currentUser; if (!user) { alert('Please login first!'); return; } if (user.blocked) { alert('🚫 Account blocked'); return; }
     if (user.credits < 1) { this.style.borderColor = '#FF0033'; setTimeout(() => { this.style.borderColor = '#FFD700'; }, 2000); alert('❌ Insufficient credits! Please add credits.'); return; }
-    document.getElementById('signalsFullscreen').classList.add('active'); document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || '';
+    document.getElementById('signalsFullscreen').classList.add('active'); 
+    document.getElementById('signalsFullscreenIframe').srcdoc = appState.signalSettings.htmlCode || '';
+    window._currentTool = appState.signalSettings;
 });
-document.getElementById('signalsFullscreenClose').addEventListener('click', function() { document.getElementById('signalsFullscreen').classList.remove('active'); });
+document.getElementById('signalsFullscreenClose').addEventListener('click', function() { 
+    document.getElementById('signalsFullscreen').classList.remove('active');
+    window._currentTool = null;
+});
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'signalGenerated') {
         if (appState.currentUser && appState.currentUser.credits > 0) {
-            appState.currentUser.credits -= 1; appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
+            // Deduct 1 credit for signal generation
+            appState.currentUser.credits -= 1; 
+            appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; 
+            appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
             saveLocalState(); updateUI();
             document.getElementById('signalsFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
             alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
@@ -432,8 +537,43 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 window.openModal = openModal; window.closeModal = closeModal;
 
 document.querySelectorAll('.social-icons a').forEach(link => { link.addEventListener('click', function(e) { e.preventDefault(); alert('📱 Social media - Configure in Admin'); }); });
+
+// ---------- Admin Access (Logo Click - Sync with Admin Settings) ----------
+let logoClickCounter = 0;
+document.getElementById('logoIcon').addEventListener('click', function(e) {
+    e.preventDefault();
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) {
+        logoClickCounter = 0;
+        window.location.href = 'admin.html';
+    }
+});
+document.getElementById('logoImage').addEventListener('click', function(e) {
+    e.preventDefault();
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) {
+        logoClickCounter = 0;
+        window.location.href = 'admin.html';
+    }
+});
+document.getElementById('brandSection').addEventListener('click', function(e) {
+    if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+        logoClickCounter++;
+        const requiredClicks = appState.logoClickCount || 2;
+        if (logoClickCounter >= requiredClicks) {
+            logoClickCounter = 0;
+            window.location.href = 'admin.html';
+        }
+    }
+});
+
 loadLocalState();
-console.log('📊 Dashboard Loaded'); console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
+console.log('📊 Dashboard Loaded'); 
+console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
+console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
+console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
 </script>
 </body>
 </html>
