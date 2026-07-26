@@ -121,22 +121,21 @@
             z-index: 1;
         }
 
-        /* ─── RED CONTAINER ─── tight wrap, minimal padding ─── */
+        /* ─── RED CONTAINER ─── super compact ─── */
         .red-container {
             background: rgba(255, 0, 51, 0.04);
             border: 1px solid rgba(255, 0, 51, 0.15);
             border-radius: 18px;
-            padding: 8px 14px 6px 14px;
-            margin: 8px 0 6px;
+            padding: 3px 12px 3px 12px;
+            margin: 6px 0 4px;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             will-change: transform;
-            /* height is auto – just enough to fit content */
         }
         .red-container:hover {
             border-color: rgba(255, 0, 51, 0.4);
             box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
-            transform: scale(1.015) translateY(-2px);
+            transform: scale(1.012) translateY(-1px);
         }
         .red-container::after {
             content: '';
@@ -159,10 +158,10 @@
         /* status dot – top left */
         .fb-status-dot {
             position: absolute;
-            top: 6px;
-            left: 10px;
-            width: 8px;
-            height: 8px;
+            top: 4px;
+            left: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             display: inline-block;
             transition: all 0.3s ease;
@@ -170,12 +169,12 @@
         }
         .fb-status-dot.green {
             background: #00FF66;
-            box-shadow: 0 0 16px rgba(0, 255, 102, 0.6);
+            box-shadow: 0 0 14px rgba(0, 255, 102, 0.6);
             animation: dotPulse 2s ease-in-out infinite;
         }
         .fb-status-dot.red {
             background: #FF0033;
-            box-shadow: 0 0 16px rgba(255, 0, 51, 0.6);
+            box-shadow: 0 0 14px rgba(255, 0, 51, 0.6);
             animation: pulseRed 1.5s ease-in-out infinite;
         }
         @keyframes pulseRed {
@@ -192,10 +191,10 @@
         @keyframes dotPulse {
             0%,
             100% {
-                box-shadow: 0 0 16px rgba(0, 255, 102, 0.6);
+                box-shadow: 0 0 14px rgba(0, 255, 102, 0.6);
             }
             50% {
-                box-shadow: 0 0 32px rgba(0, 255, 102, 0.9), 0 0 60px rgba(0, 255, 102, 0.2);
+                box-shadow: 0 0 28px rgba(0, 255, 102, 0.9), 0 0 50px rgba(0, 255, 102, 0.2);
             }
         }
 
@@ -203,46 +202,46 @@
         .admin-nav-bar {
             display: none;
             position: absolute;
-            top: 4px;
-            right: 10px;
+            top: 2px;
+            right: 8px;
             z-index: 10;
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 0, 51, 0.12);
-            border-radius: 10px;
-            padding: 2px 8px;
+            border-radius: 8px;
+            padding: 2px 6px;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
         }
         .admin-nav-bar.visible {
             display: flex;
         }
         .admin-nav-bar:hover {
             border-color: rgba(255, 0, 51, 0.3);
-            box-shadow: 0 2px 30px rgba(255, 0, 51, 0.06);
+            box-shadow: 0 2px 24px rgba(255, 0, 51, 0.06);
         }
         .admin-nav-bar .nav-label {
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             color: #888;
             letter-spacing: 0.3px;
             text-transform: uppercase;
             font-weight: 600;
-            margin-right: 2px;
+            margin-right: 1px;
         }
         .admin-nav-bar .nav-buttons {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             flex-wrap: wrap;
         }
         .admin-nav-bar .nav-buttons button {
-            padding: 2px 10px;
-            border-radius: 14px;
+            padding: 1px 8px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 0, 51, 0.08);
             background: rgba(255, 255, 255, 0.02);
             color: #aaa;
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -254,11 +253,11 @@
             border-color: #FF0033;
             color: #fff;
             background: rgba(255, 0, 51, 0.08);
-            transform: scale(1.08);
-            box-shadow: 0 2px 16px rgba(255, 0, 51, 0.06);
+            transform: scale(1.1);
+            box-shadow: 0 2px 14px rgba(255, 0, 51, 0.06);
         }
         .admin-nav-bar .nav-buttons button:active {
-            transform: scale(0.95);
+            transform: scale(0.93);
         }
         .admin-nav-bar .nav-buttons button.active {
             border-color: #FF0033;
@@ -271,32 +270,32 @@
         }
         .admin-nav-bar .nav-buttons .logout-btn:hover {
             background: rgba(255, 0, 51, 0.12);
-            box-shadow: 0 0 24px rgba(255, 0, 51, 0.08);
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.08);
         }
 
         /* ─── BRAND SECTION ─── */
         .brand-section {
             text-align: center;
-            padding: 4px 0 2px 0;
+            padding: 2px 0 1px 0;
             flex-shrink: 0;
             cursor: pointer;
             position: relative;
             z-index: 1;
         }
 
-        /* Logo glow – positioned behind logo, triggered by click */
+        /* Logo glow – ONLY on home page, triggered by click via JS */
         .logo-glow {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: clamp(140px, 26vw, 280px);
-            height: clamp(140px, 26vw, 280px);
+            width: clamp(120px, 24vw, 260px);
+            height: clamp(120px, 24vw, 260px);
             transform: translate(-50%, -50%) scale(0.5);
             background: radial-gradient(circle, rgba(255, 0, 51, 0.55) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
-            filter: blur(30px);
+            filter: blur(28px);
             opacity: 0;
             transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -363,23 +362,23 @@
         }
 
         .logo-icon {
-            font-size: clamp(3rem, 5.5vw, 5rem);
+            font-size: clamp(2.6rem, 5vw, 4.6rem);
             color: #FF0033;
-            text-shadow: 0 0 50px rgba(255, 0, 51, 0.3);
+            text-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
             animation: pulseLogo 3s ease-in-out infinite;
             display: block;
-            line-height: 1.1;
+            line-height: 1.05;
             transition: all 0.4s ease;
             position: relative;
             z-index: 1;
         }
         .brand-section:hover .logo-icon {
-            text-shadow: 0 0 70px rgba(255, 0, 51, 0.5), 0 0 100px rgba(255, 0, 51, 0.2);
+            text-shadow: 0 0 60px rgba(255, 0, 51, 0.5), 0 0 80px rgba(255, 0, 51, 0.2);
             transform: scale(1.03) rotate(-1deg);
         }
         .logo-img {
-            max-height: clamp(3rem, 5.5vw, 5rem);
-            max-width: 220px;
+            max-height: clamp(2.6rem, 5vw, 4.6rem);
+            max-width: 200px;
             object-fit: contain;
             display: none;
             margin: 0 auto;
@@ -389,7 +388,7 @@
         }
         .brand-section:hover .logo-img {
             transform: scale(1.03);
-            filter: drop-shadow(0 0 24px rgba(255, 0, 51, 0.2));
+            filter: drop-shadow(0 0 20px rgba(255, 0, 51, 0.2));
         }
         @keyframes pulseLogo {
             0%,
@@ -406,9 +405,9 @@
         .brand-name {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-size: clamp(1.3rem, 3.6vw, 3.4rem);
+            font-size: clamp(1.1rem, 3.2vw, 3rem);
             letter-spacing: 2px;
-            line-height: 1.1;
+            line-height: 1.05;
             white-space: nowrap;
             transition: all 0.3s ease;
             position: relative;
@@ -422,11 +421,11 @@
         }
         .brand-name .ruthless {
             color: #FF0033;
-            text-shadow: 0 0 24px rgba(255, 0, 51, 0.3);
+            text-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
             transition: all 0.3s ease;
         }
         .brand-section:hover .brand-name .ruthless {
-            text-shadow: 0 0 48px rgba(255, 0, 51, 0.5);
+            text-shadow: 0 0 40px rgba(255, 0, 51, 0.5);
         }
         .brand-name .trader {
             color: #fff;
@@ -434,26 +433,26 @@
 
         .brand-tagline {
             color: #888;
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 300;
-            margin-top: 1px;
+            margin-top: 0px;
             transition: all 0.3s ease;
             position: relative;
             z-index: 1;
         }
         .brand-section:hover .brand-tagline {
             color: #aaa;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
         }
 
         /* ─── SOCIAL ICONS ─── */
         .social-icons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
-            margin-top: 4px;
+            margin-top: 2px;
             flex-wrap: wrap;
             position: relative;
             z-index: 1;
@@ -462,13 +461,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 0, 51, 0.08);
             color: #888;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
@@ -486,8 +485,8 @@
         .social-icons a:hover {
             color: #FF0033;
             border-color: #FF0033;
-            transform: translateY(-3px) scale(1.1);
-            box-shadow: 0 6px 24px rgba(255, 0, 51, 0.12);
+            transform: translateY(-2px) scale(1.12);
+            box-shadow: 0 6px 20px rgba(255, 0, 51, 0.12);
         }
         .social-icons a:hover::before {
             opacity: 1;
@@ -501,9 +500,9 @@
             background: linear-gradient(135deg, rgba(255, 0, 51, 0.08), rgba(255, 215, 0, 0.03));
             border: 1.5px solid rgba(255, 215, 0, 0.12);
             border-radius: 14px;
-            padding: 10px 18px;
+            padding: 8px 14px;
             text-align: center;
-            margin: 2px 0 6px;
+            margin: 2px 0 4px;
             flex-shrink: 0;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -523,7 +522,7 @@
         }
         .offer-banner:hover {
             border-color: #FFD700;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.08), inset 0 0 60px rgba(255, 215, 0, 0.02);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.08), inset 0 0 50px rgba(255, 215, 0, 0.02);
             transform: scale(1.02) translateY(-2px);
         }
         .offer-banner:hover::before {
@@ -535,15 +534,15 @@
         .offer-banner h4 {
             color: #FFD700;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.75rem, 1.2vw, 1rem);
+            font-size: clamp(0.7rem, 1.1vw, 0.95rem);
             letter-spacing: 1px;
             position: relative;
             z-index: 1;
         }
         .offer-banner p {
             color: #aaa;
-            font-size: clamp(0.6rem, 0.85vw, 0.75rem);
-            margin-top: 2px;
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            margin-top: 1px;
             position: relative;
             z-index: 1;
         }
@@ -554,12 +553,12 @@
         }
         .offer-banner:hover .highlight {
             color: #FFD700;
-            text-shadow: 0 0 24px rgba(255, 215, 0, 0.2);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
         .offer-banner .click-hint {
             color: #666;
-            font-size: 0.45rem;
-            margin-top: 2px;
+            font-size: 0.4rem;
+            margin-top: 1px;
             letter-spacing: 1px;
             position: relative;
             z-index: 1;
@@ -593,7 +592,7 @@
         /* ─── USER CARDS ─── */
         .user-section {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             padding: 4px 0;
             flex-shrink: 0;
             flex-wrap: wrap;
@@ -601,11 +600,11 @@
         }
         .user-card {
             flex: 1;
-            min-width: 160px;
-            max-width: 260px;
+            min-width: 150px;
+            max-width: 250px;
             backdrop-filter: blur(8px);
-            border-radius: 16px;
-            padding: 14px 12px 18px;
+            border-radius: 14px;
+            padding: 12px 10px 14px;
             text-align: center;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
@@ -617,13 +616,13 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 16px;
+            border-radius: 14px;
             opacity: 0;
             transition: opacity 0.5s ease;
             pointer-events: none;
         }
         .user-card:hover {
-            transform: scale(1.035) translateY(-4px);
+            transform: scale(1.035) translateY(-3px);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
         .user-card:hover::before {
@@ -634,9 +633,9 @@
         }
 
         .user-card .icon {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             display: block;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             transition: all 0.4s ease;
         }
         .user-card:hover .icon {
@@ -644,7 +643,7 @@
         }
 
         .user-card h3 {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             transition: all 0.3s ease;
@@ -655,8 +654,8 @@
 
         .user-card p {
             color: #888;
-            font-size: 0.6rem;
-            margin: 2px 0 6px;
+            font-size: 0.55rem;
+            margin: 2px 0 5px;
             transition: all 0.3s ease;
         }
         .user-card:hover p {
@@ -665,10 +664,10 @@
 
         .user-card .btn {
             width: 100%;
-            padding: 6px;
+            padding: 5px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -704,7 +703,7 @@
         }
         .user-card.login-card:hover {
             border-color: #FF0033;
-            box-shadow: 0 0 50px rgba(255, 0, 51, 0.08), inset 0 0 50px rgba(255, 0, 51, 0.02);
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02);
         }
         .user-card.login-card h3 {
             color: #FF0033;
@@ -716,7 +715,7 @@
         .user-card.login-card .btn-white:hover {
             background: #FF0033;
             color: #fff;
-            box-shadow: 0 0 32px rgba(255, 0, 51, 0.2);
+            box-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
         }
 
         /* signup card – border white */
@@ -726,7 +725,7 @@
         }
         .user-card.signup-card:hover {
             border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.06), inset 0 0 50px rgba(255, 255, 255, 0.02);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.06), inset 0 0 40px rgba(255, 255, 255, 0.02);
         }
         .user-card.signup-card h3 {
             color: #fff;
@@ -734,11 +733,11 @@
         .user-card.signup-card .btn-red {
             background: #FF0033;
             color: #fff;
-            box-shadow: 0 0 16px rgba(255, 0, 51, 0.15);
+            box-shadow: 0 0 14px rgba(255, 0, 51, 0.15);
         }
         .user-card.signup-card .btn-red:hover {
             background: #ff1a44;
-            box-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
+            box-shadow: 0 0 36px rgba(255, 0, 51, 0.3);
             transform: scale(1.06) translateY(-2px);
         }
 
@@ -749,7 +748,7 @@
         }
         .user-card.verify-card:hover {
             border-color: #FF0033;
-            box-shadow: 0 0 50px rgba(255, 0, 51, 0.08), inset 0 0 50px rgba(255, 0, 51, 0.02);
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02);
         }
         .user-card.verify-card h3 {
             color: #FF0033;
@@ -761,12 +760,12 @@
         .user-card.verify-card .btn-white:hover {
             background: #FF0033;
             color: #fff;
-            box-shadow: 0 0 32px rgba(255, 0, 51, 0.2);
+            box-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
         }
 
         .user-card.highlight {
             border-color: #FFD700 !important;
-            box-shadow: 0 0 70px rgba(255, 215, 0, 0.1) !important;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.1) !important;
             animation: highlightPulse 0.8s ease 3;
         }
         @keyframes highlightPulse {
@@ -785,14 +784,14 @@
             border-top: 1px solid rgba(255, 0, 51, 0.04);
             border-bottom: 1px solid rgba(255, 0, 51, 0.04);
             flex-shrink: 0;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .features-title {
             text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.6rem, 0.85vw, 0.85rem);
+            font-size: clamp(0.55rem, 0.8vw, 0.8rem);
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             transition: all 0.3s ease;
         }
         .features-title .neon {
@@ -804,17 +803,17 @@
             transition: all 0.3s ease;
         }
         .features-section:hover .features-title .neon {
-            text-shadow: 0 0 32px rgba(255, 0, 51, 0.2);
+            text-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
         }
         .features-section:hover .features-title .gold {
-            text-shadow: 0 0 32px rgba(255, 215, 0, 0.2);
+            text-shadow: 0 0 28px rgba(255, 215, 0, 0.2);
         }
 
         .features-scroll {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding: 4px 2px 6px;
+            padding: 3px 2px 5px;
             scrollbar-width: thin;
             scrollbar-color: #FF0033 transparent;
             justify-content: center;
@@ -829,10 +828,10 @@
         }
 
         .feature-card {
-            flex: 0 0 90px;
+            flex: 0 0 82px;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 6px 4px;
+            border-radius: 10px;
+            padding: 5px 4px;
             border: 1px solid rgba(255, 0, 51, 0.04);
             text-align: center;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -845,15 +844,15 @@
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 12px;
+            border-radius: 10px;
             background: radial-gradient(circle at center, rgba(255, 0, 51, 0.06), transparent 70%);
             opacity: 0;
             transition: opacity 0.5s ease;
         }
         .feature-card:hover {
             border-color: #FF0033;
-            transform: scale(1.06) translateY(-4px);
-            box-shadow: 0 10px 32px rgba(255, 0, 51, 0.06);
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: 0 10px 28px rgba(255, 0, 51, 0.06);
             background: rgba(255, 255, 255, 0.04);
         }
         .feature-card:hover::before {
@@ -864,7 +863,7 @@
         }
 
         .feature-card .icon {
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: block;
             transition: all 0.4s ease;
         }
@@ -874,7 +873,7 @@
 
         .feature-card h4 {
             color: #FFD700;
-            font-size: 0.45rem;
+            font-size: 0.42rem;
             font-family: 'Orbitron', sans-serif;
             transition: all 0.3s ease;
         }
@@ -885,7 +884,7 @@
 
         .feature-card p {
             color: #666;
-            font-size: 0.4rem;
+            font-size: 0.38rem;
             margin-top: 1px;
             transition: all 0.3s ease;
         }
@@ -897,25 +896,25 @@
         .stats-row {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            padding: 4px 0;
+            gap: 18px;
+            padding: 3px 0;
             flex-shrink: 0;
             flex-wrap: wrap;
         }
         .stat-item {
             text-align: center;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 3px 6px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
             cursor: default;
             will-change: transform;
         }
         .stat-item:hover {
-            transform: scale(1.06) translateY(-3px);
+            transform: scale(1.06) translateY(-2px);
             background: rgba(255, 255, 255, 0.02);
         }
         .stat-item .number {
-            font-size: clamp(0.8rem, 1.1vw, 1rem);
+            font-size: clamp(0.75rem, 1vw, 0.95rem);
             font-weight: 700;
             font-family: 'Roboto Mono', monospace;
             transition: all 0.3s ease;
@@ -931,7 +930,7 @@
         }
         .stat-item .label {
             color: #666;
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             letter-spacing: 1px;
             text-transform: uppercase;
             transition: all 0.3s ease;
@@ -943,7 +942,7 @@
 
         /* ─── FOOTER ─── */
         .footer {
-            padding: 4px 0 6px;
+            padding: 3px 0 5px;
             text-align: center;
             border-top: 1px solid rgba(255, 0, 51, 0.04);
             flex-shrink: 0;
@@ -951,7 +950,7 @@
         }
         .footer p {
             color: #444;
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             letter-spacing: 1px;
             transition: all 0.3s ease;
         }
@@ -965,7 +964,7 @@
             transition: all 0.3s ease;
         }
         .footer:hover .brand {
-            text-shadow: 0 0 24px rgba(255, 0, 51, 0.1);
+            text-shadow: 0 0 20px rgba(255, 0, 51, 0.1);
         }
 
         /* ─── MODALS ─── */
@@ -1002,14 +1001,14 @@
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             border: 2px solid #FF0033;
-            border-radius: 18px;
-            padding: 20px 16px;
+            border-radius: 16px;
+            padding: 18px 14px;
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 0 70px rgba(255, 0, 51, 0.06);
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.06);
             animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         @keyframes modalSlide {
@@ -1032,16 +1031,16 @@
 
         .modal-close {
             position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 1.1rem;
+            top: 6px;
+            right: 10px;
+            font-size: 1rem;
             color: #FF0033;
             cursor: pointer;
             background: none;
             border: none;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 4px 8px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
         }
         .modal-close:hover {
             transform: scale(1.3) rotate(90deg);
@@ -1056,15 +1055,15 @@
             color: #FFD700;
             text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
             letter-spacing: 2px;
         }
         .modal label {
             display: block;
-            font-size: 0.5rem;
+            font-size: 0.48rem;
             color: #FFD700;
-            margin: 5px 0 2px;
+            margin: 4px 0 2px;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 1px;
@@ -1073,13 +1072,13 @@
         .modal select,
         .modal textarea {
             width: 100%;
-            padding: 6px 10px;
+            padding: 5px 10px;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 0, 51, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             color: #fff;
             font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             outline: none;
             transition: all 0.4s ease;
         }
@@ -1087,26 +1086,26 @@
         .modal select:focus,
         .modal textarea:focus {
             border-color: #FF0033;
-            box-shadow: 0 0 24px rgba(255, 0, 51, 0.04), inset 0 0 24px rgba(255, 0, 51, 0.02);
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.04), inset 0 0 20px rgba(255, 0, 51, 0.02);
             transform: scale(1.01);
         }
         .modal textarea {
-            height: 44px;
+            height: 40px;
             resize: vertical;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
         }
 
         .modal .btn-submit {
             width: 100%;
-            padding: 8px;
-            margin-top: 8px;
+            padding: 7px;
+            margin-top: 6px;
             border-radius: 30px;
             font-weight: 700;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             position: relative;
             overflow: hidden;
             will-change: transform;
@@ -1122,7 +1121,7 @@
         }
         .modal .btn-submit:hover {
             transform: scale(1.03);
-            box-shadow: 0 6px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3);
         }
         .modal .btn-submit:hover::after {
             opacity: 1;
@@ -1133,15 +1132,15 @@
 
         .modal .error-msg {
             color: #FF0033;
-            font-size: 0.6rem;
-            margin-top: 3px;
+            font-size: 0.55rem;
+            margin-top: 2px;
             font-family: 'Roboto Mono', monospace;
             min-height: 14px;
         }
         .modal .success-msg {
             color: #00FF66;
-            font-size: 0.6rem;
-            margin-top: 3px;
+            font-size: 0.55rem;
+            margin-top: 2px;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -1151,7 +1150,8 @@
                 padding: 0 12px;
             }
             .red-container {
-                padding: 6px 10px 4px 10px;
+                padding: 2px 10px 2px 10px;
+                border-radius: 14px;
             }
             .user-card {
                 min-width: 100%;
@@ -1159,14 +1159,14 @@
             }
             .user-section {
                 flex-direction: column;
-                gap: 6px;
+                gap: 5px;
             }
             .feature-card {
-                flex: 0 0 78px;
+                flex: 0 0 72px;
                 padding: 4px 3px;
             }
             .feature-card .icon {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
             .modal {
                 padding: 14px 12px;
@@ -1176,79 +1176,109 @@
                 gap: 10px;
             }
             .admin-nav-bar {
-                top: 3px;
-                right: 8px;
-                padding: 2px 6px;
-                gap: 3px;
+                top: 2px;
+                right: 6px;
+                padding: 1px 5px;
+                gap: 2px;
             }
             .admin-nav-bar .nav-label {
-                font-size: 0.4rem;
+                font-size: 0.35rem;
             }
             .admin-nav-bar .nav-buttons button {
-                font-size: 0.4rem;
-                padding: 1px 7px;
+                font-size: 0.35rem;
+                padding: 1px 6px;
             }
             .fb-status-dot {
-                top: 4px;
-                left: 8px;
-                width: 7px;
-                height: 7px;
+                top: 3px;
+                left: 6px;
+                width: 6px;
+                height: 6px;
             }
             .logo-glow {
-                width: clamp(100px, 30vw, 160px);
-                height: clamp(100px, 30vw, 160px);
+                width: clamp(90px, 28vw, 140px);
+                height: clamp(90px, 28vw, 140px);
             }
         }
 
         @media (max-width: 480px) {
             .brand-name {
-                font-size: clamp(1rem, 5.5vw, 1.6rem);
+                font-size: clamp(0.9rem, 5vw, 1.4rem);
                 letter-spacing: 0.5px;
                 white-space: nowrap;
             }
             .logo-icon {
-                font-size: clamp(2.5rem, 11vw, 3.5rem);
+                font-size: clamp(2rem, 10vw, 3rem);
             }
             .logo-img {
-                max-height: clamp(2.5rem, 11vw, 3.5rem);
+                max-height: clamp(2rem, 10vw, 3rem);
             }
             .social-icons a {
-                width: 24px;
-                height: 24px;
-                font-size: 0.65rem;
+                width: 20px;
+                height: 20px;
+                font-size: 0.55rem;
             }
             .user-card .btn {
-                font-size: 0.6rem;
-                padding: 5px;
+                font-size: 0.55rem;
+                padding: 4px;
             }
             .feature-card {
-                flex: 0 0 68px;
+                flex: 0 0 62px;
             }
             .feature-card h4 {
-                font-size: 0.4rem;
+                font-size: 0.37rem;
             }
             .admin-nav-bar .nav-buttons button {
-                font-size: 0.35rem;
-                padding: 1px 5px;
+                font-size: 0.3rem;
+                padding: 1px 4px;
             }
             .offer-banner::after {
                 animation-duration: 10s;
             }
             .logo-glow {
-                width: clamp(80px, 35vw, 140px);
-                height: clamp(80px, 35vw, 140px);
+                width: clamp(70px, 32vw, 120px);
+                height: clamp(70px, 32vw, 120px);
             }
             .red-container {
-                padding: 4px 8px 3px 8px;
-                border-radius: 14px;
+                padding: 2px 6px 2px 6px;
+                border-radius: 12px;
+                margin: 4px 0 3px;
+            }
+            .brand-section {
+                padding: 1px 0 1px 0;
+            }
+            .brand-tagline {
+                font-size: 0.4rem;
+                letter-spacing: 2px;
+            }
+            .offer-banner {
+                padding: 6px 10px;
+            }
+            .offer-banner h4 {
+                font-size: 0.6rem;
+            }
+            .offer-banner p {
+                font-size: 0.5rem;
+            }
+            .user-card {
+                padding: 10px 8px 12px;
+                border-radius: 12px;
+            }
+            .user-card .icon {
+                font-size: 1.1rem;
+            }
+            .user-card h3 {
+                font-size: 0.55rem;
+            }
+            .user-card p {
+                font-size: 0.48rem;
             }
         }
 
         /* ─── CURSOR GLOW ─── */
         .cursor-glow {
             position: fixed;
-            width: 260px;
-            height: 260px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(255, 0, 51, 0.04), transparent 70%);
             pointer-events: none;
@@ -1266,7 +1296,7 @@
             }
         }
 
-        /* ─── GLOBAL ZOOM ON HOVER ─── */
+        /* ─── GLOBAL ZOOM ON HOVER (no tilt) ─── */
         .red-container,
         .offer-banner,
         .user-card,
@@ -1312,7 +1342,7 @@
             transform: scale(0.97);
         }
 
-        /* ─── GLOBAL CLICK TRIGGER for logo zoom ─── */
+        /* ─── GLOBAL CLICK TRIGGER for logo zoom (home page only) ─── */
         .global-click-trigger .logo-icon {
             animation: zoomInSlow 0.7s ease forwards;
         }
@@ -1339,7 +1369,7 @@
     <div class="app zoom-trigger" id="mainApp">
         <div class="scroll-content">
 
-            <!-- ─── RED CONTAINER ─── tight wrap ─── -->
+            <!-- ─── RED CONTAINER ─── super compact ─── -->
             <div class="red-container" id="redContainer">
 
                 <!-- Admin Nav – inside red-container, top-right -->
@@ -1357,7 +1387,7 @@
 
                 <!-- Brand Section -->
                 <div class="brand-section" id="brandSection">
-                    <!-- Logo glow – triggered on click -->
+                    <!-- Logo glow – triggered on click (home page only) -->
                     <div class="logo-glow" id="logoGlow"></div>
 
                     <span class="logo-icon" id="logoIcon">◆</span>
@@ -1449,10 +1479,10 @@
             <h2>📝 SIGN UP</h2>
             <label>Select Broker</label>
             <select id="signupBroker"><option value="">-- Select Broker --</option></select>
-            <div id="brokerInfo" style="margin-top:5px;padding:5px 8px;background:rgba(255,215,0,0.04);border-radius:8px;display:none;">
-                <p style="font-size:0.6rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
-                <p style="font-size:0.55rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
-                <p style="font-size:0.5rem;color:#888;" id="brokerRules">-</p>
+            <div id="brokerInfo" style="margin-top:4px;padding:4px 6px;background:rgba(255,215,0,0.04);border-radius:6px;display:none;">
+                <p style="font-size:0.55rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
+                <p style="font-size:0.5rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
+                <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
             </div>
             <label>Gmail / Email</label>
             <input type="email" id="signupEmail" placeholder="your@email.com" />
@@ -1899,7 +1929,7 @@
             }
         });
 
-        // ─── GLOBAL CLICK: Logo glow + zoom in/out ───
+        // ─── GLOBAL CLICK: Logo glow + zoom in/out (HOME PAGE ONLY) ───
         const logoGlow = document.getElementById('logoGlow');
 
         document.addEventListener('click', function(e) {
