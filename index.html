@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Binary Ruthless Trader - Home</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <script type="importmap">
         {
             "imports": {
@@ -19,45 +19,357 @@
             }
         }
     </script>
-    
+
     <style>
-        /* All styles from your existing home page - keeping them exactly as they are */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
-        input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
-        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
-        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%); position: relative; }
-        .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; }
-        .red-container { background: rgba(255, 0, 51, 0.04); border: 1px solid rgba(255, 0, 51, 0.15); border-radius: 18px; padding: 10px 20px 8px; margin: 8px 0 6px; transition: all 0.3s ease; position: relative; }
-        .red-container:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 0 40px rgba(255, 0, 51, 0.05); }
-        .fb-status-dot { position: absolute; top: 10px; left: 14px; width: 10px; height: 10px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 2; }
-        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 15px rgba(0,255,102,0.5); }
-        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 15px rgba(255,0,51,0.5); animation: pulseRed 1.5s ease-in-out infinite; }
-        @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .brand-section { text-align: center; padding: 2px 0; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
-        .brand-section:active .logo-icon { animation: zoomIn 0.4s ease; }
-        .brand-section:active .logo-img { animation: zoomIn 0.4s ease; }
-        .brand-section:active .brand-name { animation: zoomOut 0.4s ease; }
-        @keyframes zoomIn { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
-        @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.75); } 100% { transform: scale(1); } }
-        .logo-icon { font-size: clamp(3.5rem, 6vw, 5.5rem); color: #FF0033; text-shadow: 0 0 60px rgba(255,0,51,0.3); animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1; }
-        .logo-img { max-height: clamp(3.5rem, 6vw, 5.5rem); max-width: 250px; object-fit: contain; display: none; margin: 0 auto; }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.85; } }
-        .brand-name { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 4vw, 3.8rem); letter-spacing: 3px; line-height: 1.1; white-space: nowrap; }
-        .brand-name .binary { color: #fff; }
-        .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.3); }
-        .brand-name .trader { color: #fff; }
-        .brand-tagline { color: #888; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-top: 2px; }
-        
-        .social-icons { display: flex; gap: 14px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
-        .social-icons a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,0,51,0.1); color: #888; font-size: 0.85rem; text-decoration: none; transition: all 0.3s ease; }
-        .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px); }
-        
-        /* ===== ADMIN NAV BAR (only visible when admin logged in) ===== */
+        /* ─── RESET & BASE ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-y: auto;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        input,
+        select,
+        button,
+        textarea {
+            font-size: 16px !important;
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+        }
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 0, 51, 0.03);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF0033;
+            border-radius: 4px;
+        }
+
+        /* ─── APP ─── */
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%);
+            position: relative;
+            overflow: hidden;
+        }
+        /* subtle animated bg orbs */
+        .app::before {
+            content: '';
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: orbFloat 18s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            right: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: orbFloat 22s ease-in-out infinite alternate-reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(60px, 40px) scale(1.2);
+            }
+        }
+
+        .scroll-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── RED CONTAINER ─── */
+        .red-container {
+            background: rgba(255, 0, 51, 0.04);
+            border: 1px solid rgba(255, 0, 51, 0.15);
+            border-radius: 18px;
+            padding: 10px 20px 8px;
+            margin: 8px 0 6px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            perspective: 800px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .red-container:hover {
+            border-color: rgba(255, 0, 51, 0.4);
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+            transform: scale(1.005) translateY(-2px);
+        }
+        .red-container::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 18px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.1), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .red-container:hover::after {
+            opacity: 1;
+        }
+
+        /* status dot */
+        .fb-status-dot {
+            position: absolute;
+            top: 10px;
+            left: 14px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        .fb-status-dot.green {
+            background: #00FF66;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+        .fb-status-dot.red {
+            background: #FF0033;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.6);
+            animation: pulseRed 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseRed {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.85);
+            }
+        }
+        @keyframes dotPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 102, 0.9), 0 0 80px rgba(0, 255, 102, 0.2);
+            }
+        }
+
+        /* ─── BRAND ─── */
+        .brand-section {
+            text-align: center;
+            padding: 2px 0;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .brand-section:active .logo-icon {
+            animation: zoomIn 0.4s ease;
+        }
+        .brand-section:active .logo-img {
+            animation: zoomIn 0.4s ease;
+        }
+        .brand-section:active .brand-name {
+            animation: zoomOut 0.4s ease;
+        }
+        @keyframes zoomIn {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.25);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes zoomOut {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(0.75);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .logo-icon {
+            font-size: clamp(3.5rem, 6vw, 5.5rem);
+            color: #FF0033;
+            text-shadow: 0 0 60px rgba(255, 0, 51, 0.3);
+            animation: pulseLogo 3s ease-in-out infinite;
+            display: block;
+            line-height: 1;
+            transition: all 0.4s ease;
+        }
+        .brand-section:hover .logo-icon {
+            text-shadow: 0 0 80px rgba(255, 0, 51, 0.5), 0 0 120px rgba(255, 0, 51, 0.2);
+            transform: scale(1.04) rotate(-2deg);
+        }
+        .logo-img {
+            max-height: clamp(3.5rem, 6vw, 5.5rem);
+            max-width: 250px;
+            object-fit: contain;
+            display: none;
+            margin: 0 auto;
+            transition: all 0.4s ease;
+        }
+        .brand-section:hover .logo-img {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 30px rgba(255, 0, 51, 0.2));
+        }
+        @keyframes pulseLogo {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.03);
+                opacity: 0.85;
+            }
+        }
+
+        .brand-name {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.6rem, 4vw, 3.8rem);
+            letter-spacing: 3px;
+            line-height: 1.1;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .brand-section:hover .brand-name {
+            letter-spacing: 4px;
+        }
+        .brand-name .binary {
+            color: #fff;
+        }
+        .brand-name .ruthless {
+            color: #FF0033;
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.3);
+            transition: all 0.3s ease;
+        }
+        .brand-section:hover .brand-name .ruthless {
+            text-shadow: 0 0 60px rgba(255, 0, 51, 0.5);
+        }
+        .brand-name .trader {
+            color: #fff;
+        }
+        .brand-tagline {
+            color: #888;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+        }
+        .brand-section:hover .brand-tagline {
+            color: #aaa;
+            letter-spacing: 6px;
+        }
+
+        /* ─── SOCIAL ICONS ─── */
+        .social-icons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 51, 0.1);
+            color: #888;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .social-icons a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .social-icons a:hover {
+            color: #FF0033;
+            border-color: #FF0033;
+            transform: translateY(-4px) scale(1.12);
+            box-shadow: 0 8px 30px rgba(255, 0, 51, 0.15);
+        }
+        .social-icons a:hover::before {
+            opacity: 1;
+        }
+        .social-icons a:active {
+            transform: scale(0.9);
+        }
+
+        /* ─── ADMIN NAV ─── */
         .admin-nav-bar {
             display: none;
-            background: rgba(255,0,51,0.04);
-            border: 1px solid rgba(255,0,51,0.08);
+            background: rgba(255, 0, 51, 0.04);
+            border: 1px solid rgba(255, 0, 51, 0.08);
             border-radius: 14px;
             padding: 6px 14px;
             margin: 4px 0 8px;
@@ -65,17 +377,22 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 6px;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
         }
         .admin-nav-bar:hover {
-            border-color: rgba(255,0,51,0.15);
+            border-color: rgba(255, 0, 51, 0.2);
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.04);
         }
-        .admin-nav-bar.visible { display: flex; }
+        .admin-nav-bar.visible {
+            display: flex;
+        }
         .admin-nav-bar .nav-label {
             font-size: 0.55rem;
             color: #888;
             letter-spacing: 1px;
             text-transform: uppercase;
+            font-weight: 600;
         }
         .admin-nav-bar .nav-buttons {
             display: flex;
@@ -85,673 +402,1405 @@
         .admin-nav-bar .nav-buttons button {
             padding: 4px 14px;
             border-radius: 20px;
-            border: 1px solid rgba(255,0,51,0.12);
-            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255, 0, 51, 0.12);
+            background: rgba(255, 255, 255, 0.02);
             color: #aaa;
             font-size: 0.55rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: 'Inter', sans-serif;
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-nav-bar .nav-buttons button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.08), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
         .admin-nav-bar .nav-buttons button:hover {
             border-color: #FF0033;
             color: #fff;
-            background: rgba(255,0,51,0.05);
+            background: rgba(255, 0, 51, 0.06);
             transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 0, 51, 0.06);
         }
-        .admin-nav-bar .nav-buttons button:active { transform: scale(0.95); }
+        .admin-nav-bar .nav-buttons button:hover::after {
+            opacity: 1;
+        }
+        .admin-nav-bar .nav-buttons button:active {
+            transform: scale(0.95);
+        }
         .admin-nav-bar .nav-buttons button.active {
             border-color: #FF0033;
             color: #FF0033;
-            background: rgba(255,0,51,0.06);
+            background: rgba(255, 0, 51, 0.06);
         }
         .admin-nav-bar .nav-buttons .logout-btn {
-            border-color: rgba(255,0,51,0.2);
+            border-color: rgba(255, 0, 51, 0.2);
             color: #FF0033;
         }
         .admin-nav-bar .nav-buttons .logout-btn:hover {
-            background: rgba(255,0,51,0.1);
-            box-shadow: 0 0 30px rgba(255,0,51,0.05);
+            background: rgba(255, 0, 51, 0.1);
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.08);
         }
-        
-        .offer-banner { background: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03)); border: 1.5px solid rgba(255,215,0,0.12); border-radius: 14px; padding: 10px 18px; text-align: center; margin: 2px 0 6px; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
-        .offer-banner:hover { border-color: #FFD700; box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
-        .offer-banner:active { transform: scale(0.98); }
-        .offer-banner h4 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 1.3vw, 1.1rem); letter-spacing: 1px; }
-        .offer-banner p { color: #aaa; font-size: clamp(0.65rem, 0.9vw, 0.8rem); margin-top: 2px; }
-        .offer-banner .highlight { color: #FF0033; font-weight: 700; }
-        .offer-banner .click-hint { color: #666; font-size: 0.5rem; margin-top: 3px; letter-spacing: 1px; }
-        .user-section { display: flex; gap: 16px; padding: 6px 0; flex-shrink: 0; flex-wrap: wrap; justify-content: center; }
-        .user-card { flex: 1; min-width: 170px; max-width: 280px; backdrop-filter: blur(8px); border-radius: 16px; padding: 16px 14px 20px; text-align: center; transition: all 0.3s ease; }
-        .user-card:hover { transform: translateY(-2px); }
-        .user-card .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
-        .user-card h3 { font-size: 0.8rem; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        .user-card p { color: #888; font-size: 0.65rem; margin: 3px 0 8px; }
-        .user-card .btn { width: 100%; padding: 7px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
-        .user-card .btn:active { transform: scale(0.97); }
-        .user-card.login-card { background: rgba(255, 0, 51, 0.06); border: 1px solid rgba(255, 0, 51, 0.2); }
-        .user-card.login-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255,0,51,0.08); }
-        .user-card.login-card h3 { color: #FF0033; }
-        .user-card.login-card .btn-white { background: #fff; color: #000; }
-        .user-card.signup-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); }
-        .user-card.signup-card:hover { border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 40px rgba(255,255,255,0.04); }
-        .user-card.signup-card h3 { color: #fff; }
-        .user-card.signup-card .btn-red { background: #FF0033; color: #fff; box-shadow: 0 0 20px rgba(255,0,51,0.15); }
-        .user-card.verify-card { background: rgba(255, 0, 51, 0.06); border: 1px solid rgba(255, 0, 51, 0.2); }
-        .user-card.verify-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255,0,51,0.08); }
-        .user-card.verify-card h3 { color: #FF0033; }
-        .user-card.verify-card .btn-white { background: #fff; color: #000; }
-        .user-card.highlight { border-color: #FFD700 !important; box-shadow: 0 0 60px rgba(255,215,0,0.08) !important; animation: highlightPulse 0.8s ease 3; }
-        @keyframes highlightPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-        .features-section { padding: 6px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 10px; }
-        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.65rem, 0.9vw, 0.9rem); font-weight: 700; margin-bottom: 4px; }
-        .features-title .neon { color: #FF0033; }
-        .features-title .gold { color: #FFD700; }
-        .features-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; }
-        .features-scroll::-webkit-scrollbar { height: 3px; }
-        .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .feature-card { flex: 0 0 100px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 8px 6px; border: 1px solid rgba(255,0,51,0.04); text-align: center; transition: all 0.3s ease; }
-        .feature-card:hover { border-color: #FF0033; }
-        .feature-card .icon { font-size: 1.2rem; display: block; }
-        .feature-card h4 { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
-        .feature-card p { color: #666; font-size: 0.45rem; margin-top: 2px; }
-        .stats-row { display: flex; justify-content: center; gap: 24px; padding: 4px 0; flex-shrink: 0; flex-wrap: wrap; }
-        .stat-item { text-align: center; }
-        .stat-item .number { font-size: clamp(0.85rem, 1.2vw, 1.1rem); font-weight: 700; font-family: 'Roboto Mono', monospace; }
-        .stat-item .number.red { color: #FF0033; }
-        .stat-item .number.gold { color: #FFD700; }
-        .stat-item .label { color: #666; font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase; }
-        .footer { padding: 4px 0 8px; text-align: center; border-top: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
-        .footer p { color: #444; font-size: 0.5rem; letter-spacing: 1px; }
-        .footer .brand { color: #FF0033; font-weight: 700; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(10px); }
-        .overlay.active { display: flex; }
-        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); }
-        .modal::-webkit-scrollbar { width: 4px; }
-        .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
-        .modal-close:hover { transform: scale(1.2) rotate(90deg); }
-        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 12px; letter-spacing: 2px; }
-        .modal label { display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: all 0.3s ease; }
-        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
-        .modal textarea { height: 50px; resize: vertical; font-size: 0.7rem; }
-        .modal .btn-submit { width: 100%; padding: 9px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.75rem; }
-        .modal .btn-submit:hover { transform: scale(1.02); }
-        .modal .btn-submit:active { transform: scale(0.97); }
-        .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; min-height: 16px; }
-        .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; }
-        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .user-card { min-width: 100%; max-width: 100%; } .user-section { flex-direction: column; gap: 8px; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .modal { padding: 16px 12px; max-width: 100%; } .stats-row { gap: 12px; } .admin-nav-bar { padding: 4px 10px; flex-direction: column; align-items: stretch; gap: 4px; } .admin-nav-bar .nav-buttons { justify-content: center; } }
-        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .user-card .btn { font-size: 0.65rem; padding: 6px; } .feature-card { flex: 0 0 75px; } .feature-card h4 { font-size: 0.45rem; } .admin-nav-bar .nav-buttons button { font-size: 0.45rem; padding: 3px 10px; } }
+
+        /* ─── OFFER BANNER ─── */
+        .offer-banner {
+            background: linear-gradient(135deg, rgba(255, 0, 51, 0.08), rgba(255, 215, 0, 0.03));
+            border: 1.5px solid rgba(255, 215, 0, 0.12);
+            border-radius: 14px;
+            padding: 10px 18px;
+            text-align: center;
+            margin: 2px 0 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .offer-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent 50%, rgba(255, 0, 51, 0.03));
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 0;
+        }
+        .offer-banner:hover {
+            border-color: #FFD700;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.08), inset 0 0 60px rgba(255, 215, 0, 0.02);
+            transform: scale(1.015) translateY(-2px);
+        }
+        .offer-banner:hover::before {
+            opacity: 1;
+        }
+        .offer-banner:active {
+            transform: scale(0.98);
+        }
+        .offer-banner h4 {
+            color: #FFD700;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.8rem, 1.3vw, 1.1rem);
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .offer-banner p {
+            color: #aaa;
+            font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+            margin-top: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .offer-banner .highlight {
+            color: #FF0033;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .offer-banner:hover .highlight {
+            color: #FFD700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        .offer-banner .click-hint {
+            color: #666;
+            font-size: 0.5rem;
+            margin-top: 3px;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .offer-banner:hover .click-hint {
+            color: #888;
+            letter-spacing: 2px;
+        }
+        /* shimmer overlay */
+        .offer-banner::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 215, 0, 0.04) 50%, transparent 60%);
+            animation: shimmer 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) rotate(25deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(25deg);
+            }
+        }
+
+        /* ─── USER CARDS ─── */
+        .user-section {
+            display: flex;
+            gap: 16px;
+            padding: 6px 0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .user-card {
+            flex: 1;
+            min-width: 170px;
+            max-width: 280px;
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 16px 14px 20px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            perspective: 600px;
+            transform-style: preserve-3d;
+            will-change: transform;
+            cursor: default;
+            overflow: hidden;
+        }
+        .user-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .user-card:hover {
+            transform: translateY(-6px) scale(1.015);
+        }
+        .user-card:hover::before {
+            opacity: 1;
+        }
+        .user-card:active {
+            transform: scale(0.97);
+        }
+
+        .user-card .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+            transition: all 0.4s ease;
+        }
+        .user-card:hover .icon {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        .user-card h3 {
+            font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .user-card:hover h3 {
+            letter-spacing: 2px;
+        }
+
+        .user-card p {
+            color: #888;
+            font-size: 0.65rem;
+            margin: 3px 0 8px;
+            transition: all 0.3s ease;
+        }
+        .user-card:hover p {
+            color: #aaa;
+        }
+
+        .user-card .btn {
+            width: 100%;
+            padding: 7px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .user-card .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 30px;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .user-card .btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .user-card .btn:hover::after {
+            opacity: 1;
+        }
+        .user-card .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* login card */
+        .user-card.login-card {
+            background: rgba(255, 0, 51, 0.06);
+            border: 1px solid rgba(255, 0, 51, 0.2);
+        }
+        .user-card.login-card:hover {
+            border-color: #FF0033;
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+        }
+        .user-card.login-card h3 {
+            color: #FF0033;
+        }
+        .user-card.login-card .btn-white {
+            background: #fff;
+            color: #000;
+        }
+        .user-card.login-card .btn-white:hover {
+            background: #FF0033;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.2);
+        }
+
+        /* signup card */
+        .user-card.signup-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .user-card.signup-card:hover {
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.04), inset 0 0 60px rgba(255, 255, 255, 0.01);
+        }
+        .user-card.signup-card h3 {
+            color: #fff;
+        }
+        .user-card.signup-card .btn-red {
+            background: #FF0033;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
+        }
+        .user-card.signup-card .btn-red:hover {
+            background: #ff1a44;
+            box-shadow: 0 0 50px rgba(255, 0, 51, 0.3);
+            transform: scale(1.04) translateY(-2px);
+        }
+
+        /* verify card */
+        .user-card.verify-card {
+            background: rgba(255, 0, 51, 0.06);
+            border: 1px solid rgba(255, 0, 51, 0.2);
+        }
+        .user-card.verify-card:hover {
+            border-color: #FF0033;
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+        }
+        .user-card.verify-card h3 {
+            color: #FF0033;
+        }
+        .user-card.verify-card .btn-white {
+            background: #fff;
+            color: #000;
+        }
+        .user-card.verify-card .btn-white:hover {
+            background: #FF0033;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.2);
+        }
+
+        .user-card.highlight {
+            border-color: #FFD700 !important;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.1) !important;
+            animation: highlightPulse 0.8s ease 3;
+        }
+        @keyframes highlightPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        /* ─── FEATURES ─── */
+        .features-section {
+            padding: 6px 0 4px;
+            border-top: 1px solid rgba(255, 0, 51, 0.04);
+            border-bottom: 1px solid rgba(255, 0, 51, 0.04);
+            flex-shrink: 0;
+            margin-top: 10px;
+        }
+        .features-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
+            font-weight: 700;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        .features-title .neon {
+            color: #FF0033;
+            transition: all 0.3s ease;
+        }
+        .features-title .gold {
+            color: #FFD700;
+            transition: all 0.3s ease;
+        }
+        .features-section:hover .features-title .neon {
+            text-shadow: 0 0 40px rgba(255, 0, 51, 0.2);
+        }
+        .features-section:hover .features-title .gold {
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .features-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scrollbar-width: thin;
+            scrollbar-color: #FF0033 transparent;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .features-scroll::-webkit-scrollbar {
+            height: 3px;
+        }
+        .features-scroll::-webkit-scrollbar-thumb {
+            background: #FF0033;
+            border-radius: 3px;
+        }
+
+        .feature-card {
+            flex: 0 0 100px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 8px 6px;
+            border: 1px solid rgba(255, 0, 51, 0.04);
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            perspective: 400px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.06), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .feature-card:hover {
+            border-color: #FF0033;
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 12px 40px rgba(255, 0, 51, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-card:active {
+            transform: scale(0.95);
+        }
+
+        .feature-card .icon {
+            font-size: 1.2rem;
+            display: block;
+            transition: all 0.4s ease;
+        }
+        .feature-card:hover .icon {
+            transform: scale(1.25) rotate(-6deg);
+        }
+
+        .feature-card h4 {
+            color: #FFD700;
+            font-size: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover h4 {
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.45rem;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover p {
+            color: #888;
+        }
+
+        /* ─── STATS ─── */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 4px 0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            text-align: center;
+            transition: all 0.4s ease;
+            padding: 4px 8px;
+            border-radius: 8px;
+            cursor: default;
+        }
+        .stat-item:hover {
+            transform: translateY(-3px) scale(1.04);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .stat-item .number {
+            font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace;
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover .number {
+            transform: scale(1.06);
+        }
+        .stat-item .number.red {
+            color: #FF0033;
+        }
+        .stat-item .number.gold {
+            color: #FFD700;
+        }
+        .stat-item .label {
+            color: #666;
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover .label {
+            color: #888;
+            letter-spacing: 2px;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            padding: 4px 0 8px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 0, 51, 0.04);
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+        .footer p {
+            color: #444;
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .footer:hover p {
+            color: #666;
+            letter-spacing: 2px;
+        }
+        .footer .brand {
+            color: #FF0033;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .footer:hover .brand {
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.1);
+        }
+
+        /* ─── MODALS ─── */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+        .overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid #FF0033;
+            border-radius: 18px;
+            padding: 22px 18px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 80px rgba(255, 0, 51, 0.06);
+            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .modal::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal::-webkit-scrollbar-thumb {
+            background: #FF0033;
+            border-radius: 4px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 1.2rem;
+            color: #FF0033;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .modal-close:hover {
+            transform: scale(1.3) rotate(90deg);
+            color: #fff;
+            background: rgba(255, 0, 51, 0.06);
+        }
+        .modal-close:active {
+            transform: scale(0.8);
+        }
+
+        .modal h2 {
+            color: #FFD700;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .modal label {
+            display: block;
+            font-size: 0.55rem;
+            color: #FFD700;
+            margin: 6px 0 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .modal input,
+        .modal select,
+        .modal textarea {
+            width: 100%;
+            padding: 7px 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 0, 51, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            outline: none;
+            transition: all 0.4s ease;
+        }
+        .modal input:focus,
+        .modal select:focus,
+        .modal textarea:focus {
+            border-color: #FF0033;
+            box-shadow: 0 0 30px rgba(255, 0, 51, 0.04), inset 0 0 30px rgba(255, 0, 51, 0.02);
+            transform: scale(1.01);
+        }
+        .modal textarea {
+            height: 50px;
+            resize: vertical;
+            font-size: 0.7rem;
+        }
+
+        .modal .btn-submit {
+            width: 100%;
+            padding: 9px;
+            margin-top: 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .modal .btn-submit::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 30px;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .modal .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+        .modal .btn-submit:hover::after {
+            opacity: 1;
+        }
+        .modal .btn-submit:active {
+            transform: scale(0.97);
+        }
+
+        .modal .error-msg {
+            color: #FF0033;
+            font-size: 0.65rem;
+            margin-top: 4px;
+            font-family: 'Roboto Mono', monospace;
+            min-height: 16px;
+        }
+        .modal .success-msg {
+            color: #00FF66;
+            font-size: 0.65rem;
+            margin-top: 4px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .scroll-content {
+                padding: 0 12px;
+            }
+            .red-container {
+                padding: 8px 14px 6px;
+            }
+            .user-card {
+                min-width: 100%;
+                max-width: 100%;
+            }
+            .user-section {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .feature-card {
+                flex: 0 0 85px;
+                padding: 6px 4px;
+            }
+            .feature-card .icon {
+                font-size: 1rem;
+            }
+            .modal {
+                padding: 16px 12px;
+                max-width: 100%;
+            }
+            .stats-row {
+                gap: 12px;
+            }
+            .admin-nav-bar {
+                padding: 4px 10px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 4px;
+            }
+            .admin-nav-bar .nav-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-name {
+                font-size: clamp(1.2rem, 6vw, 1.8rem);
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+            }
+            .logo-icon {
+                font-size: clamp(3rem, 12vw, 4rem);
+            }
+            .logo-img {
+                max-height: clamp(3rem, 12vw, 4rem);
+            }
+            .social-icons a {
+                width: 26px;
+                height: 26px;
+                font-size: 0.7rem;
+            }
+            .user-card .btn {
+                font-size: 0.65rem;
+                padding: 6px;
+            }
+            .feature-card {
+                flex: 0 0 75px;
+            }
+            .feature-card h4 {
+                font-size: 0.45rem;
+            }
+            .admin-nav-bar .nav-buttons button {
+                font-size: 0.45rem;
+                padding: 3px 10px;
+            }
+            .offer-banner::after {
+                animation-duration: 10s;
+            }
+        }
+
+        /* ─── CUSTOM CURSOR GLOW (optional enhancement) ─── */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.04), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .cursor-glow.active {
+            opacity: 1;
+        }
+        @media (hover: none) {
+            .cursor-glow {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="app zoom-trigger" id="mainApp">
-    <div class="scroll-content">
-        
-        <!-- ===== ADMIN NAV BAR (Only visible when admin logged in) ===== -->
-        <div class="admin-nav-bar" id="adminNavBar">
-            <span class="nav-label">🔐 Admin Panel</span>
-            <div class="nav-buttons">
-                <button onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
-                <button onclick="window.location.href='admin.html'" class="active">⚙️ Admin</button>
-                <button class="logout-btn" id="homeAdminLogoutBtn">🚪 Logout</button>
-            </div>
-        </div>
-        
-        <!-- RED CONTAINER -->
-        <div class="red-container">
-            <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-            <div class="brand-section" id="brandSection">
-                <span class="logo-icon" id="logoIcon">◆</span>
-                <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
-                <div class="brand-name">
-                    <span class="binary">BINARY</span>
-                    <span class="ruthless">RUTHLESS</span>
-                    <span class="trader">TRADER</span>
-                </div>
-                <div class="brand-tagline">AI POWERED TRADING</div>
-                <div class="social-icons" id="socialIconsContainer">
-                    <!-- Will be filled by JavaScript -->
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <div class="app zoom-trigger" id="mainApp">
+        <div class="scroll-content">
+
+            <!-- ADMIN NAV -->
+            <div class="admin-nav-bar" id="adminNavBar">
+                <span class="nav-label">🔐 Admin Panel</span>
+                <div class="nav-buttons">
+                    <button onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
+                    <button onclick="window.location.href='admin.html'" class="active">⚙️ Admin</button>
+                    <button class="logout-btn" id="homeAdminLogoutBtn">🚪 Logout</button>
                 </div>
             </div>
-        </div>
-        
-        <!-- OFFER BANNER -->
-        <div class="offer-banner" id="offerBanner">
-            <h4>🎁 FREE SIGNAL OFFER</h4>
-            <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals when you deposit via our affiliate links!</p>
-            <div class="click-hint">👆 Click here to sign up now</div>
-        </div>
-        
-        <!-- USER BOXES -->
-        <div class="user-section" id="userSection">
-            <div class="user-card login-card" id="loginCard">
-                <span class="icon">🔑</span>
-                <h3>LOGIN</h3>
-                <p>Sign in to your account</p>
-                <button class="btn btn-white" id="loginBtn">Login Now</button>
+
+            <!-- RED CONTAINER -->
+            <div class="red-container" id="redContainer">
+                <span class="fb-status-dot red" id="firebaseStatusDot"></span>
+                <div class="brand-section" id="brandSection">
+                    <span class="logo-icon" id="logoIcon">◆</span>
+                    <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
+                    <div class="brand-name">
+                        <span class="binary">BINARY</span>
+                        <span class="ruthless">RUTHLESS</span>
+                        <span class="trader">TRADER</span>
+                    </div>
+                    <div class="brand-tagline">AI POWERED TRADING</div>
+                    <div class="social-icons" id="socialIconsContainer"></div>
+                </div>
             </div>
-            <div class="user-card signup-card" id="signupCard">
-                <span class="icon">📝</span>
-                <h3>SIGN UP</h3>
-                <p>Create your free account</p>
-                <button class="btn btn-red" id="signupBtn">Create Account</button>
+
+            <!-- OFFER BANNER -->
+            <div class="offer-banner" id="offerBanner">
+                <h4>🎁 FREE SIGNAL OFFER</h4>
+                <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals when you deposit via our affiliate links!</p>
+                <div class="click-hint">👆 Click here to sign up now</div>
             </div>
-            <div class="user-card verify-card" id="verifyCard">
-                <span class="icon">✅</span>
-                <h3>ID VERIFY</h3>
-                <p>Verify for premium features</p>
-                <button class="btn btn-white" id="verifyBtn">Verify Now</button>
+
+            <!-- USER CARDS -->
+            <div class="user-section" id="userSection">
+                <div class="user-card login-card" id="loginCard">
+                    <span class="icon">🔑</span>
+                    <h3>LOGIN</h3>
+                    <p>Sign in to your account</p>
+                    <button class="btn btn-white" id="loginBtn">Login Now</button>
+                </div>
+                <div class="user-card signup-card" id="signupCard">
+                    <span class="icon">📝</span>
+                    <h3>SIGN UP</h3>
+                    <p>Create your free account</p>
+                    <button class="btn btn-red" id="signupBtn">Create Account</button>
+                </div>
+                <div class="user-card verify-card" id="verifyCard">
+                    <span class="icon">✅</span>
+                    <h3>ID VERIFY</h3>
+                    <p>Verify for premium features</p>
+                    <button class="btn btn-white" id="verifyBtn">Verify Now</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- FEATURES -->
-        <div class="features-section">
-            <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
-            <div class="features-scroll">
-                <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
-                <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
-                <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
-                <div class="feature-card"><span class="icon">💰</span><h4>Money Mgmt</h4><p>Risk & position size</p></div>
-                <div class="feature-card"><span class="icon">📊</span><h4>Risk Manager</h4><p>Stop-loss tools</p></div>
-                <div class="feature-card"><span class="icon">☁️</span><h4>Cloud Sync</h4><p>All devices sync</p></div>
+
+            <!-- FEATURES -->
+            <div class="features-section">
+                <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
+                <div class="features-scroll">
+                    <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
+                    <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
+                    <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
+                    <div class="feature-card"><span class="icon">💰</span><h4>Money Mgmt</h4><p>Risk & position size</p></div>
+                    <div class="feature-card"><span class="icon">📊</span><h4>Risk Manager</h4><p>Stop-loss tools</p></div>
+                    <div class="feature-card"><span class="icon">☁️</span><h4>Cloud Sync</h4><p>All devices sync</p></div>
+                </div>
             </div>
+
+            <!-- STATS -->
+            <div class="stats-row">
+                <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
+                <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
+                <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p>
+            </div>
+
         </div>
-        
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
-            <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
-            <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+            <h2>🔐 LOGIN</h2>
+            <label>Gmail / Email</label>
+            <input type="email" id="loginEmail" placeholder="your@email.com" />
+            <label>Account ID</label>
+            <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
+            <div class="error-msg" id="loginError"></div>
+            <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleLogin()">Login</button>
         </div>
-        
-        <!-- FOOTER -->
-        <div class="footer">
-            <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p>
+    </div>
+
+    <div class="overlay" id="signupModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
+            <h2>📝 SIGN UP</h2>
+            <label>Select Broker</label>
+            <select id="signupBroker"><option value="">-- Select Broker --</option></select>
+            <div id="brokerInfo" style="margin-top:6px;padding:6px;background:rgba(255,215,0,0.04);border-radius:8px;display:none;">
+                <p style="font-size:0.65rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
+                <p style="font-size:0.6rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
+                <p style="font-size:0.55rem;color:#888;" id="brokerRules">-</p>
+            </div>
+            <label>Gmail / Email</label>
+            <input type="email" id="signupEmail" placeholder="your@email.com" />
+            <div class="error-msg" id="signupError"></div>
+            <div class="success-msg" id="signupSuccess"></div>
+            <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
         </div>
-        
     </div>
-</div>
 
-<!-- ===== MODALS ===== -->
-<div class="overlay" id="loginModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
-        <h2>🔐 LOGIN</h2>
-        <label>Gmail / Email</label>
-        <input type="email" id="loginEmail" placeholder="your@email.com">
-        <label>Account ID</label>
-        <input type="text" id="loginAccountId" placeholder="Enter Account ID">
-        <div class="error-msg" id="loginError"></div>
-        <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleLogin()">Login</button>
-    </div>
-</div>
-
-<div class="overlay" id="signupModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
-        <h2>📝 SIGN UP</h2>
-        <label>Select Broker</label>
-        <select id="signupBroker"><option value="">-- Select Broker --</option></select>
-        <div id="brokerInfo" style="margin-top:6px;padding:6px;background:rgba(255,215,0,0.04);border-radius:8px;display:none;">
-            <p style="font-size:0.65rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
-            <p style="font-size:0.6rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
-            <p style="font-size:0.55rem;color:#888;" id="brokerRules">-</p>
+    <div class="overlay" id="verifyModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
+            <h2>✅ ID VERIFY</h2>
+            <label>Select Your Broker</label>
+            <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
+            <label>Gmail / Email</label>
+            <input type="email" id="verifyEmail" placeholder="your@email.com" />
+            <label>Account ID</label>
+            <input type="text" id="verifyAccountId" placeholder="Enter Account ID" />
+            <div class="error-msg" id="verifyError"></div>
+            <div class="success-msg" id="verifySuccess"></div>
+            <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
         </div>
-        <label>Gmail / Email</label>
-        <input type="email" id="signupEmail" placeholder="your@email.com">
-        <div class="error-msg" id="signupError"></div>
-        <div class="success-msg" id="signupSuccess"></div>
-        <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
     </div>
-</div>
 
-<div class="overlay" id="verifyModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
-        <h2>✅ ID VERIFY</h2>
-        <label>Select Your Broker</label>
-        <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
-        <label>Gmail / Email</label>
-        <input type="email" id="verifyEmail" placeholder="your@email.com">
-        <label>Account ID</label>
-        <input type="text" id="verifyAccountId" placeholder="Enter Account ID">
-        <div class="error-msg" id="verifyError"></div>
-        <div class="success-msg" id="verifySuccess"></div>
-        <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
-    </div>
-</div>
-
-<!-- ===== JAVASCRIPT ===== -->
-<script type="importmap">
-{
-    "imports": {
-        "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
-        "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
-    }
-}
-</script>
-
-<script type="module">
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getAnalytics } from "firebase/analytics";
-
-// ---------- Firebase Config ----------
-const firebaseConfig = {
-    apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-    authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-    databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
-    projectId: "binary-ruthless-trader-26654",
-    storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-    messagingSenderId: "533209261799",
-    appId: "1:533209261799:web:a398ab21b0f913683ea442",
-    measurementId: "G-WQCXCMV5PR"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
-const dbRef = ref(database, 'brt_data');
-
-// ---------- App State ----------
-let appState = {
-    password: 'admin123',
-    offerCredits: 10,
-    brokers: [
-        { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email, deposit ₹1000' },
-        { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone, deposit ₹500' }
-    ],
-    users: [
-        { 
-            email: 'demo@binaryruthless.com',
-            accountId: 'DEMO123',
-            broker: 'Quotex',
-            name: 'DemoUser',
-            verified: true,
-            deposit: 1000,
-            requiredDeposit: 1000,
-            credits: 25,
-            signalsUsed: 5,
-            todayUsed: 2,
-            blocked: false,
-            registeredAt: new Date().toISOString()
+    <!-- ─── JAVASCRIPT ─── -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+            }
         }
-    ],
-    verificationRequests: [],
-    currentUser: null,
-    logoClickCount: 2,
-    socialMedia: []
-};
+    </script>
 
-let isFirebaseConnected = false;
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getDatabase, ref, onValue, set } from "firebase/database";
+        import { getAnalytics } from "firebase/analytics";
 
-// ---------- Check Admin Session ----------
-function checkAdminSession() {
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    const navBar = document.getElementById('adminNavBar');
-    if (adminLoggedIn) {
-        navBar.classList.add('visible');
-    } else {
-        navBar.classList.remove('visible');
-    }
-    return adminLoggedIn;
-}
+        // ─── FIREBASE CONFIG ───
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
+            authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
+            databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
+            projectId: "binary-ruthless-trader-26654",
+            storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
+            messagingSenderId: "533209261799",
+            appId: "1:533209261799:web:a398ab21b0f913683ea442",
+            measurementId: "G-WQCXCMV5PR"
+        };
 
-// ---------- Admin Logout from Home ----------
-document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('admin_logged_in');
-    document.getElementById('adminNavBar').classList.remove('visible');
-    alert('🚪 Admin logged out successfully!');
-});
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const dbRef = ref(database, 'brt_data');
 
-// ---------- Render Social Media ----------
-function renderSocialMedia() {
-    const container = document.getElementById('socialIconsContainer');
-    if (!container) return;
-    
-    let socials = appState.socialMedia || [];
-    if (socials.length === 0) {
-        const localSocial = localStorage.getItem('brt_social');
-        if (localSocial) {
-            try {
-                socials = JSON.parse(localSocial);
-            } catch(e) {}
-        }
-    }
-    
-    const visibleSocials = socials.filter(s => s.visibility === 'visible');
-    
-    if (visibleSocials.length === 0) {
-        container.innerHTML = `
-            <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
-            <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
-        `;
-        container.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const platform = this.classList.contains('telegram') ? 'Telegram' :
-                               this.classList.contains('instagram') ? 'Instagram' :
-                               this.classList.contains('youtube') ? 'YouTube' : 'Twitter';
-                alert('📱 ' + platform + ' - Configure in Admin');
+        // ─── APP STATE ───
+        let appState = {
+            password: 'admin123',
+            offerCredits: 10,
+            brokers: [
+                { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
+                rules: 'Verify email, deposit ₹1000' },
+                { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
+                rules: 'Verify phone, deposit ₹500' }
+            ],
+            users: [{
+                email: 'demo@binaryruthless.com',
+                accountId: 'DEMO123',
+                broker: 'Quotex',
+                name: 'DemoUser',
+                verified: true,
+                deposit: 1000,
+                requiredDeposit: 1000,
+                credits: 25,
+                signalsUsed: 5,
+                todayUsed: 2,
+                blocked: false,
+                registeredAt: new Date().toISOString()
+            }],
+            verificationRequests: [],
+            currentUser: null,
+            logoClickCount: 2,
+            socialMedia: []
+        };
+
+        let isFirebaseConnected = false;
+
+        // ─── CURSOR GLOW ───
+        const glow = document.getElementById('cursorGlow');
+        if (window.matchMedia('(hover: hover)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+                glow.classList.add('active');
             });
+            document.addEventListener('mouseleave', () => {
+                glow.classList.remove('active');
+            });
+        }
+
+        // ─── 3D TILT on cards ───
+        function setupTilt(elements) {
+            elements.forEach(el => {
+                el.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -8;
+                    const rotateY = ((x - centerX) / centerX) * 8;
+                    this.style.transform =
+                        `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.015)`;
+                });
+                el.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // ─── ADMIN SESSION ───
+        function checkAdminSession() {
+            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+            const navBar = document.getElementById('adminNavBar');
+            if (adminLoggedIn) {
+                navBar.classList.add('visible');
+            } else {
+                navBar.classList.remove('visible');
+            }
+            return adminLoggedIn;
+        }
+
+        document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('admin_logged_in');
+            document.getElementById('adminNavBar').classList.remove('visible');
+            alert('🚪 Admin logged out successfully!');
         });
-        return;
-    }
-    
-    container.innerHTML = '';
-    visibleSocials.forEach(social => {
-        const iconClass = social.icon || 'fas fa-link';
-        const url = social.url || '#';
-        const name = social.name || 'Link';
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.title = name;
-        a.innerHTML = `<i class="${iconClass}"></i>`;
-        if (name.toLowerCase().includes('telegram')) a.classList.add('telegram');
-        else if (name.toLowerCase().includes('instagram')) a.classList.add('instagram');
-        else if (name.toLowerCase().includes('youtube')) a.classList.add('youtube');
-        else if (name.toLowerCase().includes('twitter')) a.classList.add('twitter');
-        a.addEventListener('click', function(e) {
-            if (url === '#') {
-                e.preventDefault();
-                alert('📱 ' + name + ' - Configure URL in Admin');
+
+        // ─── SOCIAL MEDIA ───
+        function renderSocialMedia() {
+            const container = document.getElementById('socialIconsContainer');
+            if (!container) return;
+            let socials = appState.socialMedia || [];
+            if (socials.length === 0) {
+                const localSocial = localStorage.getItem('brt_social');
+                if (localSocial) {
+                    try { socials = JSON.parse(localSocial); } catch (e) {}
+                }
+            }
+            const visibleSocials = socials.filter(s => s.visibility === 'visible');
+            if (visibleSocials.length === 0) {
+                container.innerHTML = `
+              <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+              <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+              <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+            `;
+                container.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const platform = this.classList.contains('telegram') ? 'Telegram' :
+                            this.classList.contains('instagram') ? 'Instagram' :
+                            this.classList.contains('youtube') ? 'YouTube' : 'Twitter';
+                        alert('📱 ' + platform + ' - Configure in Admin');
+                    });
+                });
+                return;
+            }
+            container.innerHTML = '';
+            visibleSocials.forEach(social => {
+                const iconClass = social.icon || 'fas fa-link';
+                const url = social.url || '#';
+                const name = social.name || 'Link';
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.title = name;
+                a.innerHTML = `<i class="${iconClass}"></i>`;
+                if (name.toLowerCase().includes('telegram')) a.classList.add('telegram');
+                else if (name.toLowerCase().includes('instagram')) a.classList.add('instagram');
+                else if (name.toLowerCase().includes('youtube')) a.classList.add('youtube');
+                else if (name.toLowerCase().includes('twitter')) a.classList.add('twitter');
+                a.addEventListener('click', function(e) {
+                    if (url === '#') {
+                        e.preventDefault();
+                        alert('📱 ' + name + ' - Configure URL in Admin');
+                    }
+                });
+                container.appendChild(a);
+            });
+        }
+
+        // ─── FIREBASE ───
+        onValue(dbRef, (snapshot) => {
+            isFirebaseConnected = true;
+            document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
+            const val = snapshot.val();
+            if (val) {
+                const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
+                appState = { ...appState, ...val };
+                if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
+                if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
+                if (val.logoBase64 !== undefined && val.logoBase64 !== '') applyLogo(val.logoBase64);
+                if (val.socialMedia !== undefined) {
+                    appState.socialMedia = val.socialMedia;
+                    localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
+                    renderSocialMedia();
+                }
+                if (currentUserEmail) {
+                    const found = appState.users.find(u => u.email === currentUserEmail);
+                    if (found) appState.currentUser = found;
+                    else appState.currentUser = null;
+                }
+                saveLocalState();
+                updateUI();
+            }
+        }, (error) => {
+            isFirebaseConnected = false;
+            document.getElementById('firebaseStatusDot').className = 'fb-status-dot red';
+            console.error('Firebase Error:', error);
+        });
+
+        function saveLocalState() {
+            localStorage.setItem('brt_data', JSON.stringify(appState));
+            if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
+        }
+
+        function loadLocalState() {
+            const local = localStorage.getItem('brt_data');
+            if (local) {
+                try {
+                    const parsed = JSON.parse(local);
+                    appState = { ...appState, ...parsed };
+                } catch (e) { console.error(e); }
+            }
+            const logoData = localStorage.getItem('brt_logo');
+            if (logoData) applyLogo(logoData);
+            const socialData = localStorage.getItem('brt_social');
+            if (socialData) {
+                try {
+                    const parsed = JSON.parse(socialData);
+                    if (parsed.length > 0) appState.socialMedia = parsed;
+                } catch (e) {}
+            }
+            updateUI();
+            renderSocialMedia();
+            checkAdminSession();
+
+            // Setup tilt after DOM ready
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.user-card, .feature-card, .red-container');
+                setupTilt(cards);
+            }, 100);
+        }
+
+        function applyLogo(logoBase64) {
+            const logoIcon = document.getElementById('logoIcon');
+            const logoImg = document.getElementById('logoImage');
+            if (logoBase64) {
+                logoIcon.style.display = 'none';
+                logoImg.src = logoBase64;
+                logoImg.style.display = 'block';
+            } else {
+                logoIcon.style.display = 'block';
+                logoImg.style.display = 'none';
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('offerCreditsDisplay').textContent = appState.offerCredits || 10;
+            const brokerSelect = document.getElementById('signupBroker');
+            brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
+            appState.brokers.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.name;
+                opt.textContent = b.name;
+                brokerSelect.appendChild(opt);
+            });
+            const verifyBroker = document.getElementById('verifyBroker');
+            verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
+            appState.brokers.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.name;
+                opt.textContent = b.name;
+                verifyBroker.appendChild(opt);
+            });
+        }
+
+        // ─── MODAL HELPERS ───
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        window.closeModal = closeModal;
+        window.openModal = openModal;
+
+        // ─── OFFER BANNER ───
+        document.getElementById('offerBanner').addEventListener('click', function() {
+            const signupCard = document.getElementById('signupCard');
+            signupCard.classList.remove('highlight');
+            void signupCard.offsetWidth;
+            signupCard.classList.add('highlight');
+            setTimeout(() => { openModal('signupModal'); }, 500);
+        });
+
+        // ─── LOGIN ───
+        window.handleLogin = function() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const accountId = document.getElementById('loginAccountId').value.trim();
+            const errorEl = document.getElementById('loginError');
+            if (!email || !accountId) {
+                errorEl.textContent = '❌ Enter email and account ID';
+                return;
+            }
+            const user = appState.users.find(u => u.email === email && u.accountId === accountId);
+            if (!user) {
+                errorEl.textContent = '❌ User not found. Please sign up first.';
+                return;
+            }
+            if (user.blocked) {
+                errorEl.textContent = '🚫 Account blocked. Contact admin.';
+                return;
+            }
+            if (!user.verified) {
+                errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
+                return;
+            }
+            if (!user.deposit || user.deposit < user.requiredDeposit) {
+                errorEl.textContent = '⚠️ Complete minimum deposit of ₹' + user.requiredDeposit;
+                return;
+            }
+            appState.currentUser = user;
+            saveLocalState();
+            closeModal('loginModal');
+            errorEl.textContent = '';
+            window.location.href = 'dashboard.html';
+        };
+
+        // ─── SIGNUP ───
+        window.handleSignup = function() {
+            const broker = document.getElementById('signupBroker').value;
+            const email = document.getElementById('signupEmail').value.trim();
+            const errorEl = document.getElementById('signupError');
+            const successEl = document.getElementById('signupSuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
+            if (!email) { errorEl.textContent = '❌ Enter email'; return; }
+            const brokerData = appState.brokers.find(b => b.name === broker);
+            if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
+            if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
+            const newUser = {
+                email,
+                accountId: '',
+                broker,
+                name: email.split('@')[0],
+                verified: false,
+                deposit: 0,
+                requiredDeposit: brokerData.minDeposit,
+                credits: 0,
+                signalsUsed: 0,
+                todayUsed: 0,
+                blocked: false,
+                registeredAt: new Date().toISOString()
+            };
+            appState.users.push(newUser);
+            saveLocalState();
+            updateUI();
+            successEl.textContent = '✅ Account created! Please verify your ID. Opening broker...';
+            setTimeout(() => { window.open(brokerData.link, '_blank'); }, 500);
+            setTimeout(() => { closeModal('signupModal'); }, 1500);
+        };
+
+        // ─── VERIFY ───
+        document.getElementById('verifySubmitBtn').addEventListener('click', function() {
+            window.handleVerify();
+        });
+
+        window.handleVerify = function() {
+            const broker = document.getElementById('verifyBroker').value;
+            const email = document.getElementById('verifyEmail').value.trim();
+            const accountId = document.getElementById('verifyAccountId').value.trim();
+            const errorEl = document.getElementById('verifyError');
+            const successEl = document.getElementById('verifySuccess');
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
+            if (!email || !accountId) { errorEl.textContent = '❌ Enter email and account ID'; return; }
+            const user = appState.users.find(u => u.email === email);
+            if (!user) { errorEl.textContent = '❌ User not found. Please sign up first.'; return; }
+            if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
+            if (user.verified) { errorEl.textContent = '✅ Already verified! You can login.'; return; }
+            if (user.broker !== broker) {
+                errorEl.textContent = '❌ Selected broker does not match your signup broker.';
+                return;
+            }
+            const existingPending = appState.verificationRequests?.find(req => req.userEmail === email && req.status ===
+                'pending');
+            if (existingPending) {
+                errorEl.textContent = '⏳ Verification already pending. Wait for admin.';
+                return;
+            }
+            const newRequest = {
+                userEmail: email,
+                accountId: accountId,
+                broker: broker,
+                status: 'pending',
+                date: new Date().toISOString(),
+                freeCredits: appState.offerCredits || 10
+            };
+            if (!appState.verificationRequests) appState.verificationRequests = [];
+            appState.verificationRequests.push(newRequest);
+            saveLocalState();
+            successEl.textContent = '✅ Verification request submitted! Please wait for admin approval.';
+            errorEl.textContent = '';
+            document.getElementById('verifyEmail').value = '';
+            document.getElementById('verifyAccountId').value = '';
+            document.getElementById('verifyBroker').value = '';
+        };
+
+        // ─── BUTTON LISTENERS ───
+        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+        document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
+
+        document.getElementById('signupBroker').addEventListener('change', function() {
+            const brokerName = this.value;
+            const infoDiv = document.getElementById('brokerInfo');
+            const broker = appState.brokers.find(b => b.name === brokerName);
+            if (broker) {
+                infoDiv.style.display = 'block';
+                document.getElementById('brokerAffiliateLink').textContent = broker.link;
+                document.getElementById('brokerMinDeposit').textContent = broker.minDeposit;
+                document.getElementById('brokerRules').textContent = '📋 ' + broker.rules;
+            } else {
+                infoDiv.style.display = 'none';
             }
         });
-        container.appendChild(a);
-    });
-}
 
-// ---------- Firebase Listener ----------
-onValue(dbRef, (snapshot) => {
-    isFirebaseConnected = true;
-    document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
-    const val = snapshot.val();
-    if (val) {
-        const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
-        appState = { ...appState, ...val };
-        if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
-        if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') applyLogo(val.logoBase64);
-        if (val.socialMedia !== undefined) {
-            appState.socialMedia = val.socialMedia;
-            localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
-            renderSocialMedia();
-        }
-        if (currentUserEmail) {
-            const found = appState.users.find(u => u.email === currentUserEmail);
-            if (found) appState.currentUser = found;
-            else appState.currentUser = null;
-        }
-        saveLocalState();
-        updateUI();
-    }
-}, (error) => {
-    isFirebaseConnected = false;
-    document.getElementById('firebaseStatusDot').className = 'fb-status-dot red';
-    console.error('Firebase Error:', error);
-});
+        // ─── ADMIN ACCESS (Logo Click) ───
+        let logoClickCounter = 0;
+        document.getElementById('logoIcon').addEventListener('click', function(e) {
+            e.preventDefault();
+            logoClickCounter++;
+            const requiredClicks = appState.logoClickCount || 2;
+            if (logoClickCounter >= requiredClicks) {
+                logoClickCounter = 0;
+                window.location.href = 'admin.html';
+            }
+        });
+        document.getElementById('logoImage').addEventListener('click', function(e) {
+            e.preventDefault();
+            logoClickCounter++;
+            const requiredClicks = appState.logoClickCount || 2;
+            if (logoClickCounter >= requiredClicks) {
+                logoClickCounter = 0;
+                window.location.href = 'admin.html';
+            }
+        });
+        document.getElementById('brandSection').addEventListener('click', function(e) {
+            if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+                logoClickCounter++;
+                const requiredClicks = appState.logoClickCount || 2;
+                if (logoClickCounter >= requiredClicks) {
+                    logoClickCounter = 0;
+                    window.location.href = 'admin.html';
+                }
+            }
+        });
 
-function saveLocalState() {
-    localStorage.setItem('brt_data', JSON.stringify(appState));
-    if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
-}
+        // ─── INIT ───
+        loadLocalState();
+        console.log('🏠 Home Page Loaded');
+        console.log('🔑 Admin Password: ' + appState.password);
+        console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
+        console.log('✅ Only Admin Approved/Added users can login.');
+        console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
+        console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' :
+            'Logged Out ❌'));
 
-function loadLocalState() {
-    const local = localStorage.getItem('brt_data');
-    if (local) {
-        try {
-            const parsed = JSON.parse(local);
-            appState = { ...appState, ...parsed };
-        } catch(e) { console.error(e); }
-    }
-    const logoData = localStorage.getItem('brt_logo');
-    if (logoData) applyLogo(logoData);
-    const socialData = localStorage.getItem('brt_social');
-    if (socialData) {
-        try {
-            const parsed = JSON.parse(socialData);
-            if (parsed.length > 0) appState.socialMedia = parsed;
-        } catch(e) {}
-    }
-    updateUI();
-    renderSocialMedia();
-    checkAdminSession();
-}
-
-function applyLogo(logoBase64) {
-    const logoIcon = document.getElementById('logoIcon');
-    const logoImg = document.getElementById('logoImage');
-    if (logoBase64) {
-        logoIcon.style.display = 'none';
-        logoImg.src = logoBase64;
-        logoImg.style.display = 'block';
-    } else {
-        logoIcon.style.display = 'block';
-        logoImg.style.display = 'none';
-    }
-}
-
-function updateUI() {
-    document.getElementById('offerCreditsDisplay').textContent = appState.offerCredits || 10;
-    const brokerSelect = document.getElementById('signupBroker');
-    brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
-    appState.brokers.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.name;
-        opt.textContent = b.name;
-        brokerSelect.appendChild(opt);
-    });
-    const verifyBroker = document.getElementById('verifyBroker');
-    verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
-    appState.brokers.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.name;
-        opt.textContent = b.name;
-        verifyBroker.appendChild(opt);
-    });
-}
-
-// ---------- Modal Helpers ----------
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-window.closeModal = closeModal;
-window.openModal = openModal;
-
-// ---------- Offer Banner ----------
-document.getElementById('offerBanner').addEventListener('click', function() {
-    const signupCard = document.getElementById('signupCard');
-    signupCard.classList.remove('highlight');
-    void signupCard.offsetWidth;
-    signupCard.classList.add('highlight');
-    setTimeout(() => { openModal('signupModal'); }, 500);
-});
-
-// ---------- LOGIN ----------
-window.handleLogin = function() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const accountId = document.getElementById('loginAccountId').value.trim();
-    const errorEl = document.getElementById('loginError');
-    
-    if (!email || !accountId) {
-        errorEl.textContent = '❌ Enter email and account ID';
-        return;
-    }
-
-    const user = appState.users.find(u => u.email === email && u.accountId === accountId);
-    if (!user) {
-        errorEl.textContent = '❌ User not found. Please sign up first.';
-        return;
-    }
-
-    if (user.blocked) {
-        errorEl.textContent = '🚫 Account blocked. Contact admin.';
-        return;
-    }
-
-    if (!user.verified) {
-        errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
-        return;
-    }
-
-    if (!user.deposit || user.deposit < user.requiredDeposit) {
-        errorEl.textContent = '⚠️ Complete minimum deposit of ₹' + user.requiredDeposit;
-        return;
-    }
-
-    appState.currentUser = user;
-    saveLocalState();
-    closeModal('loginModal');
-    errorEl.textContent = '';
-    window.location.href = 'dashboard.html';
-};
-
-// ---------- Signup ----------
-window.handleSignup = function() {
-    const broker = document.getElementById('signupBroker').value;
-    const email = document.getElementById('signupEmail').value.trim();
-    const errorEl = document.getElementById('signupError');
-    const successEl = document.getElementById('signupSuccess');
-    errorEl.textContent = ''; successEl.textContent = '';
-    if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
-    if (!email) { errorEl.textContent = '❌ Enter email'; return; }
-    const brokerData = appState.brokers.find(b => b.name === broker);
-    if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
-    if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
-    const newUser = {
-        email, accountId: '', broker, name: email.split('@')[0],
-        verified: false,
-        deposit: 0, requiredDeposit: brokerData.minDeposit,
-        credits: 0, signalsUsed: 0, todayUsed: 0, blocked: false,
-        registeredAt: new Date().toISOString()
-    };
-    appState.users.push(newUser);
-    saveLocalState();
-    updateUI();
-    successEl.textContent = '✅ Account created! Please verify your ID. Opening broker...';
-    setTimeout(() => { window.open(brokerData.link, '_blank'); }, 500);
-    setTimeout(() => { closeModal('signupModal'); }, 1500);
-};
-
-// ---------- Verify ----------
-document.getElementById('verifySubmitBtn').addEventListener('click', function() {
-    window.handleVerify();
-});
-
-window.handleVerify = function() {
-    const broker = document.getElementById('verifyBroker').value;
-    const email = document.getElementById('verifyEmail').value.trim();
-    const accountId = document.getElementById('verifyAccountId').value.trim();
-    const errorEl = document.getElementById('verifyError');
-    const successEl = document.getElementById('verifySuccess');
-    
-    errorEl.textContent = '';
-    successEl.textContent = '';
-
-    if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
-    if (!email || !accountId) { errorEl.textContent = '❌ Enter email and account ID'; return; }
-
-    const user = appState.users.find(u => u.email === email);
-    if (!user) { errorEl.textContent = '❌ User not found. Please sign up first.'; return; }
-    if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
-    if (user.verified) { errorEl.textContent = '✅ Already verified! You can login.'; return; }
-
-    if (user.broker !== broker) {
-        errorEl.textContent = '❌ Selected broker does not match your signup broker.';
-        return;
-    }
-
-    const existingPending = appState.verificationRequests?.find(req => req.userEmail === email && req.status === 'pending');
-    if (existingPending) {
-        errorEl.textContent = '⏳ Verification already pending. Wait for admin.';
-        return;
-    }
-
-    const newRequest = { 
-        userEmail: email, 
-        accountId: accountId, 
-        broker: broker, 
-        status: 'pending', 
-        date: new Date().toISOString(),
-        freeCredits: appState.offerCredits || 10
-    };
-    if (!appState.verificationRequests) appState.verificationRequests = [];
-    appState.verificationRequests.push(newRequest);
-    saveLocalState();
-
-    successEl.textContent = '✅ Verification request submitted! Please wait for admin approval.';
-    errorEl.textContent = '';
-    document.getElementById('verifyEmail').value = '';
-    document.getElementById('verifyAccountId').value = '';
-    document.getElementById('verifyBroker').value = '';
-};
-
-// ---------- Button Listeners ----------
-document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
-document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
-
-document.getElementById('signupBroker').addEventListener('change', function() {
-    const brokerName = this.value;
-    const infoDiv = document.getElementById('brokerInfo');
-    const broker = appState.brokers.find(b => b.name === brokerName);
-    if (broker) {
-        infoDiv.style.display = 'block';
-        document.getElementById('brokerAffiliateLink').textContent = broker.link;
-        document.getElementById('brokerMinDeposit').textContent = broker.minDeposit;
-        document.getElementById('brokerRules').textContent = '📋 ' + broker.rules;
-    } else {
-        infoDiv.style.display = 'none';
-    }
-});
-
-// ---------- Admin Access (Logo Click) ----------
-let logoClickCounter = 0;
-document.getElementById('logoIcon').addEventListener('click', function(e) {
-    e.preventDefault();
-    logoClickCounter++;
-    const requiredClicks = appState.logoClickCount || 2;
-    if (logoClickCounter >= requiredClicks) {
-        logoClickCounter = 0;
-        window.location.href = 'admin.html';
-    }
-});
-document.getElementById('logoImage').addEventListener('click', function(e) {
-    e.preventDefault();
-    logoClickCounter++;
-    const requiredClicks = appState.logoClickCount || 2;
-    if (logoClickCounter >= requiredClicks) {
-        logoClickCounter = 0;
-        window.location.href = 'admin.html';
-    }
-});
-document.getElementById('brandSection').addEventListener('click', function(e) {
-    if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-        logoClickCounter++;
-        const requiredClicks = appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) {
-            logoClickCounter = 0;
-            window.location.href = 'admin.html';
-        }
-    }
-});
-
-// ---------- Init ----------
-loadLocalState();
-console.log('🏠 Home Page Loaded');
-console.log('🔑 Admin Password: ' + appState.password);
-console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
-console.log('✅ Only Admin Approved/Added users can login.');
-console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
-console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' : 'Logged Out ❌'));
-</script>
+        // ─── KEYBOARD SHORTCUT: ESC to close modals ───
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
+            }
+        });
+    </script>
 </body>
 </html>
