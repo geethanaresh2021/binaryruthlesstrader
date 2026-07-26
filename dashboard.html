@@ -41,6 +41,7 @@
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
         /* ─── RED CONTAINER ─── compact ─── */
+        /* HEIGHT: auto, PADDING: 4px 12px 3px 12px, BORDER-RADIUS: 18px */
         .red-container {
             background: rgba(255, 0, 51, 0.04);
             border: 1px solid rgba(255, 0, 51, 0.15);
@@ -191,8 +192,34 @@
         .user-info-container .user-actions .btn-green { background: #00FF66; color: #000; }
         .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
         .btn-chat-wrapper { position: relative; display: inline-block; }
-        .chat-badge { position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; background: #FF0033; border-radius: 50%; border: 2px solid #000; display: none; }
-        .chat-badge.active { display: block; animation: pulseRed 1s ease-in-out infinite; }
+        .chat-badge { 
+            position: absolute; 
+            top: -6px; 
+            right: -6px; 
+            background: #FF0033; 
+            border-radius: 50%; 
+            border: 2px solid #000; 
+            display: none;
+            color: #fff;
+            font-size: 0.5rem;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            align-items: center;
+            justify-content: center;
+            line-height: 16px;
+            text-align: center;
+        }
+        .chat-badge.active { display: flex; animation: pulseRed 1s ease-in-out infinite; }
+        .chat-badge.has-count {
+            border-radius: 10px;
+            min-width: 18px;
+            height: 18px;
+            font-size: 0.45rem;
+            line-height: 18px;
+            padding: 0 5px;
+        }
         
         .credits-container {
             background: rgba(0,255,102,0.02); border: 1px solid rgba(0,255,102,0.06);
@@ -216,7 +243,7 @@
         }
         .tool-btn {
             width: 100%;
-            padding: 12px 16px;
+            padding: 16px 20px;
             background: rgba(255, 215, 0, 0.04);
             border: 1.5px solid rgba(255, 215, 0, 0.12);
             border-radius: 10px;
@@ -227,7 +254,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 60px;
+            min-height: 70px;
             position: relative;
             overflow: hidden;
         }
@@ -250,7 +277,7 @@
         .tool-btn:active { transform: scale(0.97); }
         .tool-btn .tool-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.7rem, 1.1vw, 0.95rem);
+            font-size: clamp(0.95rem, 1.5vw, 1.3rem);
             color: #ffffff;
             font-weight: 700;
             letter-spacing: 1px;
@@ -259,19 +286,19 @@
         }
         .tool-btn .tool-subname {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(0.45rem, 0.7vw, 0.6rem);
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
             color: #FF0033;
-            margin-top: 2px;
+            margin-top: 3px;
             font-weight: 400;
             letter-spacing: 0.5px;
             position: relative;
             z-index: 1;
         }
         .tool-btn .tool-sticker {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             display: inline-block;
             animation: stickerFloat 3s ease-in-out infinite;
-            margin-right: 6px;
+            margin-right: 8px;
             position: relative;
             z-index: 1;
         }
@@ -337,6 +364,46 @@
             height: 100%;
             border: none;
             background: #0a0a0a;
+        }
+        
+        /* ─── LOGO GLOW (Dashboard) ─── */
+        .logo-glow-dash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: clamp(120px, 24vw, 260px);
+            height: clamp(120px, 24vw, 260px);
+            transform: translate(-50%, -50%) scale(0.5);
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.55) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(28px);
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .logo-glow-dash.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            animation: glowFlashDash 0.7s ease forwards;
+        }
+        @keyframes glowFlashDash {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.4);
+            }
+            30% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
         }
         
         .features-section { padding: 4px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
@@ -460,9 +527,10 @@
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
             .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
-            .tool-btn { padding: 10px 14px; min-height: 50px; }
-            .tool-btn .tool-name { font-size: 0.6rem; }
-            .tool-btn .tool-subname { font-size: 0.4rem; }
+            .tool-btn { padding: 14px 16px; min-height: 60px; }
+            .tool-btn .tool-name { font-size: 0.8rem; }
+            .tool-btn .tool-subname { font-size: 0.5rem; }
+            .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
         }
         @media (max-width: 480px) {
             .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
@@ -480,9 +548,10 @@
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
-            .tool-btn { padding: 8px 12px; min-height: 44px; }
-            .tool-btn .tool-name { font-size: 0.55rem; }
-            .tool-btn .tool-subname { font-size: 0.35rem; }
+            .tool-btn { padding: 12px 14px; min-height: 55px; }
+            .tool-btn .tool-name { font-size: 0.7rem; }
+            .tool-btn .tool-subname { font-size: 0.45rem; }
+            .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
         }
         
         /* ─── CURSOR GLOW ─── */
@@ -539,9 +608,12 @@
             </div>
             
             <!-- User Logout Button -->
-            <button class="user-logout-btn" id="userLogoutBtn">🚪 Logout</button>
+            <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
             
             <div class="brand-section" id="brandSection">
+                <!-- Logo Glow for Dashboard -->
+                <div class="logo-glow-dash" id="logoGlowDash"></div>
+                
                 <span class="logo-icon" id="logoIcon">◆</span>
                 <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
                 <div class="brand-name">
@@ -711,7 +783,6 @@ function checkUserSession() {
         }
     } else {
         userLogoutBtn.classList.remove('visible');
-        // If no user and no admin, redirect to home
         const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
         if (!adminLoggedIn) {
             window.location.href = 'index.html';
@@ -792,7 +863,6 @@ function loadLocalState() {
     const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
-    // Check if user is logged in
     const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
     if (!userLoggedIn) {
         const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -801,12 +871,10 @@ function loadLocalState() {
             return;
         }
     } else {
-        // Find user
         if (!appState.currentUser) {
             window.location.href = 'index.html';
             return;
         }
-        // Check chat unread
         const key = getChatKey(appState.currentUser.email);
         const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
         const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
@@ -877,16 +945,12 @@ function updateChatBadge() {
     if (!badge) return;
     if (chatUnreadCount > 0) {
         badge.classList.add('active');
+        badge.classList.add('has-count');
         badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
-        badge.style.width = 'auto';
-        badge.style.padding = '0 4px';
-        badge.style.fontSize = '0.35rem';
-        badge.style.borderRadius = '10px';
-        badge.style.minWidth = '14px';
-        badge.style.height = '14px';
-        badge.style.display = 'block';
+        badge.style.display = 'flex';
     } else {
         badge.classList.remove('active');
+        badge.classList.remove('has-count');
         badge.style.display = 'none';
     }
 }
@@ -897,7 +961,6 @@ function renderChatMessages() {
     if (msgs.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:8px;">No messages yet</div>'; return; }
     msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'admin' && !c.read) c.read = true; });
     container.scrollTop = container.scrollHeight; saveLocalState();
-    // Reset unread count
     chatUnreadCount = 0;
     updateChatBadge();
 }
@@ -990,6 +1053,56 @@ document.getElementById('brandSection').addEventListener('click', function(e) {
         logoClickCounter++; const requiredClicks = appState.logoClickCount || 2;
         if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
     }
+});
+
+// ─── GLOBAL CLICK: Logo glow + zoom in/out (DASHBOARD) ───
+const logoGlowDash = document.getElementById('logoGlowDash');
+
+document.addEventListener('click', function(e) {
+    // Ignore clicks inside modals or admin nav
+    if (e.target.closest('.overlay')) return;
+    if (e.target.closest('.modal')) return;
+    if (e.target.closest('.admin-nav-bar')) return;
+    if (e.target.closest('.user-logout-btn')) return;
+    if (e.target.closest('.tool-btn')) return;
+    if (e.target.closest('.dash-main-btn')) return;
+
+    // ── Trigger logo glow ──
+    logoGlowDash.classList.remove('active');
+    void logoGlowDash.offsetWidth;
+    logoGlowDash.classList.add('active');
+    setTimeout(() => {
+        logoGlowDash.classList.remove('active');
+    }, 800);
+
+    // ── Logo zoom in & Brand name zoom out ──
+    const logoIcon = document.getElementById('logoIcon');
+    const logoImg = document.getElementById('logoImage');
+    const brandName = document.querySelector('.brand-name');
+
+    if (logoIcon.style.display !== 'none') {
+        logoIcon.style.animation = 'none';
+        void logoIcon.offsetWidth;
+        logoIcon.style.animation = 'zoomInSlow 0.7s ease forwards';
+    }
+    if (logoImg.style.display !== 'none') {
+        logoImg.style.animation = 'none';
+        void logoImg.offsetWidth;
+        logoImg.style.animation = 'zoomInSlow 0.7s ease forwards';
+    }
+    brandName.style.animation = 'none';
+    void brandName.offsetWidth;
+    brandName.style.animation = 'zoomOutSlow 0.7s ease forwards';
+
+    setTimeout(() => {
+        if (logoIcon.style.display !== 'none') {
+            logoIcon.style.animation = '';
+        }
+        if (logoImg.style.display !== 'none') {
+            logoImg.style.animation = '';
+        }
+        brandName.style.animation = '';
+    }, 800);
 });
 
 document.addEventListener('keydown', (e) => {
