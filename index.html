@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader</title>
+    <title>Binary Ruthless Trader - Home</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <script type="importmap">
         {
@@ -23,953 +21,117 @@
     </script>
     
     <style>
+        /* ===== All styles from previous home page ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            background: #000;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow-y: auto;
-            overflow-x: hidden;
-            touch-action: manipulation;
-        }
-        
-        input, select, button, textarea {
-            font-size: 16px !important;
-            -webkit-text-size-adjust: 100% !important;
-            -ms-text-size-adjust: 100% !important;
-        }
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-        }
-        
-        .app {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%);
-            position: relative;
-        }
-        
-        .scroll-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 0 20px;
-        }
-        
-        /* RED CONTAINER */
-        .red-container {
-            background: rgba(255, 0, 51, 0.04);
-            border: 1px solid rgba(255, 0, 51, 0.15);
-            border-radius: 18px;
-            padding: 10px 20px 8px;
-            margin: 8px 0 6px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .red-container:hover {
-            border-color: rgba(255, 0, 51, 0.3);
-            box-shadow: 0 0 40px rgba(255, 0, 51, 0.05);
-        }
-        
-        .fb-status-dot {
-            position: absolute;
-            top: 10px;
-            left: 14px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-        .fb-status-dot.green {
-            background: #00FF66;
-            box-shadow: 0 0 15px rgba(0,255,102,0.5);
-        }
-        .fb-status-dot.red {
-            background: #FF0033;
-            box-shadow: 0 0 15px rgba(255,0,51,0.5);
-            animation: pulseRed 1.5s ease-in-out infinite;
-        }
+        html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
+        input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
+        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%); position: relative; }
+        .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; }
+        .red-container { background: rgba(255, 0, 51, 0.04); border: 1px solid rgba(255, 0, 51, 0.15); border-radius: 18px; padding: 10px 20px 8px; margin: 8px 0 6px; transition: all 0.3s ease; position: relative; }
+        .red-container:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 0 40px rgba(255, 0, 51, 0.05); }
+        .fb-status-dot { position: absolute; top: 10px; left: 14px; width: 10px; height: 10px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 2; }
+        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 15px rgba(0,255,102,0.5); }
+        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 15px rgba(255,0,51,0.5); animation: pulseRed 1.5s ease-in-out infinite; }
         @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        
-        .brand-section {
-            text-align: center;
-            padding: 2px 0;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .brand-section { text-align: center; padding: 2px 0; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         .brand-section:active .logo-icon { animation: zoomIn 0.4s ease; }
         .brand-section:active .logo-img { animation: zoomIn 0.4s ease; }
         .brand-section:active .brand-name { animation: zoomOut 0.4s ease; }
-        
         @keyframes zoomIn { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
         @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.75); } 100% { transform: scale(1); } }
-        
-        .zoom-trigger:active .logo-icon { animation: zoomIn 0.4s ease; }
-        .zoom-trigger:active .logo-img { animation: zoomIn 0.4s ease; }
-        .zoom-trigger:active .brand-name { animation: zoomOut 0.4s ease; }
-        
-        .logo-icon {
-            font-size: clamp(3.5rem, 6vw, 5.5rem);
-            color: #FF0033;
-            text-shadow: 0 0 60px rgba(255,0,51,0.3);
-            animation: pulseLogo 3s ease-in-out infinite;
-            display: block;
-            line-height: 1;
-        }
-        .logo-img {
-            max-height: clamp(3.5rem, 6vw, 5.5rem);
-            max-width: 250px;
-            object-fit: contain;
-            display: none;
-            margin: 0 auto;
-        }
+        .logo-icon { font-size: clamp(3.5rem, 6vw, 5.5rem); color: #FF0033; text-shadow: 0 0 60px rgba(255,0,51,0.3); animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1; }
+        .logo-img { max-height: clamp(3.5rem, 6vw, 5.5rem); max-width: 250px; object-fit: contain; display: none; margin: 0 auto; }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.85; } }
-        
-        .brand-name {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: clamp(1.6rem, 4vw, 3.8rem);
-            letter-spacing: 3px;
-            line-height: 1.1;
-            white-space: nowrap;
-        }
+        .brand-name { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 4vw, 3.8rem); letter-spacing: 3px; line-height: 1.1; white-space: nowrap; }
         .brand-name .binary { color: #fff; }
         .brand-name .ruthless { color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.3); }
         .brand-name .trader { color: #fff; }
         .brand-tagline { color: #888; font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-top: 2px; }
-        
-        /* Logout Button - Top Right inside Red Container */
-        .logout-btn-top {
-            position: absolute;
-            top: 10px;
-            right: 14px;
-            padding: 3px 12px;
-            background: rgba(255,0,51,0.08);
-            border: 1px solid rgba(255,0,51,0.15);
-            border-radius: 12px;
-            color: #FF0033;
-            font-size: 0.5rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            z-index: 5;
-            display: none;
-        }
-        .logout-btn-top:hover {
-            background: rgba(255,0,51,0.15);
-            box-shadow: 0 0 20px rgba(255,0,51,0.05);
-        }
-        .logout-btn-top:active { transform: scale(0.95); }
-        .logout-btn-top.visible { display: block; }
-        
-        @media (max-width: 768px) {
-            .logout-btn-top { top: 8px; right: 10px; font-size: 0.45rem; padding: 2px 10px; }
-        }
-        @media (max-width: 480px) {
-            .logout-btn-top { top: 6px; right: 8px; font-size: 0.4rem; padding: 2px 8px; }
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            margin-top: 6px;
-            flex-wrap: wrap;
-        }
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,0,51,0.1);
-            color: #888;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
+        .social-icons { display: flex; gap: 14px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
+        .social-icons a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,0,51,0.1); color: #888; font-size: 0.85rem; text-decoration: none; transition: all 0.3s ease; }
         .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px); }
-        .social-icons a.telegram:hover { color: #0088cc; border-color: #0088cc; }
-        .social-icons a.instagram:hover { color: #E4405F; border-color: #E4405F; }
-        .social-icons a.youtube:hover { color: #FF0000; border-color: #FF0000; }
-        .social-icons a.twitter:hover { color: #1DA1F2; border-color: #1DA1F2; }
-        
-        /* OFFER BANNER */
-        .offer-banner {
-            background: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03));
-            border: 1.5px solid rgba(255,215,0,0.12);
-            border-radius: 14px;
-            padding: 10px 18px;
-            text-align: center;
-            margin: 2px 0 6px;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .offer-banner { background: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03)); border: 1.5px solid rgba(255,215,0,0.12); border-radius: 14px; padding: 10px 18px; text-align: center; margin: 2px 0 6px; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         .offer-banner:hover { border-color: #FFD700; box-shadow: 0 0 40px rgba(255,215,0,0.05); transform: scale(1.01); }
         .offer-banner:active { transform: scale(0.98); }
         .offer-banner h4 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 1.3vw, 1.1rem); letter-spacing: 1px; }
         .offer-banner p { color: #aaa; font-size: clamp(0.65rem, 0.9vw, 0.8rem); margin-top: 2px; }
         .offer-banner .highlight { color: #FF0033; font-weight: 700; }
         .offer-banner .click-hint { color: #666; font-size: 0.5rem; margin-top: 3px; letter-spacing: 1px; }
-        
-        /* USER BOXES */
-        .user-section {
-            display: flex;
-            gap: 16px;
-            padding: 6px 0;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .user-card {
-            flex: 1;
-            min-width: 170px;
-            max-width: 280px;
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
-            padding: 16px 14px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
+        .user-section { display: flex; gap: 16px; padding: 6px 0; flex-shrink: 0; flex-wrap: wrap; justify-content: center; }
+        .user-card { flex: 1; min-width: 170px; max-width: 280px; backdrop-filter: blur(8px); border-radius: 16px; padding: 16px 14px 20px; text-align: center; transition: all 0.3s ease; }
         .user-card:hover { transform: translateY(-2px); }
         .user-card .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
         .user-card h3 { font-size: 0.8rem; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         .user-card p { color: #888; font-size: 0.65rem; margin: 3px 0 8px; }
-        .user-card .btn {
-            width: 100%;
-            padding: 7px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.7rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
+        .user-card .btn { width: 100%; padding: 7px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
         .user-card .btn:active { transform: scale(0.97); }
-        
-        .user-card.login-card {
-            background: rgba(255, 0, 51, 0.06);
-            border: 1px solid rgba(255, 0, 51, 0.2);
-        }
+        .user-card.login-card { background: rgba(255, 0, 51, 0.06); border: 1px solid rgba(255, 0, 51, 0.2); }
         .user-card.login-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255,0,51,0.08); }
         .user-card.login-card h3 { color: #FF0033; }
         .user-card.login-card .btn-white { background: #fff; color: #000; }
-        .user-card.login-card .btn-white:hover { box-shadow: 0 0 30px rgba(255,255,255,0.1); transform: scale(1.02); }
-        
-        .user-card.signup-card {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+        .user-card.signup-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); }
         .user-card.signup-card:hover { border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 40px rgba(255,255,255,0.04); }
         .user-card.signup-card h3 { color: #fff; }
         .user-card.signup-card .btn-red { background: #FF0033; color: #fff; box-shadow: 0 0 20px rgba(255,0,51,0.15); }
-        .user-card.signup-card .btn-red:hover { box-shadow: 0 0 40px rgba(255,0,51,0.25); transform: scale(1.02); }
-        
-        .user-card.verify-card {
-            background: rgba(255, 0, 51, 0.06);
-            border: 1px solid rgba(255, 0, 51, 0.2);
-        }
+        .user-card.verify-card { background: rgba(255, 0, 51, 0.06); border: 1px solid rgba(255, 0, 51, 0.2); }
         .user-card.verify-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255,0,51,0.08); }
         .user-card.verify-card h3 { color: #FF0033; }
         .user-card.verify-card .btn-white { background: #fff; color: #000; }
-        .user-card.verify-card .btn-white:hover { box-shadow: 0 0 30px rgba(255,255,255,0.1); transform: scale(1.02); }
-        
-        .user-card.highlight {
-            border-color: #FFD700 !important;
-            box-shadow: 0 0 60px rgba(255,215,0,0.08) !important;
-            animation: highlightPulse 0.8s ease 3;
-        }
+        .user-card.highlight { border-color: #FFD700 !important; box-shadow: 0 0 60px rgba(255,215,0,0.08) !important; animation: highlightPulse 0.8s ease 3; }
         @keyframes highlightPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-        
-        /* DASHBOARD */
-        .dash-user-info {
-            text-align: center;
-            padding: 3px 0;
-            font-size: 0.65rem;
-            color: #888;
-        }
-        .dash-user-info span { margin: 0 8px; }
-        
-        /* DASHBOARD MAIN BUTTON - BINARY RUTHLESS SIGNALS */
-        .dash-main-btn {
-            width: 100%;
-            padding: 14px 10px;
-            background: rgba(255,215,0,0.04);
-            border: 2px solid #FFD700;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            margin: 4px 0 6px 0;
-        }
-        .dash-main-btn:hover {
-            background: rgba(255,215,0,0.08);
-            box-shadow: 0 0 40px rgba(255,215,0,0.05);
-            transform: scale(1.01);
-        }
-        .dash-main-btn:active { transform: scale(0.97); }
-        .dash-main-btn .main-title {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: clamp(1.2rem, 2.5vw, 2.2rem);
-            letter-spacing: 2px;
-        }
-        .dash-main-btn .main-title .binary { color: #fff; }
-        .dash-main-btn .main-title .ruthless { color: #FF0033; text-shadow: 0 0 20px rgba(255,0,51,0.2); }
-        .dash-main-btn .main-title .signals { color: #ffffff; }
-        .dash-main-btn .sub-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.5rem, 0.8vw, 0.65rem);
-            color: #FFD700;
-            letter-spacing: 2px;
-            margin-top: 4px;
-            opacity: 0.7;
-        }
-        
-        /* Dashboard Cards - Below BINARY RUTHLESS SIGNALS */
-        .dash-cards-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 4px 0 8px 0;
-        }
-        .dash-card-small {
-            flex: 1;
-            min-width: 80px;
-            max-width: 160px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 10px;
-            padding: 8px 6px;
-            text-align: center;
-            border: 1px solid rgba(255,0,51,0.04);
-            transition: all 0.3s ease;
-        }
-        .dash-card-small:hover {
-            border-color: rgba(255,0,51,0.12);
-            transform: translateY(-2px);
-        }
-        .dash-card-small .icon { font-size: 1rem; color: #FFD700; }
-        .dash-card-small .value { font-size: 0.9rem; font-weight: 700; color: #FFD700; font-family: 'Roboto Mono', monospace; }
-        .dash-card-small .label { font-size: 0.45rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .dash-card-small.recharge-card {
-            background: rgba(255,215,0,0.03);
-            border: 1px solid rgba(255,215,0,0.08);
-            cursor: pointer;
-        }
-        .dash-card-small.recharge-card:hover {
-            border-color: #FFD700;
-            box-shadow: 0 0 30px rgba(255,215,0,0.05);
-        }
-        .dash-card-small.history-card {
-            background: rgba(0,255,102,0.02);
-            border: 1px solid rgba(0,255,102,0.06);
-            cursor: pointer;
-        }
-        .dash-card-small.history-card:hover {
-            border-color: #00FF66;
-            box-shadow: 0 0 30px rgba(0,255,102,0.03);
-        }
-        
-        /* PAYMENT HISTORY CONTAINER */
-        .payment-history-container {
-            display: none;
-            margin: 4px 0;
-            padding: 8px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 10px;
-            border: 1px solid rgba(0,255,102,0.08);
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .payment-history-container.active { display: block; }
-        .payment-history-container::-webkit-scrollbar { width: 3px; }
-        .payment-history-container::-webkit-scrollbar-thumb { background: #00FF66; border-radius: 3px; }
-        .payment-history-container .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.5rem;
-            align-items: center;
-        }
-        .payment-history-container .history-item .status-success { color: #00FF66; }
-        .payment-history-container .history-item .status-failed { color: #FF0033; }
-        .payment-history-container .history-item .status-pending { color: #FFD700; }
-        .payment-history-container .history-item .amount { color: #FFD700; }
-        .payment-history-container .history-item .date { color: #666; font-size: 0.4rem; }
-        .payment-history-container .history-empty {
-            text-align: center;
-            color: #666;
-            font-size: 0.5rem;
-            padding: 8px;
-        }
-        
-        /* BINARY RUTHLESS SIGNALS FULL SCREEN APP */
-        .signals-fullscreen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            padding: 10px;
-        }
-        .signals-fullscreen-overlay.active { display: flex; }
-        
-        .signals-fullscreen-header {
-            display: flex;
-            justify-content: flex-end;
-            padding: 4px 0;
-            flex-shrink: 0;
-        }
-        .signals-fullscreen-close {
-            font-size: 1.5rem;
-            color: #FF0033;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            padding: 4px 10px;
-        }
-        .signals-fullscreen-close:hover { transform: scale(1.2); text-shadow: 0 0 20px rgba(255,0,51,0.3); }
-        
-        .signals-fullscreen-content {
-            flex: 1;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255,215,0,0.1);
-        }
-        .signals-fullscreen-content iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #0a0a0a;
-        }
-        
-        /* FEATURES */
-        .features-section {
-            padding: 6px 0 4px;
-            border-top: 1px solid rgba(255,0,51,0.04);
-            border-bottom: 1px solid rgba(255,0,51,0.04);
-            flex-shrink: 0;
-            margin-top: 10px;
-        }
-        .features-title {
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+        .features-section { padding: 6px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 10px; }
+        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.65rem, 0.9vw, 0.9rem); font-weight: 700; margin-bottom: 4px; }
         .features-title .neon { color: #FF0033; }
         .features-title .gold { color: #FFD700; }
-        
-        .features-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 4px 2px 8px;
-            scrollbar-width: thin;
-            scrollbar-color: #FF0033 transparent;
-            justify-content: center;
-        }
+        .features-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; }
         .features-scroll::-webkit-scrollbar { height: 3px; }
         .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        
-        .feature-card {
-            flex: 0 0 100px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-            padding: 8px 6px;
-            border: 1px solid rgba(255,0,51,0.04);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
+        .feature-card { flex: 0 0 100px; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 8px 6px; border: 1px solid rgba(255,0,51,0.04); text-align: center; transition: all 0.3s ease; }
         .feature-card:hover { border-color: #FF0033; }
         .feature-card .icon { font-size: 1.2rem; display: block; }
         .feature-card h4 { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
         .feature-card p { color: #666; font-size: 0.45rem; margin-top: 2px; }
-        
-        /* STATS */
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 4px 0;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-        }
+        .stats-row { display: flex; justify-content: center; gap: 24px; padding: 4px 0; flex-shrink: 0; flex-wrap: wrap; }
         .stat-item { text-align: center; }
         .stat-item .number { font-size: clamp(0.85rem, 1.2vw, 1.1rem); font-weight: 700; font-family: 'Roboto Mono', monospace; }
         .stat-item .number.red { color: #FF0033; }
         .stat-item .number.gold { color: #FFD700; }
         .stat-item .label { color: #666; font-size: 0.5rem; letter-spacing: 1px; text-transform: uppercase; }
-        
-        /* FOOTER */
-        .footer {
-            padding: 4px 0 8px;
-            text-align: center;
-            border-top: 1px solid rgba(255,0,51,0.04);
-            flex-shrink: 0;
-            margin-top: 6px;
-        }
+        .footer { padding: 4px 0 8px; text-align: center; border-top: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
         .footer p { color: #444; font-size: 0.5rem; letter-spacing: 1px; }
         .footer .brand { color: #FF0033; font-weight: 700; }
-        
-        /* OVERLAYS */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 16px;
-            backdrop-filter: blur(10px);
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(10px); }
         .overlay.active { display: flex; }
-        
-        .modal {
-            background: rgba(10,10,10,0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid #FF0033;
-            border-radius: 18px;
-            padding: 22px 18px;
-            width: 100%;
-            max-width: 520px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 0 60px rgba(255,0,51,0.06);
-        }
+        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 22px 18px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); }
         .modal::-webkit-scrollbar { width: 4px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 14px;
-            font-size: 1.2rem;
-            color: #FF0033;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: all 0.3s ease;
-        }
+        .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
         .modal-close:hover { transform: scale(1.2) rotate(90deg); }
-        
-        .modal h2 {
-            color: #FFD700;
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            letter-spacing: 2px;
-        }
-        .modal label {
-            display: block;
-            font-size: 0.55rem;
-            color: #FFD700;
-            margin: 6px 0 3px;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .modal input, .modal select, .modal textarea {
-            width: 100%;
-            padding: 7px 10px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,0,51,0.1);
-            border-radius: 8px;
-            color: #FF0033;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        .modal input:focus, .modal select:focus, .modal textarea:focus {
-            border-color: #FF0033;
-            box-shadow: 0 0 20px rgba(255,0,51,0.03);
-        }
+        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; margin-bottom: 12px; letter-spacing: 2px; }
+        .modal label { display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: all 0.3s ease; }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
         .modal textarea { height: 50px; resize: vertical; font-size: 0.7rem; }
-        .modal .btn-submit {
-            width: 100%;
-            padding: 9px;
-            margin-top: 10px;
-            border-radius: 30px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-        }
+        .modal .btn-submit { width: 100%; padding: 9px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.75rem; }
         .modal .btn-submit:hover { transform: scale(1.02); }
         .modal .btn-submit:active { transform: scale(0.97); }
-        
-        .modal .btn-submit.hidden-btn { display: none; }
-        .modal .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
-        
         .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; min-height: 16px; }
         .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; font-family: 'Roboto Mono', monospace; }
-        
-        .search-box {
-            width: 100%;
-            padding: 6px 10px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,0,51,0.1);
-            border-radius: 8px;
-            color: #00FF66;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.7rem;
-            outline: none;
-            margin-bottom: 6px;
-        }
-        .search-box:focus { border-color: #FF0033; }
-        
-        .user-detail-card {
-            background: rgba(255,215,0,0.03);
-            border: 1px solid rgba(255,215,0,0.08);
-            border-radius: 8px;
-            padding: 8px;
-            margin-top: 6px;
-        }
-        .user-detail-card .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
-            font-size: 0.6rem;
-            color: #aaa;
-        }
-        .user-detail-card .row .label { color: #888; }
-        .user-detail-card .row .value { color: #FFD700; }
-        
-        /* Credit Selector */
-        .credit-selector {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 6px 0;
-        }
-        .credit-selector button {
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,0,51,0.12);
-            background: rgba(255,0,51,0.02);
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-        }
-        .credit-selector button:hover { border-color: #FF0033; background: rgba(255,0,51,0.05); }
-        .credit-selector button.active { border-color: #FF0033; background: #FF0033; color: #fff; }
-        
-        /* QR Container */
-        .qr-container {
-            text-align: center;
-            padding: 10px;
-            background: #fff;
-            border-radius: 12px;
-            margin: 6px 0;
-            position: relative;
-            display: none;
-        }
-        .qr-container.active { display: block; }
-        .qr-container canvas { max-width: 200px; max-height: 200px; }
-        .qr-timer {
-            text-align: center;
-            font-size: 0.6rem;
-            color: #FFD700;
-            margin-top: 4px;
-            font-family: 'Roboto Mono', monospace;
-            display: none;
-        }
-        .qr-timer.active { display: block; }
-        .qr-timer .time { color: #FF0033; font-weight: 700; }
-        .qr-expired {
-            text-align: center;
-            padding: 20px;
-            color: #FF0033;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            display: none;
-        }
-        .qr-expired.active { display: block; }
-        .qr-expired .btn-new {
-            margin-top: 8px;
-            padding: 6px 20px;
-            background: #FFD700;
-            color: #000;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.6rem;
-            font-family: 'Inter', sans-serif;
-        }
-        .qr-expired .btn-new:hover { box-shadow: 0 0 30px rgba(255,215,0,0.2); }
-        
-        .qr-placeholder {
-            text-align: center;
-            color: #666;
-            font-size: 0.5rem;
-            padding: 10px;
-        }
-        
-        /* Payment Status */
-        .payment-status {
-            text-align: center;
-            padding: 8px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            margin-top: 6px;
-            display: none;
-        }
-        .payment-status.success {
-            display: block;
-            background: rgba(0,255,102,0.1);
-            color: #00FF66;
-            border: 1px solid rgba(0,255,102,0.2);
-        }
-        .payment-status.failed {
-            display: block;
-            background: rgba(255,0,51,0.1);
-            color: #FF0033;
-            border: 1px solid rgba(255,0,51,0.2);
-        }
-        .payment-status.pending {
-            display: block;
-            background: rgba(255,215,0,0.1);
-            color: #FFD700;
-            border: 1px solid rgba(255,215,0,0.2);
-        }
-        
-        /* ADMIN PANEL */
-        .admin-section {
-            border: 1px solid rgba(255,0,51,0.08);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-            background: rgba(255,255,255,0.01);
-        }
-        .admin-section h4 {
-            color: #FFD700;
-            font-size: 0.65rem;
-            margin-bottom: 6px;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-        }
-        .admin-section .field-group {
-            margin-bottom: 4px;
-        }
-        .admin-section .field-group label {
-            font-size: 0.5rem;
-            color: #888;
-            display: block;
-            margin-bottom: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .admin-section .field-group input,
-        .admin-section .field-group select,
-        .admin-section .field-group textarea {
-            width: 100%;
-            padding: 5px 8px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,0,51,0.1);
-            border-radius: 6px;
-            color: #00FF66;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.7rem;
-            outline: none;
-        }
-        .admin-section .field-group input:focus,
-        .admin-section .field-group select:focus,
-        .admin-section .field-group textarea:focus {
-            border-color: #FF0033;
-        }
-        .admin-section .field-group textarea { height: 50px; resize: vertical; }
-        
-        .admin-section .btn-save {
-            width: 100%;
-            padding: 6px;
-            margin-top: 4px;
-            border-radius: 6px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: #FFD700;
-            color: #000;
-        }
-        .admin-section .btn-save:hover { box-shadow: 0 0 30px rgba(255,215,0,0.2); transform: scale(1.02); }
-        .admin-section .btn-save:active { transform: scale(0.97); }
-        .admin-section .btn-danger {
-            background: #FF0033;
-            color: #fff;
-        }
-        .admin-section .btn-danger:hover { box-shadow: 0 0 30px rgba(255,0,51,0.2); }
-        .admin-section .btn-success {
-            background: #00FF66;
-            color: #000;
-        }
-        .admin-section .btn-success:hover { box-shadow: 0 0 30px rgba(0,255,102,0.2); }
-        
-        .admin-section .item-list {
-            max-height: 80px;
-            overflow-y: auto;
-            margin-top: 4px;
-            border: 1px solid rgba(255,0,51,0.05);
-            border-radius: 4px;
-            padding: 2px;
-        }
-        .admin-section .item-list::-webkit-scrollbar { width: 3px; }
-        .admin-section .item-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        
-        .admin-section .list-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.55rem;
-            align-items: center;
-        }
-        .admin-section .list-item .name { color: #FFD700; }
-        .admin-section .list-item .detail { color: #888; }
-        .admin-section .list-item .del-btn {
-            background: none;
-            border: none;
-            color: #FF0033;
-            cursor: pointer;
-            font-size: 0.6rem;
-        }
-        .admin-section .list-item .del-btn:hover { text-shadow: 0 0 10px rgba(255,0,51,0.3); }
-        
-        .admin-section .user-search-results {
-            max-height: 100px;
-            overflow-y: auto;
-            margin-top: 4px;
-        }
-        .admin-section .user-search-results .result-item {
-            padding: 4px 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            cursor: pointer;
-            font-size: 0.55rem;
-            display: flex;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-        .admin-section .user-search-results .result-item:hover {
-            background: rgba(255,0,51,0.05);
-        }
-        
-        .admin-section .user-detail-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 4px;
-        }
-        .admin-section .user-detail-actions .btn-action {
-            flex: 1;
-            min-width: 60px;
-            padding: 4px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        .admin-section .user-detail-actions .btn-action:hover { transform: scale(1.02); }
-        .admin-section .user-detail-actions .btn-action:active { transform: scale(0.97); }
-        .admin-section .user-detail-actions .btn-give { background: #00FF66; color: #000; }
-        .admin-section .user-detail-actions .btn-block { background: #FF0033; color: #fff; }
-        .admin-section .user-detail-actions .btn-remove { background: #FFD700; color: #000; }
-        
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .scroll-content { padding: 0 12px; }
-            .red-container { padding: 8px 14px 6px; }
-            .user-card { min-width: 100%; max-width: 100%; }
-            .user-section { flex-direction: column; gap: 8px; }
-            .feature-card { flex: 0 0 85px; padding: 6px 4px; }
-            .feature-card .icon { font-size: 1rem; }
-            .modal { padding: 16px 12px; max-width: 100%; }
-            .dash-cards-row { gap: 6px; }
-            .dash-card-small { min-width: 60px; padding: 6px 4px; }
-            .dash-card-small .value { font-size: 0.75rem; }
-            .dash-card-small .label { font-size: 0.4rem; }
-            .stats-row { gap: 12px; }
-            .dash-main-btn .main-title { font-size: clamp(1rem, 4vw, 1.6rem); }
-            .admin-section .user-detail-actions .btn-action { min-width: 50px; font-size: 0.45rem; }
-            .payment-history-container .history-item { font-size: 0.45rem; flex-wrap: wrap; }
-        }
-        @media (max-width: 480px) {
-            .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; }
-            .logo-icon { font-size: clamp(3rem, 12vw, 4rem); }
-            .logo-img { max-height: clamp(3rem, 12vw, 4rem); }
-            .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; }
-            .user-card .btn { font-size: 0.65rem; padding: 6px; }
-            .feature-card { flex: 0 0 75px; }
-            .feature-card h4 { font-size: 0.45rem; }
-            .dash-main-btn .main-title { font-size: 0.9rem; }
-            .dash-cards-row { gap: 4px; }
-            .dash-card-small { min-width: 50px; padding: 4px 3px; }
-            .dash-card-small .value { font-size: 0.65rem; }
-            .dash-card-small .label { font-size: 0.35rem; }
-            .dash-card-small .icon { font-size: 0.7rem; }
-        }
+        @media (max-width: 768px) { .scroll-content { padding: 0 12px; } .red-container { padding: 8px 14px 6px; } .user-card { min-width: 100%; max-width: 100%; } .user-section { flex-direction: column; gap: 8px; } .feature-card { flex: 0 0 85px; padding: 6px 4px; } .feature-card .icon { font-size: 1rem; } .modal { padding: 16px 12px; max-width: 100%; } .stats-row { gap: 12px; } }
+        @media (max-width: 480px) { .brand-name { font-size: clamp(1.2rem, 6vw, 1.8rem); letter-spacing: 0.5px; white-space: nowrap; } .logo-icon { font-size: clamp(3rem, 12vw, 4rem); } .logo-img { max-height: clamp(3rem, 12vw, 4rem); } .social-icons a { width: 26px; height: 26px; font-size: 0.7rem; } .user-card .btn { font-size: 0.65rem; padding: 6px; } .feature-card { flex: 0 0 75px; } .feature-card h4 { font-size: 0.45rem; } }
     </style>
 </head>
 <body>
 
 <div class="app zoom-trigger" id="mainApp">
     <div class="scroll-content">
-        
         <!-- RED CONTAINER -->
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-            
-            <!-- Logout Button - Top Right inside Red Container -->
-            <button class="logout-btn-top" id="logoutBtnTop">🚪 Logout</button>
-            
             <div class="brand-section" id="brandSection">
                 <span class="logo-icon" id="logoIcon">◆</span>
-                <img class="logo-img" id="logoImage" alt="Logo" />
+                <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
                 <div class="brand-name">
                     <span class="binary">BINARY</span>
                     <span class="ruthless">RUTHLESS</span>
@@ -977,10 +139,10 @@
                 </div>
                 <div class="brand-tagline">AI POWERED TRADING</div>
                 <div class="social-icons">
-                    <a href="#" class="telegram" id="socialTelegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#" class="instagram" id="socialInstagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="youtube" id="socialYoutube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="twitter" id="socialTwitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
@@ -1014,61 +176,10 @@
             </div>
         </div>
         
-        <!-- DASHBOARD -->
-        <div id="dashboardSection" style="display:none;">
-            
-            <!-- User Info -->
-            <div class="dash-user-info">
-                <span>👤 <span id="dashUsername">User</span></span>
-                <span>📧 <span id="dashEmail">email@example.com</span></span>
-                <span>✅ <span id="dashStatus">Verified</span></span>
-            </div>
-            
-            <!-- BINARY RUTHLESS SIGNALS Main Button -->
-            <button class="dash-main-btn" id="dashMainBtn">
-                <div class="main-title">
-                    <span class="binary">BINARY</span>
-                    <span class="ruthless">RUTHLESS</span>
-                    <span class="signals">SIGNALS</span>
-                </div>
-                <div class="sub-title">⚡ AI SIGNAL GENERATOR</div>
-            </button>
-            
-            <!-- Dashboard Cards - Below BINARY RUTHLESS SIGNALS -->
-            <div class="dash-cards-row">
-                <div class="dash-card-small">
-                    <div class="icon">💎</div>
-                    <div class="value" id="dashCredits">0</div>
-                    <div class="label">Credits</div>
-                </div>
-                <div class="dash-card-small">
-                    <div class="icon">📊</div>
-                    <div class="value" id="dashSignals">0</div>
-                    <div class="label">Used</div>
-                </div>
-                <div class="dash-card-small recharge-card" onclick="openRechargeModal()">
-                    <div class="icon">💳</div>
-                    <div class="value" style="font-size:0.7rem;color:#FFD700;">Add</div>
-                    <div class="label">Recharge</div>
-                </div>
-                <div class="dash-card-small history-card" onclick="togglePaymentHistory()">
-                    <div class="icon">📜</div>
-                    <div class="value" style="font-size:0.7rem;color:#00FF66;">View</div>
-                    <div class="label">History</div>
-                </div>
-            </div>
-            
-            <!-- Payment History Container -->
-            <div class="payment-history-container" id="paymentHistoryContainer">
-                <div id="paymentHistoryList"></div>
-            </div>
-            
-        </div>
-        
         <!-- FEATURES -->
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
-            <div class="features-scroll" id="featuresScroll">
+            <div class="features-scroll">
                 <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
                 <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
                 <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
@@ -1093,23 +204,7 @@
     </div>
 </div>
 
-<!-- ============================================================
-   BINARY RUTHLESS SIGNALS FULLSCREEN APP
-   ============================================================ -->
-<div class="signals-fullscreen-overlay" id="signalsFullscreen">
-    <div class="signals-fullscreen-header">
-        <button class="signals-fullscreen-close" id="signalsFullscreenClose">✕</button>
-    </div>
-    <div class="signals-fullscreen-content" id="signalsFullscreenContent">
-        <iframe id="signalsFullscreenIframe" src="about:blank"></iframe>
-    </div>
-</div>
-
-<!-- ============================================================
-   MODALS
-   ============================================================ -->
-
-<!-- LOGIN MODAL -->
+<!-- ===== MODALS ===== -->
 <div class="overlay" id="loginModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
@@ -1123,7 +218,6 @@
     </div>
 </div>
 
-<!-- SIGNUP MODAL -->
 <div class="overlay" id="signupModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
@@ -1143,179 +237,24 @@
     </div>
 </div>
 
-<!-- VERIFY MODAL -->
+<!-- UPDATED VERIFY MODAL WITH BROKER SELECTION -->
 <div class="overlay" id="verifyModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
         <h2>✅ ID VERIFY</h2>
+        <label>Select Your Broker</label>
+        <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
         <label>Gmail / Email</label>
         <input type="email" id="verifyEmail" placeholder="your@email.com">
         <label>Account ID</label>
         <input type="text" id="verifyAccountId" placeholder="Enter Account ID">
         <div class="error-msg" id="verifyError"></div>
         <div class="success-msg" id="verifySuccess"></div>
-        <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleVerify()">Verify Now</button>
+        <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
     </div>
 </div>
 
-<!-- RECHARGE MODAL -->
-<div class="overlay" id="rechargeModal">
-    <div class="modal">
-        <button class="modal-close" id="rechargeModalClose">✕</button>
-        <h2>💳 RECHARGE CREDITS</h2>
-        <label>Select Credit Package</label>
-        <div class="credit-selector" id="creditSelector">
-            <button data-credits="50">50</button>
-            <button data-credits="100">100</button>
-            <button data-credits="250">250</button>
-            <button data-credits="500">500</button>
-        </div>
-        
-        <div style="margin-top:6px;">
-            <p style="color:#888;font-size:0.6rem;">💰 Amount: ₹<span id="rechargeAmount">100</span></p>
-            <p style="color:#888;font-size:0.55rem;">UPI: <span id="rechargeUpi">binary@ruthless</span></p>
-        </div>
-        
-        <!-- Proceed to Pay Button -->
-        <button class="btn-submit" id="proceedToPayBtn" style="background:#FFD700;color:#000;margin-top:6px;" onclick="proceedToPay()">
-            💳 Proceed to Pay
-        </button>
-        
-        <!-- QR Code - Hidden until Proceed to Pay clicked -->
-        <div class="qr-container" id="qrContainer">
-            <div id="qrCodeDiv"></div>
-        </div>
-        
-        <div class="qr-timer" id="qrTimer">⏱ Expires in: <span class="time" id="qrTimeLeft">3:00</span></div>
-        
-        <div class="qr-expired" id="qrExpired">
-            ⏰ QR Code Expired!
-            <br>
-            <button class="btn-new" onclick="closeModal('rechargeModal')">✕ Close & Try Again</button>
-        </div>
-        
-        <div class="payment-status" id="paymentStatus"></div>
-        
-        <div class="error-msg" id="rechargeError"></div>
-        <div class="success-msg" id="rechargeSuccess"></div>
-    </div>
-</div>
-
-<!-- ADMIN MODAL -->
-<div class="overlay" id="adminModal">
-    <div class="modal" style="max-width:620px;">
-        <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-        <h2>⚙️ ADMIN PANEL</h2>
-        
-        <div id="adminLoginArea">
-            <label>🔐 Enter Admin Password</label>
-            <input type="password" id="adminPassInput" placeholder="Enter admin password" style="margin-bottom:6px;" oninput="checkAdminPassword()">
-            <button class="btn-submit hidden-btn" id="adminLoginBtn" style="background:#FF0033;color:#fff;margin-top:2px;" onclick="adminLogin()">Login to Admin</button>
-            <div class="error-msg" id="adminPassError"></div>
-        </div>
-        
-        <div id="adminArea" style="display:none;margin-top:10px;">
-            
-            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
-                <h4 style="color:#FFD700;">🔑 Test Credentials</h4>
-                <p style="font-size:0.55rem;color:#888;">Gmail: <span style="color:#00FF66;">demo@binaryruthless.com</span> | Account ID: <span style="color:#00FF66;">DEMO123</span></p>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🔥 Firebase Configuration</h4>
-                <div class="field-group"><label>API Key</label><input type="text" id="fbApiKey"></div>
-                <div class="field-group"><label>Auth Domain</label><input type="text" id="fbAuthDomain"></div>
-                <div class="field-group"><label>Database URL</label><input type="text" id="fbDbUrl"></div>
-                <div class="field-group"><label>Project ID</label><input type="text" id="fbProjectId"></div>
-                <div class="field-group"><label>Storage Bucket</label><input type="text" id="fbStorageBucket"></div>
-                <div class="field-group"><label>App ID</label><input type="text" id="fbAppId"></div>
-                <button class="btn-save" onclick="adminSaveFirebase()">Save Firebase</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>💳 Payment Settings</h4>
-                <div class="field-group"><label>UPI ID</label><input type="text" id="upiId" placeholder="binary@ruthless"></div>
-                <div class="field-group"><label>QR Image URL (Optional)</label><input type="text" id="qrImageUrl" placeholder="https://example.com/qr.png"></div>
-                <div class="field-group"><label>Price per Credit (₹)</label><input type="number" id="creditPrice" value="2"></div>
-                <button class="btn-save" onclick="adminSavePaymentSettings()">Save Payment Settings</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>📊 Signal Generator Settings</h4>
-                <div class="field-group"><label>Tool Name</label><input type="text" id="signalToolName" placeholder="AI Signal Generator"></div>
-                <div class="field-group"><label>HTML Code</label><textarea id="signalHtmlCode" placeholder="Paste HTML code..."></textarea></div>
-                <div class="field-group"><label>Status</label>
-                    <select id="signalVisibility">
-                        <option value="visible">Visible</option>
-                        <option value="hidden">Hidden</option>
-                    </select>
-                </div>
-                <button class="btn-save" onclick="adminSaveSignalSettings()">Save Signal Settings</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🖼️ Logo Update</h4>
-                <div class="field-group"><label>Upload PNG/JPG</label><input type="file" id="logoUpload" accept="image/png, image/jpeg"></div>
-                <button class="btn-save" onclick="adminSaveLogo()">Save Logo</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>👤 Add User</h4>
-                <div class="field-group"><label>Email</label><input type="email" id="adminAddEmail"></div>
-                <div class="field-group"><label>Account ID</label><input type="text" id="adminAddAccountId"></div>
-                <div class="field-group"><label>Broker</label><input type="text" id="adminAddBroker"></div>
-                <div class="field-group"><label>Deposit (₹)</label><input type="number" id="adminAddDeposit"></div>
-                <button class="btn-save btn-success" onclick="adminAddUser()">Add User</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🔍 Search & Manage Users</h4>
-                <div class="field-group"><label>Search by Email / Account ID / Name</label>
-                    <input type="text" id="userSearchInput" placeholder="Type to search..." oninput="searchUsers()" class="search-box">
-                </div>
-                <div id="userSearchResults" class="user-search-results"></div>
-                <div id="userDetailPanel" style="display:none;margin-top:6px;">
-                    <div class="user-detail-card" id="userDetailContent"></div>
-                    <div class="user-detail-actions">
-                        <button class="btn-action btn-give" onclick="adminGiveCredits()">🎁 Give</button>
-                        <button class="btn-action btn-block" onclick="adminBlockUser()">🚫 Block</button>
-                        <button class="btn-action btn-remove" onclick="adminRemoveUser()">🗑️ Remove</button>
-                    </div>
-                    <div style="margin-top:4px;">
-                        <div class="field-group"><label>Add Free Credits</label><input type="number" id="freeCreditsInput" placeholder="Enter credits"></div>
-                        <button class="btn-save btn-success" onclick="adminGiveCredits()">Add Credits</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🏢 Brokers</h4>
-                <div class="field-group"><label>Name</label><input type="text" id="adminBrokerName"></div>
-                <div class="field-group"><label>Affiliate Link</label><input type="text" id="adminBrokerLink"></div>
-                <div class="field-group"><label>Min Deposit (₹)</label><input type="number" id="adminBrokerMinDeposit"></div>
-                <div class="field-group"><label>Rules</label><input type="text" id="adminBrokerRules"></div>
-                <button class="btn-save" onclick="adminAddBroker()">Add Broker</button>
-                <div id="brokerList" class="item-list"></div>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🎁 Offer Settings</h4>
-                <div class="field-group"><label>Free Credits for New Verified Users</label><input type="number" id="adminOfferCredits" value="10"></div>
-                <button class="btn-save" onclick="adminSaveOffer()">Save Offer</button>
-            </div>
-            
-            <div class="admin-section">
-                <h4>📋 All Users</h4>
-                <div id="adminUsersList" class="item-list" style="max-height:150px;"></div>
-            </div>
-            
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================
-   JAVASCRIPT
-   ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
 <script type="importmap">
 {
     "imports": {
@@ -1327,13 +266,11 @@
 </script>
 
 <script type="module">
-// ============================================================
-// FIREBASE
-// ============================================================
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
+// ---------- Firebase Config ----------
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
     authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -1350,15 +287,10 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
-// ============================================================
-// APP STATE
-// ============================================================
+// ---------- App State ----------
 let appState = {
     password: 'admin123',
     offerCredits: 10,
-    upiId: 'binary@ruthless',
-    qrImageUrl: '',
-    creditPrice: 2,
     brokers: [
         { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email, deposit ₹1000' },
         { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone, deposit ₹500' }
@@ -1369,39 +301,23 @@ let appState = {
             accountId: 'DEMO123',
             broker: 'Quotex',
             name: 'DemoUser',
-            verified: true,
+            verified: true, // <--- Admin pre-added user, so they can login immediately
             deposit: 1000,
             requiredDeposit: 1000,
             credits: 25,
             signalsUsed: 5,
+            todayUsed: 2,
             blocked: false,
             registeredAt: new Date().toISOString()
         }
     ],
-    currentUser: null,
-    selectedUser: null,
-    signalSettings: {
-        toolName: 'AI Signal Generator',
-        htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Generate Signal (1 Credit)</button></div>',
-        visibility: 'visible'
-    },
-    logoBase64: '',
-    paymentRequests: []
+    verificationRequests: [],
+    currentUser: null
 };
 
 let isFirebaseConnected = false;
-let adminLoggedIn = false;
-let qrCodeInstance = null;
-let pendingRecharge = null;
-let qrTimerInterval = null;
-let qrExpireTime = 180;
-let paymentHistoryVisible = false;
-let isQrGenerated = false;
-let isPaymentProcessing = false;
 
-// ============================================================
-// FIREBASE SYNC
-// ============================================================
+// ---------- Firebase Listener ----------
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true;
     document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
@@ -1416,12 +332,6 @@ onValue(dbRef, (snapshot) => {
         }
         saveLocalState();
         updateUI();
-        applySignalSettings();
-        applyLogo();
-        renderUsersList();
-        renderBrokerList();
-        renderPaymentHistory();
-        if (adminLoggedIn) loadAdminData();
     }
 }, (error) => {
     isFirebaseConnected = false;
@@ -1429,14 +339,9 @@ onValue(dbRef, (snapshot) => {
     console.error('Firebase Error:', error);
 });
 
-// ============================================================
-// LOCAL STORAGE
-// ============================================================
 function saveLocalState() {
     localStorage.setItem('brt_data', JSON.stringify(appState));
-    if (isFirebaseConnected) {
-        set(dbRef, appState).catch(e => console.error('FB Sync Error:', e));
-    }
+    if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
 }
 
 function loadLocalState() {
@@ -1447,89 +352,9 @@ function loadLocalState() {
             appState = { ...appState, ...parsed };
         } catch(e) { console.error(e); }
     }
-    const logoData = localStorage.getItem('brt_logo');
-    if (logoData) {
-        appState.logoBase64 = logoData;
-    }
     updateUI();
-    applySignalSettings();
-    applyLogo();
-    renderUsersList();
-    renderBrokerList();
-    renderPaymentHistory();
 }
 
-// ============================================================
-// APPLY FUNCTIONS
-// ============================================================
-function applySignalSettings() {
-    const settings = appState.signalSettings;
-    const iframe = document.getElementById('signalsFullscreenIframe');
-    if (settings.visibility === 'hidden') {
-        document.getElementById('dashMainBtn').style.display = 'none';
-    } else {
-        document.getElementById('dashMainBtn').style.display = 'block';
-        iframe.srcdoc = settings.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p></div>';
-    }
-}
-
-function applyLogo() {
-    const logoIcon = document.getElementById('logoIcon');
-    const logoImg = document.getElementById('logoImage');
-    if (appState.logoBase64) {
-        logoIcon.style.display = 'none';
-        logoImg.src = appState.logoBase64;
-        logoImg.style.display = 'block';
-    } else {
-        logoIcon.style.display = 'block';
-        logoImg.style.display = 'none';
-    }
-}
-
-// ============================================================
-// PAYMENT HISTORY
-// ============================================================
-function renderPaymentHistory() {
-    const container = document.getElementById('paymentHistoryList');
-    if (!container) return;
-    container.innerHTML = '';
-    
-    const payments = appState.paymentRequests || [];
-    if (payments.length === 0) {
-        container.innerHTML = '<div class="history-empty">No payment history</div>';
-        return;
-    }
-    
-    const sorted = [...payments].reverse();
-    sorted.forEach(p => {
-        const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
-        const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
-        container.innerHTML += `
-            <div class="history-item">
-                <span class="${statusClass}">${statusText}</span>
-                <span class="amount">₹${p.amount}</span>
-                <span style="color:#888;">${p.credits}cr</span>
-                <span style="color:#666;font-size:0.4rem;">${p.transactionId || 'N/A'}</span>
-                <span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span>
-            </div>
-        `;
-    });
-}
-
-function togglePaymentHistory() {
-    const container = document.getElementById('paymentHistoryContainer');
-    paymentHistoryVisible = !paymentHistoryVisible;
-    if (paymentHistoryVisible) {
-        container.classList.add('active');
-        renderPaymentHistory();
-    } else {
-        container.classList.remove('active');
-    }
-}
-
-// ============================================================
-// UI UPDATE
-// ============================================================
 function updateUI() {
     document.getElementById('offerCreditsDisplay').textContent = appState.offerCredits || 10;
     const brokerSelect = document.getElementById('signupBroker');
@@ -1540,192 +365,112 @@ function updateUI() {
         opt.textContent = b.name;
         brokerSelect.appendChild(opt);
     });
-    
-    if (appState.currentUser) {
-        showDashboard();
-    } else {
-        showHome();
-    }
-}
 
-function showHome() {
-    document.getElementById('userSection').style.display = 'flex';
-    document.getElementById('dashboardSection').style.display = 'none';
-    document.getElementById('offerBanner').style.display = 'block';
-    document.getElementById('logoutBtnTop').classList.remove('visible');
-    document.getElementById('signalsFullscreen').classList.remove('active');
-}
-
-function showDashboard() {
-    document.getElementById('userSection').style.display = 'none';
-    document.getElementById('dashboardSection').style.display = 'block';
-    document.getElementById('offerBanner').style.display = 'none';
-    document.getElementById('logoutBtnTop').classList.add('visible');
-    
-    const user = appState.currentUser;
-    if (user) {
-        document.getElementById('dashUsername').textContent = user.name || user.email.split('@')[0];
-        document.getElementById('dashEmail').textContent = user.email;
-        document.getElementById('dashStatus').textContent = user.verified ? '✅ Verified' : '⏳ Pending';
-        document.getElementById('dashStatus').style.color = user.verified ? '#00FF66' : '#FFD700';
-        document.getElementById('dashCredits').textContent = user.credits || 0;
-        document.getElementById('dashSignals').textContent = user.signalsUsed || 0;
-        renderPaymentHistory();
-    }
-}
-
-function renderBrokerList() {
-    const list = document.getElementById('brokerList');
-    if (!list) return;
-    list.innerHTML = '';
-    appState.brokers.forEach((b, idx) => {
-        list.innerHTML += `
-            <div class="list-item">
-                <span class="name">${b.name}</span>
-                <span class="detail">₹${b.minDeposit}</span>
-                <button class="del-btn" onclick="window.adminDeleteBroker(${idx})">✕</button>
-            </div>
-        `;
+    // Update verify broker dropdown
+    const verifyBroker = document.getElementById('verifyBroker');
+    verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
+    appState.brokers.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.name;
+        opt.textContent = b.name;
+        verifyBroker.appendChild(opt);
     });
 }
 
-function renderUsersList() {
-    const list = document.getElementById('adminUsersList');
-    if (!list) return;
-    list.innerHTML = '';
-    if (appState.users.length === 0) {
-        list.innerHTML = '<div style="color:#666;font-size:0.55rem;text-align:center;padding:4px;">No users yet</div>';
-        return;
-    }
-    appState.users.forEach((u, idx) => {
-        const status = u.blocked ? '🚫' : (u.verified ? '✅' : '⏳');
-        const statusColor = u.blocked ? '#FF0033' : (u.verified ? '#00FF66' : '#FFD700');
-        list.innerHTML += `
-            <div class="list-item">
-                <span style="color:#aaa;font-size:0.5rem;">${u.email}</span>
-                <span style="color:${statusColor};font-size:0.5rem;">${status}</span>
-                <span style="color:#888;font-size:0.5rem;">₹${u.deposit || 0}</span>
-                <span style="color:#FFD700;font-size:0.5rem;">${u.credits || 0}cr</span>
-                <button class="del-btn" onclick="window.adminDeleteUser(${idx})">✕</button>
-            </div>
-        `;
-    });
-}
+// ---------- Modal Helpers ----------
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+window.closeModal = closeModal;
+window.openModal = openModal;
 
-// ============================================================
-// MODAL FUNCTIONS
-// ============================================================
-window.openModal = function(id) { document.getElementById(id).classList.add('active'); }
-window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); }
-
-// ============================================================
-// OFFER BANNER
-// ============================================================
+// ---------- Offer Banner ----------
 document.getElementById('offerBanner').addEventListener('click', function() {
     const signupCard = document.getElementById('signupCard');
     signupCard.classList.remove('highlight');
     void signupCard.offsetWidth;
     signupCard.classList.add('highlight');
-    if (window.innerWidth <= 768) {
-        signupCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
     setTimeout(() => { openModal('signupModal'); }, 500);
 });
 
-// ============================================================
-// LOGIN - No Alert
-// ============================================================
+// ---------- LOGIN - STRICT CHECK: Only Admin Approved or Admin Added Users ----------
 window.handleLogin = function() {
     const email = document.getElementById('loginEmail').value.trim();
     const accountId = document.getElementById('loginAccountId').value.trim();
     const errorEl = document.getElementById('loginError');
     
     if (!email || !accountId) {
-        errorEl.textContent = '❌ Please enter email and account ID';
+        errorEl.textContent = '❌ Enter email and account ID';
         return;
     }
-    
+
     const user = appState.users.find(u => u.email === email && u.accountId === accountId);
     if (!user) {
         errorEl.textContent = '❌ User not found. Please sign up first.';
         return;
     }
-    
+
     if (user.blocked) {
-        errorEl.textContent = '🚫 Your account has been blocked. Contact admin.';
+        errorEl.textContent = '🚫 Account blocked. Contact admin.';
         return;
     }
-    
+
+    // ================================================================
+    // 🔒 KEVALAM Admin Approve చేసిన లేదా Admin Direct ga Add చేసిన వాళ్ళు మాత్రమే Login అవ్వాలి
+    // Admin Add -> verified: true (adminAddUser లో)
+    // Admin Approve -> verified: true (adminApproveVerification లో)
+    // ================================================================
     if (!user.verified) {
-        errorEl.textContent = '❌ Account not verified. Please verify your ID first.';
+        errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
         return;
     }
-    
+
     if (!user.deposit || user.deposit < user.requiredDeposit) {
-        errorEl.textContent = '⚠️ Please complete minimum deposit of ₹' + user.requiredDeposit + ' to login.';
+        errorEl.textContent = '⚠️ Complete minimum deposit of ₹' + user.requiredDeposit;
         return;
     }
-    
+
+    // Login successful
     appState.currentUser = user;
     saveLocalState();
     closeModal('loginModal');
-    document.getElementById('loginEmail').value = '';
-    document.getElementById('loginAccountId').value = '';
     errorEl.textContent = '';
-    updateUI();
-}
+    window.location.href = 'dashboard.html';
+};
 
-// ============================================================
-// SIGNUP
-// ============================================================
+// ---------- Signup (New user gets verified: false) ----------
 window.handleSignup = function() {
     const broker = document.getElementById('signupBroker').value;
     const email = document.getElementById('signupEmail').value.trim();
     const errorEl = document.getElementById('signupError');
     const successEl = document.getElementById('signupSuccess');
-    
-    errorEl.textContent = '';
-    successEl.textContent = '';
-    
-    if (!broker) { errorEl.textContent = '❌ Please select a broker'; return; }
-    if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
-    
+    errorEl.textContent = ''; successEl.textContent = '';
+    if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
+    if (!email) { errorEl.textContent = '❌ Enter email'; return; }
     const brokerData = appState.brokers.find(b => b.name === broker);
     if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
-    if (appState.users.find(u => u.email === email)) {
-        errorEl.textContent = '❌ User already exists. Please login.';
-        return;
-    }
-    
+    if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
     const newUser = {
-        email: email,
-        accountId: '',
-        broker: broker,
-        name: email.split('@')[0],
-        verified: false,
-        deposit: 0,
-        requiredDeposit: brokerData.minDeposit,
-        credits: 0,
-        signalsUsed: 0,
-        blocked: false,
+        email, accountId: '', broker, name: email.split('@')[0],
+        verified: false, // <--- New users are NOT verified
+        deposit: 0, requiredDeposit: brokerData.minDeposit,
+        credits: 0, signalsUsed: 0, todayUsed: 0, blocked: false,
         registeredAt: new Date().toISOString()
     };
-    
     appState.users.push(newUser);
     saveLocalState();
     updateUI();
-    
-    successEl.textContent = '✅ Account created! Opening broker page...';
+    successEl.textContent = '✅ Account created! Please verify your ID. Opening broker...';
     setTimeout(() => { window.open(brokerData.link, '_blank'); }, 500);
-    setTimeout(() => {
-        closeModal('signupModal');
-    }, 1500);
-}
+    setTimeout(() => { closeModal('signupModal'); }, 1500);
+};
 
-// ============================================================
-// VERIFY
-// ============================================================
+// ---------- Verify (Sends request to Admin) ----------
+document.getElementById('verifySubmitBtn').addEventListener('click', function() {
+    window.handleVerify();
+});
+
 window.handleVerify = function() {
+    const broker = document.getElementById('verifyBroker').value;
     const email = document.getElementById('verifyEmail').value.trim();
     const accountId = document.getElementById('verifyAccountId').value.trim();
     const errorEl = document.getElementById('verifyError');
@@ -1733,356 +478,43 @@ window.handleVerify = function() {
     
     errorEl.textContent = '';
     successEl.textContent = '';
-    
-    if (!email || !accountId) {
-        errorEl.textContent = '❌ Please enter email and account ID';
-        return;
-    }
-    
+
+    if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
+    if (!email || !accountId) { errorEl.textContent = '❌ Enter email and account ID'; return; }
+
     const user = appState.users.find(u => u.email === email);
     if (!user) { errorEl.textContent = '❌ User not found. Please sign up first.'; return; }
-    if (user.blocked) { errorEl.textContent = '🚫 Your account is blocked. Contact admin.'; return; }
+    if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
     if (user.verified) { errorEl.textContent = '✅ Already verified! You can login.'; return; }
-    
-    user.accountId = accountId;
-    const brokerData = appState.brokers.find(b => b.name === user.broker);
-    if (!brokerData) { errorEl.textContent = '❌ Broker configuration error. Contact admin.'; return; }
-    
-    if (!user.deposit || user.deposit < brokerData.minDeposit) {
-        errorEl.textContent = '⚠️ Please deposit ₹' + brokerData.minDeposit + ' to verify your account.';
-        successEl.textContent = '💳 Deposit ₹' + brokerData.minDeposit + ' via: ' + brokerData.link;
+
+    if (user.broker !== broker) {
+        errorEl.textContent = '❌ Selected broker does not match your signup broker.';
         return;
     }
-    
-    user.verified = true;
-    user.credits = (user.credits || 0) + (appState.offerCredits || 10);
+
+    const existingPending = appState.verificationRequests?.find(req => req.userEmail === email && req.status === 'pending');
+    if (existingPending) {
+        errorEl.textContent = '⏳ Verification already pending. Wait for admin.';
+        return;
+    }
+
+    const newRequest = { userEmail: email, accountId: accountId, broker: broker, status: 'pending', date: new Date().toISOString() };
+    if (!appState.verificationRequests) appState.verificationRequests = [];
+    appState.verificationRequests.push(newRequest);
     saveLocalState();
-    updateUI();
-    successEl.textContent = '✅ Account verified! You received ' + (appState.offerCredits || 10) + ' free credits!';
+
+    successEl.textContent = '✅ Verification request submitted! Please wait for admin approval.';
     errorEl.textContent = '';
-}
+    document.getElementById('verifyEmail').value = '';
+    document.getElementById('verifyAccountId').value = '';
+    document.getElementById('verifyBroker').value = '';
+};
 
-// ============================================================
-// DASHBOARD LOGOUT - Top Right inside Red Container
-// ============================================================
-document.getElementById('logoutBtnTop').addEventListener('click', function() {
-    appState.currentUser = null;
-    document.getElementById('signalsFullscreen').classList.remove('active');
-    document.getElementById('logoutBtnTop').classList.remove('visible');
-    saveLocalState();
-    updateUI();
-});
+// ---------- Button Listeners ----------
+document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
 
-// ============================================================
-// BINARY RUTHLESS SIGNALS - Fullscreen App
-// ============================================================
-document.getElementById('dashMainBtn').addEventListener('click', function() {
-    const user = appState.currentUser;
-    if (!user) { return; }
-    if (user.blocked) { return; }
-    if (user.credits < 1) {
-        this.style.borderColor = '#FF0033';
-        setTimeout(() => { this.style.borderColor = '#FFD700'; }, 2000);
-        return;
-    }
-    
-    const overlay = document.getElementById('signalsFullscreen');
-    overlay.classList.add('active');
-    const iframe = document.getElementById('signalsFullscreenIframe');
-    iframe.srcdoc = appState.signalSettings.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p></div>';
-});
-
-document.getElementById('signalsFullscreenClose').addEventListener('click', function() {
-    document.getElementById('signalsFullscreen').classList.remove('active');
-});
-
-window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'signalGenerated') {
-        if (appState.currentUser && appState.currentUser.credits > 0) {
-            appState.currentUser.credits -= 1;
-            appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1;
-            saveLocalState();
-            updateUI();
-            const iframe = document.getElementById('signalsFullscreenIframe');
-            try {
-                iframe.contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
-            } catch(e) {}
-        } else {
-            const iframe = document.getElementById('signalsFullscreenIframe');
-            try {
-                iframe.contentWindow.postMessage({ type: 'signalResult', success: false, message: 'Insufficient credits!' }, '*');
-            } catch(e) {}
-        }
-    }
-});
-
-// ============================================================
-// RECHARGE - QR Only After Proceed to Pay
-// ============================================================
-window.openRechargeModal = function() {
-    if (!appState.currentUser) { return; }
-    if (appState.currentUser.blocked) { return; }
-    
-    // Reset everything
-    isQrGenerated = false;
-    isPaymentProcessing = false;
-    if (qrTimerInterval) {
-        clearInterval(qrTimerInterval);
-        qrTimerInterval = null;
-    }
-    
-    document.getElementById('qrContainer').classList.remove('active');
-    document.getElementById('qrTimer').classList.remove('active');
-    document.getElementById('qrExpired').classList.remove('active');
-    document.getElementById('rechargeError').textContent = '';
-    document.getElementById('rechargeSuccess').textContent = '';
-    document.getElementById('paymentStatus').className = 'payment-status';
-    document.getElementById('paymentStatus').textContent = '';
-    document.getElementById('qrCodeDiv').innerHTML = '';
-    document.getElementById('proceedToPayBtn').style.display = 'block';
-    document.getElementById('proceedToPayBtn').disabled = false;
-    
-    // Enable all credit buttons
-    document.querySelectorAll('#creditSelector button').forEach(b => {
-        b.disabled = false;
-        b.classList.remove('active');
-    });
-    
-    // Auto select first package
-    const firstBtn = document.querySelector('#creditSelector button');
-    if (firstBtn) {
-        firstBtn.classList.add('active');
-        const credits = parseInt(firstBtn.dataset.credits);
-        const amount = credits * (appState.creditPrice || 2);
-        document.getElementById('rechargeAmount').textContent = amount;
-    }
-    
-    document.getElementById('rechargeUpi').textContent = appState.upiId || 'binary@ruthless';
-    openModal('rechargeModal');
-}
-
-window.proceedToPay = function() {
-    if (isPaymentProcessing) return;
-    
-    const activeBtn = document.querySelector('#creditSelector button.active');
-    if (!activeBtn) {
-        document.getElementById('rechargeError').textContent = '❌ Please select a credit package first!';
-        return;
-    }
-    
-    const credits = parseInt(activeBtn.dataset.credits);
-    const amount = credits * (appState.creditPrice || 2);
-    const upi = appState.upiId || 'binary@ruthless';
-    
-    // Disable buttons during payment
-    document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = true);
-    document.getElementById('proceedToPayBtn').disabled = true;
-    isPaymentProcessing = true;
-    
-    // Generate QR
-    generateQR(credits, amount, upi);
-    pendingRecharge = { credits, amount, upi };
-    
-    document.getElementById('qrContainer').classList.add('active');
-    document.getElementById('qrTimer').classList.add('active');
-    document.getElementById('rechargeError').textContent = '';
-    document.getElementById('paymentStatus').className = 'payment-status pending';
-    document.getElementById('paymentStatus').textContent = '⏳ Waiting for payment...';
-    
-    qrExpireTime = 180;
-    updateQRTimer();
-    qrTimerInterval = setInterval(() => {
-        qrExpireTime--;
-        updateQRTimer();
-        if (qrExpireTime <= 0) {
-            clearInterval(qrTimerInterval);
-            qrTimerInterval = null;
-            document.getElementById('qrExpired').classList.add('active');
-            document.getElementById('qrContainer').classList.remove('active');
-            document.getElementById('qrTimer').classList.remove('active');
-            document.getElementById('paymentStatus').className = 'payment-status failed';
-            document.getElementById('paymentStatus').textContent = '❌ QR Expired! Payment failed.';
-            if (pendingRecharge) {
-                const paymentRecord = {
-                    email: appState.currentUser.email,
-                    amount: pendingRecharge.amount,
-                    credits: pendingRecharge.credits,
-                    transactionId: 'EXPIRED_' + Date.now(),
-                    upi: pendingRecharge.upi,
-                    status: 'failed',
-                    date: new Date().toISOString()
-                };
-                if (!appState.paymentRequests) appState.paymentRequests = [];
-                appState.paymentRequests.push(paymentRecord);
-                saveLocalState();
-                updateUI();
-                pendingRecharge = null;
-                document.getElementById('rechargeError').textContent = '⏰ QR Code expired! Payment failed.';
-                // Re-enable buttons
-                document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = false);
-                document.getElementById('proceedToPayBtn').disabled = false;
-                isPaymentProcessing = false;
-            }
-        }
-    }, 1000);
-    
-    // Start auto verify after QR generation
-    setTimeout(() => {
-        if (qrExpireTime > 0 && pendingRecharge && isQrGenerated) {
-            const success = Math.random() < 0.7;
-            completePayment(success, credits, amount, upi);
-        }
-    }, 12000);
-}
-
-function generateQR(credits, amount, upi) {
-    const qrDiv = document.getElementById('qrCodeDiv');
-    qrDiv.innerHTML = '';
-    isQrGenerated = false;
-    
-    const upiString = `upi://pay?pa=${upi}&pn=Binary%20Ruthless%20Trader&am=${amount}&cu=INR&tn=Recharge%20${credits}%20credits`;
-    
-    if (appState.qrImageUrl) {
-        qrDiv.innerHTML = `<img src="${appState.qrImageUrl}" style="max-width:200px;border-radius:8px;" />
-            <p style="color:#888;font-size:0.5rem;margin-top:4px;">UPI: ${upi}</p>
-            <p style="color:#666;font-size:0.45rem;">Amount: ₹${amount}</p>`;
-        isQrGenerated = true;
-    } else {
-        qrDiv.innerHTML = `<div id="qrcode"></div>`;
-        setTimeout(() => {
-            if (typeof QRCode !== 'undefined') {
-                qrCodeInstance = new QRCode(document.getElementById('qrcode'), {
-                    text: upiString,
-                    width: 200,
-                    height: 200,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-                isQrGenerated = true;
-            }
-        }, 200);
-    }
-}
-
-function updateQRTimer() {
-    const mins = Math.floor(qrExpireTime / 60);
-    const secs = qrExpireTime % 60;
-    document.getElementById('qrTimeLeft').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
-function completePayment(success, credits, amount, upi) {
-    if (!pendingRecharge || !isQrGenerated) return;
-    
-    const txId = 'TXN' + Date.now().toString().slice(-8);
-    const status = success ? 'success' : 'failed';
-    
-    const paymentRecord = {
-        email: appState.currentUser.email,
-        amount: amount,
-        credits: credits,
-        transactionId: txId,
-        upi: upi,
-        status: status,
-        date: new Date().toISOString()
-    };
-    
-    if (!appState.paymentRequests) appState.paymentRequests = [];
-    appState.paymentRequests.push(paymentRecord);
-    
-    if (success) {
-        appState.currentUser.credits = (appState.currentUser.credits || 0) + credits;
-        document.getElementById('paymentStatus').className = 'payment-status success';
-        document.getElementById('paymentStatus').textContent = '✅ Payment Successful! ' + credits + ' credits added!';
-        document.getElementById('rechargeSuccess').textContent = '✅ ' + credits + ' credits added successfully!';
-        document.getElementById('rechargeError').textContent = '';
-        // Disable further actions
-        document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = true);
-        document.getElementById('proceedToPayBtn').disabled = true;
-        setTimeout(() => {
-            closeModal('rechargeModal');
-            updateUI();
-        }, 1500);
-    } else {
-        document.getElementById('paymentStatus').className = 'payment-status failed';
-        document.getElementById('paymentStatus').textContent = '❌ Payment Failed! Please try again.';
-        document.getElementById('rechargeError').textContent = '❌ Payment Failed! Please try again.';
-        document.getElementById('rechargeSuccess').textContent = '';
-        // Re-enable buttons for retry
-        document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = false);
-        document.getElementById('proceedToPayBtn').disabled = false;
-        isPaymentProcessing = false;
-        // Hide QR so user can retry
-        document.getElementById('qrContainer').classList.remove('active');
-        document.getElementById('qrTimer').classList.remove('active');
-    }
-    
-    if (qrTimerInterval) {
-        clearInterval(qrTimerInterval);
-        qrTimerInterval = null;
-    }
-    
-    saveLocalState();
-    updateUI();
-    pendingRecharge = null;
-}
-
-// Credit selector - update amount only, QR not generated until Proceed to Pay
-document.querySelectorAll('#creditSelector button').forEach(btn => {
-    btn.addEventListener('click', function() {
-        if (isPaymentProcessing) return;
-        document.querySelectorAll('#creditSelector button').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        const credits = parseInt(this.dataset.credits);
-        const amount = credits * (appState.creditPrice || 2);
-        document.getElementById('rechargeAmount').textContent = amount;
-        // Reset QR if already shown
-        document.getElementById('qrContainer').classList.remove('active');
-        document.getElementById('qrTimer').classList.remove('active');
-        document.getElementById('qrExpired').classList.remove('active');
-        document.getElementById('paymentStatus').className = 'payment-status';
-        document.getElementById('paymentStatus').textContent = '';
-        document.getElementById('rechargeError').textContent = '';
-        document.getElementById('rechargeSuccess').textContent = '';
-        document.getElementById('qrCodeDiv').innerHTML = '';
-        document.getElementById('proceedToPayBtn').disabled = false;
-        isPaymentProcessing = false;
-    });
-});
-
-// Close recharge modal - Reset everything
-document.getElementById('rechargeModalClose').addEventListener('click', function() {
-    closeModal('rechargeModal');
-    isQrGenerated = false;
-    isPaymentProcessing = false;
-    if (qrTimerInterval) {
-        clearInterval(qrTimerInterval);
-        qrTimerInterval = null;
-    }
-    pendingRecharge = null;
-    document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = false);
-    document.getElementById('proceedToPayBtn').disabled = false;
-});
-
-// Also close on modal overlay click
-document.getElementById('rechargeModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal('rechargeModal');
-        isQrGenerated = false;
-        isPaymentProcessing = false;
-        if (qrTimerInterval) {
-            clearInterval(qrTimerInterval);
-            qrTimerInterval = null;
-        }
-        pendingRecharge = null;
-        document.querySelectorAll('#creditSelector button').forEach(b => b.disabled = false);
-        document.getElementById('proceedToPayBtn').disabled = false;
-    }
-});
-
-// ============================================================
-// BROKER INFO
-// ============================================================
 document.getElementById('signupBroker').addEventListener('change', function() {
     const brokerName = this.value;
     const infoDiv = document.getElementById('brokerInfo');
@@ -2097,350 +529,39 @@ document.getElementById('signupBroker').addEventListener('change', function() {
     }
 });
 
-// ============================================================
-// ADMIN PASSWORD CHECK
-// ============================================================
-window.checkAdminPassword = function() {
-    const pass = document.getElementById('adminPassInput').value;
-    const loginBtn = document.getElementById('adminLoginBtn');
-    const errorEl = document.getElementById('adminPassError');
-    
-    if (pass === appState.password) {
-        loginBtn.className = 'btn-submit';
-        loginBtn.style.display = 'block';
-        errorEl.textContent = '';
-    } else {
-        loginBtn.className = 'btn-submit hidden-btn';
-        loginBtn.style.display = 'none';
-        if (pass.length > 0) {
-            errorEl.textContent = '❌ Incorrect password';
-        } else {
-            errorEl.textContent = '';
-        }
-    }
-}
-
-// ============================================================
-// ADMIN LOGIN
-// ============================================================
-window.adminLogin = function() {
-    if (document.getElementById('adminPassInput').value === appState.password) {
-        adminLoggedIn = true;
-        document.getElementById('adminLoginArea').style.display = 'none';
-        document.getElementById('adminArea').style.display = 'block';
-        document.getElementById('adminPassInput').value = '';
-        loadAdminData();
-        const errorEl = document.getElementById('adminPassError');
-        errorEl.textContent = '✅ Login successful!';
-        errorEl.style.color = '#00FF66';
-        setTimeout(() => { errorEl.textContent = ''; }, 2000);
-    }
-}
-
-function loadAdminData() {
-    document.getElementById('fbApiKey').value = appState.firebaseConfig?.apiKey || '';
-    document.getElementById('fbAuthDomain').value = appState.firebaseConfig?.authDomain || '';
-    document.getElementById('fbDbUrl').value = appState.firebaseConfig?.databaseURL || '';
-    document.getElementById('fbProjectId').value = appState.firebaseConfig?.projectId || '';
-    document.getElementById('fbStorageBucket').value = appState.firebaseConfig?.storageBucket || '';
-    document.getElementById('fbAppId').value = appState.firebaseConfig?.appId || '';
-    document.getElementById('upiId').value = appState.upiId || '';
-    document.getElementById('qrImageUrl').value = appState.qrImageUrl || '';
-    document.getElementById('creditPrice').value = appState.creditPrice || 2;
-    document.getElementById('signalToolName').value = appState.signalSettings?.toolName || '';
-    document.getElementById('signalHtmlCode').value = appState.signalSettings?.htmlCode || '';
-    document.getElementById('signalVisibility').value = appState.signalSettings?.visibility || 'visible';
-    document.getElementById('adminOfferCredits').value = appState.offerCredits || 10;
-    renderBrokerList();
-    renderUsersList();
-}
-
-// ============================================================
-// ADMIN SAVE FUNCTIONS - No Alerts
-// ============================================================
-window.adminSaveFirebase = function() {
-    if (!appState.firebaseConfig) appState.firebaseConfig = {};
-    appState.firebaseConfig.apiKey = document.getElementById('fbApiKey').value.trim();
-    appState.firebaseConfig.authDomain = document.getElementById('fbAuthDomain').value.trim();
-    appState.firebaseConfig.databaseURL = document.getElementById('fbDbUrl').value.trim();
-    appState.firebaseConfig.projectId = document.getElementById('fbProjectId').value.trim();
-    appState.firebaseConfig.storageBucket = document.getElementById('fbStorageBucket').value.trim();
-    appState.firebaseConfig.appId = document.getElementById('fbAppId').value.trim();
-    saveLocalState();
-}
-
-window.adminSavePaymentSettings = function() {
-    appState.upiId = document.getElementById('upiId').value.trim() || 'binary@ruthless';
-    appState.qrImageUrl = document.getElementById('qrImageUrl').value.trim();
-    appState.creditPrice = parseFloat(document.getElementById('creditPrice').value) || 2;
-    saveLocalState();
-}
-
-window.adminSaveSignalSettings = function() {
-    appState.signalSettings = {
-        toolName: document.getElementById('signalToolName').value.trim() || 'AI Signal Generator',
-        htmlCode: document.getElementById('signalHtmlCode').value.trim() || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p></div>',
-        visibility: document.getElementById('signalVisibility').value
-    };
-    saveLocalState();
-    applySignalSettings();
-}
-
-window.adminSaveLogo = function() {
-    const file = document.getElementById('logoUpload').files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            appState.logoBase64 = e.target.result;
-            localStorage.setItem('brt_logo', appState.logoBase64);
-            applyLogo();
-            saveLocalState();
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-window.adminAddUser = function() {
-    const email = document.getElementById('adminAddEmail').value.trim();
-    const accountId = document.getElementById('adminAddAccountId').value.trim();
-    const broker = document.getElementById('adminAddBroker').value.trim();
-    const deposit = parseInt(document.getElementById('adminAddDeposit').value) || 0;
-    
-    if (!email || !accountId) { return; }
-    if (appState.users.find(u => u.email === email)) { return; }
-    
-    const brokerData = appState.brokers.find(b => b.name === broker);
-    const newUser = {
-        email, accountId, broker: broker || 'Manual',
-        name: email.split('@')[0],
-        verified: true, deposit,
-        requiredDeposit: brokerData ? brokerData.minDeposit : 0,
-        credits: 10, signalsUsed: 0, blocked: false,
-        registeredAt: new Date().toISOString()
-    };
-    appState.users.push(newUser);
-    saveLocalState();
-    renderUsersList();
-    document.getElementById('adminAddEmail').value = '';
-    document.getElementById('adminAddAccountId').value = '';
-    document.getElementById('adminAddBroker').value = '';
-    document.getElementById('adminAddDeposit').value = '';
-}
-
-window.adminDeleteUser = function(idx) {
-    if (confirm('Delete this user?')) {
-        appState.users.splice(idx, 1);
-        saveLocalState();
-        renderUsersList();
-    }
-}
-
-window.adminAddBroker = function() {
-    const name = document.getElementById('adminBrokerName').value.trim();
-    const link = document.getElementById('adminBrokerLink').value.trim();
-    const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0;
-    const rules = document.getElementById('adminBrokerRules').value.trim();
-    if (!name || !link) { return; }
-    appState.brokers.push({ name, link, minDeposit, rules });
-    saveLocalState();
-    renderBrokerList();
-    document.getElementById('adminBrokerName').value = '';
-    document.getElementById('adminBrokerLink').value = '';
-    document.getElementById('adminBrokerMinDeposit').value = '';
-    document.getElementById('adminBrokerRules').value = '';
-}
-
-window.adminDeleteBroker = function(idx) {
-    if (confirm('Delete this broker?')) {
-        appState.brokers.splice(idx, 1);
-        saveLocalState();
-        renderBrokerList();
-    }
-}
-
-window.adminSaveOffer = function() {
-    const credits = parseInt(document.getElementById('adminOfferCredits').value);
-    if (isNaN(credits) || credits < 0) { return; }
-    appState.offerCredits = credits;
-    saveLocalState();
-    updateUI();
-}
-
-// ============================================================
-// USER SEARCH
-// ============================================================
-window.searchUsers = function() {
-    const query = document.getElementById('userSearchInput').value.toLowerCase().trim();
-    const results = document.getElementById('userSearchResults');
-    results.innerHTML = '';
-    document.getElementById('userDetailPanel').style.display = 'none';
-    if (!query) return;
-    
-    const matched = appState.users.filter(u => 
-        u.email.toLowerCase().includes(query) ||
-        u.accountId.toLowerCase().includes(query) ||
-        (u.name && u.name.toLowerCase().includes(query))
-    );
-    
-    if (matched.length === 0) {
-        results.innerHTML = '<div style="color:#666;font-size:0.55rem;padding:4px;">No users found</div>';
-        return;
-    }
-    
-    matched.forEach((u, idx) => {
-        const actualIdx = appState.users.indexOf(u);
-        results.innerHTML += `
-            <div class="result-item" onclick="window.selectUser(${actualIdx})">
-                <span style="color:#aaa;">${u.email}</span>
-                <span style="color:#888;">${u.accountId || 'No ID'}</span>
-                <span style="color:${u.verified ? '#00FF66' : '#FFD700'};">${u.verified ? '✅' : '⏳'}</span>
-            </div>
-        `;
-    });
-}
-
-window.selectUser = function(idx) {
-    const user = appState.users[idx];
-    appState.selectedUser = user;
-    document.getElementById('userDetailPanel').style.display = 'block';
-    
-    document.getElementById('userDetailContent').innerHTML = `
-        <div class="row"><span class="label">Email:</span><span class="value">${user.email}</span></div>
-        <div class="row"><span class="label">Account ID:</span><span class="value">${user.accountId || 'Not set'}</span></div>
-        <div class="row"><span class="label">Broker:</span><span class="value">${user.broker || 'N/A'}</span></div>
-        <div class="row"><span class="label">Status:</span><span class="value" style="color:${user.blocked ? '#FF0033' : (user.verified ? '#00FF66' : '#FFD700')}">${user.blocked ? '🚫 Blocked' : (user.verified ? '✅ Verified' : '⏳ Pending')}</span></div>
-        <div class="row"><span class="label">Credits:</span><span class="value">${user.credits || 0}</span></div>
-        <div class="row"><span class="label">Deposit:</span><span class="value">₹${user.deposit || 0}</span></div>
-        <div class="row"><span class="label">Signals Used:</span><span class="value">${user.signalsUsed || 0}</span></div>
-    `;
-    document.getElementById('freeCreditsInput').value = '';
-}
-
-window.adminGiveCredits = function() {
-    if (!appState.selectedUser) { return; }
-    const credits = parseInt(document.getElementById('freeCreditsInput').value);
-    if (isNaN(credits) || credits <= 0) { return; }
-    appState.selectedUser.credits = (appState.selectedUser.credits || 0) + credits;
-    saveLocalState();
-    updateUI();
-    renderUsersList();
-    const idx = appState.users.indexOf(appState.selectedUser);
-    if (idx !== -1) window.selectUser(idx);
-    document.getElementById('freeCreditsInput').value = '';
-}
-
-window.adminBlockUser = function() {
-    if (!appState.selectedUser) { return; }
-    const action = appState.selectedUser.blocked ? 'Unblock' : 'Block';
-    if (confirm(action + ' user ' + appState.selectedUser.email + '?')) {
-        appState.selectedUser.blocked = !appState.selectedUser.blocked;
-        saveLocalState();
-        updateUI();
-        renderUsersList();
-        const idx = appState.users.indexOf(appState.selectedUser);
-        if (idx !== -1) window.selectUser(idx);
-    }
-}
-
-window.adminRemoveUser = function() {
-    if (!appState.selectedUser) { return; }
-    if (confirm('Remove user ' + appState.selectedUser.email + ' permanently?')) {
-        const idx = appState.users.indexOf(appState.selectedUser);
-        if (idx !== -1) {
-            appState.users.splice(idx, 1);
-            appState.selectedUser = null;
-            document.getElementById('userDetailPanel').style.display = 'none';
-            saveLocalState();
-            updateUI();
-            renderUsersList();
-        }
-    }
-}
-
-// ============================================================
-// ADMIN OPEN - Double Click on Logo
-// ============================================================
-function openAdminPanel() {
-    document.getElementById('adminLoginArea').style.display = 'block';
-    document.getElementById('adminArea').style.display = 'none';
-    document.getElementById('adminPassInput').value = '';
-    document.getElementById('adminLoginBtn').className = 'btn-submit hidden-btn';
-    document.getElementById('adminLoginBtn').style.display = 'none';
-    document.getElementById('adminPassError').textContent = '';
-    openModal('adminModal');
-    renderBrokerList();
-    renderUsersList();
-}
-
-document.getElementById('logoIcon').addEventListener('dblclick', function(e) {
-    e.preventDefault();
-    openAdminPanel();
-});
-document.getElementById('logoImage').addEventListener('dblclick', function(e) {
-    e.preventDefault();
-    openAdminPanel();
-});
-document.getElementById('brandSection').addEventListener('dblclick', function(e) {
-    e.preventDefault();
-    openAdminPanel();
-});
-
-// ============================================================
-// LOGIN, SIGNUP, VERIFY BUTTONS
-// ============================================================
-document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
-document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
-
-// ============================================================
-// SOCIAL LINKS
-// ============================================================
 document.querySelectorAll('.social-icons a').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
-        const platform = this.classList.contains('telegram') ? 'Telegram' :
-                       this.classList.contains('instagram') ? 'Instagram' :
-                       this.classList.contains('youtube') ? 'YouTube' : 'Twitter';
-        alert('📱 ' + platform + ' - Configure in Admin Settings');
+        alert('📱 Social media - Configure in Admin');
     });
 });
 
-// ============================================================
-// INIT
-// ============================================================
+// ---------- Admin Access (Double-click logo) ----------
+let logoClickCount = 0;
+document.getElementById('logoIcon').addEventListener('click', function(e) {
+    e.preventDefault();
+    logoClickCount++;
+    if (logoClickCount >= 2) {
+        logoClickCount = 0;
+        window.location.href = 'admin.html';
+    }
+});
+document.getElementById('brandSection').addEventListener('click', function(e) {
+    if (e.target.closest('.logo-icon') || e.target.closest('.brand-name')) {
+        logoClickCount++;
+        if (logoClickCount >= 2) {
+            logoClickCount = 0;
+            window.location.href = 'admin.html';
+        }
+    }
+});
+
+// ---------- Init ----------
 loadLocalState();
-
-// Expose functions
-window.handleLogin = handleLogin;
-window.handleSignup = handleSignup;
-window.handleVerify = handleVerify;
-window.openRechargeModal = openRechargeModal;
-window.togglePaymentHistory = togglePaymentHistory;
-window.proceedToPay = proceedToPay;
-window.selectUser = selectUser;
-window.adminGiveCredits = adminGiveCredits;
-window.adminBlockUser = adminBlockUser;
-window.adminRemoveUser = adminRemoveUser;
-window.adminLogin = adminLogin;
-window.adminSaveFirebase = adminSaveFirebase;
-window.adminSavePaymentSettings = adminSavePaymentSettings;
-window.adminSaveSignalSettings = adminSaveSignalSettings;
-window.adminSaveLogo = adminSaveLogo;
-window.adminAddUser = adminAddUser;
-window.adminDeleteUser = adminDeleteUser;
-window.adminAddBroker = adminAddBroker;
-window.adminDeleteBroker = adminDeleteBroker;
-window.adminSaveOffer = adminSaveOffer;
-window.checkAdminPassword = checkAdminPassword;
-
-console.log('🔥 Binary Ruthless Trader Loaded');
-console.log('🔐 Admin: Double-click on Logo');
+console.log('🏠 Home Page Loaded');
 console.log('🔑 Admin Password: ' + appState.password);
-console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
-console.log('📱 Firebase: ' + (isFirebaseConnected ? '✅ Connected' : '❌ Disconnected'));
-console.log('💳 QR generates only after "Proceed to Pay"');
-console.log('✅ Credits add only on Payment Success');
-console.log('📜 Scrolling enabled on all devices');
+console.log('📱 Test Login (Pre-verified): demo@binaryruthless.com / DEMO123');
+console.log('✅ Only Admin Approved/Added users can login.');
 </script>
 </body>
 </html>
