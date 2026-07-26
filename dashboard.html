@@ -127,28 +127,105 @@
         .user-logout-btn:active { transform: scale(0.93); }
         
         /* ─── BRAND SECTION ─── */
-        .brand-section { text-align: center; padding: 2px 0 1px 0; flex-shrink: 0; cursor: pointer; position: relative; z-index: 1; }
+        .brand-section { 
+            text-align: center; 
+            padding: 2px 0 1px 0; 
+            flex-shrink: 0; 
+            cursor: pointer; 
+            position: relative; 
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         .brand-section:active .logo-icon { animation: zoomInSlow 0.7s ease forwards; }
         .brand-section:active .logo-img { animation: zoomInSlow 0.7s ease forwards; }
         .brand-section:active .brand-name { animation: zoomOutSlow 0.7s ease forwards; }
         @keyframes zoomInSlow { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 100% { transform: scale(1); } }
         @keyframes zoomOutSlow { 0% { transform: scale(1); } 40% { transform: scale(0.8); } 100% { transform: scale(1); } }
         
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+        
         .logo-icon {
             font-size: clamp(2.6rem, 5vw, 4.6rem);
-            color: #FF0033; text-shadow: 0 0 40px rgba(255,0,51,0.3);
-            animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1.05;
-            transition: all 0.4s ease; position: relative; z-index: 1;
+            color: #FF0033;
+            text-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
+            animation: pulseLogo 3s ease-in-out infinite;
+            display: block;
+            line-height: 1.05;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
         }
         .brand-section:hover .logo-icon { text-shadow: 0 0 60px rgba(255,0,51,0.5), 0 0 80px rgba(255,0,51,0.2); transform: scale(1.03) rotate(-1deg); }
-        .logo-img { max-height: clamp(2.6rem, 5vw, 4.6rem); max-width: 200px; object-fit: contain; display: none; margin: 0 auto; transition: all 0.4s ease; position: relative; z-index: 1; }
+        .logo-img { 
+            max-height: clamp(2.6rem, 5vw, 4.6rem); 
+            max-width: 200px; 
+            object-fit: contain; 
+            display: none; 
+            margin: 0 auto; 
+            transition: all 0.4s ease; 
+            position: relative; 
+            z-index: 2;
+        }
         .brand-section:hover .logo-img { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(255,0,51,0.2)); }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.85; } }
         
+        /* ─── LOGO GLOW (Dashboard) - ONLY BEHIND LOGO ─── */
+        .logo-glow-dash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: clamp(130px, 28vw, 280px);
+            height: clamp(130px, 28vw, 280px);
+            transform: translate(-50%, -50%) scale(0.4);
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.6) 0%, rgba(255, 0, 51, 0.2) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(35px);
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .logo-glow-dash.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            animation: glowFlashDash 0.7s ease forwards;
+        }
+        @keyframes glowFlashDash {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            30% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.7);
+            }
+        }
+        
         .brand-name {
-            font-family: 'Orbitron', sans-serif; font-weight: 900;
-            font-size: clamp(1.1rem, 3.2vw, 3rem); letter-spacing: 2px; line-height: 1.05;
-            white-space: nowrap; transition: all 0.3s ease; position: relative; z-index: 1;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 3.2vw, 3rem);
+            letter-spacing: 2px;
+            line-height: 1.05;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
         }
         .brand-section:hover .brand-name { letter-spacing: 3px; }
         .brand-name .binary { color: #fff; }
@@ -156,10 +233,10 @@
         .brand-section:hover .brand-name .ruthless { text-shadow: 0 0 40px rgba(255,0,51,0.5); }
         .brand-name .trader { color: #fff; }
         
-        .brand-tagline { color: #888; font-size: 0.45rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 1; }
+        .brand-tagline { color: #888; font-size: 0.45rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 2; }
         .brand-section:hover .brand-tagline { color: #aaa; letter-spacing: 4px; }
         
-        .social-icons { display: flex; gap: 10px; justify-content: center; margin-top: 2px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .social-icons { display: flex; gap: 10px; justify-content: center; margin-top: 2px; flex-wrap: wrap; position: relative; z-index: 2; }
         .social-icons a {
             display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;
             border-radius: 50%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,0,51,0.08);
@@ -243,7 +320,7 @@
         }
         .tool-btn {
             width: 100%;
-            padding: 16px 20px;
+            padding: 18px 20px;
             background: rgba(255, 215, 0, 0.04);
             border: 1.5px solid rgba(255, 215, 0, 0.12);
             border-radius: 10px;
@@ -254,7 +331,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 70px;
+            min-height: 75px;
             position: relative;
             overflow: hidden;
         }
@@ -277,28 +354,29 @@
         .tool-btn:active { transform: scale(0.97); }
         .tool-btn .tool-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
             color: #ffffff;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
             position: relative;
             z-index: 1;
+            text-shadow: 0 0 20px rgba(255,255,255,0.05);
         }
         .tool-btn .tool-subname {
             font-family: 'Inter', sans-serif;
-            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            font-size: clamp(0.6rem, 0.9vw, 0.8rem);
             color: #FF0033;
-            margin-top: 3px;
-            font-weight: 400;
+            margin-top: 4px;
+            font-weight: 600;
             letter-spacing: 0.5px;
             position: relative;
             z-index: 1;
         }
         .tool-btn .tool-sticker {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             display: inline-block;
             animation: stickerFloat 3s ease-in-out infinite;
-            margin-right: 8px;
+            margin-right: 10px;
             position: relative;
             z-index: 1;
         }
@@ -364,46 +442,6 @@
             height: 100%;
             border: none;
             background: #0a0a0a;
-        }
-        
-        /* ─── LOGO GLOW (Dashboard) ─── */
-        .logo-glow-dash {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: clamp(120px, 24vw, 260px);
-            height: clamp(120px, 24vw, 260px);
-            transform: translate(-50%, -50%) scale(0.5);
-            background: radial-gradient(circle, rgba(255, 0, 51, 0.55) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-            filter: blur(28px);
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .logo-glow-dash.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            animation: glowFlashDash 0.7s ease forwards;
-        }
-        @keyframes glowFlashDash {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.4);
-            }
-            30% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            70% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
         }
         
         .features-section { padding: 4px 0 4px; border-top: 1px solid rgba(255,0,51,0.04); border-bottom: 1px solid rgba(255,0,51,0.04); flex-shrink: 0; margin-top: 6px; }
@@ -528,8 +566,8 @@
             .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
             .tool-btn { padding: 14px 16px; min-height: 60px; }
-            .tool-btn .tool-name { font-size: 0.8rem; }
-            .tool-btn .tool-subname { font-size: 0.5rem; }
+            .tool-btn .tool-name { font-size: 0.95rem; }
+            .tool-btn .tool-subname { font-size: 0.55rem; }
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
         }
         @media (max-width: 480px) {
@@ -549,8 +587,8 @@
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
             .tool-btn { padding: 12px 14px; min-height: 55px; }
-            .tool-btn .tool-name { font-size: 0.7rem; }
-            .tool-btn .tool-subname { font-size: 0.45rem; }
+            .tool-btn .tool-name { font-size: 0.85rem; }
+            .tool-btn .tool-subname { font-size: 0.5rem; }
             .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
         }
         
@@ -611,11 +649,12 @@
             <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
             
             <div class="brand-section" id="brandSection">
-                <!-- Logo Glow for Dashboard -->
-                <div class="logo-glow-dash" id="logoGlowDash"></div>
-                
-                <span class="logo-icon" id="logoIcon">◆</span>
-                <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
+                <div class="logo-wrapper">
+                    <!-- Logo Glow - ONLY behind logo -->
+                    <div class="logo-glow-dash" id="logoGlowDash"></div>
+                    <span class="logo-icon" id="logoIcon">◆</span>
+                    <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
+                </div>
                 <div class="brand-name">
                     <span class="binary">BINARY</span>
                     <span class="ruthless">RUTHLESS</span>
@@ -1059,13 +1098,15 @@ document.getElementById('brandSection').addEventListener('click', function(e) {
 const logoGlowDash = document.getElementById('logoGlowDash');
 
 document.addEventListener('click', function(e) {
-    // Ignore clicks inside modals or admin nav
+    // Ignore clicks inside modals, admin nav, user logout, tools, main button
     if (e.target.closest('.overlay')) return;
     if (e.target.closest('.modal')) return;
     if (e.target.closest('.admin-nav-bar')) return;
     if (e.target.closest('.user-logout-btn')) return;
     if (e.target.closest('.tool-btn')) return;
     if (e.target.closest('.dash-main-btn')) return;
+    if (e.target.closest('.btn-sm')) return;
+    if (e.target.closest('.social-icons a')) return;
 
     // ── Trigger logo glow ──
     logoGlowDash.classList.remove('active');
