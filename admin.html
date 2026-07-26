@@ -40,15 +40,15 @@
         .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 15px rgba(255,0,51,0.5); animation: pulseRed 1.5s ease-in-out infinite; }
         @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        /* ===== PASSWORD POPUP - Matching Theme ===== */
+        /* ===== PASSWORD POPUP ===== */
         .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
         .password-overlay.active { display: flex; }
-        .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 35px 28px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08), inset 0 0 60px rgba(255,0,51,0.02); position: relative; }
+        .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 18px; padding: 35px 28px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
         .password-modal .close-btn { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
         .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
         .password-modal .lock-icon { font-size: 2.8rem; color: #FF0033; margin-bottom: 10px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 18px; letter-spacing: 2px; }
-        .password-modal input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.15); border-radius: 8px; color: #fff; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; text-align: center; outline: none; transition: all 0.3s ease; }
+        .password-modal input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.15); border-radius: 8px; color: #fff; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; text-align: center; outline: none; }
         .password-modal input:focus { border-color: #FF0033; box-shadow: 0 0 30px rgba(255,0,51,0.05); }
         .password-modal input.correct { border-color: #00FF66; box-shadow: 0 0 30px rgba(0,255,102,0.2); }
         .password-modal input.wrong { border-color: #ff0033; animation: shake 0.5s; }
@@ -76,144 +76,38 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        .admin-dash-card:hover {
-            border-color: #FF0033;
-            transform: translateY(-4px);
-            box-shadow: 0 0 40px rgba(255,0,51,0.06);
-        }
+        .admin-dash-card:hover { border-color: #FF0033; transform: translateY(-4px); box-shadow: 0 0 40px rgba(255,0,51,0.06); }
         .admin-dash-card .icon { font-size: 1.6rem; color: #FFD700; }
-        .admin-dash-card .count {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #00FF66;
-            display: block;
-            margin: 4px 0;
-        }
+        .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 2rem; font-weight: 700; color: #00FF66; display: block; margin: 4px 0; }
         .admin-dash-card .label { font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .admin-dash-card .badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #FF0033;
-            color: #fff;
-            font-size: 0.6rem;
-            font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 14px;
-            min-width: 24px;
-            box-shadow: 0 0 20px rgba(255,0,51,0.2);
-        }
+        .admin-dash-card .badge { position: absolute; top: -6px; right: -6px; background: #FF0033; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 2px 10px; border-radius: 14px; min-width: 24px; box-shadow: 0 0 20px rgba(255,0,51,0.2); }
         .admin-dash-card .badge.gold { background: #FFD700; color: #000; }
         
         /* ===== ADMIN SECTION ===== */
-        .admin-section { 
-            border: 1px solid rgba(255,0,51,0.06); 
-            border-radius: 14px; 
-            padding: 16px; 
-            margin-bottom: 12px; 
-            background: rgba(255,255,255,0.01); 
-        }
-        .admin-section h4 { 
-            color: #FFD700; 
-            font-size: 0.75rem; 
-            margin-bottom: 10px; 
-            font-family: 'Orbitron', sans-serif; 
-            letter-spacing: 1px; 
-        }
+        .admin-section { border: 1px solid rgba(255,0,51,0.06); border-radius: 14px; padding: 16px; margin-bottom: 12px; background: rgba(255,255,255,0.01); }
+        .admin-section h4 { color: #FFD700; font-size: 0.75rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         .admin-section .field-group { margin-bottom: 8px; }
-        .admin-section .field-group label { 
-            font-size: 0.55rem; 
-            color: #888; 
-            display: block; 
-            margin-bottom: 3px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-        }
-        .admin-section .field-group input, 
-        .admin-section .field-group select, 
-        .admin-section .field-group textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            background: rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255,0,51,0.1); 
-            border-radius: 8px; 
-            color: #fff; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.75rem; 
-            outline: none; 
-            transition: all 0.3s ease;
-        }
-        .admin-section .field-group input:focus, 
-        .admin-section .field-group select:focus, 
-        .admin-section .field-group textarea:focus { 
-            border-color: #FF0033; 
-            box-shadow: 0 0 20px rgba(255,0,51,0.03);
-        }
+        .admin-section .field-group label { font-size: 0.55rem; color: #888; display: block; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .admin-section .field-group input, .admin-section .field-group select, .admin-section .field-group textarea { width: 100%; padding: 8px 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.75rem; outline: none; }
+        .admin-section .field-group input:focus, .admin-section .field-group select:focus, .admin-section .field-group textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
         .admin-section .field-group textarea { height: 60px; resize: vertical; }
-        .admin-section .field-group input:disabled, 
-        .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
+        .admin-section .field-group input:disabled, .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
         
-        .admin-section .btn-edit { 
-            width: 100%; 
-            padding: 8px; 
-            margin-top: 6px; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            border: none; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.65rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            background: #ffffff; 
-            color: #000; 
-        }
+        .admin-section .btn-edit { width: 100%; padding: 8px; margin-top: 6px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; background: #ffffff; color: #000; }
         .admin-section .btn-edit:hover { box-shadow: 0 0 30px rgba(255,255,255,0.15); transform: scale(1.02); }
         .admin-section .btn-edit:active { transform: scale(0.97); }
         
-        .admin-section .btn-save { 
-            width: 100%; 
-            padding: 8px; 
-            margin-top: 6px; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            border: none; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.65rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            background: #FF0033; 
-            color: #fff; 
-            display: none; 
-        }
+        .admin-section .btn-save { width: 100%; padding: 8px; margin-top: 6px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; background: #FF0033; color: #fff; display: none; }
         .admin-section .btn-save:hover { box-shadow: 0 0 30px rgba(255,0,51,0.2); transform: scale(1.02); }
         .admin-section .btn-save:active { transform: scale(0.97); }
         .admin-section .btn-save.show { display: block; }
-        
         .admin-section .btn-success { background: #00FF66; color: #000; }
         .admin-section .btn-danger { background: #FF0033; color: #fff; }
-        .admin-section .item-list { 
-            max-height: 100px; 
-            overflow-y: auto; 
-            margin-top: 6px; 
-            border: 1px solid rgba(255,0,51,0.05); 
-            border-radius: 6px; 
-            padding: 4px; 
-        }
+        
+        .admin-section .item-list { max-height: 100px; overflow-y: auto; margin-top: 6px; border: 1px solid rgba(255,0,51,0.05); border-radius: 6px; padding: 4px; }
         .admin-section .item-list::-webkit-scrollbar { width: 4px; }
         .admin-section .item-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .admin-section .list-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 4px 8px; 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
-            font-size: 0.6rem; 
-            align-items: center; 
-        }
+        .admin-section .list-item { display: flex; justify-content: space-between; padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.6rem; align-items: center; }
         .admin-section .list-item .name { color: #FFD700; }
         .admin-section .list-item .detail { color: #888; }
         .admin-section .list-item .del-btn { background: none; border: none; color: #FF0033; cursor: pointer; font-size: 0.65rem; }
@@ -225,230 +119,60 @@
         .qr-preview { max-width: 150px; max-height: 150px; border-radius: 8px; margin-top: 4px; border: 1px solid rgba(255,215,0,0.1); }
         
         /* ===== OVERLAYS ===== */
-        .overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.92); 
-            display: none; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 9999; 
-            padding: 20px; 
-            backdrop-filter: blur(12px); 
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(12px); }
         .overlay.active { display: flex; }
-        .modal { 
-            background: rgba(10,10,10,0.95); 
-            backdrop-filter: blur(20px); 
-            border: 2px solid #FF0033; 
-            border-radius: 20px; 
-            padding: 28px 24px; 
-            width: 100%; 
-            max-width: 680px; 
-            max-height: 88vh; 
-            overflow-y: auto; 
-            position: relative; 
-            box-shadow: 0 0 80px rgba(255,0,51,0.06); 
-        }
+        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 680px; max-height: 88vh; overflow-y: auto; position: relative; box-shadow: 0 0 80px rgba(255,0,51,0.06); }
         .modal::-webkit-scrollbar { width: 5px; }
         .modal::-webkit-scrollbar-track { background: rgba(255,0,51,0.05); border-radius: 5px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 5px; }
         
-        .modal-close { 
-            position: absolute; 
-            top: 12px; 
-            right: 16px; 
-            font-size: 1.4rem; 
-            color: #FF0033; 
-            cursor: pointer; 
-            background: none; 
-            border: none; 
-            transition: all 0.3s ease; 
-        }
+        .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
         .modal-close:hover { transform: scale(1.2) rotate(90deg); }
-        .modal h2 { 
-            color: #FFD700; 
-            text-align: center; 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 1rem; 
-            margin-bottom: 14px; 
-            letter-spacing: 2px; 
-        }
-        .modal label { 
-            display: block; 
-            font-size: 0.55rem; 
-            color: #FFD700; 
-            margin: 8px 0 4px; 
-            text-transform: uppercase; 
-            font-weight: 700; 
-            letter-spacing: 0.5px; 
-        }
-        .modal input, .modal select, .modal textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            background: rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255,0,51,0.1); 
-            border-radius: 8px; 
-            color: #fff; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.75rem; 
-            outline: none; 
-            transition: all 0.3s ease;
-        }
+        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+        .modal label { display: block; font-size: 0.55rem; color: #FFD700; margin: 8px 0 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 8px 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.75rem; outline: none; }
         .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.03); }
-        .modal .btn-submit { 
-            width: 100%; 
-            padding: 10px; 
-            margin-top: 10px; 
-            border-radius: 30px; 
-            font-weight: 700; 
-            border: none; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.75rem; 
-        }
+        .modal .btn-submit { width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.75rem; }
         .modal .btn-submit:hover { transform: scale(1.02); }
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
-        .modal .btn-submit.btn-danger { background: #ff0033; color: #fff; }
         .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 4px; min-height: 16px; }
         .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 4px; min-height: 16px; }
         
-        .modal .search-input { 
-            width: 100%; 
-            padding: 8px 12px; 
-            background: rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255,0,51,0.1); 
-            border-radius: 8px; 
-            color: #00FF66; 
-            font-size: 0.7rem; 
-            outline: none; 
-            margin-bottom: 8px; 
-        }
+        .modal .search-input { width: 100%; padding: 8px 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 8px; color: #00FF66; font-size: 0.7rem; outline: none; margin-bottom: 8px; }
         .modal .search-input:focus { border-color: #FF0033; }
         
-        .modal .user-list-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 6px 10px; 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            font-size: 0.65rem; 
-            align-items: center; 
-            border-radius: 4px;
-        }
+        .modal .user-list-item { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: all 0.3s ease; font-size: 0.65rem; align-items: center; border-radius: 4px; }
         .modal .user-list-item:hover { background: rgba(255,0,51,0.05); }
         .modal .user-list-item .status-verified { color: #00FF66; font-size: 0.6rem; }
         .modal .user-list-item .status-pending { color: #FFD700; font-size: 0.6rem; }
         .modal .user-list-item .status-blocked { color: #FF0033; font-size: 0.6rem; }
         .modal .user-list-item .status-admin { color: #FFD700; font-size: 0.6rem; }
-        .modal .user-list-scroll { 
-            max-height: 320px; 
-            overflow-y: auto; 
-            margin-top: 6px; 
-            border: 1px solid rgba(255,0,51,0.05); 
-            border-radius: 8px; 
-            padding: 4px; 
-        }
+        .modal .user-list-scroll { max-height: 320px; overflow-y: auto; margin-top: 6px; border: 1px solid rgba(255,0,51,0.05); border-radius: 8px; padding: 4px; }
         .modal .user-list-scroll::-webkit-scrollbar { width: 4px; }
         .modal .user-list-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        .modal .user-detail-row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 4px 0; 
-            font-size: 0.65rem; 
-            color: #aaa; 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
-        }
+        .modal .user-detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.65rem; color: #aaa; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .modal .user-detail-row .label { color: #888; }
         .modal .user-detail-row .value { color: #FFD700; }
         
-        .modal .chat-msg-list { 
-            max-height: 280px; 
-            overflow-y: auto; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            border-radius: 8px; 
-            padding: 8px; 
-            margin: 6px 0; 
-            background: rgba(0,0,0,0.2);
-        }
+        .modal .chat-msg-list { max-height: 280px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin: 6px 0; background: rgba(0,0,0,0.2); }
         .modal .chat-msg-list::-webkit-scrollbar { width: 4px; }
         .modal .chat-msg-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal .chat-msg-list .msg { 
-            padding: 6px 10px; 
-            margin: 3px 0; 
-            border-radius: 6px; 
-            font-size: 0.6rem; 
-            max-width: 85%; 
-        }
-        .modal .chat-msg-list .msg.admin { 
-            background: rgba(255,0,51,0.08); 
-            color: #FF0033; 
-            text-align: right; 
-            margin-left: auto; 
-        }
-        .modal .chat-msg-list .msg.user { 
-            background: rgba(0,255,102,0.05); 
-            color: #00FF66; 
-            text-align: left; 
-        }
+        .modal .chat-msg-list .msg { padding: 6px 10px; margin: 3px 0; border-radius: 6px; font-size: 0.6rem; max-width: 85%; }
+        .modal .chat-msg-list .msg.admin { background: rgba(255,0,51,0.08); color: #FF0033; text-align: right; margin-left: auto; }
+        .modal .chat-msg-list .msg.user { background: rgba(0,255,102,0.05); color: #00FF66; text-align: left; }
         .modal .chat-msg-list .msg .time { font-size: 0.4rem; color: #666; margin-left: 6px; }
-        .modal .chat-input-area { 
-            display: flex; 
-            gap: 6px; 
-            margin-top: 6px; 
-        }
-        .modal .chat-input-area input { 
-            flex: 1; 
-            padding: 6px 10px; 
-            background: rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255,0,51,0.1); 
-            border-radius: 6px; 
-            color: #fff; 
-            font-size: 0.65rem; 
-            outline: none; 
-        }
+        .modal .chat-input-area { display: flex; gap: 6px; margin-top: 6px; }
+        .modal .chat-input-area input { flex: 1; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.65rem; outline: none; }
         .modal .chat-input-area input:focus { border-color: #FF0033; }
-        .modal .chat-input-area button { 
-            padding: 6px 16px; 
-            border-radius: 6px; 
-            border: none; 
-            background: #0088cc; 
-            color: #fff; 
-            font-weight: 700; 
-            cursor: pointer; 
-            font-size: 0.6rem; 
-            transition: all 0.3s ease; 
-        }
+        .modal .chat-input-area button { padding: 6px 16px; border-radius: 6px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.6rem; transition: all 0.3s ease; }
         .modal .chat-input-area button:hover { transform: scale(1.02); }
         
-        .modal .btn-group { 
-            display: flex; 
-            gap: 8px; 
-            flex-wrap: wrap; 
-            margin-top: 10px; 
-        }
-        .modal .btn-group .btn-sm { 
-            flex: 1; 
-            min-width: 70px; 
-            padding: 6px; 
-            border-radius: 8px; 
-            border: none; 
-            font-weight: 700; 
-            cursor: pointer; 
-            font-size: 0.55rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            transition: all 0.3s ease; 
-        }
+        .modal .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .modal .btn-group .btn-sm { flex: 1; min-width: 70px; padding: 6px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease; }
         .modal .btn-group .btn-sm:hover { transform: scale(1.02); }
         .modal .btn-group .btn-sm:active { transform: scale(0.97); }
         .modal .btn-group .btn-give { background: #00FF66; color: #000; }
@@ -471,19 +195,16 @@
         .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.7rem; font-family: 'Orbitron', sans-serif; }
         .tools-list .tool-item .tool-status { font-size: 0.5rem; color: #888; }
         .tools-list .tool-item .tool-actions { display: flex; gap: 6px; }
-        .tools-list .tool-item .tool-actions button {
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: none;
-            font-size: 0.5rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .tools-list .tool-item .tool-actions button { padding: 4px 10px; border-radius: 4px; border: none; font-size: 0.5rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
         .tools-list .tool-item .tool-actions button:hover { transform: scale(1.05); }
         .tools-list .tool-item .tool-actions .btn-edit-tool { background: #fff; color: #000; }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
+        
+        /* Toast Notification */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: rgba(0,255,102,0.1); border: 1px solid #00FF66; color: #00FF66; padding: 12px 24px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; z-index: 99999; display: none; animation: slideUp 0.5s ease; backdrop-filter: blur(10px); }
+        .toast.show { display: block; }
+        @keyframes slideUp { 0% { transform: translateY(50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
@@ -495,6 +216,7 @@
             .payment-settings-grid { grid-template-columns: 1fr; }
             .admin-header .title { font-size: 0.85rem; }
             .modal .user-list-scroll { max-height: 250px; }
+            .toast { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 0.65rem; }
         }
         @media (max-width: 480px) {
             .admin-dash-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -507,6 +229,7 @@
             .modal { padding: 14px 12px; }
             .modal .btn-group .btn-sm { min-width: 50px; font-size: 0.45rem; padding: 4px; }
             .modal .user-list-item { font-size: 0.55rem; padding: 4px 6px; }
+            .toast { bottom: 16px; right: 16px; padding: 8px 14px; font-size: 0.55rem; }
         }
     </style>
 </head>
@@ -554,10 +277,10 @@
             </div>
         </div>
         
-        <!-- ===== ADMIN AREA (Settings below) ===== -->
+        <!-- ===== ADMIN AREA (Settings) ===== -->
         <div id="adminArea" style="display:none;">
             
-            <!-- OFFER SETTINGS - Moved to Top -->
+            <!-- OFFER SETTINGS -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
                 <div class="field-group">
@@ -721,9 +444,7 @@
             <button class="btn-submit btn-primary" style="flex:1;" onclick="showVerifiedUsers()">✅ Verified Users</button>
             <button class="btn-submit btn-gold" style="flex:1;" onclick="showAddUserForm()">➕ Add User</button>
         </div>
-        <div id="usersContent">
-            <!-- Will be dynamically filled -->
-        </div>
+        <div id="usersContent"></div>
     </div>
 </div>
 
@@ -766,6 +487,9 @@
         </div>
     </div>
 </div>
+
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div class="toast" id="toast"></div>
 
 <!-- ===== JAVASCRIPT ===== -->
 <script type="importmap">
@@ -843,7 +567,16 @@ let adminLoggedIn = false;
 let selectedUserDetail = null;
 let chatSelectedUser = null;
 let editingToolIndex = -1;
-let logoClickCounter = 0;
+
+// ===== TOAST FUNCTION =====
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = '✅ ' + message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
 
 // ===== FIREBASE LISTENER =====
 onValue(dbRef, (snapshot) => {
@@ -864,28 +597,49 @@ onValue(dbRef, (snapshot) => {
         renderToolsList();
         updateChatNotification();
         if (adminLoggedIn) loadAdminData();
-        // Update home page and dashboard via localStorage sync
-        if (val.offerCredits !== undefined) {
-            localStorage.setItem('brt_offer_credits', val.offerCredits);
-        }
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-            localStorage.setItem('brt_logo', val.logoBase64);
-        }
-        // Update tools in localStorage for dashboard
+        
+        // ==== SYNC TO LOCAL STORAGE FOR HOME & DASHBOARD ====
+        // Sync Tools
         if (val.tools !== undefined) {
             localStorage.setItem('brt_tools', JSON.stringify(val.tools));
         }
-        // Update users in localStorage
+        // Sync Logo
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            localStorage.setItem('brt_logo', val.logoBase64);
+        }
+        // Sync Users
         if (val.users !== undefined) {
             localStorage.setItem('brt_users', JSON.stringify(val.users));
         }
-        // Update credit packs in localStorage
+        // Sync Credit Packs
         if (val.creditPacks !== undefined) {
             localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
         }
-        // Update brokers in localStorage
+        // Sync Brokers
         if (val.brokers !== undefined) {
             localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+        }
+        // Sync Offer Credits
+        if (val.offerCredits !== undefined) {
+            localStorage.setItem('brt_offer_credits', val.offerCredits);
+        }
+        // Sync Payment Settings
+        if (val.upiId !== undefined) {
+            localStorage.setItem('brt_upi', val.upiId);
+        }
+        if (val.paymentInstructions !== undefined) {
+            localStorage.setItem('brt_payment_instructions', val.paymentInstructions);
+        }
+        if (val.qrCodeBase64 !== undefined) {
+            localStorage.setItem('brt_qr_code', val.qrCodeBase64);
+        }
+        // Sync Payment History (for user dashboard)
+        if (val.payments !== undefined) {
+            localStorage.setItem('brt_payments', JSON.stringify(val.payments));
+        }
+        // Sync Chats
+        if (val.chats !== undefined) {
+            localStorage.setItem('brt_chats', JSON.stringify(val.chats));
         }
     }
 }, (error) => {
@@ -907,6 +661,7 @@ function loadLocalState() {
             appState = { ...appState, ...parsed };
         } catch(e) { console.error(e); }
     }
+    // Load sync data from localStorage
     const logoData = localStorage.getItem('brt_logo');
     if (logoData) appState.logoBase64 = logoData;
     updateUI();
@@ -990,7 +745,7 @@ window.adminLogin = function() {
         document.getElementById('adminArea').style.display = 'block';
         document.getElementById('adminPassInput').value = '';
         loadAdminData();
-        // No alert - silent login
+        showToast('Admin Login Successful');
     }
 };
 
@@ -1068,7 +823,7 @@ window.adminApprovePayment = function(idx) {
         renderPendingPayments();
         renderUsersList();
         updateUI();
-        // No alert - silent
+        showToast('Payment Approved!');
     }
 };
 
@@ -1079,7 +834,7 @@ window.adminRejectPayment = function(idx) {
         payment.status = 'failed';
         saveLocalState();
         renderPendingPayments();
-        // No alert - silent
+        showToast('Payment Rejected');
     }
 };
 
@@ -1131,7 +886,6 @@ window.adminApproveVerification = function(idx) {
         const user = appState.users.find(u => u.email === request.userEmail);
         if (user) {
             user.verified = true;
-            // Add offer credits
             const offerCredits = appState.offerCredits || 10;
             user.credits = (user.credits || 0) + offerCredits;
             user.freeCredits = (user.freeCredits || 0) + offerCredits;
@@ -1140,7 +894,7 @@ window.adminApproveVerification = function(idx) {
         renderPendingVerifications();
         renderUsersList();
         updateUI();
-        // No alert - silent
+        showToast(`${request.userEmail} Verified & ${appState.offerCredits || 10} Credits Added!`);
     }
 };
 
@@ -1151,7 +905,7 @@ window.adminRejectVerification = function(idx) {
         request.status = 'rejected';
         saveLocalState();
         renderPendingVerifications();
-        // No alert - silent
+        showToast('Verification Rejected');
     }
 };
 
@@ -1300,7 +1054,7 @@ window.giveFreeCredits = function() {
     saveLocalState();
     renderUsersList();
     updateUI();
-    // No alert - silent
+    showToast(credits + ' Free Credits Added to ' + selectedUserDetail.email);
     document.getElementById('detailFreeCreditsInput').value = '';
     const idx = appState.users.indexOf(selectedUserDetail);
     if (idx !== -1) openUserDetailPopup(idx);
@@ -1314,7 +1068,7 @@ window.blockUser = function() {
         saveLocalState();
         renderUsersList();
         updateUI();
-        // No alert - silent
+        showToast('User ' + (selectedUserDetail.blocked ? 'Blocked' : 'Unblocked'));
         const idx = appState.users.indexOf(selectedUserDetail);
         if (idx !== -1) openUserDetailPopup(idx);
     }
@@ -1331,7 +1085,7 @@ window.removeUser = function() {
             saveLocalState();
             renderUsersList();
             updateUI();
-            // No alert - silent
+            showToast('User Removed');
         }
     }
 };
@@ -1520,12 +1274,14 @@ window.adminSavePaymentSettings = function() {
             saveLocalState();
             loadQRPreview();
             disableEditFields(document.querySelector('.admin-section'));
+            showToast('Payment Settings Saved!');
         };
         reader.readAsDataURL(fileInput.files[0]);
     } else {
         saveLocalState();
         loadQRPreview();
         disableEditFields(document.querySelector('.admin-section'));
+        showToast('Payment Settings Saved!');
     }
 };
 
@@ -1554,7 +1310,10 @@ function previewQRImage(event) {
 window.adminAddCreditPack = function() {
     const credits = parseInt(document.getElementById('packCredits').value);
     const price = parseInt(document.getElementById('packPrice').value);
-    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
+    if (!credits || credits <= 0 || !price || price <= 0) { 
+        alert('Enter valid credits and price'); 
+        return; 
+    }
     if (!appState.creditPacks) appState.creditPacks = [];
     appState.creditPacks.push({ credits, price });
     saveLocalState();
@@ -1562,6 +1321,7 @@ window.adminAddCreditPack = function() {
     document.getElementById('packCredits').value = '';
     document.getElementById('packPrice').value = '';
     disableEditFields(document.querySelector('.admin-section'));
+    showToast('Credit Pack Added!');
 };
 
 window.adminDeleteCreditPack = function(idx) {
@@ -1569,6 +1329,7 @@ window.adminDeleteCreditPack = function(idx) {
         appState.creditPacks.splice(idx, 1);
         saveLocalState();
         renderCreditPackList();
+        showToast('Credit Pack Deleted');
     }
 };
 
@@ -1595,13 +1356,17 @@ function renderCreditPackList() {
 // ===== OFFER SETTINGS =====
 window.adminSaveOffer = function() {
     const credits = parseInt(document.getElementById('adminOfferCredits').value);
-    if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
+    if (isNaN(credits) || credits < 0) { 
+        alert('Enter valid number'); 
+        return; 
+    }
     appState.offerCredits = credits;
     saveLocalState();
     updateUI();
-    // Update home page via localStorage
+    // Sync to localStorage for home page
     localStorage.setItem('brt_offer_credits', credits);
     disableEditFields(document.querySelector('.admin-section'));
+    showToast('Offer Settings Saved!');
 };
 
 // ===== TOOLS MANAGER =====
@@ -1662,10 +1427,11 @@ window.adminUpdateTool = function() {
     
     appState.tools[idx] = { ...appState.tools[idx], name, htmlCode, visibility };
     saveLocalState();
-    // Update localStorage for dashboard
+    // Sync to localStorage for dashboard
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('editToolForm').style.display = 'none';
+    showToast('Tool Updated Successfully!');
 };
 
 window.toggleToolVisibility = function(idx) {
@@ -1675,6 +1441,7 @@ window.toggleToolVisibility = function(idx) {
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
+    showToast('Tool Visibility Toggled');
 };
 
 window.deleteTool = function(idx) {
@@ -1683,6 +1450,7 @@ window.deleteTool = function(idx) {
         saveLocalState();
         localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
         renderToolsList();
+        showToast('Tool Deleted');
     }
 };
 
@@ -1720,6 +1488,7 @@ window.adminAddTool = function() {
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('addToolForm').style.display = 'none';
+    showToast('New Tool Added Successfully!');
 };
 
 // ===== LOGO =====
@@ -1732,6 +1501,7 @@ window.adminSaveLogo = function() {
             localStorage.setItem('brt_logo', appState.logoBase64);
             saveLocalState();
             disableEditFields(document.querySelector('.admin-section'));
+            showToast('Logo Updated Successfully!');
         };
         reader.readAsDataURL(file);
     } else {
@@ -1782,11 +1552,15 @@ window.adminAddBroker = function() {
     const link = document.getElementById('adminBrokerLink').value.trim();
     const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0;
     const rules = document.getElementById('adminBrokerRules').value.trim();
-    if (!name || !link) { alert('Enter name and link'); return; }
+    if (!name || !link) { 
+        alert('Enter name and link'); 
+        return; 
+    }
     appState.brokers.push({ name, link, minDeposit, rules });
     saveLocalState();
     renderBrokerList();
     disableEditFields(document.querySelector('.admin-section'));
+    showToast('Broker Added Successfully!');
 };
 
 window.adminDeleteBroker = function(idx) {
@@ -1794,6 +1568,7 @@ window.adminDeleteBroker = function(idx) {
         appState.brokers.splice(idx, 1);
         saveLocalState();
         renderBrokerList();
+        showToast('Broker Deleted');
     }
 };
 
@@ -1808,6 +1583,7 @@ window.adminSaveFirebase = function() {
     appState.firebaseConfig.appId = document.getElementById('fbAppId').value.trim();
     saveLocalState();
     disableEditFields(document.querySelector('.admin-section'));
+    showToast('Firebase Config Saved!');
 };
 
 // ===== ADMIN ACCESS =====
@@ -1817,6 +1593,7 @@ window.saveAdminSettings = function() {
     appState.notificationEmail = document.getElementById('notificationEmail').value.trim();
     saveLocalState();
     disableEditFields(document.querySelector('.admin-section'));
+    showToast('Admin Settings Saved!');
 };
 
 // ===== EDIT ENABLE/DISABLE =====
@@ -1834,12 +1611,6 @@ function disableEditFields(section) {
     section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
     section.querySelectorAll('.btn-edit').forEach(b => b.style.display = 'block');
 }
-
-// ===== LOGO CLICK FOR ADMIN ACCESS =====
-document.addEventListener('DOMContentLoaded', function() {
-    // This will be used by home page and dashboard via localStorage
-    // The actual click logic is in home page and dashboard
-});
 
 // ===== INIT =====
 showPasswordPopup();
