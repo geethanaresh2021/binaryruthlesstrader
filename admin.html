@@ -132,6 +132,7 @@
         .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
         .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
+        .password-modal .close-btn:active { transform: scale(0.9); }
         .password-modal .lock-icon { font-size: 2.4rem; color: #FF0033; margin-bottom: 8px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
         .password-modal input { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: #fff; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-align: center; outline: none; transition: all 0.3s ease; }
@@ -192,6 +193,7 @@
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         .modal-close { position: absolute; top: 8px; right: 12px; font-size: 1.1rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .modal-close:hover { transform: scale(1.2) rotate(90deg); }
+        .modal-close:active { transform: scale(0.9); }
         .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 10px; letter-spacing: 2px; }
         .modal label { display: block; font-size: 0.48rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         .modal input, .modal select, .modal textarea { width: 100%; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.65rem; outline: none; transition: all 0.3s ease; }
@@ -601,6 +603,12 @@ if (window.matchMedia('(hover: hover)').matches) {
     document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
 }
 
+// ─── PASSWORD POPUP CLOSE - Redirect to home ───
+window.hidePasswordPopup = function() {
+    document.getElementById('passwordOverlay').classList.remove('active');
+    window.location.href = 'index.html';
+};
+
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
     const val = snapshot.val();
@@ -669,7 +677,7 @@ let adminSession = sessionStorage.getItem('admin_logged_in');
 if (adminSession === 'true') { adminLoggedIn = true; document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('passwordOverlay').classList.remove('active'); loadLocalState(); } else { showPasswordPopup(); }
 
 function showPasswordPopup() { document.getElementById('passwordOverlay').classList.add('active'); document.getElementById('adminPassInput').value = ''; document.getElementById('adminLoginBtn').disabled = true; document.getElementById('adminLoginBtn').classList.remove('enabled'); document.getElementById('adminPassInput').classList.remove('correct', 'wrong'); document.getElementById('adminPassError').textContent = ''; setTimeout(() => document.getElementById('adminPassInput').focus(), 100); }
-window.hidePasswordPopup = function() { document.getElementById('passwordOverlay').classList.remove('active'); };
+
 window.checkAdminPassword = function() {
     const pass = document.getElementById('adminPassInput').value; const loginBtn = document.getElementById('adminLoginBtn'); const errorEl = document.getElementById('adminPassError');
     if (pass === appState.password) { loginBtn.disabled = false; loginBtn.classList.add('enabled'); document.getElementById('adminPassInput').classList.add('correct'); document.getElementById('adminPassInput').classList.remove('wrong'); errorEl.textContent = ''; }
@@ -678,7 +686,12 @@ window.checkAdminPassword = function() {
 window.adminLogin = function() { if (document.getElementById('adminPassInput').value === appState.password) { adminLoggedIn = true; sessionStorage.setItem('admin_logged_in', 'true'); hidePasswordPopup(); document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('adminPassInput').value = ''; loadLocalState(); } };
 document.getElementById('adminPassInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !document.getElementById('adminLoginBtn').disabled) { adminLogin(); } });
 
-document.getElementById('adminLogoutBtn').addEventListener('click', function() { adminLoggedIn = false; sessionStorage.removeItem('admin_logged_in'); document.getElementById('adminDashboard').style.display = 'none'; document.getElementById('adminArea').style.display = 'none'; showPasswordPopup(); });
+document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+    adminLoggedIn = false; sessionStorage.removeItem('admin_logged_in');
+    sessionStorage.removeItem('user_logged_in');
+    document.getElementById('adminDashboard').style.display = 'none'; document.getElementById('adminArea').style.display = 'none';
+    window.location.href = 'index.html';
+});
 
 window.changeAdminPassword = function() {
     const newPass = document.getElementById('adminNewPassword').value; const confirmPass = document.getElementById('adminConfirmPassword').value;
@@ -761,7 +774,6 @@ window.openUserDetailPopup = function(idx) {
     const user = appState.users[idx]; if (!user) return; selectedUserDetail = user;
     document.getElementById('userDetailTitle').textContent = '👤 ' + (user.name || user.email);
     
-    // Get user payment history
     const userPayments = (appState.payments || []).filter(p => p.userEmail === user.email);
     let paymentDetails = '';
     if (userPayments.length > 0) {
@@ -850,6 +862,8 @@ window.adminSavePaymentSettings = function() {
     appState.paymentApprovalMode = document.getElementById('paymentApprovalMode').value; appState.paymentGateway = document.getElementById('paymentGateway').value; appState.paymentEnvironment = document.getElementById('paymentEnvironment').value;
     appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless'; appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
     const fileInput = document.getElementById('qrUploadInput'); if (fileInput.files && fileInput.files[0]) { const reader = new FileReader(); reader.onload = function(e) { appState.qrCodeBase64 = e.target.result; saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }; reader.readAsDataURL(fileInput.files[0]); } else { saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }
+    document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
 };
 function loadQRPreview() { const container = document.getElementById('qrPreviewContainer'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`; } else { container.innerHTML = ''; } }
 function previewQRImage(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; }; reader.readAsDataURL(file); } }
@@ -858,6 +872,8 @@ window.adminAddCreditPack = function() {
     const credits = parseInt(document.getElementById('packCredits').value); const price = parseInt(document.getElementById('packPrice').value);
     if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
     if (!appState.creditPacks) appState.creditPacks = []; appState.creditPacks.push({ credits, price }); saveLocalState(); renderCreditPackList(); document.getElementById('packCredits').value = ''; document.getElementById('packPrice').value = ''; disableEditFields(document.querySelector('.admin-section'));
+    document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Add Pack'; }, 2000);
 };
 window.adminDeleteCreditPack = function(idx) { if (confirm('Delete this pack?')) { appState.creditPacks.splice(idx, 1); saveLocalState(); renderCreditPackList(); } };
 function renderCreditPackList() {
@@ -870,6 +886,8 @@ window.adminSaveOffer = function() {
     const credits = parseInt(document.getElementById('adminOfferCredits').value);
     if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
     appState.offerCredits = credits; saveLocalState(); updateUI(); localStorage.setItem('brt_offer_credits', credits); disableEditFields(document.querySelector('.admin-section'));
+    document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
 };
 
 function renderToolsList() {
@@ -892,6 +910,8 @@ window.adminUpdateTool = function() {
     const idx = parseInt(document.getElementById('editToolIndex').value); const name = document.getElementById('editToolName').value.trim(); const subName = document.getElementById('editToolSubName').value.trim(); const sticker = document.getElementById('editToolSticker').value.trim() || '🎯'; const htmlCode = document.getElementById('editToolHtml').value.trim(); const visibility = document.getElementById('editToolStatus').value;
     if (!name) { alert('Please enter tool name'); return; } if (!htmlCode) { alert('Please enter HTML code'); return; }
     appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility }; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); document.getElementById('editToolForm').style.display = 'none';
+    document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Update Tool'; }, 2000);
 };
 window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
 window.deleteTool = function(idx) { if (confirm('Delete this tool?')) { appState.tools.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); } };
@@ -900,6 +920,8 @@ window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim(); const subName = document.getElementById('newToolSubName').value.trim(); const sticker = document.getElementById('newToolSticker').value.trim() || '🎯'; const htmlCode = document.getElementById('newToolHtml').value.trim(); const visibility = document.getElementById('newToolStatus').value;
     if (!name) { alert('Please enter tool name'); return; } if (!htmlCode) { alert('Please enter HTML code'); return; }
     if (!appState.tools) appState.tools = []; appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility }); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); document.getElementById('addToolForm').style.display = 'none';
+    document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save Tool'; }, 2000);
 };
 
 function renderSocialList() {
@@ -920,6 +942,8 @@ window.adminUpdateSocial = function() {
     const idx = parseInt(document.getElementById('editSocialIndex').value); const name = document.getElementById('editSocialName').value.trim(); const url = document.getElementById('editSocialUrl').value.trim(); const icon = document.getElementById('editSocialIcon').value.trim(); const visibility = document.getElementById('editSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
     appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility }; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); document.getElementById('editSocialForm').style.display = 'none';
+    document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Update Social'; }, 2000);
 };
 window.toggleSocialVisibility = function(idx) { const social = appState.socialMedia[idx]; if (!social) return; social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); };
 window.deleteSocial = function(idx) { if (confirm('Delete this social media?')) { appState.socialMedia.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); } };
@@ -928,11 +952,13 @@ window.adminAddSocial = function() {
     const name = document.getElementById('newSocialName').value.trim(); const url = document.getElementById('newSocialUrl').value.trim(); const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link'; const visibility = document.getElementById('newSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
     if (!appState.socialMedia) appState.socialMedia = []; appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility }); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); document.getElementById('addSocialForm').style.display = 'none';
+    document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save Social'; }, 2000);
 };
 
 window.adminSaveLogo = function() {
     const file = document.getElementById('logoUpload').files[0];
-    if (file) { const reader = new FileReader(); reader.onload = (e) => { appState.logoBase64 = e.target.result; localStorage.setItem('brt_logo', appState.logoBase64); saveLocalState(); disableEditFields(document.querySelector('.admin-section')); }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
+    if (file) { const reader = new FileReader(); reader.onload = (e) => { appState.logoBase64 = e.target.result; localStorage.setItem('brt_logo', appState.logoBase64); saveLocalState(); disableEditFields(document.querySelector('.admin-section')); document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved'; setTimeout(() => { document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000); }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
 };
 
 function renderUsersList() { /* used internally */ }
@@ -944,6 +970,8 @@ window.adminAddBroker = function() {
     const name = document.getElementById('adminBrokerName').value.trim(); const link = document.getElementById('adminBrokerLink').value.trim(); const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; const rules = document.getElementById('adminBrokerRules').value.trim();
     if (!name || !link) { alert('Enter name and link'); return; }
     appState.brokers.push({ name, link, minDeposit, rules }); saveLocalState(); renderBrokerList(); disableEditFields(document.querySelector('.admin-section'));
+    document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Add'; }, 2000);
 };
 window.adminDeleteBroker = function(idx) { if (confirm('Delete this broker?')) { appState.brokers.splice(idx, 1); saveLocalState(); renderBrokerList(); } };
 
@@ -952,6 +980,8 @@ window.saveAdminSettings = function() {
     appState.notificationMobile = document.getElementById('notificationMobile').value.trim();
     appState.notificationEmail = document.getElementById('notificationEmail').value.trim();
     saveLocalState(); localStorage.setItem('brt_logo_click_count', appState.logoClickCount); disableEditFields(document.querySelector('.admin-section'));
+    document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
+    setTimeout(() => { document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
 };
 
 function enableEdit(btn) { const section = btn.closest('.admin-section'); if (!section) return; section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); btn.textContent = '💾 Save'; btn.style.display = 'none'; }
