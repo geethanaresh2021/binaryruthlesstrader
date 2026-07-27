@@ -420,39 +420,54 @@
         .tool-btn:hover::before { opacity: 1; }
         .tool-btn:active { transform: scale(0.97); }
         
-        /* ─── 3D FIRE ANIMATION ─── */
+        /* ─── REAL 3D FIRE ANIMATION ─── */
         .tool-fire {
             display: inline-block;
-            font-size: 2.2rem;
-            animation: fire3D 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.6));
-            margin: 0 10px;
+            font-size: 1.6rem;
+            animation: realFire3D 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 150, 0, 0.4));
+            margin: 0 6px;
             line-height: 1;
+            transform-origin: center;
         }
-        @keyframes fire3D {
+        @keyframes realFire3D {
             0%, 100% { 
-                transform: scale(1) rotate(0deg) translateY(0); 
-                filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.6)); 
+                transform: scale(1) rotate(-2deg) translateY(0); 
+                filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 150, 0, 0.4));
+                color: #FF4500;
             }
-            25% { 
-                transform: scale(1.2) rotate(-8deg) translateY(-5px); 
-                filter: drop-shadow(0 0 40px rgba(255, 50, 0, 0.9)); 
+            15% { 
+                transform: scale(1.15) rotate(-5deg) translateY(-4px); 
+                filter: drop-shadow(0 0 25px rgba(255, 50, 0, 1)) drop-shadow(0 0 50px rgba(255, 200, 0, 0.6));
+                color: #FF6600;
+            }
+            30% { 
+                transform: scale(0.95) rotate(3deg) translateY(2px); 
+                filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.9)) drop-shadow(0 0 40px rgba(255, 200, 0, 0.5));
+                color: #FF0033;
             }
             50% { 
-                transform: scale(1.1) rotate(5deg) translateY(3px); 
-                filter: drop-shadow(0 0 60px rgba(255, 200, 0, 0.8)); 
+                transform: scale(1.2) rotate(-3deg) translateY(-6px); 
+                filter: drop-shadow(0 0 35px rgba(255, 30, 0, 1)) drop-shadow(0 0 60px rgba(255, 220, 0, 0.7));
+                color: #FF8C00;
             }
-            75% { 
-                transform: scale(1.3) rotate(-3deg) translateY(-8px); 
-                filter: drop-shadow(0 0 50px rgba(255, 100, 0, 0.9)); 
+            70% { 
+                transform: scale(0.9) rotate(4deg) translateY(3px); 
+                filter: drop-shadow(0 0 20px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 35px rgba(255, 180, 0, 0.4));
+                color: #FF4500;
+            }
+            85% { 
+                transform: scale(1.1) rotate(-4deg) translateY(-3px); 
+                filter: drop-shadow(0 0 30px rgba(255, 60, 0, 1)) drop-shadow(0 0 55px rgba(255, 200, 0, 0.6));
+                color: #FF6600;
             }
         }
-        .tool-fire:nth-child(1) { animation-delay: 0s; }
-        .tool-fire:nth-child(3) { animation-delay: 0.3s; }
+        .tool-fire:first-child { animation-delay: 0s; }
+        .tool-fire:last-child { animation-delay: 0.2s; }
         
         .tool-btn .tool-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.3rem, 2.2vw, 2rem);
+            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
             color: var(--text-primary);
             font-weight: 900;
             letter-spacing: 1.5px;
@@ -463,7 +478,11 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 2px;
+        }
+        .tool-btn .tool-name .ruthless-in-tool {
+            color: #FF0033 !important;
+            text-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
         }
         .tool-btn .tool-subname {
             font-family: 'Inter', sans-serif;
@@ -616,10 +635,10 @@
             .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
             .tool-btn { padding: 14px 16px; min-height: 65px; }
-            .tool-btn .tool-name { font-size: 1.1rem; }
+            .tool-btn .tool-name { font-size: 1rem; }
             .tool-btn .tool-subname { font-size: 0.6rem; }
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
-            .tool-fire { font-size: 1.6rem; margin: 0 6px; }
+            .tool-fire { font-size: 1.3rem; margin: 0 4px; }
         }
         @media (max-width: 480px) {
             .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
@@ -638,7 +657,7 @@
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
             .tool-btn { padding: 12px 14px; min-height: 60px; }
-            .tool-btn .tool-name { font-size: 0.95rem; }
+            .tool-btn .tool-name { font-size: 0.85rem; }
             .tool-btn .tool-subname { font-size: 0.55rem; }
             .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
             .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 200px; }
@@ -646,7 +665,7 @@
             .modal label { font-size: 0.48rem; }
             .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
-            .tool-fire { font-size: 1.3rem; margin: 0 4px; }
+            .tool-fire { font-size: 1.1rem; margin: 0 3px; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -1105,7 +1124,7 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── RENDER TOOLS WITH FIRE ───
+// ─── RENDER TOOLS WITH FIRE AND RUTHLESS IN RED ───
 function renderTools() {
     const container = document.getElementById('toolsContainer');
     if (!container) return;
@@ -1119,10 +1138,18 @@ function renderTools() {
     visibleTools.forEach(tool => {
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
+        
+        // Process tool name - make RUTHLESS appear in red
+        let toolNameHtml = tool.name || 'Untitled Tool';
+        // If tool name contains RUTHLESS, wrap it with red class
+        if (toolNameHtml.includes('RUTHLESS')) {
+            toolNameHtml = toolNameHtml.replace(/RUTHLESS/g, '<span class="ruthless-in-tool">RUTHLESS</span>');
+        }
+        
         btn.innerHTML = `
             <div class="tool-name">
                 <span class="tool-fire">🔥</span>
-                ${tool.name || 'Untitled Tool'}
+                ${toolNameHtml}
                 <span class="tool-fire">🔥</span>
             </div>
             ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
