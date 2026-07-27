@@ -980,7 +980,11 @@ onValue(dbRef, (snapshot) => {
             appState.darkMode = val.darkMode;
             applyTheme(appState.darkMode);
         }
-        if (val.tools !== undefined) { appState.tools = val.tools; renderTools(); localStorage.setItem('brt_tools', JSON.stringify(val.tools)); }
+        if (val.tools !== undefined) { 
+            appState.tools = val.tools; 
+            renderTools(); 
+            localStorage.setItem('brt_tools', JSON.stringify(val.tools)); 
+        }
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(); }
         if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
         if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); }
@@ -988,6 +992,14 @@ onValue(dbRef, (snapshot) => {
             appState.features = val.features; 
             localStorage.setItem('brt_features', JSON.stringify(val.features));
             renderFeatures();
+        }
+        // Check for unread chat messages
+        if (currentUserEmail) {
+            const key = getChatKey(currentUserEmail);
+            const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+            const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
+            chatUnreadCount = unread;
+            updateChatBadge();
         }
         
         const session = getActiveSession();
@@ -1000,13 +1012,6 @@ onValue(dbRef, (snapshot) => {
             if (adminUser) appState.currentUser = adminUser;
         }
         
-        if (appState.currentUser) {
-            const key = getChatKey(appState.currentUser.email);
-            const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-            const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
-            chatUnreadCount = unread;
-            updateChatBadge();
-        }
         saveLocalState(); updateUI(); applySignalSettings(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
@@ -1026,6 +1031,7 @@ function loadLocalState() {
     
     applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
     
+    // Check for unread chat messages for current user
     const session = getActiveSession();
     if (session.type === 'admin') {
         const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
@@ -1073,12 +1079,17 @@ function applyLogo() {
 }
 
 function renderTools() {
-    const container = document.getElementById('toolsContainer'); if (!container) return;
+    const container = document.getElementById('toolsContainer');
+    if (!container) return;
     container.innerHTML = '';
     const tools = appState.tools || [];
-    if (tools.length === 0) { container.innerHTML = ''; return; }
-    tools.forEach(tool => {
-        if (tool.visibility === 'hidden') return;
+    // Only show tools that are visible
+    const visibleTools = tools.filter(tool => tool.visibility === 'visible');
+    if (visibleTools.length === 0) { 
+        container.innerHTML = ''; 
+        return; 
+    }
+    visibleTools.forEach(tool => {
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
         btn.innerHTML = `
@@ -1132,6 +1143,13 @@ function updateChatBadge() {
         badge.classList.add('has-count');
         badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
         badge.style.display = 'flex';
+        badge.style.width = 'auto';
+        badge.style.padding = '0 5px';
+        badge.style.minWidth = '18px';
+        badge.style.height = '18px';
+        badge.style.fontSize = '0.45rem';
+        badge.style.lineHeight = '18px';
+        badge.style.borderRadius = '10px';
     } else {
         badge.classList.remove('active');
         badge.classList.remove('has-count');
@@ -1145,6 +1163,7 @@ function renderChatMessages() {
     if (msgs.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No messages yet</div>'; return; }
     msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'admin' && !c.read) c.read = true; });
     container.scrollTop = container.scrollHeight; saveLocalState();
+    // Reset unread count after viewing
     chatUnreadCount = 0;
     updateChatBadge();
 }
