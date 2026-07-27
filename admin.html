@@ -21,23 +21,151 @@
     </script>
     
     <style>
+        /* ===== CSS VARIABLES FOR DARK/LIGHT MODE ===== */
+        :root {
+            --bg-primary: #000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255,255,255,0.02);
+            --bg-container: rgba(255,0,51,0.04);
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --text-muted: #666;
+            --border-color: rgba(255,0,51,0.15);
+            --border-light: rgba(255,255,255,0.06);
+            --shadow-color: rgba(255,0,51,0.08);
+            --input-bg: rgba(0,0,0,0.6);
+            --modal-bg: rgba(10,10,10,0.95);
+            --overlay-bg: rgba(0,0,0,0.9);
+            --red-container-bg: rgba(255,0,51,0.04);
+            --user-card-bg: rgba(255,255,255,0.02);
+            --admin-section-bg: rgba(255,255,255,0.01);
+            --admin-section-border: rgba(255,0,51,0.06);
+            --admin-nav-bg: rgba(0,0,0,0.65);
+            --admin-nav-border: rgba(255,0,51,0.12);
+            --nav-link-color: #aaa;
+            --nav-link-bg: rgba(255,255,255,0.02);
+            --nav-link-border: rgba(255,0,51,0.08);
+            --btn-edit-bg: #ffffff;
+            --btn-edit-color: #000;
+            --btn-save-bg: #FF0033;
+            --btn-save-color: #fff;
+            --social-icon-bg: rgba(255,255,255,0.02);
+            --social-icon-border: rgba(255,0,51,0.08);
+            --tool-item-bg: rgba(255,255,255,0.02);
+            --tool-item-border: rgba(255,0,51,0.06);
+            --social-item-bg: rgba(255,255,255,0.02);
+            --social-item-border: rgba(255,0,51,0.06);
+            --brand-tagline-color: #888;
+            --password-modal-bg: rgba(10,10,10,0.95);
+            --password-modal-border: #FF0033;
+            --password-input-bg: rgba(0,0,0,0.6);
+            --password-input-color: #fff;
+            --modal-bg-color: rgba(10,10,10,0.95);
+            --modal-border-color: #FF0033;
+            --modal-text-color: #fff;
+            --modal-input-bg: rgba(0,0,0,0.6);
+            --modal-input-color: #fff;
+            --modal-label-color: #FFD700;
+            --modal-error-color: #FF0033;
+            --modal-success-color: #00FF66;
+            --chat-msg-admin-bg: rgba(255,0,51,0.12);
+            --chat-msg-admin-color: #FF0033;
+            --chat-msg-user-bg: rgba(0,255,102,0.08);
+            --chat-msg-user-color: #00FF66;
+        }
+
+        /* Light Mode */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: rgba(0,0,0,0.02);
+            --bg-container: rgba(255,0,51,0.03);
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-muted: #999999;
+            --border-color: rgba(255,0,51,0.12);
+            --border-light: rgba(0,0,0,0.06);
+            --shadow-color: rgba(255,0,51,0.05);
+            --input-bg: rgba(255,255,255,0.8);
+            --modal-bg: rgba(255,255,255,0.95);
+            --overlay-bg: rgba(255,255,255,0.92);
+            --red-container-bg: rgba(255,0,51,0.03);
+            --user-card-bg: rgba(0,0,0,0.02);
+            --admin-section-bg: rgba(0,0,0,0.01);
+            --admin-section-border: rgba(255,0,51,0.06);
+            --admin-nav-bg: rgba(255,255,255,0.85);
+            --admin-nav-border: rgba(255,0,51,0.12);
+            --nav-link-color: #555;
+            --nav-link-bg: rgba(0,0,0,0.02);
+            --nav-link-border: rgba(255,0,51,0.08);
+            --btn-edit-bg: #000;
+            --btn-edit-color: #fff;
+            --btn-save-bg: #FF0033;
+            --btn-save-color: #fff;
+            --social-icon-bg: rgba(0,0,0,0.02);
+            --social-icon-border: rgba(255,0,51,0.08);
+            --tool-item-bg: rgba(0,0,0,0.02);
+            --tool-item-border: rgba(255,0,51,0.06);
+            --social-item-bg: rgba(0,0,0,0.02);
+            --social-item-border: rgba(255,0,51,0.06);
+            --brand-tagline-color: #999;
+            --password-modal-bg: rgba(255,255,255,0.95);
+            --password-modal-border: #FF0033;
+            --password-input-bg: rgba(255,255,255,0.8);
+            --password-input-color: #111;
+            --modal-bg-color: rgba(255,255,255,0.95);
+            --modal-border-color: #FF0033;
+            --modal-text-color: #111;
+            --modal-input-bg: rgba(255,255,255,0.8);
+            --modal-input-color: #111;
+            --modal-label-color: #FFD700;
+            --modal-error-color: #FF0033;
+            --modal-success-color: #00FF66;
+            --chat-msg-admin-bg: rgba(255,0,51,0.12);
+            --chat-msg-admin-color: #FF0033;
+            --chat-msg-user-bg: rgba(0,255,102,0.08);
+            --chat-msg-user-color: #00FF66;
+        }
+
         /* ===== GLOBAL ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
+        html, body { 
+            width: 100%; 
+            min-height: 100vh; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            font-family: 'Inter', sans-serif; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            touch-action: manipulation;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
         
-        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%); position: relative; }
+        .app { 
+            width: 100%; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            background: var(--bg-primary); 
+            position: relative; 
+            transition: background 0.4s ease;
+        }
         .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; }
         
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: rgba(255, 0, 51, 0.03); }
         ::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
+        .app::before { content: ''; position: fixed; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 18s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
+        .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
+        @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
+        
         /* ===== RED CONTAINER ─── compact ===== */
         .red-container {
-            background: rgba(255, 0, 51, 0.04);
-            border: 1px solid rgba(255, 0, 51, 0.15);
+            background: var(--red-container-bg);
+            border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
@@ -52,7 +180,7 @@
         }
         .red-container:hover {
             border-color: rgba(255, 0, 51, 0.4);
-            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+            box-shadow: 0 0 60px var(--shadow-color);
             transform: scale(1.012) translateY(-1px);
         }
         .red-container::after { content: ''; position: absolute; inset: -1px; border-radius: 18px; padding: 1px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
@@ -76,16 +204,73 @@
             font-family: 'Orbitron', sans-serif; font-weight: 900;
             font-size: clamp(0.7rem, 1.3vw, 1.1rem); letter-spacing: 1px; white-space: nowrap;
         }
-        .brand-name-sm .binary { color: #fff; }
+        .brand-name-sm .binary { color: var(--text-primary); }
         .brand-name-sm .ruthless { color: #FF0033; }
-        .brand-name-sm .trader { color: #fff; }
+        .brand-name-sm .trader { color: var(--text-primary); }
+        
+        /* ===== SOCIAL ICONS IN HEADER ===== */
+        .social-icons-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .social-icons-header a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--social-icon-bg);
+            border: 1.5px solid var(--social-icon-border);
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            animation: socialGlow 2s ease-in-out infinite;
+        }
+        .social-icons-header a:nth-child(1) { animation-delay: 0s; }
+        .social-icons-header a:nth-child(2) { animation-delay: 0.4s; }
+        .social-icons-header a:nth-child(3) { animation-delay: 0.8s; }
+        .social-icons-header a:nth-child(4) { animation-delay: 1.2s; }
+        .social-icons-header a:hover {
+            color: #FF0033;
+            border-color: #FF0033;
+            transform: translateY(-2px) scale(1.15);
+            box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
+            animation-play-state: paused;
+        }
+        .social-icons-header a:active { transform: scale(0.9); }
+        .social-icons-header a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .social-icons-header a:hover::before { opacity: 1; }
+        
+        @keyframes socialGlow {
+            0%, 100% {
+                border-color: rgba(255, 0, 51, 0.15);
+                box-shadow: 0 0 10px rgba(255, 0, 51, 0.05);
+            }
+            50% {
+                border-color: rgba(255, 0, 51, 0.8);
+                box-shadow: 0 0 25px rgba(255, 0, 51, 0.3), 0 0 50px rgba(255, 0, 51, 0.1);
+            }
+        }
         
         .nav-links {
             display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
         }
         .nav-links button {
-            padding: 1px 8px; border-radius: 12px; border: 1px solid rgba(255,0,51,0.08);
-            background: rgba(255,255,255,0.02); color: #aaa; font-size: 0.4rem; font-weight: 600;
+            padding: 1px 8px; border-radius: 12px; border: 1px solid var(--nav-link-border);
+            background: var(--nav-link-bg); color: var(--nav-link-color); font-size: 0.4rem; font-weight: 600;
             cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
@@ -95,6 +280,52 @@
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
         
+        /* ===== DARK MODE TOGGLE ===== */
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: rgba(255,0,51,0.04);
+            border: 1px solid rgba(255,0,51,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.4rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .dark-mode-toggle:hover {
+            border-color: rgba(255,0,51,0.2);
+            transform: scale(1.04);
+        }
+        .dark-mode-toggle .toggle-track {
+            width: 28px;
+            height: 14px;
+            border-radius: 10px;
+            background: #444;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .dark-mode-toggle .toggle-track .toggle-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        .dark-mode-toggle.active .toggle-track {
+            background: #FF0033;
+        }
+        .dark-mode-toggle.active .toggle-track .toggle-thumb {
+            left: 16px;
+            background: #fff;
+        }
+        
         /* ===== ADMIN DASHBOARD CARDS ===== */
         .admin-dash-grid {
             display: grid;
@@ -103,7 +334,7 @@
             margin: 6px 0 12px 0;
         }
         .admin-dash-card {
-            background: rgba(255,255,255,0.02);
+            background: var(--bg-card);
             border: 1px solid rgba(255,0,51,0.06);
             border-radius: 14px;
             padding: 14px 12px;
@@ -124,18 +355,18 @@
         .admin-dash-card .count.green { color: #00FF66; }
         .admin-dash-card .count.red { color: #FF0033; }
         .admin-dash-card .count.gold { color: #FFD700; }
-        .admin-dash-card .label { font-size: 0.5rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .admin-dash-card .label { font-size: 0.5rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
         
         /* ===== PASSWORD POPUP ===== */
-        .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
+        .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
         .password-overlay.active { display: flex; }
-        .password-modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
+        .password-modal { background: var(--password-modal-bg); backdrop-filter: blur(20px); border: 2px solid var(--password-modal-border); border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
         .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
         .password-modal .close-btn:active { transform: scale(0.9); }
         .password-modal .lock-icon { font-size: 2.4rem; color: #FF0033; margin-bottom: 8px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
-        .password-modal input { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: #fff; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-align: center; outline: none; transition: all 0.3s ease; }
+        .password-modal input { width: 100%; padding: 10px; background: var(--password-input-bg); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: var(--password-input-color); font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-align: center; outline: none; transition: all 0.3s ease; }
         .password-modal input:focus { border-color: #FF0033; box-shadow: 0 0 24px rgba(255,0,51,0.05); }
         .password-modal input.correct { border-color: #00FF66; box-shadow: 0 0 24px rgba(0,255,102,0.2); }
         .password-modal input.wrong { border-color: #ff0033; animation: shake 0.5s; }
@@ -144,128 +375,404 @@
         .password-modal .btn-enter.enabled { background: #FF0033; color: #fff; cursor: pointer; box-shadow: 0 0 24px rgba(255,0,51,0.2); border-color: #FF0033; }
         .password-modal .btn-enter.enabled:hover { box-shadow: 0 0 40px rgba(255,0,51,0.3); transform: scale(1.02); }
         .password-modal .btn-enter.enabled:active { transform: scale(0.97); }
-        .password-modal .error-text { color: #ff0033; font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
+        .password-modal .error-text { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         
         /* ===== ADMIN SECTION ===== */
         .admin-section {
-            border: 1px solid rgba(255,0,51,0.06); border-radius: 12px; padding: 12px 14px;
-            margin-bottom: 10px; background: rgba(255,255,255,0.01);
+            border: 1px solid var(--admin-section-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: var(--admin-section-bg);
             transition: all 0.3s ease;
         }
-        .admin-section:hover { border-color: rgba(255,0,51,0.12); box-shadow: 0 0 24px rgba(255,0,51,0.02); }
-        .admin-section h4 { color: #FFD700; font-size: 0.65rem; margin-bottom: 8px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        .admin-section .field-group { margin-bottom: 6px; }
-        .admin-section .field-group label { font-size: 0.48rem; color: #888; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .admin-section .field-group input, .admin-section .field-group select, .admin-section .field-group textarea {
-            width: 100%; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.65rem; outline: none; transition: all 0.3s ease;
+        .admin-section:hover { border-color: rgba(255,0,51,0.12); box-shadow: 0 0 24px var(--shadow-color); }
+        .admin-section h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        
+        .admin-section .field-group { margin-bottom: 8px; }
+        .admin-section .field-group label { font-size: 0.5rem; color: var(--text-secondary); display: block; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .admin-section .field-group input, 
+        .admin-section .field-group select, 
+        .admin-section .field-group textarea {
+            width: 100%; padding: 7px 12px; background: var(--input-bg); 
+            border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; 
+            color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 0.7rem; 
+            outline: none; transition: all 0.3s ease;
         }
-        .admin-section .field-group input:focus, .admin-section .field-group select:focus, .admin-section .field-group textarea:focus { border-color: #FF0033; box-shadow: 0 0 16px rgba(255,0,51,0.03); }
+        .admin-section .field-group input:focus, 
+        .admin-section .field-group select:focus, 
+        .admin-section .field-group textarea:focus { 
+            border-color: #FF0033; box-shadow: 0 0 16px rgba(255,0,51,0.03);
+        }
         .admin-section .field-group textarea { height: 50px; resize: vertical; }
-        .admin-section .field-group input:disabled, .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
-        .admin-section .btn-edit { width: 100%; padding: 6px; margin-top: 4px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px; background: #ffffff; color: #000; }
-        .admin-section .btn-edit:hover { box-shadow: 0 0 24px rgba(255,255,255,0.15); transform: scale(1.02); }
-        .admin-section .btn-edit:active { transform: scale(0.97); }
-        .admin-section .btn-save { width: 100%; padding: 6px; margin-top: 4px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px; background: #FF0033; color: #fff; display: none; }
-        .admin-section .btn-save:hover { box-shadow: 0 0 24px rgba(255,0,51,0.2); transform: scale(1.02); }
-        .admin-section .btn-save:active { transform: scale(0.97); }
-        .admin-section .btn-save.show { display: block; }
-        .admin-section .btn-success { background: #00FF66; color: #000; }
-        .admin-section .btn-danger { background: #FF0033; color: #fff; }
-        .admin-section .item-list { max-height: 100px; overflow-y: auto; margin-top: 4px; border: 1px solid rgba(255,0,51,0.05); border-radius: 6px; padding: 4px; }
+        .admin-section .field-group input:disabled, 
+        .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .admin-section .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .admin-section .btn-row .btn-edit {
+            flex: 1;
+            padding: 7px;
+            border-radius: 6px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--btn-edit-bg);
+            color: var(--btn-edit-color);
+        }
+        .admin-section .btn-row .btn-edit:hover { 
+            box-shadow: 0 0 24px rgba(255,255,255,0.15); 
+            transform: scale(1.02); 
+        }
+        .admin-section .btn-row .btn-edit:active { transform: scale(0.97); }
+        
+        .admin-section .btn-row .btn-save {
+            flex: 1;
+            padding: 7px;
+            border-radius: 6px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--btn-save-bg);
+            color: var(--btn-save-color);
+            display: none;
+        }
+        .admin-section .btn-row .btn-save:hover { 
+            box-shadow: 0 0 24px rgba(255,0,51,0.2); 
+            transform: scale(1.02); 
+        }
+        .admin-section .btn-row .btn-save:active { transform: scale(0.97); }
+        .admin-section .btn-row .btn-save.show { display: block; }
+        .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
+        
+        .admin-section .item-list { 
+            max-height: 100px; 
+            overflow-y: auto; 
+            margin-top: 6px; 
+            border: 1px solid rgba(255,0,51,0.05); 
+            border-radius: 6px; 
+            padding: 4px; 
+        }
         .admin-section .item-list::-webkit-scrollbar { width: 4px; }
         .admin-section .item-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .admin-section .list-item { display: flex; justify-content: space-between; padding: 3px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.5rem; align-items: center; }
+        .admin-section .list-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 3px 6px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            font-size: 0.5rem; 
+            align-items: center; 
+        }
         .admin-section .list-item .name { color: #FFD700; }
-        .admin-section .list-item .detail { color: #888; }
+        .admin-section .list-item .detail { color: var(--text-secondary); }
         .admin-section .list-item .del-btn { background: none; border: none; color: #FF0033; cursor: pointer; font-size: 0.55rem; }
         .admin-section .list-item .del-btn:hover { text-shadow: 0 0 10px rgba(255,0,51,0.3); }
+        
         .payment-settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .payment-settings-grid .field-group { margin-bottom: 0; }
         .payment-settings-grid .field-group.full-width { grid-column: 1 / -1; }
         .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
         
         /* ===== OVERLAYS ===== */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; backdrop-filter: blur(12px); }
+        .overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: var(--overlay-bg); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+            padding: 16px; 
+            backdrop-filter: blur(12px); 
+        }
         .overlay.active { display: flex; }
-        .modal { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border: 2px solid #FF0033; border-radius: 16px; padding: 20px 16px; width: 100%; max-width: 720px; max-height: 88vh; overflow-y: auto; position: relative; box-shadow: 0 0 60px rgba(255,0,51,0.06); }
+        .modal { 
+            background: var(--modal-bg-color); 
+            backdrop-filter: blur(20px); 
+            border: 2px solid var(--modal-border-color); 
+            border-radius: 16px; 
+            padding: 20px 16px; 
+            width: 100%; 
+            max-width: 720px; 
+            max-height: 88vh; 
+            overflow-y: auto; 
+            position: relative; 
+            box-shadow: 0 0 60px rgba(255,0,51,0.06); 
+        }
         .modal::-webkit-scrollbar { width: 4px; }
         .modal::-webkit-scrollbar-track { background: rgba(255,0,51,0.05); border-radius: 4px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal-close { position: absolute; top: 8px; right: 12px; font-size: 1.1rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .modal-close { 
+            position: absolute; 
+            top: 8px; 
+            right: 12px; 
+            font-size: 1.1rem; 
+            color: #FF0033; 
+            cursor: pointer; 
+            background: none; 
+            border: none; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
         .modal-close:hover { transform: scale(1.2) rotate(90deg); }
         .modal-close:active { transform: scale(0.9); }
-        .modal h2 { color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 10px; letter-spacing: 2px; }
-        .modal label { display: block; font-size: 0.48rem; color: #FFD700; margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .modal input, .modal select, .modal textarea { width: 100%; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.65rem; outline: none; transition: all 0.3s ease; }
+        .modal h2 { 
+            color: var(--modal-label-color); 
+            text-align: center; 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: 0.85rem; 
+            margin-bottom: 10px; 
+            letter-spacing: 2px; 
+        }
+        .modal label { 
+            display: block; 
+            font-size: 0.48rem; 
+            color: var(--modal-label-color); 
+            margin: 6px 0 3px; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+        }
+        .modal input, .modal select, .modal textarea { 
+            width: 100%; 
+            padding: 6px 10px; 
+            background: var(--modal-input-bg); 
+            border: 1px solid rgba(255,0,51,0.1); 
+            border-radius: 6px; 
+            color: var(--modal-input-color); 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.65rem; 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
         .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 16px rgba(255,0,51,0.03); }
-        .modal .btn-submit { width: 100%; padding: 8px; margin-top: 8px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.65rem; }
+        .modal .btn-submit { 
+            width: 100%; 
+            padding: 8px; 
+            margin-top: 8px; 
+            border-radius: 30px; 
+            font-weight: 700; 
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.65rem; 
+        }
         .modal .btn-submit:hover { transform: scale(1.02); }
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
         .modal .btn-submit.btn-danger { background: #ff0033; color: #fff; }
-        .modal .error-msg { color: #FF0033; font-size: 0.55rem; margin-top: 3px; min-height: 14px; }
-        .modal .success-msg { color: #00FF66; font-size: 0.55rem; margin-top: 3px; min-height: 14px; }
-        .modal .search-input { width: 100%; padding: 6px 10px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #00FF66; font-size: 0.6rem; outline: none; margin-bottom: 6px; }
+        .modal .error-msg { color: var(--modal-error-color); font-size: 0.55rem; margin-top: 3px; min-height: 14px; }
+        .modal .success-msg { color: var(--modal-success-color); font-size: 0.55rem; margin-top: 3px; min-height: 14px; }
+        .modal .search-input { 
+            width: 100%; 
+            padding: 6px 10px; 
+            background: var(--modal-input-bg); 
+            border: 1px solid rgba(255,0,51,0.1); 
+            border-radius: 6px; 
+            color: #00FF66; 
+            font-size: 0.6rem; 
+            outline: none; 
+            margin-bottom: 6px; 
+        }
         .modal .search-input:focus { border-color: #FF0033; }
-        .modal .user-list-item { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: all 0.3s ease; font-size: 0.6rem; align-items: center; border-radius: 4px; }
+        .modal .user-list-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 6px 10px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 0.6rem; 
+            align-items: center; 
+            border-radius: 4px; 
+        }
         .modal .user-list-item:hover { background: rgba(255,0,51,0.06); }
         .modal .user-list-item .status-verified { color: #00FF66; font-size: 0.5rem; }
         .modal .user-list-item .status-pending { color: #FFD700; font-size: 0.5rem; }
         .modal .user-list-item .status-blocked { color: #FF0033; font-size: 0.5rem; }
         .modal .user-list-item .status-admin { color: #FFD700; font-size: 0.5rem; }
-        .modal .user-list-scroll { max-height: 300px; overflow-y: auto; margin-top: 4px; border: 1px solid rgba(255,0,51,0.05); border-radius: 6px; padding: 4px; }
+        .modal .user-list-scroll { 
+            max-height: 300px; 
+            overflow-y: auto; 
+            margin-top: 4px; 
+            border: 1px solid rgba(255,0,51,0.05); 
+            border-radius: 6px; 
+            padding: 4px; 
+        }
         .modal .user-list-scroll::-webkit-scrollbar { width: 4px; }
         .modal .user-list-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal .user-detail-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.55rem; color: #aaa; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .modal .user-detail-row .label { color: #888; }
+        .modal .user-detail-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 3px 0; 
+            font-size: 0.55rem; 
+            color: var(--text-secondary); 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+        }
+        .modal .user-detail-row .label { color: var(--text-muted); }
         .modal .user-detail-row .value { color: #FFD700; }
-        .modal .chat-msg-list { max-height: 240px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 6px; margin: 4px 0; background: rgba(0,0,0,0.2); }
+        .modal .chat-msg-list { 
+            max-height: 240px; 
+            overflow-y: auto; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 6px; 
+            padding: 6px; 
+            margin: 4px 0; 
+            background: rgba(0,0,0,0.2); 
+        }
         .modal .chat-msg-list::-webkit-scrollbar { width: 4px; }
         .modal .chat-msg-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal .chat-msg-list .msg { padding: 4px 8px; margin: 2px 0; border-radius: 4px; font-size: 0.5rem; max-width: 85%; }
-        .modal .chat-msg-list .msg.admin { background: rgba(255,0,51,0.08); color: #FF0033; text-align: right; margin-left: auto; }
-        .modal .chat-msg-list .msg.user { background: rgba(0,255,102,0.05); color: #00FF66; text-align: left; }
-        .modal .chat-msg-list .msg .time { font-size: 0.35rem; color: #666; margin-left: 4px; }
-        .modal .chat-input-area { display: flex; gap: 4px; margin-top: 4px; }
-        .modal .chat-input-area input { flex: 1; padding: 4px 8px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,0,51,0.1); border-radius: 4px; color: #fff; font-size: 0.55rem; outline: none; }
+        .modal .chat-msg-list .msg { 
+            padding: 4px 8px; 
+            margin: 2px 0; 
+            border-radius: 4px; 
+            font-size: 0.5rem; 
+            max-width: 85%; 
+        }
+        .modal .chat-msg-list .msg.admin { 
+            background: var(--chat-msg-admin-bg); 
+            color: var(--chat-msg-admin-color); 
+            text-align: right; 
+            margin-left: auto; 
+        }
+        .modal .chat-msg-list .msg.user { 
+            background: var(--chat-msg-user-bg); 
+            color: var(--chat-msg-user-color); 
+            text-align: left; 
+        }
+        .modal .chat-msg-list .msg .time { font-size: 0.35rem; color: var(--text-muted); margin-left: 4px; }
+        .modal .chat-input-area { 
+            display: flex; 
+            gap: 4px; 
+            margin-top: 4px; 
+        }
+        .modal .chat-input-area input { 
+            flex: 1; 
+            padding: 4px 8px; 
+            background: var(--modal-input-bg); 
+            border: 1px solid rgba(255,0,51,0.1); 
+            border-radius: 4px; 
+            color: var(--modal-input-color); 
+            font-size: 0.55rem; 
+            outline: none; 
+        }
         .modal .chat-input-area input:focus { border-color: #FF0033; }
-        .modal .chat-input-area button { padding: 4px 12px; border-radius: 4px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer; font-size: 0.5rem; transition: all 0.3s ease; }
+        .modal .chat-input-area button { 
+            padding: 4px 12px; 
+            border-radius: 4px; 
+            border: none; 
+            background: #0088cc; 
+            color: #fff; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 0.5rem; 
+            transition: all 0.3s ease; 
+        }
         .modal .chat-input-area button:hover { transform: scale(1.04); }
-        .modal .btn-group { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-        .modal .btn-group .btn-sm { flex: 1; min-width: 60px; padding: 4px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 0.45rem; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease; }
+        .modal .btn-group { 
+            display: flex; 
+            gap: 6px; 
+            flex-wrap: wrap; 
+            margin-top: 8px; 
+        }
+        .modal .btn-group .btn-sm { 
+            flex: 1; 
+            min-width: 60px; 
+            padding: 4px; 
+            border-radius: 6px; 
+            border: none; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 0.45rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            transition: all 0.3s ease; 
+        }
         .modal .btn-group .btn-sm:hover { transform: scale(1.02); }
         .modal .btn-group .btn-sm:active { transform: scale(0.97); }
         .modal .btn-group .btn-give { background: #00FF66; color: #000; }
         .modal .btn-group .btn-block { background: #FF0033; color: #fff; }
         .modal .btn-group .btn-remove { background: #FFD700; color: #000; }
         .modal .btn-group .btn-chat { background: #0088cc; color: #fff; }
-        .tools-list .tool-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,0,51,0.06); border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+        
+        .tools-list .tool-item { 
+            background: var(--tool-item-bg); 
+            border: 1px solid var(--tool-item-border); 
+            border-radius: 8px; 
+            padding: 8px 12px; 
+            margin-bottom: 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.3s ease; 
+        }
         .tools-list .tool-item:hover { border-color: rgba(255,0,51,0.15); transform: translateX(4px); }
         .tools-list .tool-item .tool-info { flex: 1; }
         .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.6rem; font-family: 'Orbitron', sans-serif; }
-        .tools-list .tool-item .tool-subname { color: #888; font-size: 0.45rem; margin-top: 1px; }
-        .tools-list .tool-item .tool-status { font-size: 0.45rem; color: #888; }
+        .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.45rem; margin-top: 1px; }
+        .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); }
         .tools-list .tool-item .tool-actions { display: flex; gap: 4px; }
-        .tools-list .tool-item .tool-actions button { padding: 2px 8px; border-radius: 4px; border: none; font-size: 0.45rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .tools-list .tool-item .tool-actions button { 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            border: none; 
+            font-size: 0.45rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
         .tools-list .tool-item .tool-actions button:hover { transform: scale(1.04); }
-        .tools-list .tool-item .tool-actions .btn-edit-tool { background: #fff; color: #000; }
+        .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
-        .social-list .social-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,0,51,0.06); border-radius: 8px; padding: 6px 10px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; }
+        
+        .social-list .social-item { 
+            background: var(--social-item-bg); 
+            border: 1px solid var(--social-item-border); 
+            border-radius: 8px; 
+            padding: 6px 10px; 
+            margin-bottom: 4px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.3s ease; 
+        }
         .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); transform: translateX(4px); }
         .social-list .social-item .social-info { flex: 1; }
         .social-list .social-item .social-name { color: #FFD700; font-size: 0.55rem; }
-        .social-list .social-item .social-url { color: #888; font-size: 0.45rem; }
+        .social-list .social-item .social-url { color: var(--text-secondary); font-size: 0.45rem; }
         .social-list .social-item .social-actions { display: flex; gap: 4px; }
-        .social-list .social-item .social-actions button { padding: 2px 6px; border-radius: 4px; border: none; font-size: 0.4rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .social-list .social-item .social-actions button { 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            border: none; 
+            font-size: 0.4rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
         .social-list .social-item .social-actions button:hover { transform: scale(1.04); }
-        .social-list .social-item .social-actions .btn-edit-social { background: #fff; color: #000; }
+        .social-list .social-item .social-actions .btn-edit-social { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
         .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
-        .tool-sticker { display: inline-block; font-size: 1rem; animation: stickerFloat 3s ease-in-out infinite; transform-style: preserve-3d; perspective: 200px; }
-        @keyframes stickerFloat { 0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); } 25% { transform: translateY(-3px) rotateX(5deg) rotateY(-5deg); } 75% { transform: translateY(3px) rotateX(-5deg) rotateY(5deg); } }
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
@@ -281,6 +788,7 @@
             .admin-section { padding: 10px 12px; }
             .modal .user-list-scroll { max-height: 200px; }
             .modal .user-list-item { font-size: 0.5rem; padding: 4px 6px; }
+            .social-icons-header { justify-content: center; }
         }
         @media (max-width: 480px) {
             .admin-dash-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -295,6 +803,10 @@
             .modal .user-list-item { font-size: 0.45rem; padding: 3px 4px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .logo-icon-sm { font-size: 1rem; }
+            .dark-mode-toggle { font-size: 0.35rem; padding: 1px 6px; }
+            .dark-mode-toggle .toggle-track { width: 22px; height: 12px; }
+            .dark-mode-toggle .toggle-track .toggle-thumb { width: 8px; height: 8px; }
+            .dark-mode-toggle.active .toggle-track .toggle-thumb { left: 12px; }
         }
         
         /* ─── CURSOR GLOW ─── */
@@ -306,7 +818,8 @@
         .red-container, .admin-dash-card, .admin-section, .tools-list .tool-item,
         .social-list .social-item, .modal .btn-submit, .modal-close,
         .nav-links button, .admin-section .btn-edit, .admin-section .btn-save,
-        .tools-list .tool-item .tool-actions button, .social-list .social-item .social-actions button {
+        .tools-list .tool-item .tool-actions button, .social-list .social-item .social-actions button,
+        .dark-mode-toggle, .social-icons-header a {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -317,7 +830,8 @@
         .nav-links button:hover, .admin-section .btn-edit:hover,
         .admin-section .btn-save:hover,
         .tools-list .tool-item .tool-actions button:hover,
-        .social-list .social-item .social-actions button:hover {
+        .social-list .social-item .social-actions button:hover,
+        .dark-mode-toggle:hover, .social-icons-header a:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .red-container:active, .admin-dash-card:active, .admin-section:active,
@@ -326,7 +840,8 @@
         .nav-links button:active, .admin-section .btn-edit:active,
         .admin-section .btn-save:active,
         .tools-list .tool-item .tool-actions button:active,
-        .social-list .social-item .social-actions button:active {
+        .social-list .social-item .social-actions button:active,
+        .dark-mode-toggle:active, .social-icons-header a:active {
             transform: scale(0.97);
         }
     </style>
@@ -346,6 +861,12 @@
                     <span class="trader">TRADER</span>
                 </span>
                 <span class="fb-status-dot-sm red" id="adminStatusDot"></span>
+            </div>
+            <div class="social-icons-header" id="adminSocialIcons">
+                <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
             </div>
             <div class="nav-links">
                 <button onclick="window.location.href='index.html'">🏠 Home</button>
@@ -384,21 +905,43 @@
         <!-- ===== ADMIN AREA (Settings) ===== -->
         <div id="adminArea">
             
+            <!-- ===== DARK MODE TOGGLE ===== -->
+            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
+                <h4 style="color:#FFD700;">🌓 Dark Mode</h4>
+                <div style="display:flex;align-items:center;gap:12px;padding:4px 0;">
+                    <span style="font-size:0.55rem;color:var(--text-secondary);">Light</span>
+                    <div class="dark-mode-toggle" id="darkModeToggle">
+                        <span id="darkModeLabel" style="font-size:0.45rem;font-weight:600;">Dark</span>
+                        <div class="toggle-track">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                    </div>
+                    <span style="font-size:0.55rem;color:var(--text-secondary);">Dark</span>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-save show" onclick="saveDarkMode()" style="background:#FF0033;color:#fff;">💾 Save Dark Mode</button>
+                </div>
+            </div>
+            
             <!-- CHANGE PASSWORD -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🔐 Change Password</h4>
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
                 <div class="field-group"><label>Confirm New Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm new password" disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
+                </div>
             </div>
             
             <!-- OFFER SETTINGS -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
                 <div class="field-group"><label>Free Credits for New Verified Users</label><input type="number" id="adminOfferCredits" value="10" disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
+                </div>
             </div>
             
             <!-- PAYMENT SETTINGS -->
@@ -412,8 +955,10 @@
                     <div class="field-group full-width"><label>Instructions</label><textarea id="paymentInstructionsInput" disabled></textarea></div>
                     <div class="field-group full-width"><label>Upload QR</label><input type="file" id="qrUploadInput" accept="image/*" onchange="previewQRImage(event)" disabled><div id="qrPreviewContainer" style="margin-top:3px;"></div></div>
                 </div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminSavePaymentSettings()">💾 Save</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminSavePaymentSettings()">💾 Save</button>
+                </div>
             </div>
             
             <!-- CREDIT PACKS -->
@@ -426,8 +971,10 @@
                         <button class="btn-save btn-success" onclick="adminAddCreditPack()" style="margin-top:0;display:none;">Add</button>
                     </div>
                 </div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminAddCreditPack()">💾 Add Pack</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminAddCreditPack()">💾 Add Pack</button>
+                </div>
                 <div id="creditPackList" class="item-list" style="max-height:130px;margin-top:4px;"></div>
             </div>
             
@@ -435,36 +982,27 @@
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
                 <div id="toolsList" class="tools-list"></div>
-                <button class="btn-edit" onclick="showAddToolForm()" style="margin-top:4px;background:#fff;color:#000;">➕ Add New Tool</button>
+                <button class="btn-edit" onclick="showAddToolForm()" style="margin-top:4px;background:var(--btn-edit-bg);color:var(--btn-edit-color);padding:6px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.55rem;transition:all 0.3s ease;width:100%;">➕ Add New Tool</button>
                 <div id="addToolForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
                     <div class="field-group"><label>Tool Name</label><input type="text" id="newToolName" placeholder="Enter tool name"></div>
                     <div class="field-group"><label>Sub Name</label><input type="text" id="newToolSubName" placeholder="Enter sub name"></div>
-                    <div class="field-group"><label>3D Sticker Icon (Emoji)</label>
-                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-                            <input type="text" id="newToolSticker" placeholder="🔥" value="🎯" style="width:50px;text-align:center;font-size:1rem;">
-                            <span class="tool-sticker" id="stickerPreview">🎯</span>
-                            <span style="font-size:0.4rem;color:#888;">(3D animated)</span>
-                        </div>
-                    </div>
                     <div class="field-group"><label>HTML Code</label><textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="newToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <button class="btn-save" onclick="adminAddTool()" style="display:block;background:#FF0033;color:#fff;">💾 Save Tool</button>
-                    <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminAddTool()" style="background:#FF0033;color:#fff;">💾 Save Tool</button>
+                        <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
                 </div>
                 <div id="editToolForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
                     <input type="hidden" id="editToolIndex">
                     <div class="field-group"><label>Tool Name</label><input type="text" id="editToolName"></div>
                     <div class="field-group"><label>Sub Name</label><input type="text" id="editToolSubName"></div>
-                    <div class="field-group"><label>3D Sticker</label>
-                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-                            <input type="text" id="editToolSticker" style="width:50px;text-align:center;font-size:1rem;">
-                            <span class="tool-sticker" id="editStickerPreview">🎯</span>
-                        </div>
-                    </div>
                     <div class="field-group"><label>HTML Code</label><textarea id="editToolHtml" style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <button class="btn-save" onclick="adminUpdateTool()" style="display:block;background:#FF0033;color:#fff;">💾 Update Tool</button>
-                    <button class="btn-edit" onclick="document.getElementById('editToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminUpdateTool()" style="background:#FF0033;color:#fff;">💾 Update Tool</button>
+                        <button class="btn-edit" onclick="document.getElementById('editToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
                 </div>
             </div>
             
@@ -472,14 +1010,16 @@
             <div class="admin-section">
                 <h4>📱 Social Media</h4>
                 <div id="socialList" class="social-list"></div>
-                <button class="btn-edit" onclick="showAddSocialForm()" style="margin-top:4px;background:#fff;color:#000;">➕ Add Social Media</button>
+                <button class="btn-edit" onclick="showAddSocialForm()" style="margin-top:4px;background:var(--btn-edit-bg);color:var(--btn-edit-color);padding:6px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.55rem;transition:all 0.3s ease;width:100%;">➕ Add Social Media</button>
                 <div id="addSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
                     <div class="field-group"><label>Platform Name</label><input type="text" id="newSocialName" placeholder="e.g. Telegram"></div>
                     <div class="field-group"><label>URL</label><input type="text" id="newSocialUrl" placeholder="https://t.me/yourchannel"></div>
                     <div class="field-group"><label>Icon (Font Awesome)</label><input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane"></div>
                     <div class="field-group"><label>Status</label><select id="newSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <button class="btn-save" onclick="adminAddSocial()" style="display:block;background:#FF0033;color:#fff;">💾 Save Social</button>
-                    <button class="btn-edit" onclick="document.getElementById('addSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminAddSocial()" style="background:#FF0033;color:#fff;">💾 Save Social</button>
+                        <button class="btn-edit" onclick="document.getElementById('addSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
                 </div>
                 <div id="editSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
                     <input type="hidden" id="editSocialIndex">
@@ -487,8 +1027,10 @@
                     <div class="field-group"><label>URL</label><input type="text" id="editSocialUrl"></div>
                     <div class="field-group"><label>Icon</label><input type="text" id="editSocialIcon"></div>
                     <div class="field-group"><label>Status</label><select id="editSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <button class="btn-save" onclick="adminUpdateSocial()" style="display:block;background:#FF0033;color:#fff;">💾 Update Social</button>
-                    <button class="btn-edit" onclick="document.getElementById('editSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminUpdateSocial()" style="background:#FF0033;color:#fff;">💾 Update Social</button>
+                        <button class="btn-edit" onclick="document.getElementById('editSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
                 </div>
             </div>
             
@@ -496,8 +1038,10 @@
             <div class="admin-section">
                 <h4>🖼️ Logo Update</h4>
                 <div class="field-group"><label>Upload PNG/JPG</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminSaveLogo()">💾 Save</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminSaveLogo()">💾 Save</button>
+                </div>
             </div>
             
             <!-- BROKERS -->
@@ -507,8 +1051,10 @@
                 <div class="field-group"><label>Affiliate Link</label><input type="text" id="adminBrokerLink" disabled></div>
                 <div class="field-group"><label>Min Deposit</label><input type="number" id="adminBrokerMinDeposit" disabled></div>
                 <div class="field-group"><label>Rules</label><input type="text" id="adminBrokerRules" disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="adminAddBroker()">💾 Add</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminAddBroker()">💾 Add</button>
+                </div>
                 <div id="brokerList" class="item-list"></div>
             </div>
             
@@ -518,8 +1064,10 @@
                 <div class="field-group"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
                 <div class="field-group"><label>Mobile</label><input type="text" id="notificationMobile" placeholder="+91..." disabled></div>
                 <div class="field-group"><label>Email</label><input type="email" id="notificationEmail" placeholder="admin@..." disabled></div>
-                <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                <button class="btn-save" onclick="saveAdminSettings()">💾 Save</button>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="saveAdminSettings()">💾 Save</button>
+                </div>
             </div>
             
         </div>
@@ -540,11 +1088,11 @@
 </div>
 
 <!-- ===== POPUP MODALS ===== -->
-<div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:#666;font-size:0.5rem;text-align:center;padding:12px;">No pending payments</div></div></div>
-<div class="overlay" id="pendingVerificationsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button><h2>⏳ Pending Verifications</h2><div id="pendingVerificationsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingVerifications" style="color:#666;font-size:0.5rem;text-align:center;padding:12px;">No pending verifications</div></div></div>
+<div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending payments</div></div></div>
+<div class="overlay" id="pendingVerificationsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button><h2>⏳ Pending Verifications</h2><div id="pendingVerificationsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending verifications</div></div></div>
 <div class="overlay" id="usersPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('usersPopup')">✕</button><h2>👤 Users</h2><div style="display:flex;gap:8px;margin-bottom:6px;"><button class="btn-submit btn-primary" style="flex:1;" onclick="showVerifiedUsers()">✅ Verified Users</button><button class="btn-submit btn-gold" style="flex:1;" onclick="showAddUserForm()">➕ Add User</button></div><div id="usersContent"></div></div></div>
-<div class="overlay" id="userDetailPopup"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="closeModal('userDetailPopup')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group" id="userDetailActions"><button class="btn-sm btn-give" onclick="giveFreeCredits()">🎁 Give</button><button class="btn-sm btn-block" onclick="blockUser()">🚫 Block</button><button class="btn-sm btn-remove" onclick="removeUser()">🗑️ Remove</button><button class="btn-sm btn-chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:6px;"><label style="font-size:0.45rem;color:#888;">Add Free Credits</label><input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:4px 8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:#fff;font-size:0.6rem;outline:none;"><button class="btn-submit btn-success" style="margin-top:3px;font-size:0.55rem;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
-<div class="overlay" id="chatPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('chatPopup')">✕</button><h2>💬 Chat</h2><input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()"><div style="display:flex;gap:8px;margin-bottom:4px;"><div style="flex:1;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;max-height:240px;overflow-y:auto;" id="chatUserList"></div><div style="flex:2;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;display:flex;flex-direction:column;"><div style="font-size:0.45rem;color:#888;margin-bottom:3px;" id="chatWithUserLabel">Select a user to chat</div><div class="chat-msg-list" id="chatMsgBox" style="flex:1;max-height:180px;"></div><div class="chat-input-area"><input type="text" id="chatInputBox" placeholder="Type message..."><button onclick="sendChatMessage()">Send</button></div></div></div></div></div>
+<div class="overlay" id="userDetailPopup"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="closeModal('userDetailPopup')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group" id="userDetailActions"><button class="btn-sm btn-give" onclick="giveFreeCredits()">🎁 Give</button><button class="btn-sm btn-block" onclick="blockUser()">🚫 Block</button><button class="btn-sm btn-remove" onclick="removeUser()">🗑️ Remove</button><button class="btn-sm btn-chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:6px;"><label style="font-size:0.45rem;color:var(--text-secondary);">Add Free Credits</label><input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:4px 8px;background:var(--modal-input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--modal-input-color);font-size:0.6rem;outline:none;"><button class="btn-submit btn-success" style="margin-top:3px;font-size:0.55rem;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
+<div class="overlay" id="chatPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('chatPopup')">✕</button><h2>💬 Chat</h2><input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()"><div style="display:flex;gap:8px;margin-bottom:4px;"><div style="flex:1;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;max-height:240px;overflow-y:auto;" id="chatUserList"></div><div style="flex:2;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;display:flex;flex-direction:column;"><div style="font-size:0.45rem;color:var(--text-secondary);margin-bottom:3px;" id="chatWithUserLabel">Select a user to chat</div><div class="chat-msg-list" id="chatMsgBox" style="flex:1;max-height:180px;"></div><div class="chat-input-area"><input type="text" id="chatInputBox" placeholder="Type message..."><button onclick="sendChatMessage()">Send</button></div></div></div></div></div>
 
 <!-- CURSOR GLOW -->
 <div class="cursor-glow" id="cursorGlow"></div>
@@ -581,33 +1129,131 @@ const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
 let appState = {
-    password: 'admin123', offerCredits: 10, upiId: 'binary@ruthless',
+    password: 'admin123', 
+    offerCredits: 10, 
+    upiId: 'binary@ruthless',
     paymentInstructions: 'Please transfer the amount to the UPI ID.',
-    qrCodeBase64: '', creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
+    qrCodeBase64: '', 
+    creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
     brokers: [{ name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email' }, { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone' }],
-    users: [], payments: [], verificationRequests: [],
+    users: [], 
+    payments: [], 
+    verificationRequests: [],
     tools: [
         { id: 'tool_1', name: 'BINARY RUTHLESS SIGNALS', subName: 'AI Signal Generator', sticker: '🎯', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 SIGNAL GENERATOR</h2><p style="color:#888;font-size:0.8rem;">Click the button below to generate a signal (1 credit)</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' }
     ],
     socialMedia: [{ id: 'social_1', name: 'Telegram', url: 'https://t.me/binaryruthless', icon: 'fab fa-telegram-plane', visibility: 'visible' }, { id: 'social_2', name: 'Instagram', url: 'https://instagram.com/binaryruthless', icon: 'fab fa-instagram', visibility: 'visible' }, { id: 'social_3', name: 'YouTube', url: 'https://youtube.com/binaryruthless', icon: 'fab fa-youtube', visibility: 'visible' }, { id: 'social_4', name: 'Twitter', url: 'https://twitter.com/binaryruthless', icon: 'fab fa-twitter', visibility: 'visible' }],
-    logoBase64: '', chats: {}, logoClickCount: 2, notificationMobile: '', notificationEmail: '',
-    paymentApprovalMode: 'manual', paymentGateway: 'none', paymentEnvironment: 'test'
+    logoBase64: '', 
+    chats: {}, 
+    logoClickCount: 2, 
+    notificationMobile: '', 
+    notificationEmail: '',
+    paymentApprovalMode: 'manual', 
+    paymentGateway: 'none', 
+    paymentEnvironment: 'test',
+    darkMode: true
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null, editingToolIndex = -1, editingSocialIndex = -1;
 
-// Cursor Glow
-const glow = document.getElementById('cursorGlow');
-if (window.matchMedia('(hover: hover)').matches) {
-    document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
-    document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
+// ─── APPLY THEME ───
+function applyTheme(darkMode) {
+    if (darkMode === false) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    updateDarkModeToggleUI(darkMode);
 }
+
+function updateDarkModeToggleUI(darkMode) {
+    const toggle = document.getElementById('darkModeToggle');
+    const label = document.getElementById('darkModeLabel');
+    if (!toggle) return;
+    if (darkMode) {
+        toggle.classList.add('active');
+        if (label) label.textContent = 'Dark';
+    } else {
+        toggle.classList.remove('active');
+        if (label) label.textContent = 'Light';
+    }
+}
+
+// ─── DARK MODE TOGGLE ───
+document.getElementById('darkModeToggle')?.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isDark = !this.classList.contains('active');
+    this.classList.toggle('active');
+    const label = document.getElementById('darkModeLabel');
+    if (label) label.textContent = isDark ? 'Dark' : 'Light';
+});
+
+// ─── SAVE DARK MODE ───
+window.saveDarkMode = function() {
+    const isDark = document.getElementById('darkModeToggle').classList.contains('active');
+    appState.darkMode = isDark;
+    applyTheme(isDark);
+    saveLocalState();
+    const btn = document.getElementById('darkModeToggle').closest('.admin-section').querySelector('.btn-save');
+    if (btn) {
+        btn.textContent = '✅ Saved';
+        setTimeout(() => { btn.textContent = '💾 Save Dark Mode'; }, 2000);
+    }
+};
 
 // ─── PASSWORD POPUP CLOSE - Redirect to home ───
 window.hidePasswordPopup = function() {
     document.getElementById('passwordOverlay').classList.remove('active');
     window.location.href = 'index.html';
 };
+
+// ─── RENDER SOCIAL MEDIA IN HEADER ───
+function renderAdminSocialMedia() {
+    const container = document.getElementById('adminSocialIcons');
+    if (!container) return;
+    let socials = appState.socialMedia || [];
+    if (socials.length === 0) {
+        const localSocial = localStorage.getItem('brt_social');
+        if (localSocial) {
+            try { socials = JSON.parse(localSocial); } catch (e) {}
+        }
+    }
+    const visibleSocials = socials.filter(s => s.visibility === 'visible');
+    if (visibleSocials.length === 0) {
+        container.innerHTML = `
+            <a href="#"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        `;
+        container.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const platform = this.querySelector('i')?.className || 'social';
+                alert('📱 ' + platform + ' - Configure in Admin');
+            });
+        });
+        return;
+    }
+    container.innerHTML = '';
+    visibleSocials.forEach(social => {
+        const iconClass = social.icon || 'fas fa-link';
+        const url = social.url || '#';
+        const name = social.name || 'Link';
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.title = name;
+        a.innerHTML = `<i class="${iconClass}"></i>`;
+        a.addEventListener('click', function(e) {
+            if (url === '#') {
+                e.preventDefault();
+                alert('📱 ' + name + ' - Configure URL in Admin');
+            }
+        });
+        container.appendChild(a);
+    });
+}
 
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
@@ -625,7 +1271,10 @@ onValue(dbRef, (snapshot) => {
         loadQRPreview();
         renderToolsList();
         renderSocialList();
+        renderAdminSocialMedia();
         updateChatNotification();
+        applyTheme(appState.darkMode);
+        updateDarkModeToggleUI(appState.darkMode);
         if (val.offerCredits !== undefined) localStorage.setItem('brt_offer_credits', val.offerCredits);
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') localStorage.setItem('brt_logo', val.logoBase64);
         if (val.tools !== undefined) localStorage.setItem('brt_tools', JSON.stringify(val.tools));
@@ -649,7 +1298,20 @@ function loadLocalState() {
     if (brokersData) { try { const parsed = JSON.parse(brokersData); if (parsed.length > 0) appState.brokers = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
-    updateUI(); renderUsersList(); renderBrokerList(); renderPendingPayments(); renderPendingVerifications(); renderCreditPackList(); loadPaymentSettings(); loadQRPreview(); renderToolsList(); renderSocialList(); updateChatNotification();
+    applyTheme(appState.darkMode);
+    updateDarkModeToggleUI(appState.darkMode);
+    updateUI(); 
+    renderUsersList(); 
+    renderBrokerList(); 
+    renderPendingPayments(); 
+    renderPendingVerifications(); 
+    renderCreditPackList(); 
+    loadPaymentSettings(); 
+    loadQRPreview(); 
+    renderToolsList(); 
+    renderSocialList(); 
+    renderAdminSocialMedia();
+    updateChatNotification();
 }
 
 function updateUI() {
@@ -698,7 +1360,10 @@ window.changeAdminPassword = function() {
     if (newPass.length < 4) { alert('Password must be at least 4 characters!'); return; }
     if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
     appState.password = newPass; saveLocalState(); sessionStorage.setItem('admin_logged_in', 'true');
-    alert('✅ Password changed successfully!'); document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
+    const btn = document.getElementById('adminNewPassword').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
 function renderPendingPayments() {
@@ -709,10 +1374,10 @@ function renderPendingPayments() {
     pending.forEach((p, idx) => {
         const actualIdx = appState.payments.indexOf(p);
         container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:8px;margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">User:</span><span style="color:#FFD700;">${p.userEmail}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">Amount:</span><span style="color:#FFD700;">₹${p.amount}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">Credits:</span><span style="color:#FFD700;">${p.credits}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">Txn ID:</span><span style="color:#FFD700;">${p.transactionId || 'N/A'}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${p.userEmail}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Amount:</span><span style="color:#FFD700;">₹${p.amount}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Credits:</span><span style="color:#FFD700;">${p.credits}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Txn ID:</span><span style="color:#FFD700;">${p.transactionId || 'N/A'}</span></div>
             <div style="display:flex;gap:6px;margin-top:4px;">
                 <button onclick="window.adminApprovePayment(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
                 <button onclick="window.adminRejectPayment(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
@@ -731,9 +1396,9 @@ function renderPendingVerifications() {
     pending.forEach((req, idx) => {
         const actualIdx = appState.verificationRequests.indexOf(req);
         container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:8px;margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">User:</span><span style="color:#FFD700;">${req.userEmail}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">Account ID:</span><span style="color:#FFD700;">${req.accountId || 'N/A'}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:#aaa;padding:2px 0;"><span style="color:#888;">Free Credits:</span><span style="color:#FFD700;font-weight:700;">${req.freeCredits || appState.offerCredits || 10}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${req.userEmail}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Account ID:</span><span style="color:#FFD700;">${req.accountId || 'N/A'}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Free Credits:</span><span style="color:#FFD700;font-weight:700;">${req.freeCredits || appState.offerCredits || 10}</span></div>
             <div style="display:flex;gap:6px;margin-top:4px;">
                 <button onclick="window.adminApproveVerification(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
                 <button onclick="window.adminRejectVerification(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
@@ -741,7 +1406,26 @@ function renderPendingVerifications() {
         </div>`;
     });
 }
-window.adminApproveVerification = function(idx) { const request = appState.verificationRequests[idx]; if (!request || request.status !== 'pending') return; if (confirm('Approve verification for ' + request.userEmail + '?')) { request.status = 'approved'; const user = appState.users.find(u => u.email === request.userEmail); if (user) { user.verified = true; const offerCredits = appState.offerCredits || 10; user.credits = (user.credits || 0) + offerCredits; user.freeCredits = (user.freeCredits || 0) + offerCredits; } saveLocalState(); renderPendingVerifications(); renderUsersList(); updateUI(); sendNotification('✅ User Verified: ' + request.userEmail + ' (Free Credits: ' + (appState.offerCredits || 10) + ')'); } };
+window.adminApproveVerification = function(idx) { 
+    const request = appState.verificationRequests[idx]; 
+    if (!request || request.status !== 'pending') return; 
+    if (confirm('Approve verification for ' + request.userEmail + '?')) { 
+        request.status = 'approved'; 
+        const user = appState.users.find(u => u.email === request.userEmail); 
+        if (user) { 
+            user.verified = true; 
+            user.accountId = request.accountId; // Save account ID
+            const offerCredits = appState.offerCredits || 10; 
+            user.credits = (user.credits || 0) + offerCredits; 
+            user.freeCredits = (user.freeCredits || 0) + offerCredits; 
+        } 
+        saveLocalState(); 
+        renderPendingVerifications(); 
+        renderUsersList(); 
+        updateUI(); 
+        sendNotification('✅ User Verified: ' + request.userEmail + ' (Free Credits: ' + (appState.offerCredits || 10) + ')'); 
+    } 
+};
 window.adminRejectVerification = function(idx) { const request = appState.verificationRequests[idx]; if (!request || request.status !== 'pending') return; if (confirm('Reject verification for ' + request.userEmail + '?')) { request.status = 'rejected'; saveLocalState(); renderPendingVerifications(); sendNotification('❌ Verification Rejected: ' + request.userEmail); } };
 
 function sendNotification(message) { if (appState.notificationEmail) console.log('📧 Email to ' + appState.notificationEmail + ': ' + message); if (appState.notificationMobile) console.log('📱 SMS to ' + appState.notificationMobile + ': ' + message); }
@@ -751,8 +1435,8 @@ function renderVerifiedUsersList(filter = '') {
     const container = document.getElementById('verifiedUsersList'); if (!container) return; container.innerHTML = '';
     const users = appState.users.filter(u => u.verified === true);
     const filtered = users.filter(u => (u.name || '').toLowerCase().includes(filter) || (u.email || '').toLowerCase().includes(filter) || (u.broker || '').toLowerCase().includes(filter) || (u.accountId || '').toLowerCase().includes(filter));
-    if (filtered.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.5rem;text-align:center;padding:12px;">No verified users found</div>'; return; }
-    filtered.forEach((u, idx) => { const actualIdx = appState.users.indexOf(u); container.innerHTML += `<div class="user-list-item" onclick="window.openUserDetailPopup(${actualIdx})"><span style="color:#aaa;">${u.name || u.email}</span><span style="color:#FFD700;font-size:0.5rem;">${u.credits || 0}cr</span><span class="status-verified">${u.adminAdded ? 'Admin' : 'Verified'}</span></div>`; });
+    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No verified users found</div>'; return; }
+    filtered.forEach((u, idx) => { const actualIdx = appState.users.indexOf(u); container.innerHTML += `<div class="user-list-item" onclick="window.openUserDetailPopup(${actualIdx})"><span style="color:var(--text-secondary);">${u.name || u.email}</span><span style="color:#FFD700;font-size:0.5rem;">${u.credits || 0}cr</span><span class="status-verified">${u.adminAdded ? 'Admin' : 'Verified'}</span></div>`; });
 }
 window.searchUsersInPopup = function() { const query = document.getElementById('userSearchInput')?.value?.toLowerCase().trim() || ''; renderVerifiedUsersList(query); };
 function showAddUserForm() {
@@ -789,10 +1473,10 @@ window.openUserDetailPopup = function(idx) {
             <div class="user-detail-row"><span class="label">Total Payments:</span><span class="value">${userPayments.length}</span></div>
             <div class="user-detail-row"><span class="label">Successful Payments:</span><span class="value">${successCount}</span></div>
             <div class="user-detail-row"><span class="label">Total Amount Paid:</span><span class="value" style="color:#00FF66;">₹${totalPaid}</span></div>
-            <div class="user-detail-row"><span class="label">Recent Payment:</span><span class="value" style="font-size:0.5rem;color:#888;">${userPayments[userPayments.length-1]?.date ? new Date(userPayments[userPayments.length-1].date).toLocaleString() : 'N/A'}</span></div>
+            <div class="user-detail-row"><span class="label">Recent Payment:</span><span class="value" style="font-size:0.5rem;color:var(--text-secondary);">${userPayments[userPayments.length-1]?.date ? new Date(userPayments[userPayments.length-1].date).toLocaleString() : 'N/A'}</span></div>
         `;
     } else {
-        paymentDetails = `<div class="user-detail-row"><span class="label">Payments:</span><span class="value" style="color:#666;">No payment history</span></div>`;
+        paymentDetails = `<div class="user-detail-row"><span class="label">Payments:</span><span class="value" style="color:var(--text-muted);">No payment history</span></div>`;
     }
     
     document.getElementById('userDetailContent').innerHTML = `
@@ -823,14 +1507,14 @@ function renderChatUserList(filter = '') {
     chatKeys.forEach(key => { const email = key.replace(/_/g, '.'); const user = appState.users.find(u => u.email === email); if (user) { const msgs = appState.chats[key] || []; const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null; const unread = msgs.filter(m => m.sender === 'user' && !m.read).length; chatUsers.push({ user, lastMsg, unread, key }); } });
     chatUsers.sort((a, b) => { const timeA = a.lastMsg?.timestamp || 0; const timeB = b.lastMsg?.timestamp || 0; return new Date(timeB) - new Date(timeA); });
     const filtered = chatUsers.filter(c => (c.user.name || '').toLowerCase().includes(filter) || c.user.email.toLowerCase().includes(filter));
-    if (filtered.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:12px;">No chat users found</div>'; return; }
-    filtered.forEach(c => { const unreadBadge = c.unread > 0 ? `<span style="background:#FF0033;color:#fff;font-size:0.4rem;padding:1px 5px;border-radius:8px;margin-left:3px;">${c.unread}</span>` : ''; const lastMsgPreview = c.lastMsg ? (c.lastMsg.message.substring(0, 16) + (c.lastMsg.message.length > 16 ? '...' : '')) : 'No msgs'; container.innerHTML += `<div class="user-list-item" onclick="window.selectChatUser('${c.user.email}')" style="${chatSelectedUser === c.user.email ? 'background:rgba(255,0,51,0.05);' : ''}"><span style="color:#aaa;font-size:0.5rem;">${c.user.name || c.user.email}</span><span style="color:#666;font-size:0.4rem;">${lastMsgPreview}</span>${unreadBadge}</div>`; });
+    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">No chat users found</div>'; return; }
+    filtered.forEach(c => { const unreadBadge = c.unread > 0 ? `<span style="background:#FF0033;color:#fff;font-size:0.4rem;padding:1px 5px;border-radius:8px;margin-left:3px;">${c.unread}</span>` : ''; const lastMsgPreview = c.lastMsg ? (c.lastMsg.message.substring(0, 16) + (c.lastMsg.message.length > 16 ? '...' : '')) : 'No msgs'; container.innerHTML += `<div class="user-list-item" onclick="window.selectChatUser('${c.user.email}')" style="${chatSelectedUser === c.user.email ? 'background:rgba(255,0,51,0.05);' : ''}"><span style="color:var(--text-secondary);font-size:0.5rem;">${c.user.name || c.user.email}</span><span style="color:var(--text-muted);font-size:0.4rem;">${lastMsgPreview}</span>${unreadBadge}</div>`; });
 }
 window.selectChatUser = function(email) { chatSelectedUser = email; document.getElementById('chatWithUserLabel').textContent = '💬 Chat with: ' + (appState.users.find(u => u.email === email)?.name || email); renderChatUserList(document.getElementById('chatSearchInput')?.value || ''); loadChatMessages(); };
 function loadChatMessages() {
-    const box = document.getElementById('chatMsgBox'); if (!box || !chatSelectedUser) { box.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:12px;">Select a user to chat</div>'; return; }
+    const box = document.getElementById('chatMsgBox'); if (!box || !chatSelectedUser) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">Select a user to chat</div>'; return; }
     const key = chatSelectedUser.replace(/[.#$\/\[\]]/g, '_'); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    if (msgs.length === 0) { box.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:12px;">No messages</div>'; return; }
+    if (msgs.length === 0) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">No messages</div>'; return; }
     box.innerHTML = '';
     msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'user' && !c.read) c.read = true; });
     box.scrollTop = box.scrollHeight; saveLocalState(); updateChatNotification();
@@ -862,8 +1546,9 @@ window.adminSavePaymentSettings = function() {
     appState.paymentApprovalMode = document.getElementById('paymentApprovalMode').value; appState.paymentGateway = document.getElementById('paymentGateway').value; appState.paymentEnvironment = document.getElementById('paymentEnvironment').value;
     appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless'; appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
     const fileInput = document.getElementById('qrUploadInput'); if (fileInput.files && fileInput.files[0]) { const reader = new FileReader(); reader.onload = function(e) { appState.qrCodeBase64 = e.target.result; saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }; reader.readAsDataURL(fileInput.files[0]); } else { saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }
-    document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
+    const btn = document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 function loadQRPreview() { const container = document.getElementById('qrPreviewContainer'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`; } else { container.innerHTML = ''; } }
 function previewQRImage(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; }; reader.readAsDataURL(file); } }
@@ -872,13 +1557,14 @@ window.adminAddCreditPack = function() {
     const credits = parseInt(document.getElementById('packCredits').value); const price = parseInt(document.getElementById('packPrice').value);
     if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
     if (!appState.creditPacks) appState.creditPacks = []; appState.creditPacks.push({ credits, price }); saveLocalState(); renderCreditPackList(); document.getElementById('packCredits').value = ''; document.getElementById('packPrice').value = ''; disableEditFields(document.querySelector('.admin-section'));
-    document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Add Pack'; }, 2000);
+    const btn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Add Pack'; }, 2000);
 };
 window.adminDeleteCreditPack = function(idx) { if (confirm('Delete this pack?')) { appState.creditPacks.splice(idx, 1); saveLocalState(); renderCreditPackList(); } };
 function renderCreditPackList() {
     const list = document.getElementById('creditPackList'); if (!list) return; list.innerHTML = '';
-    const packs = appState.creditPacks || []; if (packs.length === 0) { list.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:4px;">No packs</div>'; return; }
+    const packs = appState.creditPacks || []; if (packs.length === 0) { list.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:4px;">No packs</div>'; return; }
     packs.forEach((p, idx) => { list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span><button class="del-btn" onclick="window.adminDeleteCreditPack(${idx})">✕</button></div>`; });
 }
 
@@ -886,51 +1572,54 @@ window.adminSaveOffer = function() {
     const credits = parseInt(document.getElementById('adminOfferCredits').value);
     if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
     appState.offerCredits = credits; saveLocalState(); updateUI(); localStorage.setItem('brt_offer_credits', credits); disableEditFields(document.querySelector('.admin-section'));
-    document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
+    const btn = document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
 function renderToolsList() {
     const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
     const tools = appState.tools || [];
-    if (tools.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; return; }
+    if (tools.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; return; }
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
-        container.innerHTML += `<div class="tool-item"><div class="tool-info"><div class="tool-name"><span class="tool-sticker">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}<div class="tool-status">${statusText}</div></div><div class="tool-actions"><button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button><button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button></div></div>`;
+        container.innerHTML += `<div class="tool-item"><div class="tool-info"><div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}<div class="tool-status">${statusText}</div></div><div class="tool-actions"><button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button><button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button></div></div>`;
     });
 }
-document.getElementById('newToolSticker')?.addEventListener('input', function() { document.getElementById('stickerPreview').textContent = this.value || '🎯'; });
-document.getElementById('editToolSticker')?.addEventListener('input', function() { document.getElementById('editStickerPreview').textContent = this.value || '🎯'; });
 window.editTool = function(idx) {
     const tool = appState.tools[idx]; if (!tool) return; editingToolIndex = idx;
-    document.getElementById('editToolIndex').value = idx; document.getElementById('editToolName').value = tool.name || ''; document.getElementById('editToolSubName').value = tool.subName || ''; document.getElementById('editToolSticker').value = tool.sticker || '🎯'; document.getElementById('editStickerPreview').textContent = tool.sticker || '🎯'; document.getElementById('editToolHtml').value = tool.htmlCode || ''; document.getElementById('editToolStatus').value = tool.visibility || 'visible';
+    document.getElementById('editToolIndex').value = idx; document.getElementById('editToolName').value = tool.name || ''; document.getElementById('editToolSubName').value = tool.subName || ''; document.getElementById('editToolHtml').value = tool.htmlCode || ''; document.getElementById('editToolStatus').value = tool.visibility || 'visible';
     document.getElementById('editToolForm').style.display = 'block'; document.getElementById('addToolForm').style.display = 'none';
 };
 window.adminUpdateTool = function() {
-    const idx = parseInt(document.getElementById('editToolIndex').value); const name = document.getElementById('editToolName').value.trim(); const subName = document.getElementById('editToolSubName').value.trim(); const sticker = document.getElementById('editToolSticker').value.trim() || '🎯'; const htmlCode = document.getElementById('editToolHtml').value.trim(); const visibility = document.getElementById('editToolStatus').value;
+    const idx = parseInt(document.getElementById('editToolIndex').value); const name = document.getElementById('editToolName').value.trim(); const subName = document.getElementById('editToolSubName').value.trim(); const htmlCode = document.getElementById('editToolHtml').value.trim(); const visibility = document.getElementById('editToolStatus').value;
     if (!name) { alert('Please enter tool name'); return; } if (!htmlCode) { alert('Please enter HTML code'); return; }
+    const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
     appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility }; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); document.getElementById('editToolForm').style.display = 'none';
-    document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Update Tool'; }, 2000);
+    const btn = document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Update Tool'; }, 2000);
 };
 window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
 window.deleteTool = function(idx) { if (confirm('Delete this tool?')) { appState.tools.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); } };
-window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolSticker').value = '🎯'; document.getElementById('stickerPreview').textContent = '🎯'; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; };
+window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; };
 window.adminAddTool = function() {
-    const name = document.getElementById('newToolName').value.trim(); const subName = document.getElementById('newToolSubName').value.trim(); const sticker = document.getElementById('newToolSticker').value.trim() || '🎯'; const htmlCode = document.getElementById('newToolHtml').value.trim(); const visibility = document.getElementById('newToolStatus').value;
+    const name = document.getElementById('newToolName').value.trim(); const subName = document.getElementById('newToolSubName').value.trim(); const htmlCode = document.getElementById('newToolHtml').value.trim(); const visibility = document.getElementById('newToolStatus').value;
     if (!name) { alert('Please enter tool name'); return; } if (!htmlCode) { alert('Please enter HTML code'); return; }
+    const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
     if (!appState.tools) appState.tools = []; appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility }); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); document.getElementById('addToolForm').style.display = 'none';
-    document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save Tool'; }, 2000);
+    const btn = document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save Tool'; }, 2000);
 };
 
 function renderSocialList() {
     const container = document.getElementById('socialList'); if (!container) return; container.innerHTML = '';
     const socials = appState.socialMedia || [];
-    if (socials.length === 0) { container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:8px;">No social media added yet</div>'; return; }
+    if (socials.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No social media added yet</div>'; return; }
     socials.forEach((s, idx) => {
         const statusText = s.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
-        container.innerHTML += `<div class="social-item"><div class="social-info"><div class="social-name"><i class="${s.icon || 'fas fa-link'}"></i> ${s.name}</div><div class="social-url">${s.url}</div><div style="font-size:0.4rem;color:#888;">${statusText}</div></div><div class="social-actions"><button class="btn-edit-social" onclick="editSocial(${idx})">✏️ Edit</button><button class="btn-toggle-social" onclick="toggleSocialVisibility(${idx})">${s.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-social" onclick="deleteSocial(${idx})">🗑️ Delete</button></div></div>`;
+        container.innerHTML += `<div class="social-item"><div class="social-info"><div class="social-name"><i class="${s.icon || 'fas fa-link'}"></i> ${s.name}</div><div class="social-url">${s.url}</div><div style="font-size:0.4rem;color:var(--text-secondary);">${statusText}</div></div><div class="social-actions"><button class="btn-edit-social" onclick="editSocial(${idx})">✏️ Edit</button><button class="btn-toggle-social" onclick="toggleSocialVisibility(${idx})">${s.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-social" onclick="deleteSocial(${idx})">🗑️ Delete</button></div></div>`;
     });
 }
 window.editSocial = function(idx) {
@@ -941,24 +1630,26 @@ window.editSocial = function(idx) {
 window.adminUpdateSocial = function() {
     const idx = parseInt(document.getElementById('editSocialIndex').value); const name = document.getElementById('editSocialName').value.trim(); const url = document.getElementById('editSocialUrl').value.trim(); const icon = document.getElementById('editSocialIcon').value.trim(); const visibility = document.getElementById('editSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
-    appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility }; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); document.getElementById('editSocialForm').style.display = 'none';
-    document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Update Social'; }, 2000);
+    appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility }; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('editSocialForm').style.display = 'none';
+    const btn = document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Update Social'; }, 2000);
 };
-window.toggleSocialVisibility = function(idx) { const social = appState.socialMedia[idx]; if (!social) return; social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); };
-window.deleteSocial = function(idx) { if (confirm('Delete this social media?')) { appState.socialMedia.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); } };
+window.toggleSocialVisibility = function(idx) { const social = appState.socialMedia[idx]; if (!social) return; social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); };
+window.deleteSocial = function(idx) { if (confirm('Delete this social media?')) { appState.socialMedia.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); } };
 window.showAddSocialForm = function() { document.getElementById('addSocialForm').style.display = 'block'; document.getElementById('editSocialForm').style.display = 'none'; document.getElementById('newSocialName').value = ''; document.getElementById('newSocialUrl').value = ''; document.getElementById('newSocialIcon').value = ''; document.getElementById('newSocialStatus').value = 'visible'; };
 window.adminAddSocial = function() {
     const name = document.getElementById('newSocialName').value.trim(); const url = document.getElementById('newSocialUrl').value.trim(); const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link'; const visibility = document.getElementById('newSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
-    if (!appState.socialMedia) appState.socialMedia = []; appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility }); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); document.getElementById('addSocialForm').style.display = 'none';
-    document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save Social'; }, 2000);
+    if (!appState.socialMedia) appState.socialMedia = []; appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility }); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('addSocialForm').style.display = 'none';
+    const btn = document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save Social'; }, 2000);
 };
 
 window.adminSaveLogo = function() {
     const file = document.getElementById('logoUpload').files[0];
-    if (file) { const reader = new FileReader(); reader.onload = (e) => { appState.logoBase64 = e.target.result; localStorage.setItem('brt_logo', appState.logoBase64); saveLocalState(); disableEditFields(document.querySelector('.admin-section')); document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved'; setTimeout(() => { document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000); }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
+    if (file) { const reader = new FileReader(); reader.onload = (e) => { appState.logoBase64 = e.target.result; localStorage.setItem('brt_logo', appState.logoBase64); saveLocalState(); disableEditFields(document.querySelector('.admin-section')); const btn = document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save'); btn.textContent = '✅ Saved'; setTimeout(() => { btn.textContent = '💾 Save'; }, 2000); }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
 };
 
 function renderUsersList() { /* used internally */ }
@@ -970,8 +1661,9 @@ window.adminAddBroker = function() {
     const name = document.getElementById('adminBrokerName').value.trim(); const link = document.getElementById('adminBrokerLink').value.trim(); const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; const rules = document.getElementById('adminBrokerRules').value.trim();
     if (!name || !link) { alert('Enter name and link'); return; }
     appState.brokers.push({ name, link, minDeposit, rules }); saveLocalState(); renderBrokerList(); disableEditFields(document.querySelector('.admin-section'));
-    document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Add'; }, 2000);
+    const btn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Add'; }, 2000);
 };
 window.adminDeleteBroker = function(idx) { if (confirm('Delete this broker?')) { appState.brokers.splice(idx, 1); saveLocalState(); renderBrokerList(); } };
 
@@ -980,12 +1672,27 @@ window.saveAdminSettings = function() {
     appState.notificationMobile = document.getElementById('notificationMobile').value.trim();
     appState.notificationEmail = document.getElementById('notificationEmail').value.trim();
     saveLocalState(); localStorage.setItem('brt_logo_click_count', appState.logoClickCount); disableEditFields(document.querySelector('.admin-section'));
-    document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save').textContent = '✅ Saved';
-    setTimeout(() => { document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save').textContent = '💾 Save'; }, 2000);
+    const btn = document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
-function enableEdit(btn) { const section = btn.closest('.admin-section'); if (!section) return; section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); btn.textContent = '💾 Save'; btn.style.display = 'none'; }
-function disableEditFields(section) { if (!section) return; section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = true); section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show')); section.querySelectorAll('.btn-edit').forEach(b => { b.style.display = 'block'; b.textContent = '✏️ Edit'; }); }
+function enableEdit(btn) { 
+    const section = btn.closest('.admin-section'); 
+    if (!section) return; 
+    section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); 
+    section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
+    btn.style.display = 'none'; 
+}
+function disableEditFields(section) { 
+    if (!section) return; 
+    section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = true); 
+    section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show')); 
+    section.querySelectorAll('.btn-edit').forEach(b => { 
+        b.style.display = 'block'; 
+        b.textContent = '✏️ Edit'; 
+    }); 
+}
 
 // INIT
 if (adminLoggedIn) { loadLocalState(); } else { showPasswordPopup(); }
@@ -1006,6 +1713,7 @@ window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.tog
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
+window.saveDarkMode = saveDarkMode;
 </script>
 </body>
 </html>
