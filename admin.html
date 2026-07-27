@@ -1295,9 +1295,7 @@ let appState = {
     users: [], 
     payments: [], 
     verificationRequests: [],
-    tools: [
-        { id: 'tool_1', name: 'BINARY RUTHLESS SIGNALS', subName: 'AI Signal Generator', sticker: '🎯', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 SIGNAL GENERATOR</h2><p style="color:#888;font-size:0.8rem;">Click the button below to generate a signal (1 credit)</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' }
-    ],
+    tools: [],
     socialMedia: [{ id: 'social_1', name: 'Telegram', url: 'https://t.me/binaryruthless', icon: 'fab fa-telegram-plane', visibility: 'visible' }, { id: 'social_2', name: 'Instagram', url: 'https://instagram.com/binaryruthless', icon: 'fab fa-instagram', visibility: 'visible' }, { id: 'social_3', name: 'YouTube', url: 'https://youtube.com/binaryruthless', icon: 'fab fa-youtube', visibility: 'visible' }, { id: 'social_4', name: 'Twitter', url: 'https://twitter.com/binaryruthless', icon: 'fab fa-twitter', visibility: 'visible' }],
     logoBase64: '', 
     chats: {}, 
@@ -1358,7 +1356,6 @@ window.toggleDarkMode = function() {
     track.classList.toggle('active');
     const isDark = track.classList.contains('active');
     document.getElementById('darkModeLabel').textContent = isDark ? 'Dark' : 'Light';
-    // Don't save immediately - wait for Save button
 };
 
 // ─── SAVE DARK MODE ───
@@ -1581,6 +1578,20 @@ function updatePendingCounts() {
     const verifiedUsers = appState.users.filter(u => u.verified === true);
     document.getElementById('verifiedUsersCount').textContent = verifiedUsers.length;
     document.getElementById('verifiedUsersCount').className = 'count gold';
+}
+
+// ─── GET CHAT KEY ───
+function getChatKey(userEmail) { 
+    return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; 
+}
+
+// ─── CHECK FOR NEW CHAT MESSAGES ───
+function checkForNewChatMessages() {
+    if (!appState.currentUser) return 0;
+    const key = getChatKey(appState.currentUser.email);
+    const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+    const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
+    return unread;
 }
 
 onValue(dbRef, (snapshot) => {
@@ -1932,7 +1943,8 @@ function loadChatMessages() {
 window.sendChatMessage = function() {
     const input = document.getElementById('chatInputBox'); const msg = input.value.trim(); if (!msg || !chatSelectedUser) { alert('Select a user and enter message'); return; }
     const key = chatSelectedUser.replace(/[.#$\/\[\]]/g, '_'); if (!appState.chats) appState.chats = {}; if (!appState.chats[key]) appState.chats[key] = [];
-    appState.chats[key].push({ sender: 'admin', message: msg, timestamp: new Date().toISOString(), read: true }); saveLocalState(); input.value = ''; loadChatMessages(); renderChatUserList(document.getElementById('chatSearchInput')?.value || ''); updateChatNotification();
+    appState.chats[key].push({ sender: 'admin', message: msg, timestamp: new Date().toISOString(), read: true });
+    saveLocalState(); input.value = ''; loadChatMessages(); renderChatUserList(document.getElementById('chatSearchInput')?.value || ''); updateChatNotification();
 };
 document.getElementById('chatInputBox')?.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendChatMessage(); });
 function updateChatNotification() {
@@ -1996,7 +2008,10 @@ window.adminSaveOffer = function() {
 function renderToolsList() {
     const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
     const tools = appState.tools || [];
-    if (tools.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; return; }
+    if (tools.length === 0) { 
+        container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; 
+        return; 
+    }
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
         container.innerHTML += `<div class="tool-item"><div class="tool-info"><div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}<div class="tool-status">${statusText}</div></div><div class="tool-actions"><button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button><button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button></div></div>`;
@@ -2020,7 +2035,6 @@ window.adminUpdateTool = function() {
     const visibility = document.getElementById('editToolStatus').value;
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
-    // Extract sticker from name if starts with emoji
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
     appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility };
     saveLocalState();
@@ -2032,7 +2046,15 @@ window.adminUpdateTool = function() {
     setTimeout(() => { btn.textContent = '💾 Update Tool'; }, 2000);
 };
 window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
-window.deleteTool = function(idx) { if (confirm('Delete this tool?')) { appState.tools.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); } };
+window.deleteTool = function(idx) { 
+    if (confirm('Delete this tool?')) { 
+        appState.tools.splice(idx, 1); 
+        saveLocalState(); 
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); 
+        renderToolsList(); 
+        // Also trigger dashboard update if needed
+    } 
+};
 window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; };
 window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim();
