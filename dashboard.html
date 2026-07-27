@@ -377,7 +377,7 @@
         .credits-container .credit-item .label { font-size: 0.48rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
         
-        /* ─── TOOLS WITH FIRE GIF ─── */
+        /* ─── TOOLS ─── */
         .tools-container {
             display: flex;
             flex-direction: column;
@@ -420,26 +420,23 @@
         .tool-btn:hover::before { opacity: 1; }
         .tool-btn:active { transform: scale(0.97); }
         
-        /* ─── FIRE GIF STYLING ─── */
-        .tool-fire-gif {
+        /* ─── FIRE EMOJI SLOW ZOOM ─── */
+        .tool-fire {
             display: inline-block;
-            width: 32px;
-            height: 32px;
-            margin: 0 6px;
-            vertical-align: middle;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.3));
-            animation: fireGlow 2s ease-in-out infinite;
+            font-size: 1em;
+            animation: fireZoom 2.5s ease-in-out infinite;
+            margin: 0 4px;
+            line-height: 1;
         }
-        @keyframes fireGlow {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.3)); }
-            50% { filter: drop-shadow(0 0 30px rgba(255, 150, 0, 0.5)); }
+        @keyframes fireZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
         }
-        .tool-fire-gif.hidden {
-            display: none;
-        }
+        .tool-fire:first-child { animation-delay: 0s; }
+        .tool-fire:last-child { animation-delay: 0.4s; }
         
-        .tool-btn .tool-name {
+        /* ─── TOOL NAME SLOW ZOOM ─── */
+        .tool-name {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1.1rem, 1.8vw, 1.6rem);
             color: var(--text-primary);
@@ -453,8 +450,13 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 2px;
+            animation: toolNameZoom 3.5s ease-in-out infinite;
         }
-        .tool-btn .tool-name .ruthless-in-tool {
+        @keyframes toolNameZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .tool-name .ruthless-in-tool {
             color: #FF0033 !important;
             text-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
         }
@@ -488,7 +490,7 @@
         .tool-fullscreen-content { flex: 1; overflow: hidden; }
         .tool-fullscreen-content iframe { width: 100%; height: 100%; border: none; background: #0a0a0a; }
         
-        /* ─── BIGGER CHAT POPUP ─── */
+        /* ─── CHAT POPUP - BLACK BACKGROUND ─── */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px); animation: fadeIn 0.3s ease; }
         .overlay.active { display: flex; }
         @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
@@ -538,7 +540,7 @@
         .history-item .date { color: var(--text-muted); font-size: 0.4rem; }
         .history-empty { text-align: center; color: var(--text-muted); font-size: 0.45rem; padding: 16px; }
         
-        /* ─── BIGGER CHAT CONTAINER ─── */
+        /* ─── CHAT CONTAINER - BLACK BACKGROUND ─── */
         .chat-container { 
             max-height: 350px; 
             overflow-y: auto; 
@@ -548,31 +550,39 @@
             padding: 10px; 
             display: flex; 
             flex-direction: column;
-            background: rgba(0,0,0,0.15);
+            background: #000000 !important;
             min-height: 120px;
         }
         .chat-container::-webkit-scrollbar { width: 5px; }
         .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .chat-message { 
-            padding: 8px 14px; 
-            margin: 4px 0; 
-            border-radius: 8px; 
-            font-size: 0.85rem; 
-            max-width: 85%; 
+        
+        /* ─── INCOMING (Admin → User): WHITE TEXT, RED BG ─── */
+        .chat-message.admin { 
+            background: #FF0033 !important; 
+            color: #ffffff !important; 
+            align-self: flex-start; 
+            border-bottom-left-radius: 4px;
+            padding: 8px 14px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            max-width: 85%;
             word-wrap: break-word;
             line-height: 1.5;
         }
-        .chat-message.admin { 
-            background: rgba(255,0,51,0.15); 
-            color: #FF0033; 
-            align-self: flex-start; 
-            border-bottom-left-radius: 4px;
-        }
+        /* ─── OUTGOING (User → Admin): RED TEXT, WHITE BG ─── */
         .chat-message.user { 
-            background: rgba(0,255,102,0.10); 
-            color: #00FF66; 
+            background: #ffffff !important; 
+            color: #FF0033 !important; 
             align-self: flex-end; 
             border-bottom-right-radius: 4px;
+            padding: 8px 14px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
         }
         .chat-message .time { 
             font-size: 0.5rem; 
@@ -651,7 +661,6 @@
         .footer .brand { color: #FF0033; font-weight: 700; transition: all 0.3s ease; }
         .footer:hover .brand { text-shadow: 0 0 20px rgba(255,0,51,0.1); }
         
-        /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
             .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
@@ -672,7 +681,6 @@
             .tool-btn .tool-name { font-size: 1rem; }
             .tool-btn .tool-subname { font-size: 0.6rem; }
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
-            .tool-fire-gif { width: 26px; height: 26px; margin: 0 4px; }
             .chat-message { font-size: 0.75rem; padding: 6px 10px; }
             .chat-container { max-height: 250px; min-height: 100px; }
         }
@@ -701,7 +709,6 @@
             .modal label { font-size: 0.48rem; }
             .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
-            .tool-fire-gif { width: 22px; height: 22px; margin: 0 3px; }
             .chat-message { font-size: 0.7rem; padding: 5px 8px; }
             .chat-container { max-height: 200px; min-height: 80px; }
         }
@@ -851,11 +858,12 @@
     <div class="modal"><button class="modal-close" onclick="closeModal('paymentHistoryModal')">✕</button><h2>📜 PAYMENT HISTORY</h2><div class="history-list" id="paymentHistoryList"></div></div>
 </div>
 
+<!-- ─── CHAT MODAL - BLACK BACKGROUND ─── -->
 <div class="overlay" id="chatModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('chatModal')">✕</button>
         <h2>💬 Chat with Admin</h2>
-        <div class="chat-container" id="chatContainer"></div>
+        <div class="chat-container" id="chatContainer" style="background:#000000 !important;"></div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Type your message...">
             <button onclick="sendChatMessage()">Send</button>
@@ -1170,7 +1178,7 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── RENDER TOOLS WITH FIRE GIF AND RUTHLESS IN RED ───
+// ─── RENDER TOOLS WITH FIRE EMOJI ───
 function renderTools() {
     const container = document.getElementById('toolsContainer');
     if (!container) return;
@@ -1185,21 +1193,18 @@ function renderTools() {
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
         
-        // Process tool name - make RUTHLESS appear in red
         let toolNameHtml = tool.name || 'Untitled Tool';
-        // If tool name contains RUTHLESS, wrap it with red class
         if (toolNameHtml.includes('RUTHLESS')) {
             toolNameHtml = toolNameHtml.replace(/RUTHLESS/g, '<span class="ruthless-in-tool">RUTHLESS</span>');
         }
         
-        // Check if fire should be shown (default true if not set)
         const showFire = tool.showFire !== undefined ? tool.showFire : true;
         
         btn.innerHTML = `
             <div class="tool-name">
-                <img class="tool-fire-gif ${!showFire ? 'hidden' : ''}" src="https://i.gifer.com/7GgZ.gif" alt="Fire" />
+                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
                 ${toolNameHtml}
-                <img class="tool-fire-gif ${!showFire ? 'hidden' : ''}" src="https://i.gifer.com/7GgZ.gif" alt="Fire" />
+                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
             </div>
             ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
         `;
@@ -1260,20 +1265,33 @@ function updateChatBadge() {
     }
 }
 
+// ─── CHAT MESSAGES - BLACK BACKGROUND ───
 function renderChatMessages() {
-    const container = document.getElementById('chatContainer'); if (!container || !appState.currentUser) return; container.innerHTML = '';
-    const key = getChatKey(appState.currentUser.email); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    if (msgs.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">No messages yet</div>'; return; }
+    const container = document.getElementById('chatContainer'); 
+    if (!container || !appState.currentUser) return; 
+    container.innerHTML = '';
+    container.style.background = '#000000 !important';
+    
+    const key = getChatKey(appState.currentUser.email); 
+    const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+    if (msgs.length === 0) { 
+        container.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">No messages yet</div>'; 
+        return; 
+    }
     msgs.forEach(c => { 
+        // Incoming (Admin → User): White Text, Red BG
+        // Outgoing (User → Admin): Red Text, White BG
         const cls = c.sender === 'admin' ? 'admin' : 'user'; 
         const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; 
         container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; 
         if (c.sender === 'admin' && !c.read) c.read = true; 
     });
-    container.scrollTop = container.scrollHeight; saveLocalState();
+    container.scrollTop = container.scrollHeight; 
+    saveLocalState();
     chatUnreadCount = msgs.filter(m => m.sender === 'admin' && !m.read).length;
     updateChatBadge();
 }
+
 window.openChatModal = function() { if (!appState.currentUser) return; renderChatMessages(); openModal('chatModal'); };
 window.sendChatMessage = function() {
     const input = document.getElementById('chatInput'); const msg = input.value.trim(); if (!msg || !appState.currentUser) return;
@@ -1347,17 +1365,37 @@ window.openModal = openModal; window.closeModal = closeModal;
 
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
-    e.preventDefault(); logoClickCounter++;
+    e.preventDefault(); 
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    if (userLoggedIn && !adminLoggedIn) {
+        alert('🚫 Access Denied! Only Admin can access this page.');
+        return;
+    }
+    logoClickCounter++;
     const requiredClicks = appState.logoClickCount || 2;
     if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
-    e.preventDefault(); logoClickCounter++;
+    e.preventDefault(); 
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    if (userLoggedIn && !adminLoggedIn) {
+        alert('🚫 Access Denied! Only Admin can access this page.');
+        return;
+    }
+    logoClickCounter++;
     const requiredClicks = appState.logoClickCount || 2;
     if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
     if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        if (userLoggedIn && !adminLoggedIn) {
+            alert('🚫 Access Denied! Only Admin can access this page.');
+            return;
+        }
         logoClickCounter++; const requiredClicks = appState.logoClickCount || 2;
         if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
     }
