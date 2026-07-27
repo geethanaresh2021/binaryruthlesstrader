@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Binary Ruthless Trader - Home</title>
+    <title>Binary Ruthless Trader - AI Signals | Free Binary Signals</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Binary Ruthless Trader - Get free AI signals for Quotex, Binomo, Pocket Option. Free binary signals, risk management tools, and AI trading bot." />
+    <meta name="keywords" content="binary ruthless trader, binary ruthless signals, binary signals, free signals, free ai signals, binary bot, binomo bot, pocket option bot, quotex ai signals, binomo ai signals, pocket option ai signals, free binary ai signals, free risk management, binary options signals, binary trading signals" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://binaryruthlesstrader.com/" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Binary Ruthless Trader - Free AI Signals for Quotex, Binomo, Pocket Option" />
+    <meta property="og:description" content="Get free AI signals, risk management tools, and binary trading bot. Free signals for Quotex, Binomo, Pocket Option." />
+    <meta property="og:url" content="https://binaryruthlesstrader.com/" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Binary Ruthless Trader",
+        "description": "Free AI signals for Quotex, Binomo, Pocket Option. Binary trading signals, risk management tools.",
+        "applicationCategory": "Financial Application",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript"
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,9 +56,9 @@
             --text-primary: #ffffff;
             --text-secondary: #aaa;
             --text-muted: #666;
-            --border-color: rgba(255,0,51,0.15);
+            --border-color: rgba(255,0,51,0.2);
             --border-light: rgba(255,255,255,0.06);
-            --border-visible: rgba(255,0,51,0.2);
+            --border-visible: rgba(255,0,51,0.25);
             --shadow-color: rgba(255,0,51,0.08);
             --input-bg: rgba(255,255,255,0.05);
             --modal-bg: rgba(20,20,20,0.95);
@@ -55,7 +80,7 @@
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #888;
             --container-bg: rgba(255,0,51,0.04);
-            --container-border: rgba(255,0,51,0.15);
+            --container-border: rgba(255,0,51,0.2);
             --section-bg: rgba(255,255,255,0.02);
             --section-border: rgba(255,0,51,0.06);
             --btn-edit-bg: #ffffff;
@@ -79,7 +104,7 @@
             --text-primary: #111111;
             --text-secondary: #444444;
             --text-muted: #777777;
-            --border-color: rgba(255,0,51,0.15);
+            --border-color: rgba(255,0,51,0.2);
             --border-light: rgba(0,0,0,0.06);
             --border-visible: rgba(255,0,51,0.25);
             --shadow-color: rgba(255,0,51,0.05);
@@ -103,7 +128,7 @@
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #999;
             --container-bg: rgba(255,0,51,0.02);
-            --container-border: rgba(255,0,51,0.12);
+            --container-border: rgba(255,0,51,0.2);
             --section-bg: rgba(0,0,0,0.01);
             --section-border: rgba(255,0,51,0.06);
             --btn-edit-bg: #000000;
@@ -137,6 +162,18 @@
             touch-action: manipulation;
             transition: background 0.4s ease, color 0.4s ease;
         }
+        /* Prevent copy and view source */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Disable right click */
+        body {
+            -webkit-touch-callout: none;
+        }
+        
         input,
         select,
         button,
@@ -223,7 +260,7 @@
         /* ─── RED CONTAINER ─── COMPACT ─── */
         .red-container {
             background: var(--container-bg);
-            border: 1px solid var(--container-border);
+            border: 2px solid var(--container-border);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
@@ -232,17 +269,17 @@
             will-change: transform;
         }
         .red-container:hover {
-            border-color: rgba(255, 0, 51, 0.4);
+            border-color: rgba(255, 0, 51, 0.5);
             box-shadow: 0 0 60px var(--shadow-color);
             transform: scale(1.012) translateY(-1px);
         }
         .red-container::after {
             content: '';
             position: absolute;
-            inset: -1px;
+            inset: -2px;
             border-radius: 18px;
-            padding: 1px;
-            background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.1), transparent);
+            padding: 2px;
+            background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -698,11 +735,11 @@
         /* ─── OFFER BANNER ─── */
         .offer-banner {
             background: var(--offer-banner-bg);
-            border: 2px solid var(--offer-banner-border);
-            border-radius: 16px;
-            padding: 14px 20px;
+            border: 3px solid var(--offer-banner-border);
+            border-radius: 20px;
+            padding: 20px 28px;
             text-align: center;
-            margin: 4px 0 6px;
+            margin: 4px 0 8px;
             flex-shrink: 0;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -715,15 +752,15 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent 50%, rgba(255, 0, 51, 0.03));
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent 50%, rgba(255, 0, 51, 0.05));
             opacity: 0;
             transition: opacity 0.6s ease;
             z-index: 0;
         }
         .offer-banner:hover {
             border-color: #FFD700;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.08), inset 0 0 60px rgba(255, 215, 0, 0.02);
-            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.1), inset 0 0 80px rgba(255, 215, 0, 0.03);
+            transform: scale(1.03) translateY(-3px);
         }
         .offer-banner:hover::before {
             opacity: 1;
@@ -734,17 +771,19 @@
         .offer-banner h4 {
             color: #FFD700;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.85rem, 1.3vw, 1.15rem);
-            letter-spacing: 1px;
+            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+            letter-spacing: 2px;
             position: relative;
             z-index: 1;
+            font-weight: 700;
         }
         .offer-banner p {
             color: var(--text-secondary);
-            font-size: clamp(0.65rem, 0.9vw, 0.8rem);
-            margin-top: 2px;
+            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+            margin-top: 4px;
             position: relative;
             z-index: 1;
+            font-weight: 400;
         }
         .offer-banner .highlight {
             color: #FF0033;
@@ -752,7 +791,7 @@
             transition: all 0.3s ease;
             display: inline-block;
             animation: creditZoom 1.5s ease-in-out infinite;
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-size: clamp(1.6rem, 2.8vw, 2.4rem);
         }
         @keyframes creditZoom {
             0%, 100% {
@@ -760,9 +799,9 @@
                 color: #FF0033;
             }
             50% {
-                transform: scale(1.25);
+                transform: scale(1.3);
                 color: #FFD700;
-                text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+                text-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
             }
         }
         .offer-banner:hover .highlight {
@@ -770,16 +809,17 @@
         }
         .offer-banner .click-hint {
             color: var(--text-muted);
-            font-size: 0.5rem;
-            margin-top: 3px;
-            letter-spacing: 1px;
+            font-size: 0.6rem;
+            margin-top: 6px;
+            letter-spacing: 2px;
             position: relative;
             z-index: 1;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
         .offer-banner:hover .click-hint {
             color: var(--text-secondary);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
         .offer-banner::after {
             content: '';
@@ -788,7 +828,7 @@
             left: -100%;
             width: 300%;
             height: 300%;
-            background: linear-gradient(45deg, transparent 40%, rgba(255, 215, 0, 0.04) 50%, transparent 60%);
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 215, 0, 0.06) 50%, transparent 60%);
             animation: shimmer 6s ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
@@ -825,7 +865,7 @@
             cursor: default;
             overflow: hidden;
             background: var(--user-card-bg);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
         }
         .user-card::before {
             content: '';
@@ -914,7 +954,7 @@
 
         .user-card.login-card {
             background: var(--user-card-bg);
-            border: 1px solid rgba(255, 0, 51, 0.2);
+            border: 2px solid rgba(255, 0, 51, 0.2);
         }
         .user-card.login-card:hover {
             border-color: #FF0033;
@@ -935,7 +975,7 @@
 
         .user-card.signup-card {
             background: var(--user-card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         .user-card.signup-card:hover {
             border-color: rgba(255, 255, 255, 0.6);
@@ -957,7 +997,7 @@
 
         .user-card.verify-card {
             background: var(--user-card-bg);
-            border: 1px solid rgba(255, 0, 51, 0.2);
+            border: 2px solid rgba(255, 0, 51, 0.2);
         }
         .user-card.verify-card:hover {
             border-color: #FF0033;
@@ -994,8 +1034,8 @@
         /* ─── FEATURES ─── */
         .features-section {
             padding: 4px 0 4px;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
+            border-top: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
             flex-shrink: 0;
             margin-top: 6px;
         }
@@ -1046,7 +1086,7 @@
             background: var(--feature-card-bg);
             border-radius: 10px;
             padding: 5px 4px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             text-align: center;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
@@ -1159,7 +1199,7 @@
         .footer {
             padding: 3px 0 5px;
             text-align: center;
-            border-top: 1px solid var(--footer-border);
+            border-top: 2px solid var(--footer-border);
             flex-shrink: 0;
             margin-top: 4px;
         }
@@ -1217,9 +1257,10 @@
             backdrop-filter: blur(20px);
             border: 2px solid var(--popup-border);
             border-radius: 16px;
-            padding: 24px 20px;
+            padding: 28px 24px;
             width: 100%;
-            max-width: 560px;
+            max-width: 600px;
+            min-height: 280px;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
@@ -1246,9 +1287,9 @@
 
         .modal-close {
             position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 1.2rem;
+            top: 10px;
+            right: 14px;
+            font-size: 1.3rem;
             color: #FF0033;
             cursor: pointer;
             background: none;
@@ -1270,13 +1311,13 @@
             color: var(--popup-label);
             text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
+            font-size: 1rem;
+            margin-bottom: 14px;
             letter-spacing: 2px;
         }
         .modal label {
             display: block;
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             color: var(--popup-label);
             margin: 6px 0 3px;
             text-transform: uppercase;
@@ -1287,13 +1328,13 @@
         .modal select,
         .modal textarea {
             width: 100%;
-            padding: 6px 10px;
+            padding: 7px 12px;
             background: var(--input-bg);
             border: 1px solid rgba(255, 0, 51, 0.1);
             border-radius: 6px;
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             outline: none;
             transition: all 0.4s ease;
         }
@@ -1305,22 +1346,22 @@
             transform: scale(1.01);
         }
         .modal textarea {
-            height: 50px;
+            height: 60px;
             resize: vertical;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
 
         .modal .btn-submit {
             width: 100%;
-            padding: 8px;
-            margin-top: 8px;
+            padding: 10px;
+            margin-top: 10px;
             border-radius: 30px;
             font-weight: 700;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             position: relative;
             overflow: hidden;
             will-change: transform;
@@ -1347,14 +1388,14 @@
 
         .modal .error-msg {
             color: #FF0033;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             margin-top: 3px;
             font-family: 'Roboto Mono', monospace;
-            min-height: 16px;
+            min-height: 18px;
         }
         .modal .success-msg {
             color: #00FF66;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             margin-top: 3px;
             font-family: 'Roboto Mono', monospace;
         }
@@ -1384,9 +1425,10 @@
                 font-size: 0.9rem;
             }
             .modal {
-                padding: 16px 14px;
+                padding: 18px 16px;
                 max-width: 100%;
                 max-height: 90vh;
+                min-height: 240px;
             }
             .stats-row {
                 gap: 10px;
@@ -1440,7 +1482,8 @@
                 font-size: 0.85rem;
             }
             .offer-banner {
-                padding: 12px 16px;
+                padding: 16px 20px;
+                border-radius: 16px;
             }
         }
 
@@ -1505,17 +1548,17 @@
                 letter-spacing: 2px;
             }
             .offer-banner {
-                padding: 8px 12px;
-                border-radius: 12px;
+                padding: 12px 16px;
+                border-radius: 14px;
             }
             .offer-banner h4 {
-                font-size: 0.7rem;
+                font-size: 0.9rem;
             }
             .offer-banner p {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
             .offer-banner .highlight {
-                font-size: 1.1rem;
+                font-size: 1.4rem;
             }
             .user-card {
                 padding: 10px 8px 12px;
@@ -1534,12 +1577,26 @@
                 gap: 14px;
             }
             .modal {
-                padding: 14px 12px;
+                padding: 16px 14px;
                 max-width: 100%;
                 max-height: 92vh;
+                min-height: 200px;
             }
             .modal h2 {
-                font-size: 0.75rem;
+                font-size: 0.85rem;
+            }
+            .modal label {
+                font-size: 0.48rem;
+            }
+            .modal input,
+            .modal select,
+            .modal textarea {
+                font-size: 0.65rem;
+                padding: 5px 8px;
+            }
+            .modal .btn-submit {
+                font-size: 0.65rem;
+                padding: 8px;
             }
         }
 
@@ -1634,6 +1691,19 @@
             0% {}
             100% {}
         }
+
+        /* ─── PREVENT SELECTION & COPY ─── */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Prevent right-click on images */
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
     </style>
 </head>
 <body>
@@ -1688,8 +1758,8 @@
 
             <!-- OFFER BANNER -->
             <div class="offer-banner" id="offerBanner">
-                <h4>🎁 FREE SIGNAL OFFER</h4>
-                <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals when you deposit via our affiliate links!</p>
+                <h4 id="offerTitle">🎁 FREE SIGNAL OFFER</h4>
+                <p>Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals for <strong>Quotex, Binomo, Pocket Option</strong> when you deposit via our affiliate links!</p>
                 <div class="click-hint">👆 Click here to sign up now</div>
             </div>
 
@@ -1737,7 +1807,7 @@
 
             <!-- FOOTER -->
             <div class="footer">
-                <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p>
+                <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — Free AI Signals for Quotex, Binomo, Pocket Option</p>
             </div>
 
         </div>
@@ -1829,6 +1899,7 @@
         let appState = {
             password: 'admin123',
             offerCredits: 10,
+            offerDescription: 'FREE SIGNAL OFFER',
             darkMode: true,
             brokers: [
                 { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
@@ -1884,7 +1955,23 @@
             appState.darkMode = !isDark;
             applyTheme(appState.darkMode);
             saveLocalState();
-            this.textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
+        });
+
+        // ─── PREVENT COPY & RIGHT CLICK ───
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        document.addEventListener('keydown', function(e) {
+            // Prevent Ctrl+C, Ctrl+U, Ctrl+S, F12
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
         });
 
         // ─── CURSOR GLOW ───
@@ -2040,6 +2127,7 @@
                 appState = { ...appState, ...val };
                 if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
                 if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
+                if (val.offerDescription !== undefined) appState.offerDescription = val.offerDescription;
                 if (val.darkMode !== undefined) {
                     appState.darkMode = val.darkMode;
                     applyTheme(appState.darkMode);
@@ -2110,6 +2198,9 @@
                 } catch (e) {}
             }
             applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
+            if (appState.offerDescription) {
+                document.getElementById('offerTitle').textContent = '🎁 ' + appState.offerDescription;
+            }
             updateUI();
             renderSocialMedia();
             renderFeatures();
@@ -2132,6 +2223,9 @@
 
         function updateUI() {
             document.getElementById('offerCreditsDisplay').textContent = appState.offerCredits || 10;
+            if (appState.offerDescription) {
+                document.getElementById('offerTitle').textContent = '🎁 ' + appState.offerDescription;
+            }
             const brokerSelect = document.getElementById('signupBroker');
             brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
             appState.brokers.forEach(b => {
@@ -2379,6 +2473,7 @@
         console.log('🏠 Home Page Loaded');
         console.log('🔑 Admin Password: ' + appState.password);
         console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
+        console.log('🔒 Security: Right-click disabled, Copy disabled');
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
