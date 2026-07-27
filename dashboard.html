@@ -377,7 +377,7 @@
         .credits-container .credit-item .label { font-size: 0.48rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
         
-        /* ─── TOOLS WITH FIRE ─── */
+        /* ─── TOOLS WITH REALISTIC 3D FIRE ─── */
         .tools-container {
             display: flex;
             flex-direction: column;
@@ -420,46 +420,62 @@
         .tool-btn:hover::before { opacity: 1; }
         .tool-btn:active { transform: scale(0.97); }
         
-        /* ─── REAL 3D FIRE ANIMATION ─── */
+        /* ─── REALISTIC 3D FIRE ANIMATION (Video Style) ─── */
         .tool-fire {
             display: inline-block;
             font-size: 1.6rem;
-            animation: realFire3D 1.2s ease-in-out infinite;
+            animation: realisticFire 1.2s ease-in-out infinite;
             filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 150, 0, 0.4));
             margin: 0 6px;
             line-height: 1;
             transform-origin: center;
+            will-change: transform, filter, color;
         }
-        @keyframes realFire3D {
-            0%, 100% { 
-                transform: scale(1) rotate(-2deg) translateY(0); 
+        @keyframes realisticFire {
+            0% { 
+                transform: scale(1) rotate(-3deg) translateY(0); 
                 filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 150, 0, 0.4));
                 color: #FF4500;
             }
-            15% { 
-                transform: scale(1.15) rotate(-5deg) translateY(-4px); 
-                filter: drop-shadow(0 0 25px rgba(255, 50, 0, 1)) drop-shadow(0 0 50px rgba(255, 200, 0, 0.6));
+            12% { 
+                transform: scale(1.2) rotate(-6deg) translateY(-6px); 
+                filter: drop-shadow(0 0 28px rgba(255, 50, 0, 1)) drop-shadow(0 0 55px rgba(255, 200, 0, 0.6));
                 color: #FF6600;
             }
-            30% { 
-                transform: scale(0.95) rotate(3deg) translateY(2px); 
-                filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.9)) drop-shadow(0 0 40px rgba(255, 200, 0, 0.5));
+            25% { 
+                transform: scale(0.92) rotate(4deg) translateY(3px); 
+                filter: drop-shadow(0 0 22px rgba(255, 100, 0, 0.9)) drop-shadow(0 0 45px rgba(255, 200, 0, 0.5));
                 color: #FF0033;
             }
-            50% { 
-                transform: scale(1.2) rotate(-3deg) translateY(-6px); 
-                filter: drop-shadow(0 0 35px rgba(255, 30, 0, 1)) drop-shadow(0 0 60px rgba(255, 220, 0, 0.7));
+            37% { 
+                transform: scale(1.25) rotate(-4deg) translateY(-8px); 
+                filter: drop-shadow(0 0 38px rgba(255, 30, 0, 1)) drop-shadow(0 0 65px rgba(255, 220, 0, 0.7));
                 color: #FF8C00;
             }
-            70% { 
-                transform: scale(0.9) rotate(4deg) translateY(3px); 
+            50% { 
+                transform: scale(0.95) rotate(5deg) translateY(4px); 
                 filter: drop-shadow(0 0 20px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 35px rgba(255, 180, 0, 0.4));
                 color: #FF4500;
             }
-            85% { 
-                transform: scale(1.1) rotate(-4deg) translateY(-3px); 
-                filter: drop-shadow(0 0 30px rgba(255, 60, 0, 1)) drop-shadow(0 0 55px rgba(255, 200, 0, 0.6));
+            62% { 
+                transform: scale(1.15) rotate(-5deg) translateY(-5px); 
+                filter: drop-shadow(0 0 32px rgba(255, 60, 0, 1)) drop-shadow(0 0 58px rgba(255, 200, 0, 0.6));
                 color: #FF6600;
+            }
+            75% { 
+                transform: scale(0.88) rotate(3deg) translateY(2px); 
+                filter: drop-shadow(0 0 18px rgba(255, 100, 0, 0.85)) drop-shadow(0 0 40px rgba(255, 200, 0, 0.4));
+                color: #FF0033;
+            }
+            87% { 
+                transform: scale(1.3) rotate(-7deg) translateY(-9px); 
+                filter: drop-shadow(0 0 45px rgba(255, 30, 0, 1)) drop-shadow(0 0 70px rgba(255, 220, 0, 0.8));
+                color: #FF8C00;
+            }
+            100% { 
+                transform: scale(1) rotate(-3deg) translateY(0); 
+                filter: drop-shadow(0 0 15px rgba(255, 80, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 150, 0, 0.4));
+                color: #FF4500;
             }
         }
         .tool-fire:first-child { animation-delay: 0s; }
@@ -1124,7 +1140,7 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── RENDER TOOLS WITH FIRE AND RUTHLESS IN RED ───
+// ─── RENDER TOOLS WITH REALISTIC FIRE AND RUTHLESS IN RED ───
 function renderTools() {
     const container = document.getElementById('toolsContainer');
     if (!container) return;
