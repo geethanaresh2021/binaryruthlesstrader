@@ -1999,10 +1999,8 @@
             const adminNavBar = document.getElementById('adminNavBar');
             if (userLoggedIn) {
                 userLogoutBtn.classList.add('visible');
-                const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-                if (!adminLoggedIn) {
-                    adminNavBar.classList.remove('visible');
-                }
+                // IMPORTANT: Do NOT show admin nav for normal users
+                adminNavBar.classList.remove('visible');
             } else {
                 userLogoutBtn.classList.remove('visible');
             }
@@ -2035,6 +2033,7 @@
             return adminLoggedIn;
         }
 
+        // ─── ADMIN LOGOUT ───
         document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
             sessionStorage.removeItem('admin_logged_in');
             sessionStorage.removeItem('user_logged_in');
@@ -2122,7 +2121,7 @@
             });
         }
 
-        // ─── UPDATE OFFER BANNER (FIXED: Number appears EXACTLY where it is in description) ───
+        // ─── UPDATE OFFER BANNER ───
         function updateOfferBanner() {
             const credits = appState.offerCredits || 10;
             const name = appState.offerName || 'FREE SIGNAL OFFER';
@@ -2132,22 +2131,17 @@
             
             const descContainer = document.getElementById('offerDescriptionText');
             
-            // Find ALL numbers in the description and replace each with animated span
-            // This ensures the number appears EXACTLY where it is in the text
-            let result = description;
-            
             // Replace the first number with animated span
             const numberMatch = description.match(/\d+/);
             if (numberMatch) {
                 const matchedNumber = numberMatch[0];
-                // Replace only the FIRST occurrence (which is the credits number)
-                result = description.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${credits}</span>`);
+                // Replace only the FIRST occurrence
+                let result = description.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${credits}</span>`);
+                descContainer.innerHTML = result;
             } else {
-                // If no number found, just append the number at the end with span
-                result = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
+                // If no number found, append at the end
+                descContainer.innerHTML = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
             }
-            
-            descContainer.innerHTML = result;
         }
 
         // ─── FIREBASE ───
@@ -2418,10 +2412,20 @@
             }
         });
 
-        // ─── ADMIN ACCESS (Logo Click) ───
+        // ─── ADMIN ACCESS (Logo Click) - ONLY FOR ADMIN ───
         let logoClickCounter = 0;
         document.getElementById('logoIcon').addEventListener('click', function(e) {
             e.preventDefault();
+            // Check if user is logged in as normal user
+            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+            
+            // If user is logged in as normal user, DO NOT show admin access
+            if (userLoggedIn && !adminLoggedIn) {
+                alert('🚫 Access Denied! Only Admin can access this page.');
+                return;
+            }
+            
             logoClickCounter++;
             const requiredClicks = appState.logoClickCount || 2;
             if (logoClickCounter >= requiredClicks) {
@@ -2431,6 +2435,14 @@
         });
         document.getElementById('logoImage').addEventListener('click', function(e) {
             e.preventDefault();
+            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+            
+            if (userLoggedIn && !adminLoggedIn) {
+                alert('🚫 Access Denied! Only Admin can access this page.');
+                return;
+            }
+            
             logoClickCounter++;
             const requiredClicks = appState.logoClickCount || 2;
             if (logoClickCounter >= requiredClicks) {
@@ -2440,6 +2452,14 @@
         });
         document.getElementById('brandSection').addEventListener('click', function(e) {
             if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+                const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+                const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+                
+                if (userLoggedIn && !adminLoggedIn) {
+                    alert('🚫 Access Denied! Only Admin can access this page.');
+                    return;
+                }
+                
                 logoClickCounter++;
                 const requiredClicks = appState.logoClickCount || 2;
                 if (logoClickCounter >= requiredClicks) {
