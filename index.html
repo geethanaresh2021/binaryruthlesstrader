@@ -579,16 +579,6 @@
             }
         }
 
-        /* ─── RUTHLESS IN RED ─── */
-        .ruthless-text {
-            color: #FF0033 !important;
-            text-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
-            transition: all 0.3s ease;
-        }
-        .brand-section:hover .ruthless-text {
-            text-shadow: 0 0 40px rgba(255, 0, 51, 0.5);
-        }
-
         .brand-name {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
@@ -738,43 +728,60 @@
             transform: scale(0.98);
         }
         
-        /* ─── OFFER TITLE WITH GIFT EMOJI ─── */
+        /* ─── OFFER TITLE WITH 3D GIFT BOX ─── */
         .offer-title-wrapper {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 4px;
         }
         .offer-gift-icon {
-            font-size: clamp(2rem, 3.5vw, 3.2rem);
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
             display: inline-block;
-            animation: giftFloat 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+            animation: gift3D 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
+            transform-style: preserve-3d;
         }
         .offer-gift-icon:nth-child(1) { animation-delay: 0s; }
-        .offer-gift-icon:nth-child(3) { animation-delay: 0.8s; }
+        .offer-gift-icon:nth-child(3) { animation-delay: 0.4s; }
         
-        @keyframes giftFloat {
-            0%, 100% {
-                transform: translateY(0) scale(1) rotate(0deg);
+        @keyframes gift3D {
+            0% {
+                transform: translateY(0) scale(1) rotateY(0deg) rotateX(0deg);
+                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
+            }
+            15% {
+                transform: translateY(-6px) scale(1.08) rotateY(15deg) rotateX(5deg);
+                filter: drop-shadow(0 8px 30px rgba(255, 215, 0, 0.5));
+            }
+            30% {
+                transform: translateY(-2px) scale(0.95) rotateY(-10deg) rotateX(-3deg);
                 filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
             }
-            25% {
-                transform: translateY(-8px) scale(1.05) rotate(-3deg);
-                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.6));
+            50% {
+                transform: translateY(-8px) scale(1.12) rotateY(20deg) rotateX(8deg);
+                filter: drop-shadow(0 12px 40px rgba(255, 215, 0, 0.6));
             }
-            75% {
-                transform: translateY(5px) scale(0.95) rotate(3deg);
-                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4));
+            70% {
+                transform: translateY(2px) scale(0.98) rotateY(-5deg) rotateX(-2deg);
+                filter: drop-shadow(0 2px 25px rgba(255, 215, 0, 0.35));
+            }
+            85% {
+                transform: translateY(-4px) scale(1.05) rotateY(8deg) rotateX(3deg);
+                filter: drop-shadow(0 6px 35px rgba(255, 215, 0, 0.45));
+            }
+            100% {
+                transform: translateY(0) scale(1) rotateY(0deg) rotateX(0deg);
+                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
             }
         }
 
         .offer-banner h4 {
             color: #FFD700;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+            font-size: clamp(1rem, 1.6vw, 1.4rem);
             letter-spacing: 2px;
             position: relative;
             z-index: 1;
@@ -790,57 +797,11 @@
                 text-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
             }
             50% {
-                transform: scale(1.05);
-                text-shadow: 0 0 60px rgba(255, 215, 0, 0.3), 0 0 80px rgba(255, 215, 0, 0.1);
+                transform: scale(1.04);
+                text-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 0 80px rgba(255, 215, 0, 0.08);
             }
         }
 
-        .offer-banner p {
-            color: var(--text-secondary);
-            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
-            margin-top: 4px;
-            position: relative;
-            z-index: 1;
-            font-weight: 400;
-        }
-        
-        /* ─── 3D CREDIT NUMBER ZOOM EFFECT ─── */
-        .offer-banner .highlight {
-            color: #FF0033;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            display: inline-block;
-            font-size: clamp(2rem, 3.5vw, 3rem);
-            text-shadow: 0 0 30px rgba(255, 0, 51, 0.3);
-            animation: credit3DZoom 1.8s ease-in-out infinite;
-            transform-origin: center;
-            position: relative;
-            padding: 0 8px;
-        }
-        
-        @keyframes credit3DZoom {
-            0% {
-                transform: scale(1) translateZ(0) rotateX(0deg);
-                color: #FF0033;
-                text-shadow: 0 0 30px rgba(255, 0, 51, 0.3), 0 0 60px rgba(255, 0, 51, 0.1);
-            }
-            30% {
-                transform: scale(1.4) translateZ(40px) rotateX(8deg);
-                color: #FFD700;
-                text-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.2), 0 10px 30px rgba(255, 215, 0, 0.3);
-            }
-            60% {
-                transform: scale(1.2) translateZ(20px) rotateX(-4deg);
-                color: #FF0033;
-                text-shadow: 0 0 40px rgba(255, 0, 51, 0.4), 0 0 80px rgba(255, 0, 51, 0.15);
-            }
-            100% {
-                transform: scale(1) translateZ(0) rotateX(0deg);
-                color: #FF0033;
-                text-shadow: 0 0 30px rgba(255, 0, 51, 0.3), 0 0 60px rgba(255, 0, 51, 0.1);
-            }
-        }
-        
         .offer-banner .offer-description-text {
             color: var(--text-secondary);
             font-size: clamp(0.85rem, 1.2vw, 1.05rem);
@@ -848,6 +809,49 @@
             position: relative;
             z-index: 1;
             font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        /* ─── 3D CREDIT NUMBER ZOOM EFFECT (Slightly larger than text) ─── */
+        .offer-banner .highlight {
+            color: #FF0033;
+            font-weight: 700;
+            display: inline-block;
+            font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+            text-shadow: 0 0 20px rgba(255, 0, 51, 0.25);
+            animation: credit3DZoom 1.8s ease-in-out infinite;
+            transform-origin: center;
+            position: relative;
+            padding: 0 4px;
+            line-height: 1.4;
+        }
+        
+        @keyframes credit3DZoom {
+            0% {
+                transform: scale(1) translateZ(0) rotateX(0deg);
+                color: #FF0033;
+                text-shadow: 0 0 20px rgba(255, 0, 51, 0.25), 0 0 40px rgba(255, 0, 51, 0.08);
+            }
+            25% {
+                transform: scale(1.25) translateZ(20px) rotateX(5deg);
+                color: #FFD700;
+                text-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.15);
+            }
+            50% {
+                transform: scale(1.1) translateZ(10px) rotateX(-3deg);
+                color: #FF0033;
+                text-shadow: 0 0 30px rgba(255, 0, 51, 0.3), 0 0 50px rgba(255, 0, 51, 0.1);
+            }
+            75% {
+                transform: scale(1.2) translateZ(15px) rotateX(4deg);
+                color: #FF6600;
+                text-shadow: 0 0 35px rgba(255, 100, 0, 0.35), 0 0 55px rgba(255, 215, 0, 0.12);
+            }
+            100% {
+                transform: scale(1) translateZ(0) rotateX(0deg);
+                color: #FF0033;
+                text-shadow: 0 0 20px rgba(255, 0, 51, 0.25), 0 0 40px rgba(255, 0, 51, 0.08);
+            }
         }
 
         .offer-banner .click-hint {
@@ -1523,6 +1527,12 @@
                 padding: 16px 20px;
                 border-radius: 16px;
             }
+            .offer-gift-icon {
+                font-size: clamp(1rem, 1.6vw, 1.4rem);
+            }
+            .offer-banner .highlight {
+                font-size: clamp(1rem, 1.4vw, 1.2rem);
+            }
         }
 
         @media (max-width: 480px) {
@@ -1585,16 +1595,16 @@
                 border-radius: 14px;
             }
             .offer-banner h4 {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
-            .offer-banner p {
+            .offer-banner .offer-description-text {
                 font-size: 0.7rem;
             }
             .offer-banner .highlight {
-                font-size: 1.8rem;
+                font-size: 0.95rem;
             }
             .offer-gift-icon {
-                font-size: 1.6rem;
+                font-size: 0.9rem;
             }
             .user-card {
                 padding: 10px 8px 12px;
@@ -1912,7 +1922,7 @@
             password: 'admin123',
             offerCredits: 10,
             offerName: 'FREE SIGNAL OFFER',
-            offerDescription: 'Get {credits} FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
+            offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
             darkMode: true,
             brokers: [
                 { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
@@ -2112,25 +2122,32 @@
             });
         }
 
-        // ─── UPDATE OFFER BANNER ───
+        // ─── UPDATE OFFER BANNER (FIXED: Number appears EXACTLY where it is in description) ───
         function updateOfferBanner() {
             const credits = appState.offerCredits || 10;
             const name = appState.offerName || 'FREE SIGNAL OFFER';
-            let description = appState.offerDescription || 'Get {credits} FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
+            let description = appState.offerDescription || 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
             
             document.getElementById('offerTitle').textContent = name;
             
             const descContainer = document.getElementById('offerDescriptionText');
             
-            // Replace {credits} with the animated span
-            if (description.includes('{credits}')) {
-                const parts = description.split('{credits}');
-                descContainer.innerHTML = `${parts[0]}<span class="highlight" id="offerCreditsDisplay">${credits}</span>${parts[1] || ''}`;
+            // Find ALL numbers in the description and replace each with animated span
+            // This ensures the number appears EXACTLY where it is in the text
+            let result = description;
+            
+            // Replace the first number with animated span
+            const numberMatch = description.match(/\d+/);
+            if (numberMatch) {
+                const matchedNumber = numberMatch[0];
+                // Replace only the FIRST occurrence (which is the credits number)
+                result = description.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${credits}</span>`);
             } else {
-                // If no placeholder, append the number with span at the appropriate position
-                // Try to find where number should go
-                descContainer.innerHTML = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
+                // If no number found, just append the number at the end with span
+                result = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
             }
+            
+            descContainer.innerHTML = result;
         }
 
         // ─── FIREBASE ───
