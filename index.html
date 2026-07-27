@@ -48,7 +48,6 @@
     <style>
         /* ─── CSS VARIABLES FOR DARK/LIGHT MODE ─── */
         :root {
-            /* Dark Mode (default) */
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
             --bg-card: rgba(255,255,255,0.03);
@@ -162,15 +161,11 @@
             touch-action: manipulation;
             transition: background 0.4s ease, color 0.4s ease;
         }
-        /* Prevent copy and view source */
         body {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-        }
-        /* Disable right click */
-        body {
             -webkit-touch-callout: none;
         }
         
@@ -1625,32 +1620,12 @@
             transform: scale(0.97);
         }
 
-        /* ─── GLOBAL CLICK TRIGGER for logo zoom (home page only) ─── */
-        .global-click-trigger .logo-icon {
-            animation: zoomInSlow 0.7s ease forwards;
-        }
-        .global-click-trigger .logo-img {
-            animation: zoomInSlow 0.7s ease forwards;
-        }
-        .global-click-trigger .brand-name {
-            animation: zoomOutSlow 0.7s ease forwards;
-        }
-        .global-click-trigger {
-            animation: resetTrigger 0.8s ease forwards;
-        }
-        @keyframes resetTrigger {
-            0% {}
-            100% {}
-        }
-
-        /* ─── PREVENT SELECTION & COPY ─── */
         .no-select {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-        /* Prevent right-click on images */
         img {
             -webkit-user-drag: none;
             user-drag: none;
@@ -1841,7 +1816,7 @@
         const database = getDatabase(app);
         const dbRef = ref(database, 'brt_data');
 
-        // ─── APP STATE ───
+        // ─── APP STATE (Hardcoded Signal Tool REMOVED) ───
         let appState = {
             password: 'admin123',
             offerCredits: 10,
@@ -1859,7 +1834,7 @@
             currentUser: null,
             logoClickCount: 2,
             socialMedia: [],
-            tools: [],
+            tools: [], // Only Admin added tools will exist here
             features: [
                 { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
                 { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1867,7 +1842,13 @@
                 { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' },
                 { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
                 { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
-            ]
+            ],
+            payments: [],
+            upiId: 'binary@ruthless',
+            paymentInstructions: 'Please transfer the amount to the UPI ID.',
+            qrCodeBase64: '',
+            creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
+            chats: {}
         };
 
         let isFirebaseConnected = false;
@@ -2040,22 +2021,24 @@
             });
         }
 
-        // ─── UPDATE OFFER BANNER ───
+        // ─── UPDATE OFFER BANNER (Fixed Animation) ───
         function updateOfferBanner() {
             const credits = appState.offerCredits || 10;
             const name = appState.offerName || 'FREE SIGNAL OFFER';
             let description = appState.offerDescription || 'Get {credits} FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
             
-            // Replace {credits} placeholder with actual number
-            description = description.replace(/\{credits\}/g, credits);
-            
             document.getElementById('offerTitle').textContent = '🎁 ' + name;
-            document.getElementById('offerCreditsDisplay').textContent = credits;
             
-            // Update description with highlight span
             const descContainer = document.getElementById('offerDescriptionText');
-            // Keep the highlight span intact
-            descContainer.innerHTML = description;
+            
+            // Replace {credits} with the animated span
+            if (description.includes('{credits}')) {
+                const parts = description.split('{credits}');
+                descContainer.innerHTML = `${parts[0]}<span class="highlight" id="offerCreditsDisplay">${credits}</span>${parts[1] || ''}`;
+            } else {
+                // If no placeholder, just append the number with span
+                descContainer.innerHTML = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
+            }
         }
 
         // ─── FIREBASE ───
@@ -2065,6 +2048,7 @@
             const val = snapshot.val();
             if (val) {
                 const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
+                // Merge but DO NOT call saveLocalState() here to avoid loops
                 appState = { ...appState, ...val };
                 if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
                 if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
@@ -2094,7 +2078,7 @@
                     if (found) appState.currentUser = found;
                     else appState.currentUser = null;
                 }
-                saveLocalState();
+                // Do NOT call saveLocalState() here
                 updateUI();
                 updateOfferBanner();
             }
@@ -2183,7 +2167,6 @@
 
         // ─── MODAL HELPERS ───
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         window.closeModal = closeModal;
         window.openModal = openModal;
@@ -2406,10 +2389,9 @@
 
         // ─── INIT ───
         loadLocalState();
-        console.log('🏠 Home Page Loaded');
+        console.log('🏠 Home Page Loaded (Hardcoded Signal Tool Removed)');
         console.log('🔑 Admin Password: ' + appState.password);
         console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
-        console.log('🔒 Security: Right-click disabled, Copy disabled');
         console.log('📢 Offer: ' + appState.offerName + ' - ' + appState.offerCredits + ' credits');
 
         document.addEventListener('keydown', (e) => {
