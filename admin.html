@@ -30,9 +30,9 @@
             --text-primary: #ffffff;
             --text-secondary: #aaa;
             --text-muted: #666;
-            --border-color: rgba(255,0,51,0.15);
+            --border-color: rgba(255,0,51,0.2);
             --border-light: rgba(255,255,255,0.06);
-            --border-visible: rgba(255,0,51,0.2);
+            --border-visible: rgba(255,0,51,0.25);
             --shadow-color: rgba(255,0,51,0.08);
             --input-bg: rgba(255,255,255,0.05);
             --modal-bg: rgba(20,20,20,0.95);
@@ -54,7 +54,7 @@
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #888;
             --container-bg: rgba(255,0,51,0.04);
-            --container-border: rgba(255,0,51,0.15);
+            --container-border: rgba(255,0,51,0.2);
             --section-bg: rgba(255,255,255,0.02);
             --section-border: rgba(255,0,51,0.06);
             --btn-edit-bg: #ffffff;
@@ -103,7 +103,7 @@
             --text-primary: #111111;
             --text-secondary: #444444;
             --text-muted: #777777;
-            --border-color: rgba(255,0,51,0.15);
+            --border-color: rgba(255,0,51,0.2);
             --border-light: rgba(0,0,0,0.06);
             --border-visible: rgba(255,0,51,0.25);
             --shadow-color: rgba(255,0,51,0.05);
@@ -127,7 +127,7 @@
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #999;
             --container-bg: rgba(255,0,51,0.02);
-            --container-border: rgba(255,0,51,0.12);
+            --container-border: rgba(255,0,51,0.2);
             --section-bg: rgba(0,0,0,0.01);
             --section-border: rgba(255,0,51,0.06);
             --btn-edit-bg: #000000;
@@ -205,7 +205,7 @@
         /* ===== RED CONTAINER ─── compact ===== */
         .red-container {
             background: var(--container-bg);
-            border: 1px solid var(--container-border);
+            border: 2px solid var(--container-border);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
@@ -219,11 +219,11 @@
             gap: 4px;
         }
         .red-container:hover {
-            border-color: rgba(255, 0, 51, 0.4);
+            border-color: rgba(255, 0, 51, 0.5);
             box-shadow: 0 0 60px var(--shadow-color);
             transform: scale(1.012) translateY(-1px);
         }
-        .red-container::after { content: ''; position: absolute; inset: -1px; border-radius: 18px; padding: 1px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
+        .red-container::after { content: ''; position: absolute; inset: -2px; border-radius: 18px; padding: 2px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
         .red-container:hover::after { opacity: 1; }
         
         .fb-status-dot-sm {
@@ -274,7 +274,20 @@
         .brand-left {
             display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
         }
-        .logo-icon-sm { font-size: 1.4rem; color: #FF0033; text-shadow: 0 0 30px rgba(255,0,51,0.2); animation: pulseLogo 3s ease-in-out infinite; }
+        .logo-icon-sm { 
+            font-size: 1.4rem; 
+            color: #FF0033; 
+            text-shadow: 0 0 30px rgba(255,0,51,0.2); 
+            animation: pulseLogo 3s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+        .logo-img-sm {
+            max-height: 1.4rem;
+            max-width: 60px;
+            object-fit: contain;
+            display: none;
+            transition: all 0.4s ease;
+        }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.85; } }
         .brand-name-sm {
             font-family: 'Orbitron', sans-serif; font-weight: 900;
@@ -537,9 +550,10 @@
             backdrop-filter: blur(20px); 
             border: 2px solid var(--popup-border); 
             border-radius: 16px; 
-            padding: 24px 20px; 
+            padding: 28px 24px; 
             width: 100%; 
-            max-width: 560px; 
+            max-width: 600px; 
+            min-height: 280px; 
             max-height: 85vh; 
             overflow-y: auto; 
             position: relative; 
@@ -550,9 +564,9 @@
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         .modal-close { 
             position: absolute; 
-            top: 8px; 
-            right: 12px; 
-            font-size: 1.2rem; 
+            top: 10px; 
+            right: 14px; 
+            font-size: 1.3rem; 
             color: #FF0033; 
             cursor: pointer; 
             background: none; 
@@ -565,13 +579,13 @@
             color: var(--popup-label); 
             text-align: center; 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 0.9rem; 
-            margin-bottom: 12px; 
+            font-size: 1rem; 
+            margin-bottom: 14px; 
             letter-spacing: 2px; 
         }
         .modal label { 
             display: block; 
-            font-size: 0.5rem; 
+            font-size: 0.55rem; 
             color: var(--popup-label); 
             margin: 6px 0 3px; 
             text-transform: uppercase; 
@@ -580,29 +594,29 @@
         }
         .modal input, .modal select, .modal textarea { 
             width: 100%; 
-            padding: 6px 10px; 
+            padding: 7px 12px; 
             background: var(--input-bg); 
             border: 1px solid rgba(255,0,51,0.1); 
             border-radius: 6px; 
             color: var(--text-primary); 
             font-family: 'Inter', sans-serif; 
-            font-size: 0.7rem; 
+            font-size: 0.75rem; 
             outline: none; 
             transition: all 0.4s ease; 
         }
         .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.04); transform: scale(1.01); }
-        .modal textarea { height: 50px; resize: vertical; font-size: 0.65rem; }
+        .modal textarea { height: 60px; resize: vertical; font-size: 0.7rem; }
         .modal .btn-submit { 
             width: 100%; 
-            padding: 8px; 
-            margin-top: 8px; 
+            padding: 10px; 
+            margin-top: 10px; 
             border-radius: 30px; 
             font-weight: 700; 
             border: none; 
             cursor: pointer; 
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
             font-family: 'Inter', sans-serif; 
-            font-size: 0.7rem; 
+            font-size: 0.75rem; 
         }
         .modal .btn-submit:hover { transform: scale(1.03); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
         .modal .btn-submit:active { transform: scale(0.97); }
@@ -839,14 +853,24 @@
         .features-list .feature-item .feature-actions .btn-delete-feature { background: #FF0033; color: #fff; }
         .features-list .feature-item .feature-actions .btn-toggle-feature { background: #FFD700; color: #000; }
         
+        /* ===== FIREBASE CONFIG SECTION ===== */
+        .firebase-config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .firebase-config-grid .field-group { margin-bottom: 0; }
+        .firebase-config-grid .field-group.full-width { grid-column: 1 / -1; }
+        
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
-            .modal { padding: 16px 14px; max-width: 100%; max-height: 90vh; }
+            .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 240px; }
             .admin-dash-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .admin-dash-card { padding: 10px 8px; }
             .admin-dash-card .count { font-size: 1.2rem; }
             .payment-settings-grid { grid-template-columns: 1fr; }
+            .firebase-config-grid { grid-template-columns: 1fr; }
             .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; flex-direction: column; align-items: stretch; gap: 2px; }
             .brand-left { justify-content: center; }
             .nav-links { justify-content: center; }
@@ -864,13 +888,17 @@
             .brand-name-sm { font-size: 0.6rem; }
             .nav-links button { font-size: 0.35rem; padding: 1px 5px; }
             .admin-section { padding: 8px 10px; }
-            .modal { padding: 14px 12px; max-width: 100%; max-height: 92vh; }
+            .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 200px; }
             .modal .btn-group .btn-sm { min-width: 40px; font-size: 0.4rem; padding: 3px; }
             .modal .user-list-item { font-size: 0.45rem; padding: 3px 4px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .logo-icon-sm { font-size: 1rem; }
+            .logo-img-sm { max-height: 1rem; }
             .dark-mode-toggle-btn { font-size: 0.3rem; padding: 1px 4px; left: 14px; }
-            .modal h2 { font-size: 0.75rem; }
+            .modal h2 { font-size: 0.85rem; }
+            .modal label { font-size: 0.48rem; }
+            .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
+            .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
         }
         
         /* ─── CURSOR GLOW ─── */
@@ -930,7 +958,8 @@
             </div>
             
             <div class="brand-left">
-                <span class="logo-icon-sm">◆</span>
+                <span class="logo-icon-sm" id="adminLogoIcon">◆</span>
+                <img class="logo-img-sm" id="adminLogoImage" alt="Logo" style="display:none;" />
                 <span class="brand-name-sm">
                     <span class="binary">BINARY</span>
                     <span class="ruthless">RUTHLESS</span>
@@ -1146,6 +1175,25 @@
                 <div id="brokerList" class="item-list"></div>
             </div>
             
+            <!-- FIREBASE CONFIG -->
+            <div class="admin-section">
+                <h4>🔥 Firebase Configuration</h4>
+                <div class="firebase-config-grid">
+                    <div class="field-group"><label>API Key</label><input type="text" id="fbApiKey" value="AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g" disabled></div>
+                    <div class="field-group"><label>Auth Domain</label><input type="text" id="fbAuthDomain" value="binary-ruthless-trader-26654.firebaseapp.com" disabled></div>
+                    <div class="field-group"><label>Database URL</label><input type="text" id="fbDbUrl" value="https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com" disabled></div>
+                    <div class="field-group"><label>Project ID</label><input type="text" id="fbProjectId" value="binary-ruthless-trader-26654" disabled></div>
+                    <div class="field-group"><label>Storage Bucket</label><input type="text" id="fbStorageBucket" value="binary-ruthless-trader-26654.firebasestorage.app" disabled></div>
+                    <div class="field-group"><label>Messaging Sender ID</label><input type="text" id="fbMessagingSenderId" value="533209261799" disabled></div>
+                    <div class="field-group full-width"><label>App ID</label><input type="text" id="fbAppId" value="1:533209261799:web:a398ab21b0f913683ea442" disabled></div>
+                    <div class="field-group full-width"><label>Measurement ID</label><input type="text" id="fbMeasurementId" value="G-WQCXCMV5PR" disabled></div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminSaveFirebase()">💾 Save</button>
+                </div>
+            </div>
+            
             <!-- ADMIN ACCESS -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
@@ -1248,7 +1296,17 @@ let appState = {
         { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' },
         { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
         { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
-    ]
+    ],
+    firebaseConfig: {
+        apiKey: 'AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g',
+        authDomain: 'binary-ruthless-trader-26654.firebaseapp.com',
+        databaseURL: 'https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com',
+        projectId: 'binary-ruthless-trader-26654',
+        storageBucket: 'binary-ruthless-trader-26654.firebasestorage.app',
+        messagingSenderId: '533209261799',
+        appId: '1:533209261799:web:a398ab21b0f913683ea442',
+        measurementId: 'G-WQCXCMV5PR'
+    }
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null, editingToolIndex = -1, editingSocialIndex = -1, editingFeatureIndex = -1;
@@ -1270,8 +1328,21 @@ document.getElementById('darkModeToggleBtn').addEventListener('click', function(
     appState.darkMode = !isDark;
     applyTheme(appState.darkMode);
     saveLocalState();
-    this.textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
 });
+
+// ─── APPLY LOGO TO ADMIN HEADER ───
+function applyAdminLogo(logoBase64) {
+    const icon = document.getElementById('adminLogoIcon');
+    const img = document.getElementById('adminLogoImage');
+    if (logoBase64 && logoBase64 !== '') {
+        icon.style.display = 'none';
+        img.src = logoBase64;
+        img.style.display = 'block';
+    } else {
+        icon.style.display = 'block';
+        img.style.display = 'none';
+    }
+}
 
 // ─── PASSWORD POPUP CLOSE - Redirect to home ───
 window.hidePasswordPopup = function() {
@@ -1381,10 +1452,6 @@ window.adminUpdateFeature = function() {
     saveLocalState();
     localStorage.setItem('brt_features', JSON.stringify(appState.features));
     renderFeaturesList();
-    // Also update home page features if function exists
-    if (typeof window.renderHomeFeatures === 'function') {
-        window.renderHomeFeatures();
-    }
     document.getElementById('editFeatureForm').style.display = 'none';
     const btn = document.getElementById('editFeatureName').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1398,9 +1465,6 @@ window.toggleFeatureVisibility = function(idx) {
     saveLocalState();
     localStorage.setItem('brt_features', JSON.stringify(appState.features));
     renderFeaturesList();
-    if (typeof window.renderHomeFeatures === 'function') {
-        window.renderHomeFeatures();
-    }
 };
 
 window.deleteFeature = function(idx) {
@@ -1409,9 +1473,6 @@ window.deleteFeature = function(idx) {
         saveLocalState();
         localStorage.setItem('brt_features', JSON.stringify(appState.features));
         renderFeaturesList();
-        if (typeof window.renderHomeFeatures === 'function') {
-            window.renderHomeFeatures();
-        }
     }
 };
 
@@ -1435,13 +1496,30 @@ window.adminAddFeature = function() {
     saveLocalState();
     localStorage.setItem('brt_features', JSON.stringify(appState.features));
     renderFeaturesList();
-    if (typeof window.renderHomeFeatures === 'function') {
-        window.renderHomeFeatures();
-    }
     document.getElementById('addFeatureForm').style.display = 'none';
     const btn = document.getElementById('newFeatureName').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save Feature'; }, 2000);
+};
+
+// ─── FIREBASE SAVE ───
+window.adminSaveFirebase = function() {
+    appState.firebaseConfig = {
+        apiKey: document.getElementById('fbApiKey').value.trim(),
+        authDomain: document.getElementById('fbAuthDomain').value.trim(),
+        databaseURL: document.getElementById('fbDbUrl').value.trim(),
+        projectId: document.getElementById('fbProjectId').value.trim(),
+        storageBucket: document.getElementById('fbStorageBucket').value.trim(),
+        messagingSenderId: document.getElementById('fbMessagingSenderId').value.trim(),
+        appId: document.getElementById('fbAppId').value.trim(),
+        measurementId: document.getElementById('fbMeasurementId').value.trim()
+    };
+    saveLocalState();
+    disableEditFields(document.querySelector('.admin-section'));
+    const btn = document.getElementById('fbApiKey').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    alert('✅ Firebase configuration saved successfully!');
 };
 
 onValue(dbRef, (snapshot) => {
@@ -1465,14 +1543,29 @@ onValue(dbRef, (snapshot) => {
         updateChatNotification();
         applyTheme(appState.darkMode);
         document.getElementById('darkModeToggleBtn').textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
+        // Apply logo to admin header
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            applyAdminLogo(val.logoBase64);
+            localStorage.setItem('brt_logo', val.logoBase64);
+        }
         if (val.offerCredits !== undefined) localStorage.setItem('brt_offer_credits', val.offerCredits);
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') localStorage.setItem('brt_logo', val.logoBase64);
         if (val.tools !== undefined) localStorage.setItem('brt_tools', JSON.stringify(val.tools));
         if (val.socialMedia !== undefined) localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
         if (val.brokers !== undefined) localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
         if (val.creditPacks !== undefined) localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
         if (val.features !== undefined) localStorage.setItem('brt_features', JSON.stringify(val.features));
         if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
+        // Load Firebase config into fields
+        if (val.firebaseConfig) {
+            document.getElementById('fbApiKey').value = val.firebaseConfig.apiKey || '';
+            document.getElementById('fbAuthDomain').value = val.firebaseConfig.authDomain || '';
+            document.getElementById('fbDbUrl').value = val.firebaseConfig.databaseURL || '';
+            document.getElementById('fbProjectId').value = val.firebaseConfig.projectId || '';
+            document.getElementById('fbStorageBucket').value = val.firebaseConfig.storageBucket || '';
+            document.getElementById('fbMessagingSenderId').value = val.firebaseConfig.messagingSenderId || '';
+            document.getElementById('fbAppId').value = val.firebaseConfig.appId || '';
+            document.getElementById('fbMeasurementId').value = val.firebaseConfig.measurementId || '';
+        }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; console.error(error); });
 
@@ -1485,7 +1578,11 @@ function loadLocalState() {
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
     const toolsData = localStorage.getItem('brt_tools');
     if (toolsData) { try { const parsed = JSON.parse(toolsData); if (parsed.length > 0) appState.tools = parsed; } catch(e) {} }
-    const logoData = localStorage.getItem('brt_logo'); if (logoData) appState.logoBase64 = logoData;
+    const logoData = localStorage.getItem('brt_logo'); 
+    if (logoData) {
+        appState.logoBase64 = logoData;
+        applyAdminLogo(logoData);
+    }
     const brokersData = localStorage.getItem('brt_brokers');
     if (brokersData) { try { const parsed = JSON.parse(brokersData); if (parsed.length > 0) appState.brokers = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
@@ -1495,6 +1592,17 @@ function loadLocalState() {
     applyTheme(appState.darkMode);
     document.getElementById('darkModeToggleBtn').textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
+    // Load Firebase config
+    if (appState.firebaseConfig) {
+        document.getElementById('fbApiKey').value = appState.firebaseConfig.apiKey || '';
+        document.getElementById('fbAuthDomain').value = appState.firebaseConfig.authDomain || '';
+        document.getElementById('fbDbUrl').value = appState.firebaseConfig.databaseURL || '';
+        document.getElementById('fbProjectId').value = appState.firebaseConfig.projectId || '';
+        document.getElementById('fbStorageBucket').value = appState.firebaseConfig.storageBucket || '';
+        document.getElementById('fbMessagingSenderId').value = appState.firebaseConfig.messagingSenderId || '';
+        document.getElementById('fbAppId').value = appState.firebaseConfig.appId || '';
+        document.getElementById('fbMeasurementId').value = appState.firebaseConfig.measurementId || '';
+    }
     updateUI(); 
     renderUsersList(); 
     renderBrokerList(); 
@@ -1609,7 +1717,6 @@ function renderPendingVerifications() {
 window.adminApproveVerification = function(idx) {
     const request = appState.verificationRequests[idx];
     if (!request || request.status !== 'pending') return;
-    // Get the custom free credits from the input field
     const inputField = document.getElementById('verifyFreeCredits_' + idx);
     const freeCredits = inputField ? parseInt(inputField.value) || appState.offerCredits || 10 : appState.offerCredits || 10;
     if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
@@ -1618,7 +1725,6 @@ window.adminApproveVerification = function(idx) {
         if (user) {
             user.verified = true;
             user.accountId = request.accountId;
-            // Set free credits
             user.freeCredits = freeCredits;
             user.credits = (user.credits || 0) + freeCredits;
         }
@@ -1855,7 +1961,17 @@ window.adminAddSocial = function() {
 
 window.adminSaveLogo = function() {
     const file = document.getElementById('logoUpload').files[0];
-    if (file) { const reader = new FileReader(); reader.onload = (e) => { appState.logoBase64 = e.target.result; localStorage.setItem('brt_logo', appState.logoBase64); saveLocalState(); disableEditFields(document.querySelector('.admin-section')); const btn = document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save'); btn.textContent = '✅ Saved'; setTimeout(() => { btn.textContent = '💾 Save'; }, 2000); }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
+    if (file) { const reader = new FileReader(); reader.onload = (e) => { 
+        const logoData = e.target.result;
+        appState.logoBase64 = logoData; 
+        localStorage.setItem('brt_logo', logoData);
+        applyAdminLogo(logoData);
+        saveLocalState(); 
+        disableEditFields(document.querySelector('.admin-section')); 
+        const btn = document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save'); 
+        btn.textContent = '✅ Saved'; 
+        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000); 
+    }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
 };
 
 function renderUsersList() { /* used internally */ }
@@ -1920,6 +2036,7 @@ window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
 window.editFeature = editFeature; window.adminUpdateFeature = adminUpdateFeature; window.toggleFeatureVisibility = toggleFeatureVisibility; window.deleteFeature = deleteFeature; window.showAddFeatureForm = showAddFeatureForm; window.adminAddFeature = adminAddFeature;
+window.adminSaveFirebase = adminSaveFirebase;
 </script>
 </body>
 </html>
