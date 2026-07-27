@@ -202,7 +202,6 @@
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
-        /* ===== RED CONTAINER ─── compact ===== */
         .red-container {
             background: var(--container-bg);
             border: 2px solid var(--container-border);
@@ -261,7 +260,6 @@
         .brand-name-sm .ruthless { color: #FF0033; }
         .brand-name-sm .trader { color: var(--text-primary); }
         
-        /* ===== SOCIAL ICONS IN HEADER ===== */
         .social-icons-header {
             display: flex;
             gap: 8px;
@@ -333,7 +331,6 @@
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
         
-        /* ===== ADMIN DASHBOARD CARDS ===== */
         .admin-dash-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -364,7 +361,6 @@
         .admin-dash-card .count.gold { color: #FFD700; }
         .admin-dash-card .label { font-size: 0.5rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
         
-        /* ===== PASSWORD POPUP ===== */
         .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
         .password-overlay.active { display: flex; }
         .password-modal { background: var(--password-modal-bg); backdrop-filter: blur(20px); border: 2px solid var(--password-modal-border); border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
@@ -384,7 +380,6 @@
         .password-modal .btn-enter.enabled:active { transform: scale(0.97); }
         .password-modal .error-text { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         
-        /* ===== ADMIN SECTION ===== */
         .admin-section {
             border: 1px solid var(--section-border);
             border-radius: 12px;
@@ -493,7 +488,6 @@
         .payment-settings-grid .field-group.full-width { grid-column: 1 / -1; }
         .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
         
-        /* ===== OVERLAYS ===== */
         .overlay { 
             position: fixed; 
             top: 0; 
@@ -783,7 +777,6 @@
         .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
         .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
         
-        /* ===== FEATURES SETTINGS ===== */
         .features-list .feature-item {
             background: var(--tool-item-bg);
             border: 1px solid var(--tool-item-border);
@@ -817,7 +810,6 @@
         .features-list .feature-item .feature-actions .btn-delete-feature { background: #FF0033; color: #fff; }
         .features-list .feature-item .feature-actions .btn-toggle-feature { background: #FFD700; color: #000; }
         
-        /* ===== FIREBASE CONFIG SECTION ===== */
         .firebase-config-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -826,7 +818,6 @@
         .firebase-config-grid .field-group { margin-bottom: 0; }
         .firebase-config-grid .field-group.full-width { grid-column: 1 / -1; }
         
-        /* ===== DARK MODE TOGGLE (Admin Only) ===== */
         .dark-mode-toggle-admin {
             display: flex;
             align-items: center;
@@ -867,7 +858,6 @@
             font-weight: 600;
         }
         
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
             .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 260px; }
@@ -907,12 +897,10 @@
             .dark-mode-toggle-admin .toggle-track.active .toggle-thumb { left: 18px; }
         }
         
-        /* ─── CURSOR GLOW ─── */
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
         .cursor-glow.active { opacity: 1; }
         @media (hover: none) { .cursor-glow { display: none !important; } }
         
-        /* ─── GLOBAL ZOOM ON HOVER ─── */
         .red-container, .admin-dash-card, .admin-section, .tools-list .tool-item,
         .social-list .social-item, .features-list .feature-item,
         .modal .btn-submit, .modal-close, .nav-links button,
@@ -956,7 +944,6 @@
 <div class="app">
     <div class="scroll-content">
         
-        <!-- ===== RED CONTAINER ─── compact ===== -->
         <div class="red-container">
             <div class="brand-left">
                 <span class="logo-icon-sm" id="adminLogoIcon">◆</span>
@@ -983,7 +970,6 @@
             </div>
         </div>
         
-        <!-- ===== ADMIN DASHBOARD CARDS ===== -->
         <div id="adminDashboard">
             <div class="admin-dash-grid">
                 <div class="admin-dash-card" onclick="openPendingPaymentsPopup()">
@@ -1009,10 +995,8 @@
             </div>
         </div>
         
-        <!-- ===== ADMIN AREA (Settings) ===== -->
         <div id="adminArea">
             
-            <!-- CHANGE PASSWORD -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🔐 Change Password</h4>
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
@@ -1023,11 +1007,10 @@
                 </div>
             </div>
             
-            <!-- OFFER SETTINGS -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
                 <div class="field-group"><label>Offer Name</label><input type="text" id="offerName" placeholder="FREE SIGNAL OFFER" disabled></div>
-                <div class="field-group"><label>Offer Description (Include Credits Number)</label><textarea id="offerDescription" placeholder="Get {credits} FREE signals for Quotex, Binomo, Pocket Option..." disabled></textarea></div>
+                <div class="field-group"><label>Offer Description (Use {credits} for number)</label><textarea id="offerDescription" placeholder="Get {credits} FREE signals..." disabled></textarea></div>
                 <div class="field-group"><label>Free Credits for New Verified Users</label><input type="number" id="adminOfferCredits" value="10" disabled></div>
                 <div class="btn-row">
                     <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
@@ -1035,7 +1018,6 @@
                 </div>
             </div>
             
-            <!-- DARK MODE TOGGLE (Admin Only) -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🌓 Dark Mode</h4>
                 <div class="dark-mode-toggle-admin">
@@ -1050,7 +1032,6 @@
                 </div>
             </div>
             
-            <!-- PAYMENT SETTINGS -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">💳 Payment Settings</h4>
                 <div class="field-group"><label>Approval Mode</label><select id="paymentApprovalMode" disabled><option value="manual">Manual</option><option value="auto">Auto</option></select></div>
@@ -1067,7 +1048,6 @@
                 </div>
             </div>
             
-            <!-- CREDIT PACKS -->
             <div class="admin-section">
                 <h4>📦 Credit Packs</h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
@@ -1084,7 +1064,6 @@
                 <div id="creditPackList" class="item-list" style="max-height:130px;margin-top:4px;"></div>
             </div>
             
-            <!-- TOOLS -->
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
                 <div id="toolsList" class="tools-list"></div>
@@ -1112,7 +1091,6 @@
                 </div>
             </div>
             
-            <!-- SOCIAL MEDIA -->
             <div class="admin-section">
                 <h4>📱 Social Media</h4>
                 <div id="socialList" class="social-list"></div>
@@ -1140,7 +1118,6 @@
                 </div>
             </div>
             
-            <!-- FEATURES -->
             <div class="admin-section">
                 <h4>⚡ Features Manager</h4>
                 <div id="featuresList" class="features-list"></div>
@@ -1168,7 +1145,6 @@
                 </div>
             </div>
             
-            <!-- LOGO -->
             <div class="admin-section">
                 <h4>🖼️ Logo Update</h4>
                 <div class="field-group"><label>Upload PNG/JPG</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
@@ -1178,7 +1154,6 @@
                 </div>
             </div>
             
-            <!-- BROKERS -->
             <div class="admin-section">
                 <h4>🏢 Brokers</h4>
                 <div class="field-group"><label>Name</label><input type="text" id="adminBrokerName" disabled></div>
@@ -1192,7 +1167,6 @@
                 <div id="brokerList" class="item-list"></div>
             </div>
             
-            <!-- FIREBASE CONFIG -->
             <div class="admin-section">
                 <h4>🔥 Firebase Configuration</h4>
                 <div class="firebase-config-grid">
@@ -1211,7 +1185,6 @@
                 </div>
             </div>
             
-            <!-- ADMIN ACCESS -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
                 <div class="field-group"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
@@ -1228,7 +1201,6 @@
     </div>
 </div>
 
-<!-- ===== PASSWORD POPUP ===== -->
 <div class="password-overlay" id="passwordOverlay">
     <div class="password-modal">
         <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
@@ -1240,14 +1212,12 @@
     </div>
 </div>
 
-<!-- ===== POPUP MODALS ===== -->
 <div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending payments</div></div></div>
 <div class="overlay" id="pendingVerificationsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button><h2>⏳ Pending Verifications</h2><div id="pendingVerificationsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending verifications</div></div></div>
 <div class="overlay" id="usersPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('usersPopup')">✕</button><h2>👤 Users</h2><div style="display:flex;gap:8px;margin-bottom:6px;"><button class="btn-submit btn-primary" style="flex:1;" onclick="showVerifiedUsers()">✅ Verified Users</button><button class="btn-submit btn-gold" style="flex:1;" onclick="showAddUserForm()">➕ Add User</button></div><div id="usersContent"></div></div></div>
 <div class="overlay" id="userDetailPopup"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="closeModal('userDetailPopup')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group" id="userDetailActions"><button class="btn-sm btn-give" onclick="giveFreeCredits()">🎁 Give</button><button class="btn-sm btn-block" onclick="blockUser()">🚫 Block</button><button class="btn-sm btn-remove" onclick="removeUser()">🗑️ Remove</button><button class="btn-sm btn-chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:6px;"><label style="font-size:0.45rem;color:var(--text-secondary);">Add Free Credits</label><input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:4px 8px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.6rem;outline:none;"><button class="btn-submit btn-success" style="margin-top:3px;font-size:0.55rem;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
 <div class="overlay" id="chatPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('chatPopup')">✕</button><h2>💬 Chat</h2><input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()"><div style="display:flex;gap:8px;margin-bottom:4px;"><div style="flex:1;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;max-height:240px;overflow-y:auto;" id="chatUserList"></div><div style="flex:2;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;display:flex;flex-direction:column;"><div style="font-size:0.45rem;color:var(--text-secondary);margin-bottom:3px;" id="chatWithUserLabel">Select a user to chat</div><div class="chat-msg-list" id="chatMsgBox" style="flex:1;max-height:180px;"></div><div class="chat-input-area"><input type="text" id="chatInputBox" placeholder="Type message..."><button onclick="sendChatMessage()">Send</button></div></div></div></div></div>
 
-<!-- CURSOR GLOW -->
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <script type="importmap">
@@ -1281,6 +1251,7 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
+// Hardcoded signal tool REMOVED
 let appState = {
     password: 'admin123', 
     offerCredits: 10,
@@ -1325,19 +1296,8 @@ let appState = {
     }
 };
 
-let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null, editingToolIndex = -1, editingSocialIndex = -1, editingFeatureIndex = -1;
+let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
 
-// ─── SEND NOTIFICATION ───
-function sendNotification(message) { 
-    if (appState.notificationEmail) {
-        console.log('📧 Email to ' + appState.notificationEmail + ': ' + message);
-    }
-    if (appState.notificationMobile) {
-        console.log('📱 SMS to ' + appState.notificationMobile + ': ' + message);
-    }
-}
-
-// ─── APPLY THEME ───
 function applyTheme(darkMode) {
     if (darkMode === false) {
         document.documentElement.setAttribute('data-theme', 'light');
@@ -1350,7 +1310,6 @@ function applyTheme(darkMode) {
     }
 }
 
-// ─── TOGGLE DARK MODE ───
 window.toggleDarkMode = function() {
     const track = document.getElementById('darkModeToggleTrack');
     track.classList.toggle('active');
@@ -1358,7 +1317,6 @@ window.toggleDarkMode = function() {
     document.getElementById('darkModeLabel').textContent = isDark ? 'Dark' : 'Light';
 };
 
-// ─── SAVE DARK MODE ───
 window.saveDarkMode = function() {
     const isDark = document.getElementById('darkModeToggleTrack').classList.contains('active');
     appState.darkMode = isDark;
@@ -1371,7 +1329,6 @@ window.saveDarkMode = function() {
     }
 };
 
-// ─── APPLY LOGO TO ADMIN HEADER ───
 function applyAdminLogo(logoBase64) {
     const icon = document.getElementById('adminLogoIcon');
     const img = document.getElementById('adminLogoImage');
@@ -1385,13 +1342,11 @@ function applyAdminLogo(logoBase64) {
     }
 }
 
-// ─── PASSWORD POPUP CLOSE - Redirect to home ───
 window.hidePasswordPopup = function() {
     document.getElementById('passwordOverlay').classList.remove('active');
     window.location.href = 'index.html';
 };
 
-// ─── RENDER SOCIAL MEDIA IN HEADER ───
 function renderAdminSocialMedia() {
     const container = document.getElementById('adminSocialIcons');
     if (!container) return;
@@ -1413,8 +1368,7 @@ function renderAdminSocialMedia() {
         container.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const platform = this.querySelector('i')?.className || 'social';
-                alert('📱 ' + platform + ' - Configure in Admin');
+                alert('📱 Configure in Admin');
             });
         });
         return;
@@ -1439,7 +1393,6 @@ function renderAdminSocialMedia() {
     });
 }
 
-// ─── FEATURES RENDER ───
 function renderFeaturesList() {
     const container = document.getElementById('featuresList');
     if (!container) return;
@@ -1468,11 +1421,10 @@ function renderFeaturesList() {
     });
 }
 
-// ─── FEATURES FUNCTIONS ───
 window.editFeature = function(idx) {
     const f = appState.features[idx];
     if (!f) return;
-    editingFeatureIndex = idx;
+    window.editingFeatureIndex = idx;
     document.getElementById('editFeatureIndex').value = idx;
     document.getElementById('editFeatureIcon').value = f.icon || '🧠';
     document.getElementById('editFeatureName').value = f.name || '';
@@ -1543,7 +1495,6 @@ window.adminAddFeature = function() {
     setTimeout(() => { btn.textContent = '💾 Save Feature'; }, 2000);
 };
 
-// ─── FIREBASE SAVE ───
 window.adminSaveFirebase = function() {
     appState.firebaseConfig = {
         apiKey: document.getElementById('fbApiKey').value.trim(),
@@ -1563,7 +1514,6 @@ window.adminSaveFirebase = function() {
     alert('✅ Firebase configuration saved successfully!');
 };
 
-// ─── UPDATE PENDING COUNTS ───
 function updatePendingCounts() {
     const payments = appState.payments || [];
     const pendingPayments = payments.filter(p => p.status === 'pending');
@@ -1580,18 +1530,8 @@ function updatePendingCounts() {
     document.getElementById('verifiedUsersCount').className = 'count gold';
 }
 
-// ─── GET CHAT KEY ───
 function getChatKey(userEmail) { 
     return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; 
-}
-
-// ─── CHECK FOR NEW CHAT MESSAGES ───
-function checkForNewChatMessages() {
-    if (!appState.currentUser) return 0;
-    const key = getChatKey(appState.currentUser.email);
-    const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
-    return unread;
 }
 
 onValue(dbRef, (snapshot) => {
@@ -1599,7 +1539,7 @@ onValue(dbRef, (snapshot) => {
     const val = snapshot.val();
     if (val) {
         appState = { ...appState, ...val };
-        saveLocalState();
+        // Do NOT call saveLocalState() here to avoid loops
         updateUI();
         renderUsersList();
         renderBrokerList();
@@ -1623,7 +1563,6 @@ onValue(dbRef, (snapshot) => {
             track.classList.remove('active');
             document.getElementById('darkModeLabel').textContent = 'Light';
         }
-        // Apply logo to admin header
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
             applyAdminLogo(val.logoBase64);
             localStorage.setItem('brt_logo', val.logoBase64);
@@ -1636,7 +1575,6 @@ onValue(dbRef, (snapshot) => {
         if (val.features !== undefined) localStorage.setItem('brt_features', JSON.stringify(val.features));
         if (val.offerName !== undefined) document.getElementById('offerName').value = val.offerName;
         if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
-        // Load Firebase config into fields
         if (val.firebaseConfig) {
             document.getElementById('fbApiKey').value = val.firebaseConfig.apiKey || '';
             document.getElementById('fbAuthDomain').value = val.firebaseConfig.authDomain || '';
@@ -1681,7 +1619,6 @@ function loadLocalState() {
     }
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
-    // Load Firebase config
     if (appState.firebaseConfig) {
         document.getElementById('fbApiKey').value = appState.firebaseConfig.apiKey || '';
         document.getElementById('fbAuthDomain').value = appState.firebaseConfig.authDomain || '';
@@ -1717,7 +1654,6 @@ function updateUI() {
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
 }
 
-// Session
 let adminSession = sessionStorage.getItem('admin_logged_in');
 if (adminSession === 'true') { adminLoggedIn = true; document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('passwordOverlay').classList.remove('active'); loadLocalState(); } else { showPasswordPopup(); }
 
@@ -1779,7 +1715,6 @@ window.adminApprovePayment = function(idx) {
         renderPendingPayments(); 
         renderUsersList(); 
         updatePendingCounts();
-        sendNotification('✅ Payment Approved: ₹' + payment.amount + ' for ' + payment.userEmail);
     } 
 };
 window.adminRejectPayment = function(idx) { 
@@ -1789,7 +1724,6 @@ window.adminRejectPayment = function(idx) {
         payment.status = 'failed'; 
         saveLocalState(); 
         renderPendingPayments(); 
-        sendNotification('❌ Payment Rejected: ₹' + payment.amount + ' for ' + payment.userEmail);
     } 
 };
 
@@ -1832,7 +1766,6 @@ window.adminApproveVerification = function(idx) {
         renderPendingVerifications();
         renderUsersList();
         updatePendingCounts();
-        sendNotification('✅ User Verified: ' + request.userEmail + ' (Free Credits: ' + freeCredits + ')');
     }
 };
 window.adminRejectVerification = function(idx) { 
@@ -1842,7 +1775,6 @@ window.adminRejectVerification = function(idx) {
         request.status = 'rejected'; 
         saveLocalState(); 
         renderPendingVerifications(); 
-        sendNotification('❌ Verification Rejected: ' + request.userEmail);
     } 
 };
 
@@ -1895,7 +1827,6 @@ window.openUserDetailPopup = function(idx) {
         paymentDetails = `<div class="user-detail-row"><span class="label">Payments:</span><span class="value" style="color:var(--text-muted);">No payment history</span></div>`;
     }
     
-    // Get user's chat messages
     const chatKey = user.email.replace(/[.#$\/\[\]]/g, '_');
     const chatMsgs = appState.chats && appState.chats[chatKey] ? appState.chats[chatKey] : [];
     const chatCount = chatMsgs.length;
@@ -1937,13 +1868,20 @@ function loadChatMessages() {
     const key = chatSelectedUser.replace(/[.#$\/\[\]]/g, '_'); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
     if (msgs.length === 0) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">No messages</div>'; return; }
     box.innerHTML = '';
-    msgs.forEach(c => { const cls = c.sender === 'admin' ? 'admin' : 'user'; const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`; if (c.sender === 'user' && !c.read) c.read = true; });
+    msgs.forEach(c => { 
+        const cls = c.sender === 'admin' ? 'admin' : 'user'; 
+        const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; 
+        box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`; 
+        // Mark user messages as read when admin views them
+        if (c.sender === 'user' && !c.read) c.read = true; 
+    });
     box.scrollTop = box.scrollHeight; saveLocalState(); updateChatNotification();
 }
 window.sendChatMessage = function() {
     const input = document.getElementById('chatInputBox'); const msg = input.value.trim(); if (!msg || !chatSelectedUser) { alert('Select a user and enter message'); return; }
     const key = chatSelectedUser.replace(/[.#$\/\[\]]/g, '_'); if (!appState.chats) appState.chats = {}; if (!appState.chats[key]) appState.chats[key] = [];
-    appState.chats[key].push({ sender: 'admin', message: msg, timestamp: new Date().toISOString(), read: true });
+    // IMPORTANT: Admin sends message with read: false so user gets notification
+    appState.chats[key].push({ sender: 'admin', message: msg, timestamp: new Date().toISOString(), read: false });
     saveLocalState(); input.value = ''; loadChatMessages(); renderChatUserList(document.getElementById('chatSearchInput')?.value || ''); updateChatNotification();
 };
 document.getElementById('chatInputBox')?.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendChatMessage(); });
@@ -2018,7 +1956,7 @@ function renderToolsList() {
     });
 }
 window.editTool = function(idx) {
-    const tool = appState.tools[idx]; if (!tool) return; editingToolIndex = idx;
+    const tool = appState.tools[idx]; if (!tool) return; window.editingToolIndex = idx;
     document.getElementById('editToolIndex').value = idx;
     document.getElementById('editToolName').value = tool.name || '';
     document.getElementById('editToolSubName').value = tool.subName || '';
@@ -2052,7 +1990,6 @@ window.deleteTool = function(idx) {
         saveLocalState(); 
         localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); 
         renderToolsList(); 
-        // Also trigger dashboard update if needed
     } 
 };
 window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; };
@@ -2085,7 +2022,7 @@ function renderSocialList() {
     });
 }
 window.editSocial = function(idx) {
-    const social = appState.socialMedia[idx]; if (!social) return; editingSocialIndex = idx;
+    const social = appState.socialMedia[idx]; if (!social) return; window.editingSocialIndex = idx;
     document.getElementById('editSocialIndex').value = idx; document.getElementById('editSocialName').value = social.name || ''; document.getElementById('editSocialUrl').value = social.url || ''; document.getElementById('editSocialIcon').value = social.icon || ''; document.getElementById('editSocialStatus').value = social.visibility || 'visible';
     document.getElementById('editSocialForm').style.display = 'block'; document.getElementById('addSocialForm').style.display = 'none';
 };
@@ -2166,11 +2103,9 @@ function disableEditFields(section) {
     }); 
 }
 
-// INIT
 if (adminLoggedIn) { loadLocalState(); } else { showPasswordPopup(); }
-console.log('⚙️ Admin Panel Loaded');
+console.log('⚙️ Admin Panel Loaded (Hardcoded Tool Removed)');
 
-// Expose functions to window
 window.adminApprovePayment = adminApprovePayment; window.adminRejectPayment = adminRejectPayment;
 window.adminApproveVerification = adminApproveVerification; window.adminRejectVerification = adminRejectVerification;
 window.openUserDetailPopup = openUserDetailPopup; window.giveFreeCredits = giveFreeCredits; window.blockUser = blockUser; window.removeUser = removeUser; window.chatWithUser = chatWithUser;
