@@ -21,6 +21,73 @@
     </script>
 
     <style>
+        /* ─── CSS VARIABLES FOR DARK/LIGHT MODE ─── */
+        :root {
+            /* Dark Mode (default) */
+            --bg-primary: #000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255,255,255,0.02);
+            --bg-container: rgba(255,0,51,0.04);
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --text-muted: #666;
+            --border-color: rgba(255,0,51,0.15);
+            --border-light: rgba(255,255,255,0.06);
+            --shadow-color: rgba(255,0,51,0.08);
+            --input-bg: rgba(0,0,0,0.6);
+            --modal-bg: rgba(10,10,10,0.95);
+            --overlay-bg: rgba(0,0,0,0.9);
+            --red-container-bg: rgba(255,0,51,0.04);
+            --user-card-bg: rgba(255,255,255,0.02);
+            --feature-card-bg: rgba(255,255,255,0.02);
+            --stat-item-hover: rgba(255,255,255,0.02);
+            --social-icon-bg: rgba(255,255,255,0.02);
+            --social-icon-border: rgba(255,0,51,0.08);
+            --tool-btn-bg: rgba(255,215,0,0.04);
+            --tool-btn-border: rgba(255,215,0,0.12);
+            --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03));
+            --offer-banner-border: rgba(255,215,0,0.12);
+            --footer-border: rgba(255,0,51,0.04);
+            --admin-nav-bg: rgba(0,0,0,0.65);
+            --admin-nav-border: rgba(255,0,51,0.12);
+            --user-logout-bg: rgba(0,0,0,0.65);
+            --user-logout-border: rgba(255,0,51,0.12);
+            --brand-tagline-color: #888;
+        }
+
+        /* Light Mode */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: rgba(0,0,0,0.02);
+            --bg-container: rgba(255,0,51,0.03);
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-muted: #999999;
+            --border-color: rgba(255,0,51,0.12);
+            --border-light: rgba(0,0,0,0.06);
+            --shadow-color: rgba(255,0,51,0.05);
+            --input-bg: rgba(255,255,255,0.8);
+            --modal-bg: rgba(255,255,255,0.95);
+            --overlay-bg: rgba(255,255,255,0.92);
+            --red-container-bg: rgba(255,0,51,0.03);
+            --user-card-bg: rgba(0,0,0,0.02);
+            --feature-card-bg: rgba(0,0,0,0.02);
+            --stat-item-hover: rgba(0,0,0,0.02);
+            --social-icon-bg: rgba(0,0,0,0.02);
+            --social-icon-border: rgba(255,0,51,0.08);
+            --tool-btn-bg: rgba(255,215,0,0.04);
+            --tool-btn-border: rgba(255,215,0,0.12);
+            --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.04), rgba(255,215,0,0.02));
+            --offer-banner-border: rgba(255,215,0,0.12);
+            --footer-border: rgba(255,0,51,0.04);
+            --admin-nav-bg: rgba(255,255,255,0.85);
+            --admin-nav-border: rgba(255,0,51,0.12);
+            --user-logout-bg: rgba(255,255,255,0.85);
+            --user-logout-border: rgba(255,0,51,0.12);
+            --brand-tagline-color: #999;
+        }
+
         /* ─── RESET & BASE ─── */
         * {
             margin: 0;
@@ -32,12 +99,13 @@
         body {
             width: 100%;
             min-height: 100vh;
-            background: #000;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             overflow-y: auto;
             overflow-x: hidden;
             touch-action: manipulation;
+            transition: background 0.4s ease, color 0.4s ease;
         }
         input,
         select,
@@ -73,9 +141,10 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: radial-gradient(ellipse at center, rgba(255, 0, 51, 0.03), #000 70%);
+            background: var(--bg-primary);
             position: relative;
             overflow: hidden;
+            transition: background 0.4s ease;
         }
         .app::before {
             content: '';
@@ -123,8 +192,8 @@
 
         /* ─── RED CONTAINER ─── COMPACT ─── */
         .red-container {
-            background: rgba(255, 0, 51, 0.04);
-            border: 1px solid rgba(255, 0, 51, 0.15);
+            background: var(--red-container-bg);
+            border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
@@ -134,7 +203,7 @@
         }
         .red-container:hover {
             border-color: rgba(255, 0, 51, 0.4);
-            box-shadow: 0 0 60px rgba(255, 0, 51, 0.08), inset 0 0 60px rgba(255, 0, 51, 0.02);
+            box-shadow: 0 0 60px var(--shadow-color);
             transform: scale(1.012) translateY(-1px);
         }
         .red-container::after {
@@ -205,9 +274,9 @@
             top: 2px;
             right: 8px;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.65);
+            background: var(--admin-nav-bg);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 0, 51, 0.12);
+            border: 1px solid var(--admin-nav-border);
             border-radius: 8px;
             padding: 2px 6px;
             align-items: center;
@@ -225,7 +294,7 @@
         }
         .admin-nav-bar .nav-label {
             font-size: 0.4rem;
-            color: #888;
+            color: var(--text-secondary);
             letter-spacing: 0.3px;
             text-transform: uppercase;
             font-weight: 600;
@@ -241,7 +310,7 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 0, 51, 0.08);
             background: rgba(255, 255, 255, 0.02);
-            color: #aaa;
+            color: var(--text-secondary);
             font-size: 0.4rem;
             font-weight: 600;
             cursor: pointer;
@@ -281,9 +350,9 @@
             top: 2px;
             right: 8px;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.65);
+            background: var(--user-logout-bg);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 0, 51, 0.12);
+            border: 1px solid var(--user-logout-border);
             border-radius: 8px;
             padding: 2px 8px;
             align-items: center;
@@ -458,12 +527,13 @@
             transition: all 0.3s ease;
             position: relative;
             z-index: 2;
+            color: var(--text-primary);
         }
         .brand-section:hover .brand-name {
             letter-spacing: 3px;
         }
         .brand-name .binary {
-            color: #fff;
+            color: var(--text-primary);
         }
         .brand-name .ruthless {
             color: #FF0033;
@@ -474,11 +544,11 @@
             text-shadow: 0 0 40px rgba(255, 0, 51, 0.5);
         }
         .brand-name .trader {
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .brand-tagline {
-            color: #888;
+            color: var(--brand-tagline-color);
             font-size: 0.5rem;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -489,7 +559,7 @@
             z-index: 2;
         }
         .brand-section:hover .brand-tagline {
-            color: #aaa;
+            color: var(--text-secondary);
             letter-spacing: 4px;
         }
 
@@ -510,9 +580,9 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1.5px solid rgba(255, 0, 51, 0.15);
-            color: #888;
+            background: var(--social-icon-bg);
+            border: 1.5px solid var(--social-icon-border);
+            color: var(--text-secondary);
             font-size: 0.75rem;
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -561,8 +631,8 @@
 
         /* ─── OFFER BANNER ─── */
         .offer-banner {
-            background: linear-gradient(135deg, rgba(255, 0, 51, 0.08), rgba(255, 215, 0, 0.03));
-            border: 2px solid rgba(255, 215, 0, 0.15);
+            background: var(--offer-banner-bg);
+            border: 2px solid var(--offer-banner-border);
             border-radius: 16px;
             padding: 14px 20px;
             text-align: center;
@@ -604,7 +674,7 @@
             z-index: 1;
         }
         .offer-banner p {
-            color: #aaa;
+            color: var(--text-secondary);
             font-size: clamp(0.65rem, 0.9vw, 0.8rem);
             margin-top: 2px;
             position: relative;
@@ -633,7 +703,7 @@
             animation-duration: 0.8s;
         }
         .offer-banner .click-hint {
-            color: #666;
+            color: var(--text-muted);
             font-size: 0.5rem;
             margin-top: 3px;
             letter-spacing: 1px;
@@ -642,7 +712,7 @@
             transition: all 0.3s ease;
         }
         .offer-banner:hover .click-hint {
-            color: #888;
+            color: var(--text-secondary);
             letter-spacing: 2px;
         }
         .offer-banner::after {
@@ -688,6 +758,8 @@
             will-change: transform;
             cursor: default;
             overflow: hidden;
+            background: var(--user-card-bg);
+            border: 1px solid var(--border-color);
         }
         .user-card::before {
             content: '';
@@ -724,19 +796,20 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
         .user-card:hover h3 {
             letter-spacing: 2px;
         }
 
         .user-card p {
-            color: #888;
+            color: var(--text-secondary);
             font-size: 0.55rem;
             margin: 2px 0 5px;
             transition: all 0.3s ease;
         }
         .user-card:hover p {
-            color: #aaa;
+            color: var(--text-primary);
         }
 
         .user-card .btn {
@@ -774,7 +847,7 @@
         }
 
         .user-card.login-card {
-            background: rgba(255, 0, 51, 0.06);
+            background: var(--user-card-bg);
             border: 1px solid rgba(255, 0, 51, 0.2);
         }
         .user-card.login-card:hover {
@@ -795,7 +868,7 @@
         }
 
         .user-card.signup-card {
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--user-card-bg);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .user-card.signup-card:hover {
@@ -803,7 +876,7 @@
             box-shadow: 0 0 40px rgba(255, 255, 255, 0.06), inset 0 0 40px rgba(255, 255, 255, 0.02);
         }
         .user-card.signup-card h3 {
-            color: #fff;
+            color: var(--text-primary);
         }
         .user-card.signup-card .btn-red {
             background: #FF0033;
@@ -817,7 +890,7 @@
         }
 
         .user-card.verify-card {
-            background: rgba(255, 0, 51, 0.06);
+            background: var(--user-card-bg);
             border: 1px solid rgba(255, 0, 51, 0.2);
         }
         .user-card.verify-card:hover {
@@ -903,7 +976,7 @@
 
         .feature-card {
             flex: 0 0 82px;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--feature-card-bg);
             border-radius: 10px;
             padding: 5px 4px;
             border: 1px solid rgba(255, 0, 51, 0.04);
@@ -952,18 +1025,18 @@
             transition: all 0.3s ease;
         }
         .feature-card:hover h4 {
-            color: #fff;
+            color: var(--text-primary);
             letter-spacing: 0.5px;
         }
 
         .feature-card p {
-            color: #666;
+            color: var(--text-muted);
             font-size: 0.38rem;
             margin-top: 1px;
             transition: all 0.3s ease;
         }
         .feature-card:hover p {
-            color: #888;
+            color: var(--text-secondary);
         }
 
         /* ─── STATS ─── */
@@ -985,7 +1058,7 @@
         }
         .stat-item:hover {
             transform: scale(1.06) translateY(-2px);
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--stat-item-hover);
         }
         .stat-item .number {
             font-size: clamp(0.75rem, 1vw, 0.95rem);
@@ -1003,14 +1076,14 @@
             color: #FFD700;
         }
         .stat-item .label {
-            color: #666;
+            color: var(--text-muted);
             font-size: 0.4rem;
             letter-spacing: 1px;
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
         .stat-item:hover .label {
-            color: #888;
+            color: var(--text-secondary);
             letter-spacing: 2px;
         }
 
@@ -1018,18 +1091,18 @@
         .footer {
             padding: 3px 0 5px;
             text-align: center;
-            border-top: 1px solid rgba(255, 0, 51, 0.04);
+            border-top: 1px solid var(--footer-border);
             flex-shrink: 0;
             margin-top: 4px;
         }
         .footer p {
-            color: #444;
+            color: var(--text-muted);
             font-size: 0.4rem;
             letter-spacing: 1px;
             transition: all 0.3s ease;
         }
         .footer:hover p {
-            color: #666;
+            color: var(--text-secondary);
             letter-spacing: 2px;
         }
         .footer .brand {
@@ -1048,7 +1121,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--overlay-bg);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1072,7 +1145,7 @@
         }
 
         .modal {
-            background: rgba(10, 10, 10, 0.95);
+            background: var(--modal-bg);
             backdrop-filter: blur(20px);
             border: 2px solid #FF0033;
             border-radius: 16px;
@@ -1147,10 +1220,10 @@
         .modal textarea {
             width: 100%;
             padding: 5px 10px;
-            background: rgba(0, 0, 0, 0.6);
+            background: var(--input-bg);
             border: 1px solid rgba(255, 0, 51, 0.1);
             border-radius: 6px;
-            color: #fff;
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             outline: none;
@@ -1661,26 +1734,14 @@
         let appState = {
             password: 'admin123',
             offerCredits: 10,
+            darkMode: true, // true = dark, false = light
             brokers: [
                 { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
                     rules: 'Verify email, deposit ₹1000' },
                 { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
                     rules: 'Verify phone, deposit ₹500' }
             ],
-            users: [{
-                email: 'demo@binaryruthless.com',
-                accountId: 'DEMO123',
-                broker: 'Quotex',
-                name: 'DemoUser',
-                verified: true,
-                deposit: 1000,
-                requiredDeposit: 1000,
-                credits: 25,
-                signalsUsed: 5,
-                todayUsed: 2,
-                blocked: false,
-                registeredAt: new Date().toISOString()
-            }],
+            
             verificationRequests: [],
             currentUser: null,
             logoClickCount: 2,
@@ -1689,6 +1750,15 @@
         };
 
         let isFirebaseConnected = false;
+
+        // ─── APPLY THEME ───
+        function applyTheme(darkMode) {
+            if (darkMode === false) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
 
         // ─── CURSOR GLOW ───
         const glow = document.getElementById('cursorGlow');
@@ -1822,6 +1892,10 @@
                 appState = { ...appState, ...val };
                 if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
                 if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
+                if (val.darkMode !== undefined) {
+                    appState.darkMode = val.darkMode;
+                    applyTheme(appState.darkMode);
+                }
                 if (val.logoBase64 !== undefined && val.logoBase64 !== '') applyLogo(val.logoBase64);
                 if (val.socialMedia !== undefined) {
                     appState.socialMedia = val.socialMedia;
@@ -1875,6 +1949,8 @@
                     if (parsed.length > 0) appState.tools = parsed;
                 } catch (e) {}
             }
+            // Apply theme
+            applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
             updateUI();
             renderSocialMedia();
             checkAdminSession();
@@ -2146,13 +2222,14 @@
         loadLocalState();
         console.log('🏠 Home Page Loaded');
         console.log('🔑 Admin Password: ' + appState.password);
-        console.log('📱 Test Login: demo@binaryruthless.com / DEMO123');
+        
         console.log('✅ Only Admin Approved/Added users can login.');
         console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
         console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' :
             'Logged Out ❌'));
         console.log('👤 User Session: ' + (sessionStorage.getItem('user_logged_in') === 'true' ? 'Logged In ✅' :
             'Logged Out ❌'));
+        console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
 
         // ─── KEYBOARD SHORTCUT: ESC to close modals ───
         document.addEventListener('keydown', (e) => {
