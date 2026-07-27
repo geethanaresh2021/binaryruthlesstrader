@@ -24,19 +24,20 @@
         /* ─── CSS VARIABLES FOR DARK/LIGHT MODE ─── */
         :root {
             /* Dark Mode (default) */
-            --bg-primary: #000;
-            --bg-secondary: #0a0a0a;
-            --bg-card: rgba(255,255,255,0.02);
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111;
+            --bg-card: rgba(255,255,255,0.03);
             --bg-container: rgba(255,0,51,0.04);
-            --text-primary: #fff;
+            --text-primary: #ffffff;
             --text-secondary: #aaa;
             --text-muted: #666;
             --border-color: rgba(255,0,51,0.15);
             --border-light: rgba(255,255,255,0.06);
+            --border-visible: rgba(255,0,51,0.2);
             --shadow-color: rgba(255,0,51,0.08);
-            --input-bg: rgba(0,0,0,0.6);
-            --modal-bg: rgba(10,10,10,0.95);
-            --overlay-bg: rgba(0,0,0,0.9);
+            --input-bg: rgba(255,255,255,0.05);
+            --modal-bg: rgba(20,20,20,0.95);
+            --overlay-bg: rgba(0,0,0,0.85);
             --red-container-bg: rgba(255,0,51,0.04);
             --user-card-bg: rgba(255,255,255,0.02);
             --feature-card-bg: rgba(255,255,255,0.02);
@@ -48,29 +49,44 @@
             --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03));
             --offer-banner-border: rgba(255,215,0,0.12);
             --footer-border: rgba(255,0,51,0.04);
-            --admin-nav-bg: rgba(0,0,0,0.65);
+            --admin-nav-bg: rgba(0,0,0,0.7);
             --admin-nav-border: rgba(255,0,51,0.12);
-            --user-logout-bg: rgba(0,0,0,0.65);
+            --user-logout-bg: rgba(0,0,0,0.7);
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #888;
+            --container-bg: rgba(255,0,51,0.04);
+            --container-border: rgba(255,0,51,0.15);
+            --section-bg: rgba(255,255,255,0.02);
+            --section-border: rgba(255,0,51,0.06);
+            --btn-edit-bg: #ffffff;
+            --btn-edit-color: #000000;
+            --btn-save-bg: #FF0033;
+            --btn-save-color: #ffffff;
+            --toggle-bg: #333;
+            --toggle-thumb: #fff;
+            --popup-bg: rgba(20,20,20,0.97);
+            --popup-border: rgba(255,0,51,0.2);
+            --popup-text: #fff;
+            --popup-label: #FFD700;
         }
 
         /* Light Mode */
         [data-theme="light"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
+            --bg-primary: #f0f0f5;
+            --bg-secondary: #e8e8ee;
             --bg-card: rgba(0,0,0,0.02);
-            --bg-container: rgba(255,0,51,0.03);
+            --bg-container: rgba(255,0,51,0.02);
             --text-primary: #111111;
-            --text-secondary: #555555;
-            --text-muted: #999999;
-            --border-color: rgba(255,0,51,0.12);
+            --text-secondary: #444444;
+            --text-muted: #777777;
+            --border-color: rgba(255,0,51,0.15);
             --border-light: rgba(0,0,0,0.06);
+            --border-visible: rgba(255,0,51,0.25);
             --shadow-color: rgba(255,0,51,0.05);
-            --input-bg: rgba(255,255,255,0.8);
-            --modal-bg: rgba(255,255,255,0.95);
-            --overlay-bg: rgba(255,255,255,0.92);
-            --red-container-bg: rgba(255,0,51,0.03);
+            --input-bg: rgba(255,255,255,0.7);
+            --modal-bg: rgba(255,255,255,0.97);
+            --overlay-bg: rgba(0,0,0,0.5);
+            --red-container-bg: rgba(255,0,51,0.02);
             --user-card-bg: rgba(0,0,0,0.02);
             --feature-card-bg: rgba(0,0,0,0.02);
             --stat-item-hover: rgba(0,0,0,0.02);
@@ -86,6 +102,20 @@
             --user-logout-bg: rgba(255,255,255,0.85);
             --user-logout-border: rgba(255,0,51,0.12);
             --brand-tagline-color: #999;
+            --container-bg: rgba(255,0,51,0.02);
+            --container-border: rgba(255,0,51,0.12);
+            --section-bg: rgba(0,0,0,0.01);
+            --section-border: rgba(255,0,51,0.06);
+            --btn-edit-bg: #000000;
+            --btn-edit-color: #ffffff;
+            --btn-save-bg: #FF0033;
+            --btn-save-color: #ffffff;
+            --toggle-bg: #ccc;
+            --toggle-thumb: #fff;
+            --popup-bg: rgba(255,255,255,0.97);
+            --popup-border: rgba(255,0,51,0.2);
+            --popup-text: #111;
+            --popup-label: #FF0033;
         }
 
         /* ─── RESET & BASE ─── */
@@ -192,8 +222,8 @@
 
         /* ─── RED CONTAINER ─── COMPACT ─── */
         .red-container {
-            background: var(--red-container-bg);
-            border: 1px solid var(--border-color);
+            background: var(--container-bg);
+            border: 1px solid var(--container-border);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
@@ -265,6 +295,42 @@
             50% {
                 box-shadow: 0 0 28px rgba(0, 255, 102, 0.9), 0 0 50px rgba(0, 255, 102, 0.2);
             }
+        }
+
+        /* ─── DARK MODE TOGGLE (top-left of container) ─── */
+        .dark-mode-toggle-container {
+            position: absolute;
+            top: 2px;
+            left: 20px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .dark-mode-toggle-btn {
+            background: var(--admin-nav-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--admin-nav-border);
+            border-radius: 8px;
+            padding: 1px 8px;
+            color: var(--text-secondary);
+            font-size: 0.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .dark-mode-toggle-btn:hover {
+            border-color: #FF0033;
+            color: #FF0033;
+            transform: scale(1.04);
+            box-shadow: 0 2px 14px rgba(255,0,51,0.06);
+        }
+        .dark-mode-toggle-btn:active {
+            transform: scale(0.93);
         }
 
         /* ─── ADMIN NAV – inside red-container, top-right ─── */
@@ -928,8 +994,8 @@
         /* ─── FEATURES ─── */
         .features-section {
             padding: 4px 0 4px;
-            border-top: 1px solid rgba(255, 0, 51, 0.04);
-            border-bottom: 1px solid rgba(255, 0, 51, 0.04);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
             margin-top: 6px;
         }
@@ -940,6 +1006,7 @@
             font-weight: 700;
             margin-bottom: 3px;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
         .features-title .neon {
             color: #FF0033;
@@ -979,7 +1046,7 @@
             background: var(--feature-card-bg);
             border-radius: 10px;
             padding: 5px 4px;
-            border: 1px solid rgba(255, 0, 51, 0.04);
+            border: 1px solid var(--border-color);
             text-align: center;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
@@ -1065,6 +1132,7 @@
             font-weight: 700;
             font-family: 'Roboto Mono', monospace;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
         .stat-item:hover .number {
             transform: scale(1.04);
@@ -1126,7 +1194,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            padding: 16px;
+            padding: 20px;
             backdrop-filter: blur(10px);
             animation: fadeIn 0.3s ease;
         }
@@ -1145,17 +1213,17 @@
         }
 
         .modal {
-            background: var(--modal-bg);
+            background: var(--popup-bg);
             backdrop-filter: blur(20px);
-            border: 2px solid #FF0033;
+            border: 2px solid var(--popup-border);
             border-radius: 16px;
-            padding: 18px 14px;
+            padding: 24px 20px;
             width: 100%;
-            max-width: 480px;
-            max-height: 90vh;
+            max-width: 560px;
+            max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 0 60px rgba(255, 0, 51, 0.06);
+            box-shadow: 0 0 80px rgba(255, 0, 51, 0.08);
             animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         @keyframes modalSlide {
@@ -1178,20 +1246,20 @@
 
         .modal-close {
             position: absolute;
-            top: 6px;
-            right: 10px;
-            font-size: 1rem;
+            top: 8px;
+            right: 12px;
+            font-size: 1.2rem;
             color: #FF0033;
             cursor: pointer;
             background: none;
             border: none;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 6px;
         }
         .modal-close:hover {
             transform: scale(1.3) rotate(90deg);
-            color: #fff;
+            color: var(--text-primary);
             background: rgba(255, 0, 51, 0.06);
         }
         .modal-close:active {
@@ -1199,18 +1267,18 @@
         }
 
         .modal h2 {
-            color: #FFD700;
+            color: var(--popup-label);
             text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
             letter-spacing: 2px;
         }
         .modal label {
             display: block;
-            font-size: 0.48rem;
-            color: #FFD700;
-            margin: 4px 0 2px;
+            font-size: 0.5rem;
+            color: var(--popup-label);
+            margin: 6px 0 3px;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 1px;
@@ -1219,7 +1287,7 @@
         .modal select,
         .modal textarea {
             width: 100%;
-            padding: 5px 10px;
+            padding: 6px 10px;
             background: var(--input-bg);
             border: 1px solid rgba(255, 0, 51, 0.1);
             border-radius: 6px;
@@ -1237,22 +1305,22 @@
             transform: scale(1.01);
         }
         .modal textarea {
-            height: 40px;
+            height: 50px;
             resize: vertical;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
         }
 
         .modal .btn-submit {
             width: 100%;
-            padding: 7px;
-            margin-top: 6px;
+            padding: 8px;
+            margin-top: 8px;
             border-radius: 30px;
             font-weight: 700;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             position: relative;
             overflow: hidden;
             will-change: transform;
@@ -1279,15 +1347,15 @@
 
         .modal .error-msg {
             color: #FF0033;
-            font-size: 0.55rem;
-            margin-top: 2px;
+            font-size: 0.6rem;
+            margin-top: 3px;
             font-family: 'Roboto Mono', monospace;
-            min-height: 14px;
+            min-height: 16px;
         }
         .modal .success-msg {
             color: #00FF66;
-            font-size: 0.55rem;
-            margin-top: 2px;
+            font-size: 0.6rem;
+            margin-top: 3px;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -1316,8 +1384,9 @@
                 font-size: 0.9rem;
             }
             .modal {
-                padding: 14px 12px;
+                padding: 16px 14px;
                 max-width: 100%;
+                max-height: 90vh;
             }
             .stats-row {
                 gap: 10px;
@@ -1340,6 +1409,11 @@
                 right: 6px;
                 padding: 1px 6px;
                 font-size: 0.35rem;
+            }
+            .dark-mode-toggle-btn {
+                font-size: 0.35rem;
+                padding: 1px 6px;
+                left: 16px;
             }
             .fb-status-dot {
                 top: 3px;
@@ -1406,6 +1480,11 @@
                 font-size: 0.3rem;
                 padding: 1px 4px;
             }
+            .dark-mode-toggle-btn {
+                font-size: 0.3rem;
+                padding: 1px 4px;
+                left: 14px;
+            }
             .offer-banner::after {
                 animation-duration: 10s;
             }
@@ -1454,6 +1533,14 @@
             .social-icons {
                 gap: 14px;
             }
+            .modal {
+                padding: 14px 12px;
+                max-width: 100%;
+                max-height: 92vh;
+            }
+            .modal h2 {
+                font-size: 0.75rem;
+            }
         }
 
         /* ─── CURSOR GLOW ─── */
@@ -1489,7 +1576,8 @@
         .admin-nav-bar .nav-buttons button,
         .modal .btn-submit,
         .modal-close,
-        .user-logout-btn {
+        .user-logout-btn,
+        .dark-mode-toggle-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease,
                 border-color 0.4s ease;
@@ -1505,7 +1593,8 @@
         .admin-nav-bar .nav-buttons button:hover,
         .modal .btn-submit:hover,
         .modal-close:hover,
-        .user-logout-btn:hover {
+        .user-logout-btn:hover,
+        .dark-mode-toggle-btn:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover,
@@ -1523,7 +1612,8 @@
         .admin-nav-bar .nav-buttons button:active,
         .modal .btn-submit:active,
         .modal-close:active,
-        .user-logout-btn:active {
+        .user-logout-btn:active,
+        .dark-mode-toggle-btn:active {
             transform: scale(0.97);
         }
 
@@ -1556,6 +1646,11 @@
 
             <!-- ─── RED CONTAINER ─── compact ─── -->
             <div class="red-container" id="redContainer">
+
+                <!-- Dark Mode Toggle - top left -->
+                <div class="dark-mode-toggle-container">
+                    <button class="dark-mode-toggle-btn" id="darkModeToggleBtn">🌙 Dark</button>
+                </div>
 
                 <!-- Admin Nav – inside red-container, top-right -->
                 <div class="admin-nav-bar" id="adminNavBar">
@@ -1623,7 +1718,7 @@
             <!-- FEATURES -->
             <div class="features-section">
                 <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
-                <div class="features-scroll">
+                <div class="features-scroll" id="featuresScroll">
                     <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
                     <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
                     <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
@@ -1734,19 +1829,40 @@
         let appState = {
             password: 'admin123',
             offerCredits: 10,
-            darkMode: true, // true = dark, false = light
+            darkMode: true,
             brokers: [
                 { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
                     rules: 'Verify email, deposit ₹1000' },
                 { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
                     rules: 'Verify phone, deposit ₹500' }
             ],
-            
+            users: [{
+                email: 'demo@binaryruthless.com',
+                accountId: 'DEMO123',
+                broker: 'Quotex',
+                name: 'DemoUser',
+                verified: true,
+                deposit: 1000,
+                requiredDeposit: 1000,
+                credits: 25,
+                signalsUsed: 5,
+                todayUsed: 2,
+                blocked: false,
+                registeredAt: new Date().toISOString()
+            }],
             verificationRequests: [],
             currentUser: null,
             logoClickCount: 2,
             socialMedia: [],
-            tools: []
+            tools: [],
+            features: [
+                { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
+                { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
+                { id: 'feat_3', icon: '📓', name: 'Trading Journal', desc: 'Track every trade', visibility: 'visible' },
+                { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' },
+                { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
+                { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
+            ]
         };
 
         let isFirebaseConnected = false;
@@ -1755,10 +1871,21 @@
         function applyTheme(darkMode) {
             if (darkMode === false) {
                 document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('darkModeToggleBtn').textContent = '☀️ Light';
             } else {
                 document.documentElement.removeAttribute('data-theme');
+                document.getElementById('darkModeToggleBtn').textContent = '🌙 Dark';
             }
         }
+
+        // ─── TOGGLE DARK MODE ───
+        document.getElementById('darkModeToggleBtn').addEventListener('click', function() {
+            const isDark = appState.darkMode !== false;
+            appState.darkMode = !isDark;
+            applyTheme(appState.darkMode);
+            saveLocalState();
+            this.textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
+        });
 
         // ─── CURSOR GLOW ───
         const glow = document.getElementById('cursorGlow');
@@ -1780,7 +1907,6 @@
             const adminNavBar = document.getElementById('adminNavBar');
             if (userLoggedIn) {
                 userLogoutBtn.classList.add('visible');
-                // Hide admin nav if admin is not logged in
                 const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
                 if (!adminLoggedIn) {
                     adminNavBar.classList.remove('visible');
@@ -1809,7 +1935,6 @@
                 userLogoutBtn.classList.remove('visible');
             } else {
                 navBar.classList.remove('visible');
-                // Check if user is logged in
                 const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
                 if (userLoggedIn) {
                     userLogoutBtn.classList.add('visible');
@@ -1882,6 +2007,29 @@
             });
         }
 
+        // ─── FEATURES RENDER ───
+        function renderFeatures() {
+            const container = document.getElementById('featuresScroll');
+            if (!container) return;
+            const features = appState.features || [];
+            const visible = features.filter(f => f.visibility !== 'hidden');
+            if (visible.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = '';
+            visible.forEach(f => {
+                const card = document.createElement('div');
+                card.className = 'feature-card';
+                card.innerHTML = `
+                    <span class="icon">${f.icon || '🧠'}</span>
+                    <h4>${f.name || 'Feature'}</h4>
+                    <p>${f.desc || ''}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         // ─── FIREBASE ───
         onValue(dbRef, (snapshot) => {
             isFirebaseConnected = true;
@@ -1905,6 +2053,11 @@
                 if (val.tools !== undefined) {
                     appState.tools = val.tools;
                     localStorage.setItem('brt_tools', JSON.stringify(val.tools));
+                }
+                if (val.features !== undefined) {
+                    appState.features = val.features;
+                    localStorage.setItem('brt_features', JSON.stringify(val.features));
+                    renderFeatures();
                 }
                 if (currentUserEmail) {
                     const found = appState.users.find(u => u.email === currentUserEmail);
@@ -1949,10 +2102,17 @@
                     if (parsed.length > 0) appState.tools = parsed;
                 } catch (e) {}
             }
-            // Apply theme
+            const featuresData = localStorage.getItem('brt_features');
+            if (featuresData) {
+                try {
+                    const parsed = JSON.parse(featuresData);
+                    if (parsed.length > 0) appState.features = parsed;
+                } catch (e) {}
+            }
             applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
             updateUI();
             renderSocialMedia();
+            renderFeatures();
             checkAdminSession();
             checkUserSession();
         }
@@ -2015,7 +2175,6 @@
                 errorEl.textContent = '❌ Enter email and account ID';
                 return;
             }
-            // Check if user exists in users list (any user, regardless of verification)
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
             if (!user) {
                 errorEl.textContent = '❌ User not found. Please sign up first.';
@@ -2029,7 +2188,6 @@
                 errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
                 return;
             }
-            // User is verified - allow login (no deposit check)
             appState.currentUser = user;
             sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
@@ -2174,13 +2332,12 @@
         const logoGlow = document.getElementById('logoGlow');
 
         document.addEventListener('click', function(e) {
-            // Ignore clicks inside modals or admin nav
             if (e.target.closest('.overlay')) return;
             if (e.target.closest('.modal')) return;
             if (e.target.closest('.admin-nav-bar')) return;
             if (e.target.closest('.user-logout-btn')) return;
+            if (e.target.closest('.dark-mode-toggle-btn')) return;
 
-            // ── Trigger logo glow ──
             logoGlow.classList.remove('active');
             void logoGlow.offsetWidth;
             logoGlow.classList.add('active');
@@ -2188,7 +2345,6 @@
                 logoGlow.classList.remove('active');
             }, 800);
 
-            // ── Logo zoom in & Brand name zoom out ──
             const logoIcon = document.getElementById('logoIcon');
             const logoImg = document.getElementById('logoImage');
             const brandName = document.querySelector('.brand-name');
@@ -2222,16 +2378,8 @@
         loadLocalState();
         console.log('🏠 Home Page Loaded');
         console.log('🔑 Admin Password: ' + appState.password);
-        
-        console.log('✅ Only Admin Approved/Added users can login.');
-        console.log('🔄 Logo Click Count: ' + (appState.logoClickCount || 2) + ' clicks');
-        console.log('👑 Admin Session: ' + (sessionStorage.getItem('admin_logged_in') === 'true' ? 'Logged In ✅' :
-            'Logged Out ❌'));
-        console.log('👤 User Session: ' + (sessionStorage.getItem('user_logged_in') === 'true' ? 'Logged In ✅' :
-            'Logged Out ❌'));
         console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
 
-        // ─── KEYBOARD SHORTCUT: ESC to close modals ───
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
