@@ -25,7 +25,7 @@
     <style>
         /* ─── RESET & BASE ─── */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: var(--bg-primary, #000); color: var(--text-primary, #fff); font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; transition: background 0.4s ease, color 0.4s ease; }
+        html, body { width: 100%; min-height: 100vh; background: var(--bg-primary, #0a0a0a); color: var(--text-primary, #fff); font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; transition: background 0.4s ease, color 0.4s ease; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
         
@@ -152,40 +152,6 @@
         .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 14px rgba(255,0,51,0.6); animation: pulseRed 1.5s ease-in-out infinite; }
         @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } }
         @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 14px rgba(0,255,102,0.6); } 50% { box-shadow: 0 0 28px rgba(0,255,102,0.9), 0 0 50px rgba(0,255,102,0.2); } }
-        
-        /* ─── DARK MODE TOGGLE (top-left of container) ─── */
-        .dark-mode-toggle-container {
-            position: absolute;
-            top: 2px;
-            left: 20px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .dark-mode-toggle-btn {
-            background: var(--admin-nav-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--admin-nav-border);
-            border-radius: 8px;
-            padding: 1px 8px;
-            color: var(--text-secondary);
-            font-size: 0.4rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .dark-mode-toggle-btn:hover {
-            border-color: #FF0033;
-            color: #FF0033;
-            transform: scale(1.04);
-            box-shadow: 0 2px 14px rgba(255,0,51,0.06);
-        }
-        .dark-mode-toggle-btn:active { transform: scale(0.93); }
         
         /* ─── ADMIN NAV – inside red-container, top-right ─── */
         .admin-nav-bar {
@@ -637,7 +603,6 @@
             .admin-nav-bar .nav-label { font-size: 0.35rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
             .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
-            .dark-mode-toggle-btn { font-size: 0.35rem; padding: 1px 6px; left: 16px; }
             .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
             .tool-btn { padding: 14px 16px; min-height: 65px; }
             .tool-btn .tool-name { font-size: 1.1rem; }
@@ -657,7 +622,6 @@
             .credits-container .credit-item .number { font-size: 0.85rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
             .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
-            .dark-mode-toggle-btn { font-size: 0.3rem; padding: 1px 4px; left: 14px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
             .brand-section { padding: 1px 0 1px 0; }
             .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
@@ -681,7 +645,7 @@
         .red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
         .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
         .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
-        .tool-btn, .dash-main-btn, .user-logout-btn, .dark-mode-toggle-btn {
+        .tool-btn, .dash-main-btn, .user-logout-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -690,8 +654,7 @@
         .feature-card:hover, .stat-item:hover, .social-icons a:hover,
         .admin-nav-bar .nav-buttons button:hover, .modal .btn-submit:hover,
         .modal-close:hover, .user-info-container:hover, .credits-container:hover,
-        .tool-btn:hover, .dash-main-btn:hover, .user-logout-btn:hover,
-        .dark-mode-toggle-btn:hover {
+        .tool-btn:hover, .dash-main-btn:hover, .user-logout-btn:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover, .admin-nav-bar .nav-buttons button:hover,
@@ -702,8 +665,7 @@
         .feature-card:active, .stat-item:active, .social-icons a:active,
         .admin-nav-bar .nav-buttons button:active, .modal .btn-submit:active,
         .modal-close:active, .user-info-container:active, .credits-container:active,
-        .tool-btn:active, .dash-main-btn:active, .user-logout-btn:active,
-        .dark-mode-toggle-btn:active {
+        .tool-btn:active, .dash-main-btn:active, .user-logout-btn:active {
             transform: scale(0.97);
         }
     </style>
@@ -716,11 +678,6 @@
         <!-- ─── RED CONTAINER ─── compact ─── -->
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-            
-            <!-- Dark Mode Toggle - top left -->
-            <div class="dark-mode-toggle-container">
-                <button class="dark-mode-toggle-btn" id="darkModeToggleBtn">🌙 Dark</button>
-            </div>
             
             <!-- Admin Nav – inside red-container, top-right -->
             <div class="admin-nav-bar" id="adminNavBar">
@@ -781,7 +738,7 @@
         <!-- ─── FEATURES ─── -->
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
-            <div class="features-scroll">
+            <div class="features-scroll" id="featuresScroll">
                 <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
                 <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
                 <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
@@ -883,7 +840,15 @@ let appState = {
     signalSettings: { toolName: 'AI Signal Generator', htmlCode: '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Signal Generator</h2><p style="color:#888;font-size:0.8rem;">Your custom signal generator HTML will appear here.</p><button onclick="window.parent.postMessage({type:\'signalGenerated\'},\'*\')" style="background:#FF0033;color:#fff;padding:10px 30px;border:none;border-radius:30px;cursor:pointer;font-weight:700;margin-top:10px;">Get Signal (1 Credit)</button></div>', visibility: 'visible' },
     logoBase64: '', payments: [], chats: {},
     tools: [], socialMedia: [], logoClickCount: 2,
-    darkMode: true
+    darkMode: true,
+    features: [
+        { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
+        { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
+        { id: 'feat_3', icon: '📓', name: 'Trading Journal', desc: 'Track every trade', visibility: 'visible' },
+        { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' },
+        { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
+        { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
+    ]
 };
 
 let isFirebaseConnected = false, selectedCreditPack = null;
@@ -893,20 +858,33 @@ let chatUnreadCount = 0;
 function applyTheme(darkMode) {
     if (darkMode === false) {
         document.documentElement.setAttribute('data-theme', 'light');
-        document.getElementById('darkModeToggleBtn').textContent = '☀️ Light';
     } else {
         document.documentElement.removeAttribute('data-theme');
-        document.getElementById('darkModeToggleBtn').textContent = '🌙 Dark';
     }
 }
 
-// ─── TOGGLE DARK MODE ───
-document.getElementById('darkModeToggleBtn').addEventListener('click', function() {
-    const isDark = appState.darkMode !== false;
-    appState.darkMode = !isDark;
-    applyTheme(appState.darkMode);
-    saveLocalState();
-});
+// ─── RENDER FEATURES ───
+function renderFeatures() {
+    const container = document.getElementById('featuresScroll');
+    if (!container) return;
+    const features = appState.features || [];
+    const visible = features.filter(f => f.visibility !== 'hidden');
+    if (visible.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    container.innerHTML = '';
+    visible.forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'feature-card';
+        card.innerHTML = `
+            <span class="icon">${f.icon || '🧠'}</span>
+            <h4>${f.name || 'Feature'}</h4>
+            <p>${f.desc || ''}</p>
+        `;
+        container.appendChild(card);
+    });
+}
 
 // ─── CHECK WHICH SESSION IS ACTIVE ───
 function getActiveSession() {
@@ -1006,6 +984,11 @@ onValue(dbRef, (snapshot) => {
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(); }
         if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
         if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); }
+        if (val.features !== undefined) { 
+            appState.features = val.features; 
+            localStorage.setItem('brt_features', JSON.stringify(val.features));
+            renderFeatures();
+        }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1038,9 +1021,10 @@ function loadLocalState() {
     const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
+    const featuresData = localStorage.getItem('brt_features');
+    if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
     
     applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
-    document.getElementById('darkModeToggleBtn').textContent = appState.darkMode ? '🌙 Dark' : '☀️ Light';
     
     const session = getActiveSession();
     if (session.type === 'admin') {
@@ -1079,7 +1063,7 @@ function loadLocalState() {
         window.location.href = 'index.html';
         return;
     }
-    updateUI(); applySignalSettings(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
+    updateUI(); applySignalSettings(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
 }
 
 function applyLogo() {
@@ -1267,7 +1251,6 @@ document.addEventListener('click', function(e) {
     if (e.target.closest('.dash-main-btn')) return;
     if (e.target.closest('.btn-sm')) return;
     if (e.target.closest('.social-icons a')) return;
-    if (e.target.closest('.dark-mode-toggle-btn')) return;
 
     logoGlowDash.classList.remove('active');
     void logoGlowDash.offsetWidth;
@@ -1312,6 +1295,7 @@ console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
 console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
 console.log('💬 Unread Chats: ' + chatUnreadCount);
 console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
+console.log('⚡ Features: ' + (appState.features?.length || 0) + ' features loaded');
 </script>
 </body>
 </html>
