@@ -21,7 +21,7 @@
     </script>
     
     <style>
-        /* ===== CSS VARIABLES FOR DARK/LIGHT MODE ===== */
+        /* ===== CSS VARIABLES ===== */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
@@ -381,6 +381,7 @@
         .password-modal .btn-enter.enabled:active { transform: scale(0.97); }
         .password-modal .error-text { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         
+        /* ─── ADMIN SECTION ─── */
         .admin-section {
             border: 1px solid var(--section-border);
             border-radius: 12px;
@@ -489,6 +490,7 @@
         .payment-settings-grid .field-group.full-width { grid-column: 1 / -1; }
         .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
         
+        /* ─── BIGGER POPUPS ─── */
         .overlay { 
             position: fixed; 
             top: 0; 
@@ -511,14 +513,14 @@
             border-radius: 16px; 
             padding: 28px 24px; 
             width: 100%; 
-            max-width: 640px; 
-            min-height: 320px; 
-            max-height: 85vh; 
+            max-width: 780px; 
+            min-height: 380px; 
+            max-height: 90vh; 
             overflow-y: auto; 
             position: relative; 
             box-shadow: 0 0 80px rgba(255, 0, 51, 0.08); 
         }
-        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar { width: 6px; }
         .modal::-webkit-scrollbar-track { background: rgba(255,0,51,0.05); border-radius: 4px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         .modal-close { 
@@ -538,13 +540,13 @@
             color: var(--popup-label); 
             text-align: center; 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             margin-bottom: 14px; 
             letter-spacing: 2px; 
         }
         .modal label { 
             display: block; 
-            font-size: 0.55rem; 
+            font-size: 0.6rem; 
             color: var(--popup-label); 
             margin: 6px 0 3px; 
             text-transform: uppercase; 
@@ -553,13 +555,13 @@
         }
         .modal input, .modal select, .modal textarea { 
             width: 100%; 
-            padding: 7px 12px; 
+            padding: 8px 14px; 
             background: var(--input-bg); 
             border: 1px solid rgba(255,0,51,0.1); 
             border-radius: 6px; 
             color: var(--text-primary); 
             font-family: 'Inter', sans-serif; 
-            font-size: 0.75rem; 
+            font-size: 0.8rem; 
             outline: none; 
             transition: all 0.4s ease; 
         }
@@ -567,7 +569,7 @@
         .modal textarea { height: 60px; resize: vertical; font-size: 0.7rem; }
         .modal .btn-submit { 
             width: 100%; 
-            padding: 10px; 
+            padding: 12px; 
             margin-top: 10px; 
             border-radius: 30px; 
             font-weight: 700; 
@@ -583,114 +585,124 @@
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
         .modal .btn-submit.btn-danger { background: #ff0033; color: #fff; }
-        .modal .error-msg { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 3px; min-height: 16px; }
-        .modal .success-msg { color: var(--modal-success-color); font-size: 0.6rem; margin-top: 3px; min-height: 16px; }
+        .modal .error-msg { color: var(--modal-error-color); font-size: 0.65rem; margin-top: 3px; min-height: 16px; }
+        .modal .success-msg { color: var(--modal-success-color); font-size: 0.65rem; margin-top: 3px; min-height: 16px; }
         .modal .search-input { 
             width: 100%; 
-            padding: 6px 10px; 
+            padding: 8px 12px; 
             background: var(--input-bg); 
             border: 1px solid rgba(255,0,51,0.1); 
             border-radius: 6px; 
             color: #00FF66; 
-            font-size: 0.6rem; 
+            font-size: 0.65rem; 
             outline: none; 
             margin-bottom: 6px; 
         }
         .modal .search-input:focus { border-color: #FF0033; }
+        
+        /* ─── BIGGER USER LIST ─── */
         .modal .user-list-item { 
             display: flex; 
             justify-content: space-between; 
-            padding: 6px 10px; 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            padding: 8px 14px; 
+            border-bottom: 1px solid rgba(255,255,255,0.04); 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            font-size: 0.6rem; 
+            font-size: 0.7rem; 
             align-items: center; 
             border-radius: 4px; 
         }
         .modal .user-list-item:hover { background: rgba(255,0,51,0.06); }
-        .modal .user-list-item .status-verified { color: #00FF66; font-size: 0.5rem; }
-        .modal .user-list-item .status-pending { color: #FFD700; font-size: 0.5rem; }
-        .modal .user-list-item .status-blocked { color: #FF0033; font-size: 0.5rem; }
-        .modal .user-list-item .status-admin { color: #FFD700; font-size: 0.5rem; }
+        .modal .user-list-item .status-verified { color: #00FF66; font-size: 0.55rem; }
+        .modal .user-list-item .status-pending { color: #FFD700; font-size: 0.55rem; }
+        .modal .user-list-item .status-blocked { color: #FF0033; font-size: 0.55rem; }
+        .modal .user-list-item .status-admin { color: #FFD700; font-size: 0.55rem; }
         .modal .user-list-scroll { 
-            max-height: 300px; 
+            max-height: 400px; 
             overflow-y: auto; 
-            margin-top: 4px; 
+            margin-top: 6px; 
             border: 1px solid rgba(255,0,51,0.05); 
             border-radius: 6px; 
-            padding: 4px; 
+            padding: 6px; 
         }
-        .modal .user-list-scroll::-webkit-scrollbar { width: 4px; }
+        .modal .user-list-scroll::-webkit-scrollbar { width: 5px; }
         .modal .user-list-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         .modal .user-detail-row { 
             display: flex; 
             justify-content: space-between; 
-            padding: 3px 0; 
-            font-size: 0.55rem; 
+            padding: 5px 0; 
+            font-size: 0.65rem; 
             color: var(--text-secondary); 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
+            border-bottom: 1px solid rgba(255,255,255,0.04); 
         }
         .modal .user-detail-row .label { color: var(--text-muted); }
         .modal .user-detail-row .value { color: #FFD700; }
+        
+        /* ─── BIGGER CHAT ─── */
         .modal .chat-msg-list { 
-            max-height: 240px; 
+            max-height: 320px; 
             overflow-y: auto; 
             border: 1px solid rgba(255,255,255,0.05); 
             border-radius: 6px; 
-            padding: 6px; 
-            margin: 4px 0; 
-            background: rgba(0,0,0,0.2); 
+            padding: 10px; 
+            margin: 6px 0; 
+            background: rgba(0,0,0,0.15); 
+            min-height: 120px;
         }
-        .modal .chat-msg-list::-webkit-scrollbar { width: 4px; }
+        .modal .chat-msg-list::-webkit-scrollbar { width: 5px; }
         .modal .chat-msg-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         .modal .chat-msg-list .msg { 
-            padding: 4px 8px; 
-            margin: 2px 0; 
-            border-radius: 4px; 
-            font-size: 0.5rem; 
+            padding: 6px 12px; 
+            margin: 4px 0; 
+            border-radius: 6px; 
+            font-size: 0.75rem; 
             max-width: 85%; 
+            word-wrap: break-word;
+            line-height: 1.5;
         }
         .modal .chat-msg-list .msg.admin { 
             background: var(--chat-msg-admin-bg); 
             color: var(--chat-msg-admin-color); 
             text-align: right; 
             margin-left: auto; 
+            border-bottom-right-radius: 2px;
         }
         .modal .chat-msg-list .msg.user { 
             background: var(--chat-msg-user-bg); 
             color: var(--chat-msg-user-color); 
             text-align: left; 
+            border-bottom-left-radius: 2px;
         }
-        .modal .chat-msg-list .msg .time { font-size: 0.35rem; color: var(--text-muted); margin-left: 4px; }
+        .modal .chat-msg-list .msg .time { font-size: 0.45rem; color: var(--text-muted); margin-left: 6px; }
         .modal .chat-input-area { 
             display: flex; 
-            gap: 4px; 
-            margin-top: 4px; 
+            gap: 6px; 
+            margin-top: 6px; 
         }
         .modal .chat-input-area input { 
             flex: 1; 
-            padding: 4px 8px; 
+            padding: 8px 12px; 
             background: var(--input-bg); 
             border: 1px solid rgba(255,0,51,0.1); 
             border-radius: 4px; 
             color: var(--text-primary); 
-            font-size: 0.55rem; 
+            font-size: 0.7rem; 
             outline: none; 
         }
         .modal .chat-input-area input:focus { border-color: #FF0033; }
         .modal .chat-input-area button { 
-            padding: 4px 12px; 
+            padding: 8px 16px; 
             border-radius: 4px; 
             border: none; 
             background: #0088cc; 
             color: #fff; 
             font-weight: 700; 
             cursor: pointer; 
-            font-size: 0.5rem; 
+            font-size: 0.6rem; 
             transition: all 0.3s ease; 
         }
         .modal .chat-input-area button:hover { transform: scale(1.04); }
+        
         .modal .btn-group { 
             display: flex; 
             gap: 6px; 
@@ -700,12 +712,12 @@
         .modal .btn-group .btn-sm { 
             flex: 1; 
             min-width: 60px; 
-            padding: 4px; 
+            padding: 6px; 
             border-radius: 6px; 
             border: none; 
             font-weight: 700; 
             cursor: pointer; 
-            font-size: 0.45rem; 
+            font-size: 0.5rem; 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
             transition: all 0.3s ease; 
@@ -717,6 +729,7 @@
         .modal .btn-group .btn-remove { background: #FFD700; color: #000; }
         .modal .btn-group .btn-chat { background: #0088cc; color: #fff; }
         
+        /* ─── TOOLS LIST ─── */
         .tools-list .tool-item { 
             background: var(--tool-item-bg); 
             border: 1px solid var(--tool-item-border); 
@@ -733,7 +746,7 @@
         .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.6rem; font-family: 'Orbitron', sans-serif; }
         .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.45rem; margin-top: 1px; }
         .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); }
-        .tools-list .tool-item .tool-actions { display: flex; gap: 4px; }
+        .tools-list .tool-item .tool-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
         .tools-list .tool-item .tool-actions button { 
             padding: 2px 8px; 
             border-radius: 4px; 
@@ -747,6 +760,17 @@
         .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
+        /* ─── FIRE TOGGLE BUTTON ─── */
+        .tools-list .tool-item .tool-actions .btn-fire-toggle { 
+            background: #FF4500; 
+            color: #fff; 
+            font-size: 0.4rem; 
+            padding: 2px 6px;
+        }
+        .tools-list .tool-item .tool-actions .btn-fire-toggle.off { 
+            background: #555; 
+            color: #aaa;
+        }
         
         .social-list .social-item { 
             background: var(--social-item-bg); 
@@ -861,7 +885,7 @@
         
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
-            .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 260px; }
+            .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 300px; }
             .admin-dash-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .admin-dash-card { padding: 10px 8px; }
             .admin-dash-card .count { font-size: 1.2rem; }
@@ -871,8 +895,9 @@
             .brand-left { justify-content: center; }
             .nav-links { justify-content: center; }
             .admin-section { padding: 10px 12px; }
-            .modal .user-list-scroll { max-height: 200px; }
-            .modal .user-list-item { font-size: 0.5rem; padding: 4px 6px; }
+            .modal .user-list-scroll { max-height: 300px; }
+            .modal .user-list-item { font-size: 0.55rem; padding: 6px 8px; }
+            .modal .chat-msg-list { max-height: 250px; }
             .social-icons-header { justify-content: center; }
         }
         @media (max-width: 480px) {
@@ -883,19 +908,21 @@
             .brand-name-sm { font-size: 0.6rem; }
             .nav-links button { font-size: 0.35rem; padding: 1px 5px; }
             .admin-section { padding: 8px 10px; }
-            .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 220px; }
-            .modal .btn-group .btn-sm { min-width: 40px; font-size: 0.4rem; padding: 3px; }
-            .modal .user-list-item { font-size: 0.45rem; padding: 3px 4px; }
-            .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
-            .logo-icon-sm { font-size: 1rem; }
-            .logo-img-sm { max-height: 1rem; }
+            .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 250px; }
             .modal h2 { font-size: 0.85rem; }
             .modal label { font-size: 0.48rem; }
             .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
+            .modal .user-list-item { font-size: 0.5rem; padding: 4px 6px; }
+            .modal .user-list-scroll { max-height: 250px; }
+            .modal .chat-msg-list { max-height: 200px; }
+            .modal .chat-msg-list .msg { font-size: 0.65rem; }
             .dark-mode-toggle-admin .toggle-track { width: 32px; height: 16px; }
             .dark-mode-toggle-admin .toggle-track .toggle-thumb { width: 10px; height: 10px; }
             .dark-mode-toggle-admin .toggle-track.active .toggle-thumb { left: 18px; }
+            .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
+            .logo-icon-sm { font-size: 1rem; }
+            .logo-img-sm { max-height: 1rem; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -1071,6 +1098,7 @@
                 <div id="creditPackList" class="item-list" style="max-height:130px;margin-top:4px;"></div>
             </div>
             
+            <!-- ===== TOOLS MANAGER WITH FIRE TOGGLE ===== -->
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
                 <div id="toolsList" class="tools-list"></div>
@@ -1080,6 +1108,9 @@
                     <div class="field-group"><label>Sub Name</label><input type="text" id="newToolSubName" placeholder="Enter sub name"></div>
                     <div class="field-group"><label>HTML Code</label><textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="newToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field-group"><label>Show Fire GIF</label>
+                        <select id="newToolFire"><option value="true">Yes (🔥)</option><option value="false">No</option></select>
+                    </div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminAddTool()" style="background:#FF0033;color:#fff;">💾 Save Tool</button>
                         <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
@@ -1091,6 +1122,9 @@
                     <div class="field-group"><label>Sub Name</label><input type="text" id="editToolSubName"></div>
                     <div class="field-group"><label>HTML Code</label><textarea id="editToolHtml" style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field-group"><label>Show Fire GIF</label>
+                        <select id="editToolFire"><option value="true">Yes (🔥)</option><option value="false">No</option></select>
+                    </div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminUpdateTool()" style="background:#FF0033;color:#fff;">💾 Update Tool</button>
                         <button class="btn-edit" onclick="document.getElementById('editToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
@@ -1208,6 +1242,7 @@
     </div>
 </div>
 
+<!-- ===== POPUPS ===== -->
 <div class="password-overlay" id="passwordOverlay">
     <div class="password-modal">
         <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
@@ -1219,11 +1254,44 @@
     </div>
 </div>
 
-<div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending payments</div></div></div>
-<div class="overlay" id="pendingVerificationsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button><h2>⏳ Pending Verifications</h2><div id="pendingVerificationsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No pending verifications</div></div></div>
-<div class="overlay" id="usersPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('usersPopup')">✕</button><h2>👤 Users</h2><div style="display:flex;gap:8px;margin-bottom:6px;"><button class="btn-submit btn-primary" style="flex:1;" onclick="showVerifiedUsers()">✅ Verified Users</button><button class="btn-submit btn-gold" style="flex:1;" onclick="showAddUserForm()">➕ Add User</button></div><div id="usersContent"></div></div></div>
-<div class="overlay" id="userDetailPopup"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="closeModal('userDetailPopup')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group" id="userDetailActions"><button class="btn-sm btn-give" onclick="giveFreeCredits()">🎁 Give</button><button class="btn-sm btn-block" onclick="blockUser()">🚫 Block</button><button class="btn-sm btn-remove" onclick="removeUser()">🗑️ Remove</button><button class="btn-sm btn-chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:6px;"><label style="font-size:0.45rem;color:var(--text-secondary);">Add Free Credits</label><input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:4px 8px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.6rem;outline:none;"><button class="btn-submit btn-success" style="margin-top:3px;font-size:0.55rem;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
-<div class="overlay" id="chatPopup"><div class="modal" style="max-width:720px;"><button class="modal-close" onclick="closeModal('chatPopup')">✕</button><h2>💬 Chat</h2><input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()"><div style="display:flex;gap:8px;margin-bottom:4px;"><div style="flex:1;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;max-height:240px;overflow-y:auto;" id="chatUserList"></div><div style="flex:2;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:6px;display:flex;flex-direction:column;"><div style="font-size:0.45rem;color:var(--text-secondary);margin-bottom:3px;" id="chatWithUserLabel">Select a user to chat</div><div class="chat-msg-list" id="chatMsgBox" style="flex:1;max-height:180px;"></div><div class="chat-input-area"><input type="text" id="chatInputBox" placeholder="Type message..."><button onclick="sendChatMessage()">Send</button></div></div></div></div></div>
+<div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:16px;">No pending payments</div></div></div>
+
+<div class="overlay" id="pendingVerificationsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button><h2>⏳ Pending Verifications</h2><div id="pendingVerificationsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:16px;">No pending verifications</div></div></div>
+
+<!-- ===== BIGGER USERS POPUP ===== -->
+<div class="overlay" id="usersPopup">
+    <div class="modal" style="max-width:820px;">
+        <button class="modal-close" onclick="closeModal('usersPopup')">✕</button>
+        <h2>👤 Users</h2>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button class="btn-submit btn-primary" style="flex:1;" onclick="showVerifiedUsers()">✅ Verified Users</button>
+            <button class="btn-submit btn-gold" style="flex:1;" onclick="showAddUserForm()">➕ Add User</button>
+        </div>
+        <div id="usersContent"></div>
+    </div>
+</div>
+
+<div class="overlay" id="userDetailPopup"><div class="modal" style="max-width:620px;"><button class="modal-close" onclick="closeModal('userDetailPopup')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group" id="userDetailActions"><button class="btn-sm btn-give" onclick="giveFreeCredits()">🎁 Give</button><button class="btn-sm btn-block" onclick="blockUser()">🚫 Block</button><button class="btn-sm btn-remove" onclick="removeUser()">🗑️ Remove</button><button class="btn-sm btn-chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:6px;"><label style="font-size:0.5rem;color:var(--text-secondary);">Add Free Credits</label><input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:6px 10px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.65rem;outline:none;"><button class="btn-submit btn-success" style="margin-top:3px;font-size:0.6rem;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
+
+<!-- ===== BIGGER CHAT POPUP ===== -->
+<div class="overlay" id="chatPopup">
+    <div class="modal" style="max-width:820px;">
+        <button class="modal-close" onclick="closeModal('chatPopup')">✕</button>
+        <h2>💬 Chat</h2>
+        <input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()">
+        <div style="display:flex;gap:10px;margin-bottom:6px;min-height:350px;">
+            <div style="flex:1;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:8px;max-height:400px;overflow-y:auto;min-width:200px;" id="chatUserList"></div>
+            <div style="flex:2;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:8px;display:flex;flex-direction:column;min-height:350px;">
+                <div style="font-size:0.55rem;color:var(--text-secondary);margin-bottom:4px;" id="chatWithUserLabel">Select a user to chat</div>
+                <div class="chat-msg-list" id="chatMsgBox" style="flex:1;max-height:280px;"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInputBox" placeholder="Type message...">
+                    <button onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="cursor-glow" id="cursorGlow"></div>
 
@@ -1699,14 +1767,14 @@ function renderPendingPayments() {
     document.getElementById('noPendingPayments').style.display = 'none';
     pending.forEach((p, idx) => {
         const actualIdx = appState.payments.indexOf(p);
-        container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:8px;margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${p.userEmail}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Amount:</span><span style="color:#FFD700;">₹${p.amount}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Credits:</span><span style="color:#FFD700;">${p.credits}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Txn ID:</span><span style="color:#FFD700;">${p.transactionId || 'N/A'}</span></div>
-            <div style="display:flex;gap:6px;margin-top:4px;">
-                <button onclick="window.adminApprovePayment(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
-                <button onclick="window.adminRejectPayment(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
+        container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${p.userEmail}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Amount:</span><span style="color:#FFD700;">₹${p.amount}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Credits:</span><span style="color:#FFD700;">${p.credits}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Txn ID:</span><span style="color:#FFD700;">${p.transactionId || 'N/A'}</span></div>
+            <div style="display:flex;gap:8px;margin-top:6px;">
+                <button onclick="window.adminApprovePayment(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
+                <button onclick="window.adminRejectPayment(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
             </div>
         </div>`;
     });
@@ -1741,15 +1809,15 @@ function renderPendingVerifications() {
     document.getElementById('noPendingVerifications').style.display = 'none';
     pending.forEach((req, idx) => {
         const actualIdx = appState.verificationRequests.indexOf(req);
-        container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:8px;margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${req.userEmail}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><span style="color:var(--text-muted);">Account ID:</span><span style="color:#FFD700;">${req.accountId || 'N/A'}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.5rem;color:var(--text-secondary);padding:2px 0;"><label style="font-size:0.4rem;color:var(--text-muted);">Free Credits:</label>
-                <input type="number" id="verifyFreeCredits_${idx}" value="${req.freeCredits || appState.offerCredits || 10}" style="width:80px;padding:2px 4px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.45rem;text-align:center;">
+        container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${req.userEmail}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Account ID:</span><span style="color:#FFD700;">${req.accountId || 'N/A'}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><label style="font-size:0.45rem;color:var(--text-muted);">Free Credits:</label>
+                <input type="number" id="verifyFreeCredits_${idx}" value="${req.freeCredits || appState.offerCredits || 10}" style="width:100px;padding:4px 6px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.5rem;text-align:center;">
             </div>
-            <div style="display:flex;gap:6px;margin-top:4px;">
-                <button onclick="window.adminApproveVerification(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
-                <button onclick="window.adminRejectVerification(${actualIdx})" style="flex:1;padding:4px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.45rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
+            <div style="display:flex;gap:8px;margin-top:6px;">
+                <button onclick="window.adminApproveVerification(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
+                <button onclick="window.adminRejectVerification(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
             </div>
         </div>`;
     });
@@ -1785,13 +1853,13 @@ window.adminRejectVerification = function(idx) {
     } 
 };
 
-function showVerifiedUsers() { const container = document.getElementById('usersContent'); container.innerHTML = `<input class="search-input" id="userSearchInput" placeholder="Search..." oninput="searchUsersInPopup()"><div class="user-list-scroll" id="verifiedUsersList"></div>`; renderVerifiedUsersList(); }
+function showVerifiedUsers() { const container = document.getElementById('usersContent'); container.innerHTML = `<input class="search-input" id="userSearchInput" placeholder="Search by name, email, broker..." oninput="searchUsersInPopup()"><div class="user-list-scroll" id="verifiedUsersList"></div>`; renderVerifiedUsersList(); }
 function renderVerifiedUsersList(filter = '') {
     const container = document.getElementById('verifiedUsersList'); if (!container) return; container.innerHTML = '';
     const users = appState.users.filter(u => u.verified === true);
     const filtered = users.filter(u => (u.name || '').toLowerCase().includes(filter) || (u.email || '').toLowerCase().includes(filter) || (u.broker || '').toLowerCase().includes(filter) || (u.accountId || '').toLowerCase().includes(filter));
-    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:12px;">No verified users found</div>'; return; }
-    filtered.forEach((u, idx) => { const actualIdx = appState.users.indexOf(u); container.innerHTML += `<div class="user-list-item" onclick="window.openUserDetailPopup(${actualIdx})"><span style="color:var(--text-secondary);">${u.name || u.email}</span><span style="color:#FFD700;font-size:0.5rem;">${u.credits || 0}cr</span><span class="status-verified">${u.adminAdded ? 'Admin' : 'Verified'}</span></div>`; });
+    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:20px;">No verified users found</div>'; return; }
+    filtered.forEach((u, idx) => { const actualIdx = appState.users.indexOf(u); container.innerHTML += `<div class="user-list-item" onclick="window.openUserDetailPopup(${actualIdx})"><span style="color:var(--text-secondary);font-size:0.65rem;">${u.name || u.email}</span><span style="color:#FFD700;font-size:0.6rem;">${u.credits || 0}cr</span><span class="status-verified">${u.adminAdded ? 'Admin' : 'Verified'}</span></div>`; });
 }
 window.searchUsersInPopup = function() { const query = document.getElementById('userSearchInput')?.value?.toLowerCase().trim() || ''; renderVerifiedUsersList(query); };
 function showAddUserForm() {
@@ -1828,7 +1896,7 @@ window.openUserDetailPopup = function(idx) {
             <div class="user-detail-row"><span class="label">Total Payments:</span><span class="value">${userPayments.length}</span></div>
             <div class="user-detail-row"><span class="label">Successful Payments:</span><span class="value">${successCount}</span></div>
             <div class="user-detail-row"><span class="label">Total Amount Paid:</span><span class="value" style="color:#00FF66;">₹${totalPaid}</span></div>
-            <div class="user-detail-row"><span class="label">Recent Payment:</span><span class="value" style="font-size:0.5rem;color:var(--text-secondary);">${userPayments[userPayments.length-1]?.date ? new Date(userPayments[userPayments.length-1].date).toLocaleString() : 'N/A'}</span></div>
+            <div class="user-detail-row"><span class="label">Recent Payment:</span><span class="value" style="font-size:0.55rem;color:var(--text-secondary);">${userPayments[userPayments.length-1]?.date ? new Date(userPayments[userPayments.length-1].date).toLocaleString() : 'N/A'}</span></div>
         `;
     } else {
         paymentDetails = `<div class="user-detail-row"><span class="label">Payments:</span><span class="value" style="color:var(--text-muted);">No payment history</span></div>`;
@@ -1866,14 +1934,14 @@ function renderChatUserList(filter = '') {
     chatKeys.forEach(key => { const email = key.replace(/_/g, '.'); const user = appState.users.find(u => u.email === email); if (user) { const msgs = appState.chats[key] || []; const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null; const unread = msgs.filter(m => m.sender === 'user' && !m.read).length; chatUsers.push({ user, lastMsg, unread, key }); } });
     chatUsers.sort((a, b) => { const timeA = a.lastMsg?.timestamp || 0; const timeB = b.lastMsg?.timestamp || 0; return new Date(timeB) - new Date(timeA); });
     const filtered = chatUsers.filter(c => (c.user.name || '').toLowerCase().includes(filter) || c.user.email.toLowerCase().includes(filter));
-    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">No chat users found</div>'; return; }
-    filtered.forEach(c => { const unreadBadge = c.unread > 0 ? `<span style="background:#FF0033;color:#fff;font-size:0.4rem;padding:1px 5px;border-radius:8px;margin-left:3px;">${c.unread}</span>` : ''; const lastMsgPreview = c.lastMsg ? (c.lastMsg.message.substring(0, 16) + (c.lastMsg.message.length > 16 ? '...' : '')) : 'No msgs'; container.innerHTML += `<div class="user-list-item" onclick="window.selectChatUser('${c.user.email}')" style="${chatSelectedUser === c.user.email ? 'background:rgba(255,0,51,0.05);' : ''}"><span style="color:var(--text-secondary);font-size:0.5rem;">${c.user.name || c.user.email}</span><span style="color:var(--text-muted);font-size:0.4rem;">${lastMsgPreview}</span>${unreadBadge}</div>`; });
+    if (filtered.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.5rem;text-align:center;padding:16px;">No chat users found</div>'; return; }
+    filtered.forEach(c => { const unreadBadge = c.unread > 0 ? `<span style="background:#FF0033;color:#fff;font-size:0.45rem;padding:1px 7px;border-radius:10px;margin-left:4px;">${c.unread}</span>` : ''; const lastMsgPreview = c.lastMsg ? (c.lastMsg.message.substring(0, 20) + (c.lastMsg.message.length > 20 ? '...' : '')) : 'No msgs'; container.innerHTML += `<div class="user-list-item" onclick="window.selectChatUser('${c.user.email}')" style="${chatSelectedUser === c.user.email ? 'background:rgba(255,0,51,0.05);' : ''}"><span style="color:var(--text-secondary);font-size:0.6rem;">${c.user.name || c.user.email}</span><span style="color:var(--text-muted);font-size:0.5rem;">${lastMsgPreview}</span>${unreadBadge}</div>`; });
 }
 window.selectChatUser = function(email) { chatSelectedUser = email; document.getElementById('chatWithUserLabel').textContent = '💬 Chat with: ' + (appState.users.find(u => u.email === email)?.name || email); renderChatUserList(document.getElementById('chatSearchInput')?.value || ''); loadChatMessages(); };
 function loadChatMessages() {
-    const box = document.getElementById('chatMsgBox'); if (!box || !chatSelectedUser) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">Select a user to chat</div>'; return; }
+    const box = document.getElementById('chatMsgBox'); if (!box || !chatSelectedUser) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:20px;">Select a user to chat</div>'; return; }
     const key = chatSelectedUser.replace(/[.#$\/\[\]]/g, '_'); const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    if (msgs.length === 0) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:12px;">No messages</div>'; return; }
+    if (msgs.length === 0) { box.innerHTML = '<div style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:20px;">No messages</div>'; return; }
     box.innerHTML = '';
     msgs.forEach(c => { 
         const cls = c.sender === 'admin' ? 'admin' : 'user'; 
@@ -1963,6 +2031,7 @@ window.adminSaveOffer = function() {
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
+// ===== TOOLS LIST WITH FIRE TOGGLE =====
 function renderToolsList() {
     const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
     const tools = appState.tools || [];
@@ -1972,9 +2041,39 @@ function renderToolsList() {
     }
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
-        container.innerHTML += `<div class="tool-item"><div class="tool-info"><div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}<div class="tool-status">${statusText}</div></div><div class="tool-actions"><button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button><button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button></div></div>`;
+        const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
+        const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
+        const fireBtnClass = fireStatus ? '' : 'off';
+        container.innerHTML += `
+            <div class="tool-item">
+                <div class="tool-info">
+                    <div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>
+                    ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
+                    <div class="tool-status">${statusText} | Fire: ${fireStatus ? '✅' : '❌'}</div>
+                </div>
+                <div class="tool-actions">
+                    <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
+                    <button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button>
+                    <button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
+                    <button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button>
+                </div>
+            </div>
+        `;
     });
 }
+
+// ─── TOGGLE FIRE ───
+window.toggleToolFire = function(idx) {
+    const tool = appState.tools[idx];
+    if (!tool) return;
+    tool.showFire = tool.showFire !== undefined ? !tool.showFire : false;
+    saveLocalState();
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+    renderToolsList();
+    // Also update dashboard tools if needed
+    if (window.renderTools) window.renderTools();
+};
+
 window.editTool = function(idx) {
     const tool = appState.tools[idx]; if (!tool) return; window.editingToolIndex = idx;
     document.getElementById('editToolIndex').value = idx;
@@ -1982,6 +2081,7 @@ window.editTool = function(idx) {
     document.getElementById('editToolSubName').value = tool.subName || '';
     document.getElementById('editToolHtml').value = tool.htmlCode || '';
     document.getElementById('editToolStatus').value = tool.visibility || 'visible';
+    document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true';
     document.getElementById('editToolForm').style.display = 'block';
     document.getElementById('addToolForm').style.display = 'none';
 };
@@ -1991,10 +2091,11 @@ window.adminUpdateTool = function() {
     const subName = document.getElementById('editToolSubName').value.trim();
     const htmlCode = document.getElementById('editToolHtml').value.trim();
     const visibility = document.getElementById('editToolStatus').value;
+    const showFire = document.getElementById('editToolFire').value === 'true';
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
-    appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility };
+    appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire };
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
@@ -2012,17 +2113,18 @@ window.deleteTool = function(idx) {
         renderToolsList(); 
     } 
 };
-window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; };
+window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; };
 window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim();
     const subName = document.getElementById('newToolSubName').value.trim();
     const htmlCode = document.getElementById('newToolHtml').value.trim();
     const visibility = document.getElementById('newToolStatus').value;
+    const showFire = document.getElementById('newToolFire').value === 'true';
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
     if (!appState.tools) appState.tools = [];
-    appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility });
+    appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire });
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
@@ -2137,6 +2239,7 @@ window.adminAddBroker = adminAddBroker; window.adminDeleteBroker = adminDeleteBr
 window.adminSaveOffer = adminSaveOffer; window.saveAdminSettings = saveAdminSettings;
 window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
 window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.toggleToolVisibility = toggleToolVisibility; window.deleteTool = deleteTool; window.showAddToolForm = showAddToolForm; window.adminAddTool = adminAddTool;
+window.toggleToolFire = toggleToolFire;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
