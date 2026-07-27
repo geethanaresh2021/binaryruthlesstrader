@@ -252,12 +252,13 @@
             transition: all 0.4s ease;
         }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.85; } }
+        
         .brand-name-sm {
             font-family: 'Orbitron', sans-serif; font-weight: 900;
             font-size: clamp(0.7rem, 1.3vw, 1.1rem); letter-spacing: 1px; white-space: nowrap;
         }
         .brand-name-sm .binary { color: var(--text-primary); }
-        .brand-name-sm .ruthless { color: #FF0033; }
+        .brand-name-sm .ruthless { color: #FF0033 !important; }
         .brand-name-sm .trader { color: var(--text-primary); }
         
         .social-icons-header {
@@ -1007,11 +1008,17 @@
                 </div>
             </div>
             
+            <!-- ===== OFFER SETTINGS (REMOVED FREE CREDITS FIELD) ===== -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
-                <div class="field-group"><label>Offer Name</label><input type="text" id="offerName" placeholder="FREE SIGNAL OFFER" disabled></div>
-                <div class="field-group"><label>Offer Description (Use {credits} for number)</label><textarea id="offerDescription" placeholder="Get {credits} FREE signals..." disabled></textarea></div>
-                <div class="field-group"><label>Free Credits for New Verified Users</label><input type="number" id="adminOfferCredits" value="10" disabled></div>
+                <div class="field-group">
+                    <label>Offer Name</label>
+                    <input type="text" id="offerName" placeholder="FREE SIGNAL OFFER" disabled>
+                </div>
+                <div class="field-group">
+                    <label>Offer Description (The number in this text will be automatically used as Free Credits)</label>
+                    <textarea id="offerDescription" placeholder="Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit..." disabled></textarea>
+                </div>
                 <div class="btn-row">
                     <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
                     <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
@@ -1256,7 +1263,7 @@ let appState = {
     password: 'admin123', 
     offerCredits: 10,
     offerName: 'FREE SIGNAL OFFER',
-    offerDescription: 'Get {credits} FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
+    offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
     darkMode: true,
     upiId: 'binary@ruthless',
     paymentInstructions: 'Please transfer the amount to the UPI ID.',
@@ -1539,7 +1546,7 @@ onValue(dbRef, (snapshot) => {
     const val = snapshot.val();
     if (val) {
         appState = { ...appState, ...val };
-        // Do NOT call saveLocalState() here to avoid loops
+        // Do NOT call saveLocalState() here
         updateUI();
         renderUsersList();
         renderBrokerList();
@@ -1646,7 +1653,7 @@ function loadLocalState() {
 }
 
 function updateUI() {
-    document.getElementById('adminOfferCredits').value = appState.offerCredits || 10;
+    // Removed the free credits field update
     document.getElementById('logoClickCount').value = appState.logoClickCount || 2;
     document.getElementById('notificationMobile').value = appState.notificationMobile || '';
     document.getElementById('notificationEmail').value = appState.notificationEmail || '';
@@ -1872,7 +1879,6 @@ function loadChatMessages() {
         const cls = c.sender === 'admin' ? 'admin' : 'user'; 
         const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; 
         box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`; 
-        // Mark user messages as read when admin views them
         if (c.sender === 'user' && !c.read) c.read = true; 
     });
     box.scrollTop = box.scrollHeight; saveLocalState(); updateChatNotification();
@@ -1928,17 +1934,31 @@ function renderCreditPackList() {
     packs.forEach((p, idx) => { list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span><button class="del-btn" onclick="window.adminDeleteCreditPack(${idx})">✕</button></div>`; });
 }
 
+// ===== UPDATED OFFER SAVE FUNCTION =====
 window.adminSaveOffer = function() {
-    const credits = parseInt(document.getElementById('adminOfferCredits').value);
     const name = document.getElementById('offerName').value.trim() || 'FREE SIGNAL OFFER';
-    const description = document.getElementById('offerDescription').value.trim() || 'Get {credits} FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
-    if (isNaN(credits) || credits < 0) { alert('Enter valid number'); return; }
-    appState.offerCredits = credits;
+    let description = document.getElementById('offerDescription').value.trim() || 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
+    
+    // Extract number from description and use as offerCredits
+    const numberMatch = description.match(/\d+/);
+    if (numberMatch) {
+        const credits = parseInt(numberMatch[0]);
+        if (!isNaN(credits) && credits > 0) {
+            appState.offerCredits = credits;
+        } else {
+            appState.offerCredits = 10; // fallback
+        }
+    } else {
+        appState.offerCredits = 10; // fallback if no number found
+    }
+    
     appState.offerName = name;
     appState.offerDescription = description;
-    saveLocalState(); updateUI(); localStorage.setItem('brt_offer_credits', credits);
+    saveLocalState();
+    updateUI();
+    localStorage.setItem('brt_offer_credits', appState.offerCredits);
     disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('adminOfferCredits').closest('.admin-section').querySelector('.btn-save');
+    const btn = document.getElementById('offerName').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
