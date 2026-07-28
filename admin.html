@@ -1355,14 +1355,23 @@
     </div>
 </div>
 
-<div class="overlay" id="pendingPaymentsPopup"><div class="modal"><button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button><h2>⏳ Pending Payments</h2><div id="pendingPaymentsList" style="max-height:320px;overflow-y:auto;"></div><div id="noPendingPayments" style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:16px;">No pending payments</div></div></div>
+<!-- ===== PENDING PAYMENTS POPUP - BIGGER TEXT ===== -->
+<div class="overlay" id="pendingPaymentsPopup">
+    <div class="modal" style="max-width:820px;">
+        <button class="modal-close" onclick="closeModal('pendingPaymentsPopup')">✕</button>
+        <h2>⏳ Pending Payments</h2>
+        <div id="pendingPaymentsList" style="max-height:400px;overflow-y:auto;"></div>
+        <div id="noPendingPayments" style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:16px;">No pending payments</div>
+    </div>
+</div>
 
+<!-- ===== PENDING VERIFICATIONS POPUP ===== -->
 <div class="overlay" id="pendingVerificationsPopup">
     <div class="modal" style="max-width:820px;">
         <button class="modal-close" onclick="closeModal('pendingVerificationsPopup')">✕</button>
         <h2>⏳ Pending Verifications</h2>
         <div id="pendingVerificationsList" style="max-height:400px;overflow-y:auto;"></div>
-        <div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.55rem;text-align:center;padding:16px;">No pending verifications</div>
+        <div id="noPendingVerifications" style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:16px;">No pending verifications</div>
     </div>
 </div>
 
@@ -1888,25 +1897,67 @@ window.changeAdminPassword = function() {
     document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
+// ─── PENDING PAYMENTS - BIGGER TEXT, NAME, ACCOUNT ID ───
 function renderPendingPayments() {
-    const container = document.getElementById('pendingPaymentsList'); if (!container) return; container.innerHTML = '';
-    const payments = appState.payments || []; const pending = payments.filter(p => p.status === 'pending');
-    if (pending.length === 0) { document.getElementById('noPendingPayments').style.display = 'block'; return; }
+    const container = document.getElementById('pendingPaymentsList'); 
+    if (!container) return; 
+    container.innerHTML = '';
+    const payments = appState.payments || []; 
+    const pending = payments.filter(p => p.status === 'pending');
+    if (pending.length === 0) { 
+        document.getElementById('noPendingPayments').style.display = 'block'; 
+        return; 
+    }
     document.getElementById('noPendingPayments').style.display = 'none';
     pending.forEach((p, idx) => {
         const actualIdx = appState.payments.indexOf(p);
-        container.innerHTML += `<div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:10px;margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">User:</span><span style="color:#FFD700;">${p.userEmail}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Amount:</span><span style="color:#FFD700;">₹${p.amount}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Credits:</span><span style="color:#FFD700;">${p.credits}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-secondary);padding:3px 0;"><span style="color:var(--text-muted);">Txn ID:</span><span style="color:#FFD700;">${p.transactionId || 'N/A'}</span></div>
-            <div style="display:flex;gap:8px;margin-top:6px;">
-                <button onclick="window.adminApprovePayment(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#00FF66;color:#000;">✅ Approve</button>
-                <button onclick="window.adminRejectPayment(${actualIdx})" style="flex:1;padding:6px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#FF0033;color:#fff;">❌ Reject</button>
+        const user = appState.users.find(u => u.email === p.userEmail);
+        const userName = user ? user.name || user.email : p.userEmail;
+        const accountId = user ? user.accountId || 'N/A' : 'N/A';
+        
+        container.innerHTML += `
+            <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                        <span style="color:var(--text-muted);">Name:</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${userName}</span>
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                        <span style="color:var(--text-muted);">Account ID:</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${accountId}</span>
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                        <span style="color:var(--text-muted);">Amount:</span>
+                        <span style="color:#00FF66;font-weight:700;font-size:0.8rem;">₹${p.amount}</span>
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                        <span style="color:var(--text-muted);">Credits:</span>
+                        <span style="color:#FFD700;font-weight:700;font-size:0.8rem;">${p.credits}</span>
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;grid-column:1/2;">
+                        <span style="color:var(--text-muted);">Txn ID / UTR:</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${p.transactionId || 'N/A'}</span>
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;grid-column:2/3;">
+                        <span style="color:var(--text-muted);">Date:</span>
+                        <span style="color:var(--text-secondary);font-size:0.6rem;">${p.date ? new Date(p.date).toLocaleString() : 'N/A'}</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:8px;">
+                    <button onclick="window.adminApprovePayment(${actualIdx})" 
+                        style="flex:1;padding:8px 12px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.6rem;text-transform:uppercase;background:#00FF66;color:#000;letter-spacing:1px;">
+                        ✅ Approve
+                    </button>
+                    <button onclick="window.adminRejectPayment(${actualIdx})" 
+                        style="flex:1;padding:8px 12px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.6rem;text-transform:uppercase;background:#FF0033;color:#fff;letter-spacing:1px;">
+                        ❌ Reject
+                    </button>
+                </div>
             </div>
-        </div>`;
+        `;
     });
 }
+
 window.adminApprovePayment = function(idx) { 
     const payment = appState.payments[idx]; 
     if (!payment || payment.status !== 'pending') return; 
@@ -1920,6 +1971,7 @@ window.adminApprovePayment = function(idx) {
         updatePendingCounts();
     } 
 };
+
 window.adminRejectPayment = function(idx) { 
     const payment = appState.payments[idx]; 
     if (!payment || payment.status !== 'pending') return; 
@@ -1927,10 +1979,12 @@ window.adminRejectPayment = function(idx) {
         payment.status = 'failed'; 
         saveLocalState(); 
         renderPendingPayments(); 
+        renderUsersList();
+        updatePendingCounts();
     } 
 };
 
-// ─── PENDING VERIFICATIONS - WITH NAME, ACCOUNT ID, BROKER, GMAIL, FREE CREDITS (EDITABLE) ───
+// ─── PENDING VERIFICATIONS - DETAILS AND CREDITS EDITABLE ───
 function renderPendingVerifications() {
     const container = document.getElementById('pendingVerificationsList'); 
     if (!container) return; 
@@ -1945,35 +1999,35 @@ function renderPendingVerifications() {
     pending.forEach((req, idx) => {
         const actualIdx = appState.verificationRequests.indexOf(req);
         container.innerHTML += `
-            <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:6px;padding:12px;margin-bottom:10px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;">
-                    <div style="font-size:0.55rem;color:var(--text-secondary);padding:2px 0;">
+            <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
                         <span style="color:var(--text-muted);">Name:</span>
-                        <span style="color:#FFD700;">${req.userName || 'N/A'}</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.userName || 'N/A'}</span>
                     </div>
-                    <div style="font-size:0.55rem;color:var(--text-secondary);padding:2px 0;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
                         <span style="color:var(--text-muted);">Gmail:</span>
-                        <span style="color:#FFD700;">${req.userEmail}</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.userEmail}</span>
                     </div>
-                    <div style="font-size:0.55rem;color:var(--text-secondary);padding:2px 0;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
                         <span style="color:var(--text-muted);">Account ID:</span>
-                        <span style="color:#FFD700;">${req.accountId || 'N/A'}</span>
+                        <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.accountId || 'N/A'}</span>
                     </div>
-                    <div style="font-size:0.55rem;color:var(--text-secondary);padding:2px 0;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
                         <span style="color:var(--text-muted);">Broker:</span>
-                        <span style="color:#FFD700;">${req.broker || 'N/A'}</span>
+                        <span style="color:#FFD700;font-weight:700;font-size:0.75rem;">${req.broker || 'N/A'}</span>
                     </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;">
-                    <span style="font-size:0.45rem;color:var(--text-muted);">Free Credits:</span>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;">
+                    <span style="font-size:0.55rem;color:var(--text-muted);font-weight:600;">Free Credits:</span>
                     <input type="number" id="verifyFreeCredits_${idx}" value="${req.freeCredits || appState.offerCredits || 10}" 
-                        style="width:80px;padding:4px 6px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.5rem;text-align:center;">
+                        style="width:100px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.6rem;text-align:center;font-weight:600;">
                     <button onclick="window.adminApproveVerification(${actualIdx})" 
-                        style="flex:1;padding:6px 12px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#00FF66;color:#000;min-width:80px;">
+                        style="flex:1;padding:8px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.6rem;text-transform:uppercase;background:#00FF66;color:#000;letter-spacing:1px;min-width:100px;">
                         ✅ Approve
                     </button>
                     <button onclick="window.adminRejectVerification(${actualIdx})" 
-                        style="flex:1;padding:6px 12px;border-radius:4px;border:none;font-weight:700;cursor:pointer;font-size:0.5rem;text-transform:uppercase;background:#FF0033;color:#fff;min-width:80px;">
+                        style="flex:1;padding:8px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.6rem;text-transform:uppercase;background:#FF0033;color:#fff;letter-spacing:1px;min-width:100px;">
                         ❌ Reject
                     </button>
                 </div>
@@ -2003,6 +2057,7 @@ window.adminApproveVerification = function(idx) {
         updatePendingCounts();
     }
 };
+
 window.adminRejectVerification = function(idx) { 
     const request = appState.verificationRequests[idx]; 
     if (!request || request.status !== 'pending') return; 
@@ -2144,8 +2199,6 @@ window.openUserDetailPopup = function(idx) {
         <div class="user-detail-row"><span class="label">Free Credits:</span><span class="value">${user.freeCredits || 0}</span></div>
         <div class="user-detail-row"><span class="label">Available Credits:</span><span class="value green">${user.credits || 0}</span></div>
         <div class="user-detail-row"><span class="label">Today Used:</span><span class="value">${user.todayUsed || 0}</span></div>
-        <div class="user-detail-row"><span class="label">Total Used:</span><span class="value">${user.totalUsed || 0}</span></div>
-        <div class="user-detail-row"><span class="label">Signals Generated:</span><span class="value">${user.signalsUsed || 0}</span></div>
         <div class="user-detail-row"><span class="label">Chat Messages:</span><span class="value">${chatCount}</span></div>
         ${paymentDetails}
         <div class="user-detail-row"><span class="label">Registered:</span><span class="value" style="font-size:0.55rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
