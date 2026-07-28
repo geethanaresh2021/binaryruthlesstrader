@@ -1271,7 +1271,7 @@
             text-shadow: 0 0 20px rgba(255, 0, 51, 0.1);
         }
 
-        /* ─── POPUP CONTAINER (for Login/Verify messages) ─── */
+        /* ─── INFO POPUP (for Login/Verify messages) ─── */
         .info-popup-overlay {
             position: fixed;
             top: 0;
@@ -1372,6 +1372,12 @@
         }
         .info-popup .popup-btn.btn-white:hover {
             box-shadow: 0 6px 28px rgba(255, 255, 255, 0.2);
+        }
+
+        /* ─── POPUP BUTTON CENTER ─── */
+        .info-popup .popup-btn.center-btn {
+            display: block;
+            margin: 0 auto;
         }
 
         @keyframes modalSlide {
@@ -1513,6 +1519,12 @@
             height: 60px;
             resize: vertical;
             font-size: 0.7rem;
+        }
+
+        /* ─── ACCOUNT ID ONLY NUMBERS ─── */
+        .modal input[type="text"].account-id-input {
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         .modal .btn-submit {
@@ -1992,7 +2004,7 @@
             <span class="popup-icon" id="infoPopupIcon">ℹ️</span>
             <h3 id="infoPopupTitle">Info</h3>
             <p id="infoPopupMessage">Message here</p>
-            <button class="popup-btn" id="infoPopupBtn" style="display:none;">Continue</button>
+            <button class="popup-btn center-btn" id="infoPopupBtn" style="display:none;">Continue</button>
         </div>
     </div>
 
@@ -2042,7 +2054,7 @@
             <label>Select Your Broker</label>
             <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
             <label>Account ID</label>
-            <input type="text" id="verifyAccountId" placeholder="Enter Account ID" />
+            <input type="text" class="account-id-input" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
             <div class="error-msg" id="verifyError"></div>
             <div class="success-msg" id="verifySuccess"></div>
             <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
@@ -2304,7 +2316,7 @@
             if (btnText) {
                 btn.style.display = 'block';
                 btn.textContent = btnText;
-                btn.className = 'popup-btn';
+                btn.className = 'popup-btn center-btn';
                 if (btnText.toLowerCase().includes('signup') || btnText.toLowerCase().includes('continue')) {
                     btn.classList.add('btn-gold');
                 } else {
@@ -2483,7 +2495,7 @@
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
             
             if (!user) {
-                // User not found - Show signup popup
+                // User not found - Show signup popup with button in center
                 showInfoPopup(
                     '📝',
                     'Account Not Found!',
@@ -2571,6 +2583,7 @@
                 freeCredits: 0,
                 signalsUsed: 0,
                 todayUsed: 0,
+                totalUsed: 0,
                 blocked: false,
                 registeredAt: new Date().toISOString()
             };
@@ -2600,13 +2613,30 @@
             if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
             if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
             if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
-            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID'; return; }
+            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID (Numbers only)'; return; }
             
-            // Check if user exists
-            const user = appState.users.find(u => u.email === email);
+            // Check if user exists - if not, create one
+            let user = appState.users.find(u => u.email === email);
             if (!user) {
-                errorEl.textContent = '❌ User not found. Please sign up first.';
-                return;
+                // Create new user if not exists
+                const brokerData = appState.brokers.find(b => b.name === broker);
+                user = {
+                    email,
+                    accountId: accountId,
+                    name: name,
+                    broker: broker,
+                    verified: false,
+                    deposit: 0,
+                    requiredDeposit: brokerData ? brokerData.minDeposit : 0,
+                    credits: 0,
+                    freeCredits: 0,
+                    signalsUsed: 0,
+                    todayUsed: 0,
+                    totalUsed: 0,
+                    blocked: false,
+                    registeredAt: new Date().toISOString()
+                };
+                appState.users.push(user);
             }
             
             if (user.blocked) {
