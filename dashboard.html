@@ -71,6 +71,7 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #fff;
             --popup-label: #FFD700;
+            --popup-close-color: #FF0033;
         }
 
         /* Light Mode */
@@ -115,6 +116,7 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #111;
             --popup-label: #FF0033;
+            --popup-close-color: #FF0033;
         }
         
         .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg-primary); position: relative; transition: background 0.4s ease; }
@@ -354,6 +356,7 @@
         .user-info-container .user-actions .btn-gold { background: #FFD700; color: #000; }
         .user-info-container .user-actions .btn-green { background: #00FF66; color: #000; }
         .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
+        .user-info-container .user-actions .btn-account { background: #8B5CF6; color: #fff; }
         .btn-chat-wrapper { position: relative; display: inline-block; }
         .chat-badge { 
             position: absolute; top: -6px; right: -6px; 
@@ -377,7 +380,7 @@
         .credits-container .credit-item .label { font-size: 0.48rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
         
-        /* ─── TOOLS ─── */
+        /* ─── TOOLS CONTAINER ─── */
         .tools-container {
             display: flex;
             flex-direction: column;
@@ -420,7 +423,6 @@
         .tool-btn:hover::before { opacity: 1; }
         .tool-btn:active { transform: scale(0.97); }
         
-        /* ─── FIRE EMOJI SLOW ZOOM ─── */
         .tool-fire {
             display: inline-block;
             font-size: 1em;
@@ -435,7 +437,6 @@
         .tool-fire:first-child { animation-delay: 0s; }
         .tool-fire:last-child { animation-delay: 0.4s; }
         
-        /* ─── TOOL NAME SLOW ZOOM ─── */
         .tool-name {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1.1rem, 1.8vw, 1.6rem);
@@ -471,6 +472,7 @@
             z-index: 1;
         }
         
+        /* ─── TOOL FULLSCREEN WITH SLIM TOP BAR ─── */
         .tool-fullscreen-overlay {
             position: fixed;
             top: 0;
@@ -484,23 +486,148 @@
             padding: 0;
         }
         .tool-fullscreen-overlay.active { display: flex; }
-        .tool-fullscreen-header { display: flex; justify-content: flex-end; padding: 4px 8px; flex-shrink: 0; background: rgba(0,0,0,0.95); z-index: 1; position: relative; }
-        .tool-fullscreen-close { font-size: 1.6rem; color: #FF0033; cursor: pointer; background: none; border: none; font-weight: 700; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 4px 12px; }
-        .tool-fullscreen-close:hover { transform: scale(1.2) rotate(90deg); text-shadow: 0 0 30px rgba(255,0,51,0.3); }
+        
+        /* Slim Top Bar */
+        .tool-fullscreen-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 4px 12px; 
+            flex-shrink: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 1; 
+            position: relative;
+            border-bottom: 1px solid rgba(255,0,51,0.15);
+            min-height: 36px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tool-fullscreen-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tool-fullscreen-header .header-left .user-name-tool {
+            color: #FFD700;
+            font-size: 0.6rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .tool-fullscreen-header .header-left .credits-tool {
+            color: #00FF66;
+            font-size: 0.55rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .tool-fullscreen-header .header-left .used-tool {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
+        }
+        .tool-fullscreen-header .header-left .divider {
+            color: var(--text-muted);
+            font-size: 0.5rem;
+        }
+        .tool-fullscreen-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tool-fullscreen-header .header-right .recent-tools-btn {
+            background: rgba(255,215,0,0.08);
+            border: 1px solid rgba(255,215,0,0.15);
+            color: #FFD700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.45rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .tool-fullscreen-header .header-right .recent-tools-btn:hover {
+            background: rgba(255,215,0,0.15);
+            transform: scale(1.05);
+        }
+        .tool-fullscreen-header .header-right .tool-name-display {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .tool-fullscreen-close { 
+            font-size: 1.4rem; 
+            color: #FF0033; 
+            cursor: pointer; 
+            background: none; 
+            border: none; 
+            font-weight: 700; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            padding: 0 6px;
+            line-height: 1;
+        }
+        .tool-fullscreen-close:hover { 
+            transform: scale(1.2) rotate(90deg); 
+            text-shadow: 0 0 30px rgba(255,0,51,0.3); 
+        }
+        
         .tool-fullscreen-content { flex: 1; overflow: hidden; }
         .tool-fullscreen-content iframe { width: 100%; height: 100%; border: none; background: #0a0a0a; }
         
-        /* ─── CHAT POPUP - BLACK BACKGROUND ─── */
+        /* ─── RECENT TOOLS MINIMIZED BUTTON ─── */
+        .recent-tools-mini {
+            display: none;
+            margin: 4px 0;
+            padding: 8px 16px;
+            background: var(--tool-btn-bg);
+            border: 2px solid var(--tool-btn-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+        }
+        .recent-tools-mini:hover {
+            border-color: #FFD700;
+            transform: scale(1.02);
+        }
+        .recent-tools-mini .mini-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            color: #FFD700;
+            letter-spacing: 1px;
+        }
+        .recent-tools-mini .mini-sub {
+            font-size: 0.45rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        /* ─── CREDIT POPUP ─── */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px); animation: fadeIn 0.3s ease; }
         .overlay.active { display: flex; }
         @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
+        
         .modal { background: var(--popup-bg); backdrop-filter: blur(20px); border: 2px solid var(--popup-border); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; min-height: 280px; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 0 80px rgba(255,0,51,0.08); animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes modalSlide { 0% { opacity: 0; transform: translateY(30px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .modal::-webkit-scrollbar { width: 4px; }
         .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.3rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 4px 8px; border-radius: 6px; }
+        
+        .modal-close { 
+            position: absolute; 
+            top: 10px; 
+            right: 14px; 
+            font-size: 1.5rem; 
+            color: #FF0033; 
+            cursor: pointer; 
+            background: none; 
+            border: none; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            padding: 4px 8px; 
+            border-radius: 6px;
+            font-weight: 700;
+        }
         .modal-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255,0,51,0.06); }
         .modal-close:active { transform: scale(0.8); }
+        
         .modal h2 { color: var(--popup-label); text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
         .modal label { display: block; font-size: 0.55rem; color: var(--popup-label); margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 12px; background: var(--input-bg); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 0.75rem; outline: none; transition: all 0.4s ease; }
@@ -509,8 +636,12 @@
         .modal .btn-submit { width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.75rem; }
         .modal .btn-submit:hover { transform: scale(1.03); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
         .modal .btn-submit:active { transform: scale(0.97); }
+        .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
+        .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
+        .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 3px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 3px; font-family: 'Roboto Mono', monospace; }
+        
         .credit-packs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 4px 0; }
         .credit-pack { flex: 1; min-width: 80px; max-width: 120px; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 8px; text-align: center; border: 1px solid rgba(255,0,51,0.08); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
         .credit-pack:hover { border-color: #FF0033; transform: translateY(-3px) scale(1.03); box-shadow: 0 0 24px rgba(255,0,51,0.05); }
@@ -556,7 +687,6 @@
         .chat-container::-webkit-scrollbar { width: 5px; }
         .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        /* ─── INCOMING (Admin → User): WHITE TEXT, RED BG ─── */
         .chat-message.admin { 
             background: #FF0033 !important; 
             color: #ffffff !important; 
@@ -570,7 +700,6 @@
             word-wrap: break-word;
             line-height: 1.5;
         }
-        /* ─── OUTGOING (User → Admin): RED TEXT, WHITE BG ─── */
         .chat-message.user { 
             background: #ffffff !important; 
             color: #FF0033 !important; 
@@ -618,6 +747,19 @@
             transition: all 0.3s ease; 
         }
         .chat-input-area button:hover { transform: scale(1.04); }
+        
+        /* ─── ACCOUNT DETAILS MODAL ─── */
+        .account-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.65rem;
+        }
+        .account-detail-row .label { color: var(--text-muted); }
+        .account-detail-row .value { color: #FFD700; font-weight: 600; }
+        .account-detail-row .value.green { color: #00FF66; }
+        .account-detail-row .value.red { color: #FF0033; }
         
         /* ─── FEATURES ─── */
         .features-section { padding: 4px 0 4px; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); flex-shrink: 0; margin-top: 6px; }
@@ -683,6 +825,13 @@
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
             .chat-message { font-size: 0.75rem; padding: 6px 10px; }
             .chat-container { max-height: 250px; min-height: 100px; }
+            .tool-fullscreen-header { padding: 2px 8px; min-height: 30px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.5rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.45rem; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.4rem; }
+            .tool-fullscreen-close { font-size: 1.2rem; }
+            .recent-tools-mini { padding: 6px 12px; }
+            .recent-tools-mini .mini-title { font-size: 0.5rem; }
         }
         @media (max-width: 480px) {
             .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
@@ -711,6 +860,15 @@
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
             .chat-message { font-size: 0.7rem; padding: 5px 8px; }
             .chat-container { max-height: 200px; min-height: 80px; }
+            .tool-fullscreen-header { padding: 2px 6px; min-height: 26px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.4rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.4rem; }
+            .tool-fullscreen-header .header-left .used-tool { font-size: 0.35rem; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.35rem; }
+            .tool-fullscreen-close { font-size: 1rem; }
+            .recent-tools-mini { padding: 4px 10px; }
+            .recent-tools-mini .mini-title { font-size: 0.45rem; }
+            .account-detail-row { font-size: 0.5rem; padding: 4px 0; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -720,7 +878,8 @@
         .red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
         .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
         .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
-        .tool-btn, .user-logout-btn {
+        .tool-btn, .user-logout-btn, .recent-tools-mini,
+        .tool-fullscreen-header .header-right .recent-tools-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -729,7 +888,7 @@
         .feature-card:hover, .stat-item:hover, .social-icons a:hover,
         .admin-nav-bar .nav-buttons button:hover, .modal .btn-submit:hover,
         .modal-close:hover, .user-info-container:hover, .credits-container:hover,
-        .tool-btn:hover, .user-logout-btn:hover {
+        .tool-btn:hover, .user-logout-btn:hover, .recent-tools-mini:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover, .admin-nav-bar .nav-buttons button:hover,
@@ -740,7 +899,7 @@
         .feature-card:active, .stat-item:active, .social-icons a:active,
         .admin-nav-bar .nav-buttons button:active, .modal .btn-submit:active,
         .modal-close:active, .user-info-container:active, .credits-container:active,
-        .tool-btn:active, .user-logout-btn:active {
+        .tool-btn:active, .user-logout-btn:active, .recent-tools-mini:active {
             transform: scale(0.97);
         }
     </style>
@@ -785,11 +944,12 @@
             </div>
         </div>
         
+        <!-- USER INFO CONTAINER -->
         <div class="user-info-container" id="userInfoContainer">
             <span class="user-name" id="dashUserName">User</span>
             <div class="user-actions">
+                <button class="btn-sm btn-account" onclick="openAccountModal()">👤 Account</button>
                 <button class="btn-sm btn-gold" onclick="openAddCreditsModal()">💳 Add Credits</button>
-                <button class="btn-sm btn-green" onclick="openPaymentHistoryModal()">📜 History</button>
                 <div class="btn-chat-wrapper">
                     <button class="btn-sm btn-chat" onclick="openChatModal()">💬 Chat</button>
                     <span class="chat-badge" id="chatBadge"></span>
@@ -797,11 +957,20 @@
             </div>
         </div>
         
+        <!-- CREDITS CONTAINER -->
         <div class="credits-container" id="creditsContainer">
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
             <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
+            <div class="credit-item"><span class="number" id="dashTotalUsed">0</span><span class="label">Total Used</span></div>
         </div>
         
+        <!-- RECENT TOOLS MINI BUTTON -->
+        <div class="recent-tools-mini" id="recentToolsMini" style="display:none;">
+            <div class="mini-title">📌 Recent Tools</div>
+            <div class="mini-sub" id="recentToolsMiniSub">Click to open</div>
+        </div>
+        
+        <!-- TOOLS CONTAINER -->
         <div class="tools-container" id="toolsContainer"></div>
         
         <div class="features-section">
@@ -827,15 +996,40 @@
     </div>
 </div>
 
+<!-- TOOL FULLSCREEN -->
 <div class="tool-fullscreen-overlay" id="toolFullscreen">
     <div class="tool-fullscreen-header">
-        <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
+        <div class="header-left">
+            <span class="user-name-tool" id="toolHeaderUserName">User</span>
+            <span class="divider">|</span>
+            <span class="credits-tool" id="toolHeaderCredits">💰 0</span>
+            <span class="divider">|</span>
+            <span class="used-tool" id="toolHeaderUsed">📊 Used: 0</span>
+        </div>
+        <div class="header-right">
+            <span class="tool-name-display" id="toolHeaderName">Tool</span>
+            <button class="recent-tools-btn" id="toolHeaderRecentBtn" onclick="minimizeTool()">📌 Recent</button>
+            <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
+        </div>
     </div>
     <div class="tool-fullscreen-content">
         <iframe id="toolFullscreenIframe" src="about:blank"></iframe>
     </div>
 </div>
 
+<!-- ACCOUNT MODAL -->
+<div class="overlay" id="accountModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('accountModal')">✕</button>
+        <h2>👤 ACCOUNT DETAILS</h2>
+        <div id="accountDetailsContent"></div>
+        <div style="margin-top:10px;">
+            <button class="btn-submit btn-gold" onclick="openPaymentHistoryModal()" style="margin-top:0;">📜 Payment History</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADD CREDITS MODAL -->
 <div class="overlay" id="addCreditsModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('addCreditsModal')">✕</button>
@@ -848,17 +1042,18 @@
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
             <label>Transaction ID / UTR</label><input type="text" id="transactionIdInput" placeholder="Enter UPI Transaction ID">
             <label style="margin-top:4px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
-            <button class="btn-submit" style="background:#FFD700;color:#000;margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
+            <button class="btn-submit btn-gold" style="margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
         </div>
         <div class="error-msg" id="addCreditsError"></div><div class="success-msg" id="addCreditsSuccess"></div>
     </div>
 </div>
 
+<!-- PAYMENT HISTORY MODAL -->
 <div class="overlay" id="paymentHistoryModal">
     <div class="modal"><button class="modal-close" onclick="closeModal('paymentHistoryModal')">✕</button><h2>📜 PAYMENT HISTORY</h2><div class="history-list" id="paymentHistoryList"></div></div>
 </div>
 
-<!-- ─── CHAT MODAL - BLACK BACKGROUND ─── -->
+<!-- CHAT MODAL -->
 <div class="overlay" id="chatModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('chatModal')">✕</button>
@@ -868,6 +1063,17 @@
             <input type="text" id="chatInput" placeholder="Type your message...">
             <button onclick="sendChatMessage()">Send</button>
         </div>
+    </div>
+</div>
+
+<!-- NO CREDITS POPUP -->
+<div class="overlay" id="noCreditsPopup">
+    <div class="modal" style="max-width:400px;text-align:center;">
+        <button class="modal-close" onclick="closeModal('noCreditsPopup')">✕</button>
+        <span style="font-size:2.5rem;display:block;margin-bottom:4px;">⚠️</span>
+        <h2 style="color:#FF0033;">Insufficient Credits!</h2>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin:8px 0 12px;">You don't have enough credits. Please add credits to continue using tools.</p>
+        <button class="btn-submit btn-gold" onclick="closeModal('noCreditsPopup');openAddCreditsModal();" style="background:#FFD700;color:#000;">💳 Add Credits</button>
     </div>
 </div>
 
@@ -904,7 +1110,6 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
-// Hardcoded signal tool REMOVED
 let appState = {
     offerCredits: 10, upiId: 'binary@ruthless', paymentInstructions: 'Please transfer the amount to the UPI ID below.',
     qrCodeBase64: '', creditPrice: 2, paymentApprovalMode: 'manual', paymentGateway: 'none', paymentEnvironment: 'test',
@@ -925,6 +1130,9 @@ let appState = {
 
 let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
+let currentToolIndex = -1;
+let recentTools = [];
+let isToolMinimized = false;
 
 function applyTheme(darkMode) {
     if (darkMode === false) {
@@ -1023,6 +1231,7 @@ function getCurrentUser() {
             credits: 999,
             signalsUsed: 0,
             todayUsed: 0,
+            totalUsed: 0,
             blocked: false,
             registeredAt: new Date().toISOString()
         };
@@ -1072,6 +1281,21 @@ document.getElementById('dashAdminLogoutBtn').addEventListener('click', function
     }
 });
 
+// ─── RESET TODAY USED AT 12 AM ───
+function resetTodayUsed() {
+    const now = new Date();
+    const lastReset = localStorage.getItem('lastResetDate');
+    const today = now.toDateString();
+    if (lastReset !== today) {
+        appState.users.forEach(u => {
+            u.todayUsed = 0;
+        });
+        localStorage.setItem('lastResetDate', today);
+        saveLocalState();
+        updateUI();
+    }
+}
+
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
     const val = snapshot.val();
@@ -1095,13 +1319,7 @@ onValue(dbRef, (snapshot) => {
             localStorage.setItem('brt_features', JSON.stringify(val.features));
             renderFeatures();
         }
-        if (currentUserEmail) {
-            const key = getChatKey(currentUserEmail);
-            const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-            const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
-            chatUnreadCount = unread;
-            updateChatBadge();
-        }
+        if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1113,7 +1331,7 @@ onValue(dbRef, (snapshot) => {
             if (adminUser) appState.currentUser = adminUser;
         }
         
-        // Do NOT call saveLocalState() here
+        resetTodayUsed();
         updateUI(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
@@ -1130,6 +1348,8 @@ function loadLocalState() {
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
     const featuresData = localStorage.getItem('brt_features');
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
+    const creditPacksData = localStorage.getItem('brt_creditPacks');
+    if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
     
     applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
     
@@ -1149,6 +1369,7 @@ function loadLocalState() {
                 credits: 999,
                 signalsUsed: 0,
                 todayUsed: 0,
+                totalUsed: 0,
                 blocked: false,
                 registeredAt: new Date().toISOString()
             };
@@ -1169,6 +1390,7 @@ function loadLocalState() {
         window.location.href = 'index.html';
         return;
     }
+    resetTodayUsed();
     updateUI(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
 }
 
@@ -1178,7 +1400,7 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── RENDER TOOLS WITH FIRE EMOJI ───
+// ─── RENDER TOOLS ───
 function renderTools() {
     const container = document.getElementById('toolsContainer');
     if (!container) return;
@@ -1189,7 +1411,7 @@ function renderTools() {
         container.innerHTML = ''; 
         return; 
     }
-    visibleTools.forEach(tool => {
+    visibleTools.forEach((tool, idx) => {
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
         
@@ -1208,29 +1430,154 @@ function renderTools() {
             </div>
             ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
         `;
-        btn.addEventListener('click', function() { openToolFullscreen(tool); });
+        btn.addEventListener('click', function() { 
+            const globalIdx = appState.tools.indexOf(tool);
+            openToolFullscreen(globalIdx); 
+        });
         container.appendChild(btn);
     });
 }
 
-function openToolFullscreen(tool) {
+function openToolFullscreen(index) {
     const user = appState.currentUser;
     if (!user) { alert('Please login first!'); return; }
     if (user.blocked) { alert('🚫 Account blocked'); return; }
     if (user.credits < 1) {
-        alert('❌ Insufficient credits! Please add credits.');
+        openModal('noCreditsPopup');
         return;
     }
+    
+    const tools = appState.tools || [];
+    const tool = tools[index];
+    if (!tool) return;
+    
+    // Reset minimized state
+    isToolMinimized = false;
+    document.getElementById('recentToolsMini').style.display = 'none';
+    
+    currentToolIndex = index;
+    
+    // Update header
+    document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
+    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+    document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
+    document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
+    
+    // Show fullscreen
     const overlay = document.getElementById('toolFullscreen');
     const iframe = document.getElementById('toolFullscreenIframe');
     overlay.classList.add('active');
     iframe.srcdoc = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    window._currentTool = tool;
+    
+    // Track recent tool
+    if (!recentTools.includes(index)) {
+        recentTools.unshift(index);
+        if (recentTools.length > 5) recentTools.pop();
+    }
+    updateRecentToolsMini();
 }
+
+function minimizeTool() {
+    isToolMinimized = true;
+    document.getElementById('toolFullscreen').classList.remove('active');
+    document.getElementById('recentToolsMini').style.display = 'block';
+    updateRecentToolsMini();
+    window._currentTool = null;
+}
+
+function updateRecentToolsMini() {
+    const mini = document.getElementById('recentToolsMini');
+    const sub = document.getElementById('recentToolsMiniSub');
+    if (recentTools.length === 0) {
+        mini.style.display = 'none';
+        return;
+    }
+    const tools = appState.tools || [];
+    const names = recentTools.filter(i => tools[i]).map(i => tools[i].name).join(' • ');
+    sub.textContent = names || 'Click to open';
+}
+
+document.getElementById('recentToolsMini').addEventListener('click', function() {
+    if (recentTools.length === 0) return;
+    const lastTool = recentTools[0];
+    if (appState.tools && appState.tools[lastTool]) {
+        // Check credits before opening
+        const user = appState.currentUser;
+        if (!user) { alert('Please login first!'); return; }
+        if (user.blocked) { alert('🚫 Account blocked'); return; }
+        if (user.credits < 1) {
+            openModal('noCreditsPopup');
+            return;
+        }
+        openToolFullscreen(lastTool);
+    }
+});
 
 document.getElementById('toolFullscreenClose').addEventListener('click', function() {
     document.getElementById('toolFullscreen').classList.remove('active');
     window._currentTool = null;
+});
+
+// ─── ACCOUNT MODAL ───
+function openAccountModal() {
+    const user = appState.currentUser;
+    if (!user) return;
+    const container = document.getElementById('accountDetailsContent');
+    container.innerHTML = `
+        <div class="account-detail-row"><span class="label">Name</span><span class="value">${user.name || 'N/A'}</span></div>
+        <div class="account-detail-row"><span class="label">Email</span><span class="value">${user.email}</span></div>
+        <div class="account-detail-row"><span class="label">Account ID</span><span class="value">${user.accountId || 'N/A'}</span></div>
+        <div class="account-detail-row"><span class="label">Broker</span><span class="value">${user.broker || 'N/A'}</span></div>
+        <div class="account-detail-row"><span class="label">Status</span><span class="value ${user.blocked ? 'red' : 'green'}">${user.blocked ? '🚫 Blocked' : '✅ Verified'}</span></div>
+        <div class="account-detail-row"><span class="label">Available Credits</span><span class="value green">${user.credits || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Free Credits</span><span class="value">${user.freeCredits || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Today Used</span><span class="value">${user.todayUsed || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Total Used</span><span class="value">${user.totalUsed || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Signals Generated</span><span class="value">${user.signalsUsed || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.5rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
+    `;
+    openModal('accountModal');
+}
+window.openAccountModal = openAccountModal;
+
+// ─── SIGNAL GENERATION (credit deduction) ───
+function deductCredit() {
+    const user = appState.currentUser;
+    if (!user) return false;
+    if (user.credits < 1) return false;
+    user.credits -= 1;
+    user.signalsUsed = (user.signalsUsed || 0) + 1;
+    user.todayUsed = (user.todayUsed || 0) + 1;
+    user.totalUsed = (user.totalUsed || 0) + 1;
+    saveLocalState();
+    updateUI();
+    // Update tool header if open
+    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+    document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
+    return true;
+}
+
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'signalGenerated') {
+        if (appState.currentUser && appState.currentUser.credits > 0) {
+            const success = deductCredit();
+            if (success) {
+                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                    type: 'signalResult', 
+                    success: true, 
+                    credits: appState.currentUser.credits 
+                }, '*');
+                alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
+            }
+        } else {
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                type: 'signalResult', 
+                success: false, 
+                message: 'Insufficient credits!' 
+            }, '*');
+            openModal('noCreditsPopup');
+        }
+    }
 });
 
 function updateUI() {
@@ -1238,11 +1585,18 @@ function updateUI() {
     if (user) { 
         document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; 
         document.getElementById('dashCredits').textContent = user.credits || 0; 
-        document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0; 
+        document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0;
+        document.getElementById('dashTotalUsed').textContent = user.totalUsed || 0;
+    }
+    if (user && document.getElementById('toolFullscreen').classList.contains('active')) {
+        document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
+        document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+        document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
     }
 }
 
 function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
+
 function updateChatBadge() {
     const badge = document.getElementById('chatBadge');
     if (!badge) return;
@@ -1265,7 +1619,7 @@ function updateChatBadge() {
     }
 }
 
-// ─── CHAT MESSAGES - BLACK BACKGROUND ───
+// ─── CHAT ───
 function renderChatMessages() {
     const container = document.getElementById('chatContainer'); 
     if (!container || !appState.currentUser) return; 
@@ -1279,8 +1633,6 @@ function renderChatMessages() {
         return; 
     }
     msgs.forEach(c => { 
-        // Incoming (Admin → User): White Text, Red BG
-        // Outgoing (User → Admin): Red Text, White BG
         const cls = c.sender === 'admin' ? 'admin' : 'user'; 
         const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; 
         container.innerHTML += `<div class="chat-message ${cls}">${c.message}<span class="time">${time}</span></div>`; 
@@ -1299,6 +1651,7 @@ window.sendChatMessage = function() {
     appState.chats[key].push({ sender: 'user', message: msg, timestamp: new Date().toISOString(), read: false }); saveLocalState(); input.value = ''; renderChatMessages();
 };
 
+// ─── PAYMENT HISTORY ───
 function renderPaymentHistory() {
     const container = document.getElementById('paymentHistoryList'); if (!container) return; container.innerHTML = '';
     const payments = appState.payments || []; const userPayments = payments.filter(p => p.userEmail === appState.currentUser?.email);
@@ -1311,6 +1664,7 @@ function renderPaymentHistory() {
 }
 window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
 
+// ─── CREDIT PACKS ───
 function renderCreditPacks() {
     const container = document.getElementById('creditPacksList'); if (!container) return; container.innerHTML = '';
     const packs = appState.creditPacks || []; packs.forEach((pack, idx) => {
@@ -1345,24 +1699,11 @@ window.submitManualPayment = function() {
     setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
-window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'signalGenerated') {
-        if (appState.currentUser && appState.currentUser.credits > 0) {
-            appState.currentUser.credits -= 1; appState.currentUser.signalsUsed = (appState.currentUser.signalsUsed || 0) + 1; appState.currentUser.todayUsed = (appState.currentUser.todayUsed || 0) + 1;
-            saveLocalState(); updateUI();
-            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
-            alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
-        } else {
-            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, message: 'Insufficient credits!' }, '*');
-            alert('❌ Insufficient credits! Please add credits.');
-        }
-    }
-});
-
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 window.openModal = openModal; window.closeModal = closeModal;
 
+// ─── LOGO CLICK - ADMIN ACCESS (ONLY HOME PAGE) ───
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault(); 
@@ -1410,6 +1751,7 @@ document.addEventListener('click', function(e) {
     if (e.target.closest('.tool-btn')) return;
     if (e.target.closest('.btn-sm')) return;
     if (e.target.closest('.social-icons a')) return;
+    if (e.target.closest('.tool-fullscreen-overlay')) return;
 
     logoGlowDash.classList.remove('active');
     void logoGlowDash.offsetWidth;
@@ -1449,7 +1791,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 loadLocalState();
-console.log('📊 Dashboard Loaded (Hardcoded Tool Removed)');
+console.log('📊 Dashboard Loaded');
 console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
 console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
 console.log('💬 Unread Chats: ' + chatUnreadCount);
