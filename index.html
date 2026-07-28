@@ -92,6 +92,7 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #fff;
             --popup-label: #FFD700;
+            --popup-close-color: #FF0033;
         }
 
         /* Light Mode */
@@ -140,6 +141,7 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #111;
             --popup-label: #FF0033;
+            --popup-close-color: #FF0033;
         }
 
         /* ─── RESET & BASE ─── */
@@ -691,14 +693,14 @@
             transform: scale(0.9);
         }
 
-        /* ─── OFFER BANNER ─── */
+        /* ─── OFFER BANNER - BIGGER ─── */
         .offer-banner {
             background: var(--offer-banner-bg);
             border: 3px solid var(--offer-banner-border);
             border-radius: 20px;
-            padding: 20px 28px;
+            padding: 28px 32px;
             text-align: center;
-            margin: 4px 0 8px;
+            margin: 6px 0 10px;
             flex-shrink: 0;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -733,12 +735,12 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
         .offer-gift-icon {
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-size: clamp(1.6rem, 2.5vw, 2.4rem);
             display: inline-block;
             animation: gift3D 2.5s ease-in-out infinite;
             filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
@@ -781,7 +783,7 @@
         .offer-banner h4 {
             color: #FFD700;
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1rem, 1.6vw, 1.4rem);
+            font-size: clamp(1.3rem, 2vw, 1.8rem);
             letter-spacing: 2px;
             position: relative;
             z-index: 1;
@@ -804,25 +806,25 @@
 
         .offer-banner .offer-description-text {
             color: var(--text-secondary);
-            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
-            margin-top: 4px;
+            font-size: clamp(1rem, 1.4vw, 1.3rem);
+            margin-top: 6px;
             position: relative;
             z-index: 1;
             font-weight: 400;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         
-        /* ─── 3D CREDIT NUMBER ZOOM EFFECT (Slightly larger than text) ─── */
+        /* ─── 3D CREDIT NUMBER ZOOM EFFECT ─── */
         .offer-banner .highlight {
             color: #FF0033;
             font-weight: 700;
             display: inline-block;
-            font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+            font-size: clamp(1.4rem, 2vw, 1.8rem);
             text-shadow: 0 0 20px rgba(255, 0, 51, 0.25);
             animation: credit3DZoom 1.8s ease-in-out infinite;
             transform-origin: center;
             position: relative;
-            padding: 0 4px;
+            padding: 0 6px;
             line-height: 1.4;
         }
         
@@ -856,8 +858,8 @@
 
         .offer-banner .click-hint {
             color: var(--text-muted);
-            font-size: 0.6rem;
-            margin-top: 6px;
+            font-size: 0.7rem;
+            margin-top: 8px;
             letter-spacing: 2px;
             position: relative;
             z-index: 1;
@@ -1269,6 +1271,130 @@
             text-shadow: 0 0 20px rgba(255, 0, 51, 0.1);
         }
 
+        /* ─── POPUP CONTAINER (for Login/Verify messages) ─── */
+        .info-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-bg);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+        .info-popup-overlay.active {
+            display: flex;
+        }
+        .info-popup {
+            background: var(--popup-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--popup-border);
+            border-radius: 16px;
+            padding: 30px 28px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 80px rgba(255, 0, 51, 0.08);
+            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .info-popup .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 1.5rem;
+            color: #FF0033;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+        .info-popup .popup-close:hover {
+            transform: scale(1.3) rotate(90deg);
+            color: var(--text-primary);
+            background: rgba(255, 0, 51, 0.06);
+        }
+        .info-popup .popup-close:active {
+            transform: scale(0.8);
+        }
+        .info-popup .popup-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .info-popup h3 {
+            color: var(--popup-label);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .info-popup p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .info-popup .popup-btn {
+            padding: 10px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            background: #FF0033;
+            color: #fff;
+        }
+        .info-popup .popup-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 28px rgba(255, 0, 51, 0.2);
+        }
+        .info-popup .popup-btn.btn-gold {
+            background: #FFD700;
+            color: #000;
+        }
+        .info-popup .popup-btn.btn-gold:hover {
+            box-shadow: 0 6px 28px rgba(255, 215, 0, 0.3);
+        }
+        .info-popup .popup-btn.btn-white {
+            background: #fff;
+            color: #000;
+        }
+        .info-popup .popup-btn.btn-white:hover {
+            box-shadow: 0 6px 28px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes modalSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         /* ─── MODALS ─── */
         .overlay {
             position: fixed;
@@ -1287,16 +1413,6 @@
         }
         .overlay.active {
             display: flex;
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
 
         .modal {
@@ -1336,7 +1452,7 @@
             position: absolute;
             top: 10px;
             right: 14px;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: #FF0033;
             cursor: pointer;
             background: none;
@@ -1344,6 +1460,7 @@
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             padding: 4px 8px;
             border-radius: 6px;
+            font-weight: 700;
         }
         .modal-close:hover {
             transform: scale(1.3) rotate(90deg);
@@ -1524,14 +1641,27 @@
                 font-size: 0.85rem;
             }
             .offer-banner {
-                padding: 16px 20px;
+                padding: 20px 18px;
                 border-radius: 16px;
             }
             .offer-gift-icon {
-                font-size: clamp(1rem, 1.6vw, 1.4rem);
+                font-size: clamp(1.3rem, 2.5vw, 1.8rem);
             }
             .offer-banner .highlight {
-                font-size: clamp(1rem, 1.4vw, 1.2rem);
+                font-size: clamp(1.2rem, 2vw, 1.6rem);
+            }
+            .offer-banner .offer-description-text {
+                font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+            }
+            .info-popup {
+                padding: 24px 20px;
+                max-width: 95%;
+            }
+            .info-popup h3 {
+                font-size: 0.95rem;
+            }
+            .info-popup p {
+                font-size: 0.8rem;
             }
         }
 
@@ -1591,20 +1721,20 @@
                 letter-spacing: 2px;
             }
             .offer-banner {
-                padding: 12px 16px;
+                padding: 16px 14px;
                 border-radius: 14px;
             }
             .offer-banner h4 {
-                font-size: 0.85rem;
+                font-size: 1rem;
             }
             .offer-banner .offer-description-text {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
             }
             .offer-banner .highlight {
-                font-size: 0.95rem;
+                font-size: 1.1rem;
             }
             .offer-gift-icon {
-                font-size: 0.9rem;
+                font-size: 1.1rem;
             }
             .user-card {
                 padding: 10px 8px 12px;
@@ -1644,6 +1774,19 @@
                 font-size: 0.65rem;
                 padding: 8px;
             }
+            .info-popup {
+                padding: 20px 16px;
+                max-width: 98%;
+            }
+            .info-popup h3 {
+                font-size: 0.85rem;
+            }
+            .info-popup p {
+                font-size: 0.75rem;
+            }
+            .info-popup .popup-close {
+                font-size: 1.3rem;
+            }
         }
 
         /* ─── CURSOR GLOW ─── */
@@ -1668,7 +1811,7 @@
             }
         }
 
-        /* ─── GLOBAL ZOOM ON HOVER (no tilt) ─── */
+        /* ─── GLOBAL ZOOM ON HOVER ─── */
         .red-container,
         .offer-banner,
         .user-card,
@@ -1679,7 +1822,9 @@
         .admin-nav-bar .nav-buttons button,
         .modal .btn-submit,
         .modal-close,
-        .user-logout-btn {
+        .user-logout-btn,
+        .info-popup .popup-btn,
+        .info-popup .popup-close {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease,
                 border-color 0.4s ease;
@@ -1695,12 +1840,15 @@
         .admin-nav-bar .nav-buttons button:hover,
         .modal .btn-submit:hover,
         .modal-close:hover,
-        .user-logout-btn:hover {
+        .user-logout-btn:hover,
+        .info-popup .popup-btn:hover,
+        .info-popup .popup-close:hover {
             transform: scale(1.04) translateY(-2px);
         }
         .user-card .btn:hover,
         .admin-nav-bar .nav-buttons button:hover,
-        .modal .btn-submit:hover {
+        .modal .btn-submit:hover,
+        .info-popup .popup-btn:hover {
             transform: scale(1.06) translateY(-2px);
         }
         .red-container:active,
@@ -1713,7 +1861,9 @@
         .admin-nav-bar .nav-buttons button:active,
         .modal .btn-submit:active,
         .modal-close:active,
-        .user-logout-btn:active {
+        .user-logout-btn:active,
+        .info-popup .popup-btn:active,
+        .info-popup .popup-close:active {
             transform: scale(0.97);
         }
 
@@ -1774,7 +1924,7 @@
                 </div>
             </div>
 
-            <!-- OFFER BANNER -->
+            <!-- OFFER BANNER - BIGGER -->
             <div class="offer-banner" id="offerBanner">
                 <div class="offer-title-wrapper">
                     <span class="offer-gift-icon">🎁</span>
@@ -1835,7 +1985,18 @@
         </div>
     </div>
 
-    <!-- MODALS -->
+    <!-- ─── INFO POPUP (for Login/Verify messages) ─── -->
+    <div class="info-popup-overlay" id="infoPopup">
+        <div class="info-popup">
+            <button class="popup-close" id="infoPopupClose">✕</button>
+            <span class="popup-icon" id="infoPopupIcon">ℹ️</span>
+            <h3 id="infoPopupTitle">Info</h3>
+            <p id="infoPopupMessage">Message here</p>
+            <button class="popup-btn" id="infoPopupBtn" style="display:none;">Continue</button>
+        </div>
+    </div>
+
+    <!-- ─── LOGIN MODAL ─── -->
     <div class="overlay" id="loginModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
@@ -1849,6 +2010,7 @@
         </div>
     </div>
 
+    <!-- ─── SIGNUP MODAL ─── -->
     <div class="overlay" id="signupModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
@@ -1868,14 +2030,17 @@
         </div>
     </div>
 
+    <!-- ─── VERIFY MODAL ─── -->
     <div class="overlay" id="verifyModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
             <h2>✅ ID VERIFY</h2>
-            <label>Select Your Broker</label>
-            <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
+            <label>Full Name</label>
+            <input type="text" id="verifyName" placeholder="Enter your full name" />
             <label>Gmail / Email</label>
             <input type="email" id="verifyEmail" placeholder="your@email.com" />
+            <label>Select Your Broker</label>
+            <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
             <label>Account ID</label>
             <input type="text" id="verifyAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="verifyError"></div>
@@ -1885,16 +2050,6 @@
     </div>
 
     <!-- ─── JAVASCRIPT ─── -->
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
-                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
-            }
-        }
-    </script>
-
     <script type="module">
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, onValue, set } from "firebase/database";
@@ -1999,7 +2154,6 @@
             const adminNavBar = document.getElementById('adminNavBar');
             if (userLoggedIn) {
                 userLogoutBtn.classList.add('visible');
-                // IMPORTANT: Do NOT show admin nav for normal users
                 adminNavBar.classList.remove('visible');
             } else {
                 userLogoutBtn.classList.remove('visible');
@@ -2131,18 +2285,51 @@
             
             const descContainer = document.getElementById('offerDescriptionText');
             
-            // Replace the first number with animated span
             const numberMatch = description.match(/\d+/);
             if (numberMatch) {
-                const matchedNumber = numberMatch[0];
-                // Replace only the FIRST occurrence
                 let result = description.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${credits}</span>`);
                 descContainer.innerHTML = result;
             } else {
-                // If no number found, append at the end
                 descContainer.innerHTML = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
             }
         }
+
+        // ─── INFO POPUP FUNCTIONS ───
+        function showInfoPopup(icon, title, message, btnText, btnAction) {
+            const popup = document.getElementById('infoPopup');
+            document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
+            document.getElementById('infoPopupTitle').textContent = title || 'Info';
+            document.getElementById('infoPopupMessage').textContent = message || 'Message here';
+            const btn = document.getElementById('infoPopupBtn');
+            if (btnText) {
+                btn.style.display = 'block';
+                btn.textContent = btnText;
+                btn.className = 'popup-btn';
+                if (btnText.toLowerCase().includes('signup') || btnText.toLowerCase().includes('continue')) {
+                    btn.classList.add('btn-gold');
+                } else {
+                    btn.classList.add('btn-white');
+                }
+                // Remove old click listeners
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', function(e) {
+                    if (typeof btnAction === 'function') {
+                        btnAction();
+                    }
+                    closeInfoPopup();
+                });
+            } else {
+                btn.style.display = 'none';
+            }
+            popup.classList.add('active');
+        }
+
+        function closeInfoPopup() {
+            document.getElementById('infoPopup').classList.remove('active');
+        }
+
+        document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
 
         // ─── FIREBASE ───
         onValue(dbRef, (snapshot) => {
@@ -2286,23 +2473,70 @@
             const email = document.getElementById('loginEmail').value.trim();
             const accountId = document.getElementById('loginAccountId').value.trim();
             const errorEl = document.getElementById('loginError');
+            
             if (!email || !accountId) {
                 errorEl.textContent = '❌ Enter email and account ID';
                 return;
             }
+            
+            // Check if user exists
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
+            
             if (!user) {
-                errorEl.textContent = '❌ User not found. Please sign up first.';
+                // User not found - Show signup popup
+                showInfoPopup(
+                    '📝',
+                    'Account Not Found!',
+                    'No account found with these details. Please sign up first to get started.',
+                    'Sign Up Now',
+                    function() {
+                        closeModal('loginModal');
+                        openModal('signupModal');
+                    }
+                );
+                errorEl.textContent = '';
                 return;
             }
+            
             if (user.blocked) {
                 errorEl.textContent = '🚫 Account blocked. Contact admin.';
                 return;
             }
+            
+            // Check if user is verified
             if (!user.verified) {
-                errorEl.textContent = '❌ Account not verified. Please submit verification request and wait for admin approval.';
+                // Check if user has a pending verification request
+                const pendingRequest = appState.verificationRequests?.find(
+                    req => req.userEmail === email && req.status === 'pending'
+                );
+                
+                if (pendingRequest) {
+                    // Pending verification - Show popup
+                    showInfoPopup(
+                        '⏳',
+                        'Verification Pending!',
+                        'Admin is currently reviewing your verification request. Please wait for approval. You will get access once verified.',
+                        null,
+                        null
+                    );
+                } else {
+                    // No pending verification - Show signup popup
+                    showInfoPopup(
+                        '✅',
+                        'Not Verified Yet!',
+                        'Please submit your verification request first. Admin will review and approve your account.',
+                        'Go to Verify',
+                        function() {
+                            closeModal('loginModal');
+                            openModal('verifyModal');
+                        }
+                    );
+                }
+                errorEl.textContent = '';
                 return;
             }
+            
+            // User is verified - Login success
             appState.currentUser = user;
             sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
@@ -2324,15 +2558,17 @@
             const brokerData = appState.brokers.find(b => b.name === broker);
             if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
             if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
+            
             const newUser = {
                 email,
                 accountId: '',
-                broker,
                 name: email.split('@')[0],
+                broker,
                 verified: false,
                 deposit: 0,
                 requiredDeposit: brokerData.minDeposit,
                 credits: 0,
+                freeCredits: 0,
                 signalsUsed: 0,
                 todayUsed: 0,
                 blocked: false,
@@ -2352,30 +2588,49 @@
         });
 
         window.handleVerify = function() {
-            const broker = document.getElementById('verifyBroker').value;
+            const name = document.getElementById('verifyName').value.trim();
             const email = document.getElementById('verifyEmail').value.trim();
+            const broker = document.getElementById('verifyBroker').value;
             const accountId = document.getElementById('verifyAccountId').value.trim();
             const errorEl = document.getElementById('verifyError');
             const successEl = document.getElementById('verifySuccess');
             errorEl.textContent = '';
             successEl.textContent = '';
+            
+            if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
+            if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
             if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
-            if (!email || !accountId) { errorEl.textContent = '❌ Enter email and account ID'; return; }
+            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID'; return; }
+            
+            // Check if user exists
             const user = appState.users.find(u => u.email === email);
-            if (!user) { errorEl.textContent = '❌ User not found. Please sign up first.'; return; }
-            if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
-            if (user.verified) { errorEl.textContent = '✅ Already verified! You can login.'; return; }
-            if (user.broker !== broker) {
-                errorEl.textContent = '❌ Selected broker does not match your signup broker.';
+            if (!user) {
+                errorEl.textContent = '❌ User not found. Please sign up first.';
                 return;
             }
-            const existingPending = appState.verificationRequests?.find(req => req.userEmail === email && req.status ===
-                'pending');
+            
+            if (user.blocked) {
+                errorEl.textContent = '🚫 Account blocked. Contact admin.';
+                return;
+            }
+            
+            if (user.verified) {
+                errorEl.textContent = '✅ Already verified! You can login.';
+                return;
+            }
+            
+            // Check if user already has a pending request
+            const existingPending = appState.verificationRequests?.find(
+                req => req.userEmail === email && req.status === 'pending'
+            );
             if (existingPending) {
                 errorEl.textContent = '⏳ Verification already pending. Wait for admin.';
                 return;
             }
+            
+            // Create verification request
             const newRequest = {
+                userName: name,
                 userEmail: email,
                 accountId: accountId,
                 broker: broker,
@@ -2383,14 +2638,32 @@
                 date: new Date().toISOString(),
                 freeCredits: appState.offerCredits || 10
             };
+            
             if (!appState.verificationRequests) appState.verificationRequests = [];
             appState.verificationRequests.push(newRequest);
+            
+            // Update user's name and accountId
+            user.name = name;
+            user.accountId = accountId;
+            
             saveLocalState();
-            successEl.textContent = '✅ Verification request submitted! Please wait for admin approval.';
-            errorEl.textContent = '';
+            
+            // Show success popup
+            showInfoPopup(
+                '✅',
+                'Verification Submitted!',
+                'Your verification request has been submitted successfully. Please wait for admin approval. You will be notified once verified.',
+                null,
+                null
+            );
+            
+            // Clear form
+            document.getElementById('verifyName').value = '';
             document.getElementById('verifyEmail').value = '';
             document.getElementById('verifyAccountId').value = '';
             document.getElementById('verifyBroker').value = '';
+            errorEl.textContent = '';
+            successEl.textContent = '';
         };
 
         // ─── BUTTON LISTENERS ───
@@ -2416,11 +2689,9 @@
         let logoClickCounter = 0;
         document.getElementById('logoIcon').addEventListener('click', function(e) {
             e.preventDefault();
-            // Check if user is logged in as normal user
             const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
             
-            // If user is logged in as normal user, DO NOT show admin access
             if (userLoggedIn && !adminLoggedIn) {
                 alert('🚫 Access Denied! Only Admin can access this page.');
                 return;
@@ -2477,6 +2748,7 @@
             if (e.target.closest('.modal')) return;
             if (e.target.closest('.admin-nav-bar')) return;
             if (e.target.closest('.user-logout-btn')) return;
+            if (e.target.closest('.info-popup-overlay')) return;
 
             logoGlow.classList.remove('active');
             void logoGlow.offsetWidth;
@@ -2524,8 +2796,23 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
+                closeInfoPopup();
             }
         });
+
+        // ─── CLOSE INFO POPUP ON OVERLAY CLICK ───
+        document.getElementById('infoPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeInfoPopup();
+            }
+        });
+
+        // Expose functions globally
+        window.showInfoPopup = showInfoPopup;
+        window.closeInfoPopup = closeInfoPopup;
+        window.handleLogin = handleLogin;
+        window.handleSignup = handleSignup;
+        window.handleVerify = handleVerify;
     </script>
 </body>
 </html>
