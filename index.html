@@ -2014,7 +2014,7 @@
             <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
             <h2>🔐 LOGIN</h2>
             <label>Gmail / Email</label>
-            <input type="email" id="loginEmail" placeholder="your@email.com" />
+            <input type="email" id="loginEmail" placeholder="your@gmail.com" />
             <label>Account ID</label>
             <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="loginError"></div>
@@ -2035,7 +2035,7 @@
                 <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
             </div>
             <label>Gmail / Email</label>
-            <input type="email" id="signupEmail" placeholder="your@email.com" />
+            <input type="email" id="signupEmail" placeholder="your@gmail.com" />
             <div class="error-msg" id="signupError"></div>
             <div class="success-msg" id="signupSuccess"></div>
             <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
@@ -2050,7 +2050,7 @@
             <label>Full Name</label>
             <input type="text" id="verifyName" placeholder="Enter your full name" />
             <label>Gmail / Email</label>
-            <input type="email" id="verifyEmail" placeholder="your@email.com" />
+            <input type="email" id="verifyEmail" placeholder="your@gmail.com" />
             <label>Select Your Broker</label>
             <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
             <label>Account ID</label>
@@ -2343,6 +2343,11 @@
 
         document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
 
+        // ─── EMAIL VALIDATION (GMAIL ONLY) ───
+        function isValidEmail(email) {
+            return /^[^\s@]+@gmail\.com$/.test(email);
+        }
+
         // ─── FIREBASE ───
         onValue(dbRef, (snapshot) => {
             isFirebaseConnected = true;
@@ -2490,6 +2495,12 @@
                 errorEl.textContent = '❌ Enter email and account ID';
                 return;
             }
+
+            // Validate Gmail
+            if (!isValidEmail(email)) {
+                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+                return;
+            }
             
             // Check if user exists
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
@@ -2565,8 +2576,16 @@
             const successEl = document.getElementById('signupSuccess');
             errorEl.textContent = '';
             successEl.textContent = '';
+            
             if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
             if (!email) { errorEl.textContent = '❌ Enter email'; return; }
+
+            // Validate Gmail
+            if (!isValidEmail(email)) {
+                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+                return;
+            }
+
             const brokerData = appState.brokers.find(b => b.name === broker);
             if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
             if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
@@ -2612,6 +2631,13 @@
             
             if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
             if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
+
+            // Validate Gmail
+            if (!isValidEmail(email)) {
+                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+                return;
+            }
+
             if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
             if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID (Numbers only)'; return; }
             
@@ -2843,6 +2869,7 @@
         window.handleLogin = handleLogin;
         window.handleSignup = handleSignup;
         window.handleVerify = handleVerify;
+        window.isValidEmail = isValidEmail;
     </script>
 </body>
 </html>
