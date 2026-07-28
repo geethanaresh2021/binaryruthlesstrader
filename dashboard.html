@@ -368,6 +368,7 @@
         .chat-badge.active { display: flex; animation: pulseRed 1s ease-in-out infinite; }
         .chat-badge.has-count { border-radius: 10px; min-width: 18px; height: 18px; font-size: 0.45rem; line-height: 18px; padding: 0 5px; }
         
+        /* ─── CREDITS CONTAINER ─── */
         .credits-container {
             background: rgba(0,255,102,0.02); border: 2px solid rgba(0,255,102,0.06);
             border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px;
@@ -492,13 +493,13 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 6px 16px; 
+            padding: 8px 16px; 
             flex-shrink: 0; 
             background: rgba(0,0,0,0.95); 
             z-index: 1; 
             position: relative;
             border-bottom: 2px solid rgba(255,0,51,0.15);
-            min-height: 48px;
+            min-height: 52px;
             gap: 10px;
             flex-wrap: wrap;
         }
@@ -510,60 +511,60 @@
         }
         .tool-fullscreen-header .header-left .user-name-tool {
             color: #FFD700;
-            font-size: clamp(0.85rem, 1.2vw, 1.2rem);
+            font-size: clamp(1rem, 1.4vw, 1.4rem);
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             font-weight: 700;
         }
         .tool-fullscreen-header .header-left .credits-tool {
             color: #00FF66;
-            font-size: clamp(0.75rem, 1vw, 1rem);
+            font-size: clamp(0.9rem, 1.2vw, 1.2rem);
             font-family: 'Roboto Mono', monospace;
             font-weight: 700;
         }
-        .tool-fullscreen-header .header-left .used-tool {
-            color: var(--text-secondary);
-            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
-            font-weight: 600;
-        }
         .tool-fullscreen-header .header-left .today-used-tool {
             color: #FFD700;
-            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
-            font-weight: 600;
+            font-size: clamp(0.8rem, 1.1vw, 1.1rem);
+            font-weight: 700;
         }
         .tool-fullscreen-header .header-left .divider {
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
         }
         .tool-fullscreen-header .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
-        .tool-fullscreen-header .header-right .recent-tools-btn {
+        .tool-fullscreen-header .header-right .tool-switch-btn {
             background: rgba(255,215,0,0.08);
             border: 1px solid rgba(255,215,0,0.15);
             color: #FFD700;
-            padding: 3px 12px;
-            border-radius: 14px;
-            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: clamp(0.55rem, 0.8vw, 0.8rem);
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        .tool-fullscreen-header .header-right .recent-tools-btn:hover {
+        .tool-fullscreen-header .header-right .tool-switch-btn:hover {
             background: rgba(255,215,0,0.15);
             transform: scale(1.05);
         }
+        .tool-fullscreen-header .header-right .tool-switch-btn.active-tool {
+            background: rgba(255,0,51,0.12);
+            border-color: rgba(255,0,51,0.3);
+            color: #FF0033;
+        }
         .tool-fullscreen-header .header-right .tool-name-display {
             color: var(--text-secondary);
-            font-size: clamp(0.55rem, 0.8vw, 0.8rem);
+            font-size: clamp(0.6rem, 0.9vw, 0.9rem);
             font-family: 'Orbitron', sans-serif;
         }
         .tool-fullscreen-close { 
-            font-size: 1.8rem; 
+            font-size: 2rem; 
             color: #FF0033; 
             cursor: pointer; 
             background: none; 
@@ -695,9 +696,10 @@
         .chat-container::-webkit-scrollbar { width: 5px; }
         .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
+        /* Chat Messages - Background same, Text Black */
         .chat-message.admin { 
             background: #FF0033 !important; 
-            color: #ffffff !important; 
+            color: #000000 !important; 
             align-self: flex-start; 
             border-bottom-left-radius: 4px;
             padding: 8px 14px;
@@ -710,7 +712,7 @@
         }
         .chat-message.user { 
             background: #ffffff !important; 
-            color: #FF0033 !important; 
+            color: #000000 !important; 
             align-self: flex-end; 
             border-bottom-right-radius: 4px;
             padding: 8px 14px;
@@ -760,14 +762,19 @@
         .account-detail-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
         }
         .account-detail-row .label { color: var(--text-muted); font-weight: 500; }
         .account-detail-row .value { color: #FFD700; font-weight: 600; }
         .account-detail-row .value.green { color: #00FF66; }
         .account-detail-row .value.red { color: #FF0033; }
+        
+        /* ─── PAYMENT HISTORY - BIGGER TEXT ─── */
+        .history-item { font-size: 0.7rem; padding: 6px 8px; }
+        .history-item .date { font-size: 0.5rem; }
+        .history-empty { font-size: 0.6rem; }
         
         /* ─── FEATURES ─── */
         .features-section { padding: 4px 0 4px; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); flex-shrink: 0; margin-top: 6px; }
@@ -811,6 +818,7 @@
         .footer .brand { color: #FF0033; font-weight: 700; transition: all 0.3s ease; }
         .footer:hover .brand { text-shadow: 0 0 20px rgba(255,0,51,0.1); }
         
+        /* ─── MOBILE VIEW - CREDITS IN SINGLE LINE ─── */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
             .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
@@ -821,7 +829,9 @@
             .credit-pack { min-width: 70px; max-width: 100px; }
             .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
             .user-info-container .user-actions { justify-content: center; }
-            .credits-container { flex-direction: column; gap: 2px; }
+            /* Credits in single line on mobile */
+            .credits-container { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 4px; }
+            .credits-container .credit-item { flex: 1; min-width: 80px; }
             .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
             .admin-nav-bar .nav-label { font-size: 0.35rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
@@ -833,16 +843,17 @@
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
             .chat-message { font-size: 0.75rem; padding: 6px 10px; }
             .chat-container { max-height: 250px; min-height: 100px; }
-            .tool-fullscreen-header { padding: 4px 10px; min-height: 40px; }
-            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.65rem; }
-            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.6rem; }
-            .tool-fullscreen-header .header-left .used-tool { font-size: 0.5rem; }
-            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.5rem; }
-            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.45rem; }
-            .tool-fullscreen-close { font-size: 1.4rem; }
+            .tool-fullscreen-header { padding: 4px 10px; min-height: 42px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
+            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.5rem; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.45rem; padding: 2px 10px; }
+            .tool-fullscreen-close { font-size: 1.5rem; }
             .recent-tools-mini { padding: 8px 14px; }
             .recent-tools-mini .mini-title { font-size: 0.55rem; }
-            .account-detail-row { font-size: 0.6rem; padding: 5px 0; }
+            .account-detail-row { font-size: 0.7rem; padding: 6px 0; }
+            .history-item { font-size: 0.6rem; padding: 4px 6px; }
         }
         @media (max-width: 480px) {
             .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
@@ -855,6 +866,7 @@
             .user-info-container .user-name { font-size: 0.6rem; }
             .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
             .credits-container .credit-item .number { font-size: 0.95rem; }
+            .credits-container .credit-item .label { font-size: 0.4rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
             .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
@@ -871,18 +883,18 @@
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
             .chat-message { font-size: 0.7rem; padding: 5px 8px; }
             .chat-container { max-height: 200px; min-height: 80px; }
-            .tool-fullscreen-header { padding: 3px 8px; min-height: 34px; }
-            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.5rem; }
-            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.45rem; }
-            .tool-fullscreen-header .header-left .used-tool { font-size: 0.4rem; }
-            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.4rem; }
+            .tool-fullscreen-header { padding: 3px 8px; min-height: 36px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.55rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
+            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
             .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.4rem; }
-            .tool-fullscreen-header .header-right .recent-tools-btn { font-size: 0.4rem; padding: 2px 8px; }
-            .tool-fullscreen-close { font-size: 1.2rem; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 8px; }
+            .tool-fullscreen-close { font-size: 1.3rem; }
             .recent-tools-mini { padding: 6px 12px; }
             .recent-tools-mini .mini-title { font-size: 0.5rem; }
-            .account-detail-row { font-size: 0.5rem; padding: 4px 0; }
-            .history-item { font-size: 0.5rem; }
+            .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
+            .history-item { font-size: 0.5rem; padding: 3px 4px; }
+            .history-empty { font-size: 0.5rem; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -893,7 +905,7 @@
         .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
         .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
         .tool-btn, .user-logout-btn, .recent-tools-mini,
-        .tool-fullscreen-header .header-right .recent-tools-btn {
+        .tool-fullscreen-header .header-right .tool-switch-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -1018,12 +1030,11 @@
             <span class="credits-tool" id="toolHeaderCredits">💰 0</span>
             <span class="divider">|</span>
             <span class="today-used-tool" id="toolHeaderTodayUsed">📊 Today: 0</span>
-            <span class="divider">|</span>
-            <span class="used-tool" id="toolHeaderUsed">Total: 0</span>
         </div>
         <div class="header-right">
             <span class="tool-name-display" id="toolHeaderName">Tool</span>
-            <button class="recent-tools-btn" id="toolHeaderRecentBtn" onclick="minimizeTool()">📌 Recent</button>
+            <button class="tool-switch-btn" id="toolHeaderSwitchBtn1" onclick="switchTool(0)" style="display:none;">Tool 1</button>
+            <button class="tool-switch-btn" id="toolHeaderSwitchBtn2" onclick="switchTool(1)" style="display:none;">Tool 2</button>
             <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
         </div>
     </div>
@@ -1147,6 +1158,7 @@ let appState = {
 let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
 let currentToolIndex = -1;
+let openTools = []; // Array of tool indices currently open in the container
 let recentTools = [];
 let isToolMinimized = false;
 let toolDataCache = {};
@@ -1355,6 +1367,7 @@ onValue(dbRef, (snapshot) => {
         if (document.getElementById('toolFullscreen').classList.contains('active')) {
             // Tool already open, just update header
             updateToolHeader();
+            updateSwitchButtons();
         }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
@@ -1384,6 +1397,18 @@ function loadLocalState() {
     const savedRecent = localStorage.getItem('brt_recent_tools');
     if (savedRecent) {
         try { recentTools = JSON.parse(savedRecent); } catch(e) {}
+    }
+    
+    // Restore open tools
+    const savedOpenTools = localStorage.getItem('brt_open_tools');
+    if (savedOpenTools) {
+        try { openTools = JSON.parse(savedOpenTools); } catch(e) {}
+    }
+    
+    // Restore current tool index
+    const savedCurrent = localStorage.getItem('brt_current_tool');
+    if (savedCurrent !== null) {
+        currentToolIndex = parseInt(savedCurrent);
     }
     
     applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
@@ -1435,6 +1460,29 @@ function loadLocalState() {
         updateRecentToolsMini();
         isToolMinimized = true;
     }
+    
+    // Restore tool if it was open
+    if (openTools.length > 0 && currentToolIndex >= 0) {
+        const tool = appState.tools[currentToolIndex];
+        if (tool) {
+            // Restore the tool container
+            const overlay = document.getElementById('toolFullscreen');
+            const iframe = document.getElementById('toolFullscreenIframe');
+            overlay.classList.add('active');
+            
+            const cacheKey = 'tool_' + currentToolIndex;
+            let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
+            if (toolDataCache[cacheKey]) {
+                htmlContent = toolDataCache[cacheKey];
+            }
+            iframe.srcdoc = htmlContent;
+            
+            updateToolHeader();
+            updateSwitchButtons();
+            document.getElementById('recentToolsMini').style.display = 'none';
+            isToolMinimized = false;
+        }
+    }
 }
 
 function applyLogo() {
@@ -1473,8 +1521,8 @@ function renderTools() {
             </div>
             ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
         `;
+        const globalIdx = appState.tools.indexOf(tool);
         btn.addEventListener('click', function() { 
-            const globalIdx = appState.tools.indexOf(tool);
             openToolFullscreen(globalIdx); 
         });
         container.appendChild(btn);
@@ -1487,8 +1535,63 @@ function updateToolHeader() {
     document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
     document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
     document.getElementById('toolHeaderTodayUsed').textContent = '📊 Today: ' + (user.todayUsed || 0);
-    document.getElementById('toolHeaderUsed').textContent = 'Total: ' + (user.totalUsed || 0);
 }
+
+function updateSwitchButtons() {
+    const btn1 = document.getElementById('toolHeaderSwitchBtn1');
+    const btn2 = document.getElementById('toolHeaderSwitchBtn2');
+    const tools = appState.tools || [];
+    
+    // Clear both buttons
+    btn1.style.display = 'none';
+    btn2.style.display = 'none';
+    btn1.className = 'tool-switch-btn';
+    btn2.className = 'tool-switch-btn';
+    
+    if (openTools.length >= 1 && tools[openTools[0]]) {
+        btn1.style.display = 'inline-block';
+        btn1.textContent = tools[openTools[0]].name || 'Tool 1';
+        if (currentToolIndex === openTools[0]) {
+            btn1.classList.add('active-tool');
+        }
+    }
+    if (openTools.length >= 2 && tools[openTools[1]]) {
+        btn2.style.display = 'inline-block';
+        btn2.textContent = tools[openTools[1]].name || 'Tool 2';
+        if (currentToolIndex === openTools[1]) {
+            btn2.classList.add('active-tool');
+        }
+    }
+}
+
+// ─── SWITCH TOOL WITHOUT CLOSING ───
+window.switchTool = function(slot) {
+    if (slot >= openTools.length) return;
+    const newIndex = openTools[slot];
+    if (newIndex === currentToolIndex) return;
+    if (newIndex < 0 || !appState.tools[newIndex]) return;
+    
+    // Save current tool data before switching
+    saveCurrentToolData();
+    
+    // Switch to new tool
+    currentToolIndex = newIndex;
+    const tool = appState.tools[currentToolIndex];
+    const iframe = document.getElementById('toolFullscreenIframe');
+    
+    const cacheKey = 'tool_' + currentToolIndex;
+    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
+    if (toolDataCache[cacheKey]) {
+        htmlContent = toolDataCache[cacheKey];
+    }
+    iframe.srcdoc = htmlContent;
+    
+    document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
+    updateSwitchButtons();
+    updateToolHeader();
+    
+    localStorage.setItem('brt_current_tool', currentToolIndex);
+};
 
 function openToolFullscreen(index) {
     const user = appState.currentUser;
@@ -1508,7 +1611,19 @@ function openToolFullscreen(index) {
     sessionStorage.setItem('brt_tool_minimized', 'false');
     document.getElementById('recentToolsMini').style.display = 'none';
     
+    // If tool not in open list, add it (max 2)
+    if (!openTools.includes(index)) {
+        if (openTools.length >= 2) {
+            // Remove the oldest tool (first)
+            const removed = openTools.shift();
+            // If current tool was removed, we need to handle it
+        }
+        openTools.push(index);
+        localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
+    }
+    
     currentToolIndex = index;
+    localStorage.setItem('brt_current_tool', currentToolIndex);
     
     // Update header
     updateToolHeader();
@@ -1534,6 +1649,7 @@ function openToolFullscreen(index) {
         localStorage.setItem('brt_recent_tools', JSON.stringify(recentTools));
     }
     updateRecentToolsMini();
+    updateSwitchButtons();
 }
 
 function minimizeTool() {
@@ -1562,6 +1678,28 @@ window.addEventListener('message', function(event) {
         const cacheKey = 'tool_' + event.data.toolIndex;
         toolDataCache[cacheKey] = event.data.htmlContent;
         localStorage.setItem('brt_tool_cache', JSON.stringify(toolDataCache));
+    }
+    
+    // Signal generation from tool
+    if (event.data && event.data.type === 'signalGenerated') {
+        if (appState.currentUser && appState.currentUser.credits > 0) {
+            const success = deductCredit();
+            if (success) {
+                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                    type: 'signalResult', 
+                    success: true, 
+                    credits: appState.currentUser.credits 
+                }, '*');
+                alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
+            }
+        } else {
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                type: 'signalResult', 
+                success: false, 
+                message: 'Insufficient credits!' 
+            }, '*');
+            openModal('noCreditsPopup');
+        }
     }
 });
 
@@ -1624,7 +1762,7 @@ function openAccountModal() {
 }
 window.openAccountModal = openAccountModal;
 
-// ─── SIGNAL GENERATION (credit deduction) ───
+// ─── SIGNAL GENERATION (credit deduction) - STRICT ───
 function deductCredit() {
     const user = appState.currentUser;
     if (!user) return false;
@@ -1638,29 +1776,6 @@ function deductCredit() {
     updateToolHeader();
     return true;
 }
-
-window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'signalGenerated') {
-        if (appState.currentUser && appState.currentUser.credits > 0) {
-            const success = deductCredit();
-            if (success) {
-                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                    type: 'signalResult', 
-                    success: true, 
-                    credits: appState.currentUser.credits 
-                }, '*');
-                alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
-            }
-        } else {
-            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                type: 'signalResult', 
-                success: false, 
-                message: 'Insufficient credits!' 
-            }, '*');
-            openModal('noCreditsPopup');
-        }
-    }
-});
 
 function updateUI() {
     const user = appState.currentUser;
@@ -1736,7 +1851,7 @@ function renderPaymentHistory() {
     userPayments.reverse().forEach(p => {
         const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
         const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
-        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:var(--text-muted);font-size:0.35rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
+        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:var(--text-muted);font-size:0.4rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
     });
 }
 window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
