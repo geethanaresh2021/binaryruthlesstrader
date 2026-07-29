@@ -488,7 +488,7 @@
         }
         .tool-fullscreen-overlay.active { display: flex; }
         
-        /* Slim Top Bar - BIGGER TEXT */
+        /* Slim Top Bar - BIGGER TEXT, SINGLE LINE, SCROLLING */
         .tool-fullscreen-header { 
             display: flex; 
             justify-content: space-between; 
@@ -501,53 +501,88 @@
             border-bottom: 2px solid rgba(255,0,51,0.15);
             min-height: 52px;
             gap: 10px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            width: 100%;
         }
         .tool-fullscreen-header .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
-            flex-wrap: wrap;
+            flex-shrink: 0;
+            flex-wrap: nowrap;
         }
         .tool-fullscreen-header .header-left .user-name-tool {
             color: #FFD700;
-            font-size: clamp(1rem, 1.4vw, 1.4rem);
+            font-size: clamp(0.85rem, 1.2vw, 1.2rem);
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             font-weight: 700;
+            white-space: nowrap;
         }
         .tool-fullscreen-header .header-left .credits-tool {
             color: #00FF66;
-            font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+            font-size: clamp(0.75rem, 1vw, 1rem);
             font-family: 'Roboto Mono', monospace;
             font-weight: 700;
+            white-space: nowrap;
         }
         .tool-fullscreen-header .header-left .today-used-tool {
             color: #FFD700;
-            font-size: clamp(0.8rem, 1.1vw, 1.1rem);
+            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
             font-weight: 700;
+            white-space: nowrap;
         }
         .tool-fullscreen-header .header-left .divider {
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            flex-shrink: 0;
         }
+        /* ─── HEADER RIGHT - TOOL NAMES WITH SCROLLING ─── */
         .tool-fullscreen-header .header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            justify-content: flex-end;
+        }
+        .tool-fullscreen-header .header-right .tool-name-display {
+            color: var(--text-secondary);
+            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
+            font-family: 'Orbitron', sans-serif;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        /* Tool switch buttons container - scrolling */
+        .tool-switch-container {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex: 1;
+            min-width: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 2px 0;
+        }
+        .tool-switch-container::-webkit-scrollbar {
+            display: none;
         }
         .tool-fullscreen-header .header-right .tool-switch-btn {
             background: rgba(255,215,0,0.08);
             border: 1px solid rgba(255,215,0,0.15);
             color: #FFD700;
-            padding: 4px 14px;
+            padding: 4px 12px;
             border-radius: 16px;
-            font-size: clamp(0.55rem, 0.8vw, 0.8rem);
+            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .tool-fullscreen-header .header-right .tool-switch-btn:hover {
             background: rgba(255,215,0,0.15);
@@ -558,13 +593,8 @@
             border-color: rgba(255,0,51,0.3);
             color: #FF0033;
         }
-        .tool-fullscreen-header .header-right .tool-name-display {
-            color: var(--text-secondary);
-            font-size: clamp(0.6rem, 0.9vw, 0.9rem);
-            font-family: 'Orbitron', sans-serif;
-        }
         .tool-fullscreen-close { 
-            font-size: 2rem; 
+            font-size: 1.8rem; 
             color: #FF0033; 
             cursor: pointer; 
             background: none; 
@@ -573,6 +603,7 @@
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
             padding: 0 6px;
             line-height: 1;
+            flex-shrink: 0;
         }
         .tool-fullscreen-close:hover { 
             transform: scale(1.2) rotate(90deg); 
@@ -818,7 +849,7 @@
         .footer .brand { color: #FF0033; font-weight: 700; transition: all 0.3s ease; }
         .footer:hover .brand { text-shadow: 0 0 20px rgba(255,0,51,0.1); }
         
-        /* ─── MOBILE VIEW - CREDITS IN SINGLE LINE ─── */
+        /* ─── MOBILE VIEW ─── */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
             .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
@@ -829,7 +860,6 @@
             .credit-pack { min-width: 70px; max-width: 100px; }
             .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
             .user-info-container .user-actions { justify-content: center; }
-            /* Credits in single line on mobile */
             .credits-container { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 4px; }
             .credits-container .credit-item { flex: 1; min-width: 80px; }
             .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
@@ -847,8 +877,8 @@
             .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
             .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
             .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
-            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.5rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.45rem; padding: 2px 10px; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.45rem; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.45rem; padding: 2px 8px; }
             .tool-fullscreen-close { font-size: 1.5rem; }
             .recent-tools-mini { padding: 8px 14px; }
             .recent-tools-mini .mini-title { font-size: 0.55rem; }
@@ -888,13 +918,16 @@
             .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
             .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
             .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.4rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 8px; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; }
             .tool-fullscreen-close { font-size: 1.3rem; }
             .recent-tools-mini { padding: 6px 12px; }
             .recent-tools-mini .mini-title { font-size: 0.5rem; }
             .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
             .history-item { font-size: 0.5rem; padding: 3px 4px; }
             .history-empty { font-size: 0.5rem; }
+            /* ─── MOBILE: Tool switch container scroll ─── */
+            .tool-switch-container { gap: 4px; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -983,7 +1016,7 @@
             </div>
         </div>
         
-        <!-- CREDITS CONTAINER - Only Available Credits and Today Used -->
+        <!-- CREDITS CONTAINER -->
         <div class="credits-container" id="creditsContainer">
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
             <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
@@ -1033,8 +1066,9 @@
         </div>
         <div class="header-right">
             <span class="tool-name-display" id="toolHeaderName">Tool</span>
-            <button class="tool-switch-btn" id="toolHeaderSwitchBtn1" onclick="switchTool(0)" style="display:none;">Tool 1</button>
-            <button class="tool-switch-btn" id="toolHeaderSwitchBtn2" onclick="switchTool(1)" style="display:none;">Tool 2</button>
+            <div class="tool-switch-container" id="toolSwitchContainer">
+                <!-- Tool buttons will be added here dynamically -->
+            </div>
             <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
         </div>
     </div>
@@ -1158,7 +1192,7 @@ let appState = {
 let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
 let currentToolIndex = -1;
-let openTools = []; // Array of tool indices currently open in the container
+let openTools = [];
 let recentTools = [];
 let isToolMinimized = false;
 let toolDataCache = {};
@@ -1363,9 +1397,7 @@ onValue(dbRef, (snapshot) => {
         resetTodayUsed();
         updateUI(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
         
-        // Restore tool state if needed
         if (document.getElementById('toolFullscreen').classList.contains('active')) {
-            // Tool already open, just update header
             updateToolHeader();
             updateSwitchButtons();
         }
@@ -1387,25 +1419,21 @@ function loadLocalState() {
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
     
-    // Restore tool data cache
     const savedCache = localStorage.getItem('brt_tool_cache');
     if (savedCache) {
         try { toolDataCache = JSON.parse(savedCache); } catch(e) {}
     }
     
-    // Restore recent tools
     const savedRecent = localStorage.getItem('brt_recent_tools');
     if (savedRecent) {
         try { recentTools = JSON.parse(savedRecent); } catch(e) {}
     }
     
-    // Restore open tools
     const savedOpenTools = localStorage.getItem('brt_open_tools');
     if (savedOpenTools) {
         try { openTools = JSON.parse(savedOpenTools); } catch(e) {}
     }
     
-    // Restore current tool index
     const savedCurrent = localStorage.getItem('brt_current_tool');
     if (savedCurrent !== null) {
         currentToolIndex = parseInt(savedCurrent);
@@ -1453,7 +1481,6 @@ function loadLocalState() {
     resetTodayUsed();
     updateUI(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     
-    // Check if tool was minimized and restore
     const toolMinimized = sessionStorage.getItem('brt_tool_minimized') === 'true';
     if (toolMinimized && recentTools.length > 0) {
         document.getElementById('recentToolsMini').style.display = 'block';
@@ -1461,11 +1488,9 @@ function loadLocalState() {
         isToolMinimized = true;
     }
     
-    // Restore tool if it was open
     if (openTools.length > 0 && currentToolIndex >= 0) {
         const tool = appState.tools[currentToolIndex];
         if (tool) {
-            // Restore the tool container
             const overlay = document.getElementById('toolFullscreen');
             const iframe = document.getElementById('toolFullscreenIframe');
             overlay.classList.add('active');
@@ -1474,6 +1499,13 @@ function loadLocalState() {
             let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
             if (toolDataCache[cacheKey]) {
                 htmlContent = toolDataCache[cacheKey];
+            }
+            // Inject user email
+            const user = appState.currentUser;
+            if (user) {
+                htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
+                htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
+                htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
             }
             iframe.srcdoc = htmlContent;
             
@@ -1538,44 +1570,47 @@ function updateToolHeader() {
 }
 
 function updateSwitchButtons() {
-    const btn1 = document.getElementById('toolHeaderSwitchBtn1');
-    const btn2 = document.getElementById('toolHeaderSwitchBtn2');
+    const container = document.getElementById('toolSwitchContainer');
+    if (!container) return;
+    container.innerHTML = '';
     const tools = appState.tools || [];
     
-    // Clear both buttons
-    btn1.style.display = 'none';
-    btn2.style.display = 'none';
-    btn1.className = 'tool-switch-btn';
-    btn2.className = 'tool-switch-btn';
+    // Show only first 2 tools in openTools
+    const displayTools = openTools.slice(0, 2);
     
-    if (openTools.length >= 1 && tools[openTools[0]]) {
-        btn1.style.display = 'inline-block';
-        btn1.textContent = tools[openTools[0]].name || 'Tool 1';
-        if (currentToolIndex === openTools[0]) {
-            btn1.classList.add('active-tool');
-        }
+    if (displayTools.length === 0) {
+        container.innerHTML = '<span style="color:var(--text-muted);font-size:0.5rem;white-space:nowrap;">No tools</span>';
+        return;
     }
-    if (openTools.length >= 2 && tools[openTools[1]]) {
-        btn2.style.display = 'inline-block';
-        btn2.textContent = tools[openTools[1]].name || 'Tool 2';
-        if (currentToolIndex === openTools[1]) {
-            btn2.classList.add('active-tool');
+    
+    displayTools.forEach((toolIdx, slot) => {
+        if (tools[toolIdx]) {
+            const btn = document.createElement('button');
+            btn.className = 'tool-switch-btn';
+            btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
+            if (currentToolIndex === toolIdx) {
+                btn.classList.add('active-tool');
+            }
+            btn.addEventListener('click', function() {
+                if (currentToolIndex !== toolIdx) {
+                    switchTool(toolIdx);
+                }
+            });
+            container.appendChild(btn);
         }
-    }
+    });
 }
 
 // ─── SWITCH TOOL WITHOUT CLOSING ───
-window.switchTool = function(slot) {
-    if (slot >= openTools.length) return;
-    const newIndex = openTools[slot];
-    if (newIndex === currentToolIndex) return;
-    if (newIndex < 0 || !appState.tools[newIndex]) return;
+function switchTool(index) {
+    if (!appState.tools[index]) return;
+    if (index === currentToolIndex) return;
     
-    // Save current tool data before switching
     saveCurrentToolData();
     
-    // Switch to new tool
-    currentToolIndex = newIndex;
+    currentToolIndex = index;
+    localStorage.setItem('brt_current_tool', currentToolIndex);
+    
     const tool = appState.tools[currentToolIndex];
     const iframe = document.getElementById('toolFullscreenIframe');
     
@@ -1584,14 +1619,19 @@ window.switchTool = function(slot) {
     if (toolDataCache[cacheKey]) {
         htmlContent = toolDataCache[cacheKey];
     }
+    // Inject user email
+    const user = appState.currentUser;
+    if (user) {
+        htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
+        htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
+        htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
+    }
     iframe.srcdoc = htmlContent;
     
     document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
     updateSwitchButtons();
     updateToolHeader();
-    
-    localStorage.setItem('brt_current_tool', currentToolIndex);
-};
+}
 
 function openToolFullscreen(index) {
     const user = appState.currentUser;
@@ -1606,7 +1646,6 @@ function openToolFullscreen(index) {
     const tool = tools[index];
     if (!tool) return;
     
-    // Reset minimized state
     isToolMinimized = false;
     sessionStorage.setItem('brt_tool_minimized', 'false');
     document.getElementById('recentToolsMini').style.display = 'none';
@@ -1614,9 +1653,7 @@ function openToolFullscreen(index) {
     // If tool not in open list, add it (max 2)
     if (!openTools.includes(index)) {
         if (openTools.length >= 2) {
-            // Remove the oldest tool (first)
-            const removed = openTools.shift();
-            // If current tool was removed, we need to handle it
+            openTools.shift();
         }
         openTools.push(index);
         localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
@@ -1625,24 +1662,181 @@ function openToolFullscreen(index) {
     currentToolIndex = index;
     localStorage.setItem('brt_current_tool', currentToolIndex);
     
-    // Update header
     updateToolHeader();
     document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
     
-    // Show fullscreen
     const overlay = document.getElementById('toolFullscreen');
     const iframe = document.getElementById('toolFullscreenIframe');
     overlay.classList.add('active');
     
-    // Restore saved data if exists
     const cacheKey = 'tool_' + index;
     let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
     if (toolDataCache[cacheKey]) {
         htmlContent = toolDataCache[cacheKey];
     }
+    
+    // Inject user email and credits into tool
+    htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
+    htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
+    htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
+    
+    // ─── INJECT SCRIPT FOR SIGNAL DETECTION ───
+    const injectScript = `
+    <script>
+        // ─── SIGNAL DETECTION ───
+        let signalGenerated = false;
+        let signalSuccess = false;
+        
+        // User info from parent
+        const USER_EMAIL = '${user.email}';
+        const USER_NAME = '${user.name || user.email.split('@')[0]}';
+        const USER_CREDITS = ${user.credits || 0};
+        
+        // Listen for button clicks - Signal buttons detect
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            
+            const text = btn.textContent || '';
+            const btnId = btn.id || '';
+            
+            // Check if it's a signal button
+            if (text.includes('Signal') || text.includes('Get') || text.includes('Generate') || 
+                text.includes('BUY') || text.includes('SELL') || text.includes('TRADE') ||
+                text.toLowerCase().includes('signal') || text.toLowerCase().includes('get') || 
+                btnId === 'generateSignalBtn' || btnId === 'btnSignal' ||
+                btnId === 'getSignalBtn') {
+                
+                signalGenerated = false;
+                signalSuccess = false;
+                
+                setTimeout(() => {
+                    watchForSignalResult();
+                }, 500);
+            }
+        });
+        
+        // ─── WATCH FOR SIGNAL RESULT ───
+        function watchForSignalResult() {
+            const signalView = document.getElementById('signalView');
+            const errorView = document.getElementById('errorView');
+            const waitingView = document.getElementById('waitingView');
+            const statusView = document.getElementById('statusView');
+            
+            let attempts = 0;
+            const maxAttempts = 40;
+            
+            const checkInterval = setInterval(() => {
+                attempts++;
+                
+                // Check success
+                const isSuccess = (
+                    (signalView && signalView.classList && signalView.classList.contains('active')) ||
+                    (statusView && statusView.classList && statusView.classList.contains('active') && 
+                     statusView.textContent && statusView.textContent.includes('✅')) ||
+                    (document.querySelector('#signalView.active')) ||
+                    (document.querySelector('[class*="signal"]') && 
+                     document.querySelector('[class*="signal"]').textContent && 
+                     document.querySelector('[class*="signal"]').textContent.includes('✅'))
+                );
+                
+                if (isSuccess) {
+                    clearInterval(checkInterval);
+                    signalSuccess = true;
+                    signalGenerated = true;
+                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
+                    return;
+                }
+                
+                // Check failure
+                const isFailure = (
+                    (errorView && errorView.classList && errorView.classList.contains('active')) ||
+                    (document.querySelector('#errorView.active')) ||
+                    (document.querySelector('[class*="error"]') && 
+                     document.querySelector('[class*="error"]').textContent && 
+                     (document.querySelector('[class*="error"]').textContent.includes('❌') ||
+                      document.querySelector('[class*="error"]').textContent.includes('Error')))
+                );
+                
+                if (isFailure) {
+                    clearInterval(checkInterval);
+                    signalSuccess = false;
+                    signalGenerated = true;
+                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+                    return;
+                }
+                
+                if (waitingView && waitingView.classList && waitingView.classList.contains('active')) {
+                    return;
+                }
+                
+                if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    if (!signalGenerated) {
+                        window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+                    }
+                }
+            }, 500);
+        }
+        
+        // ─── OVERRIDE RENDER FUNCTIONS ───
+        if (typeof renderSignalResult === 'function') {
+            const originalRender = renderSignalResult;
+            window.renderSignalResult = function(data) {
+                originalRender(data);
+                window.parent.postMessage({ type: 'signalResult', success: true }, '*');
+            };
+        }
+        
+        if (typeof showError === 'function') {
+            const originalShowError = showError;
+            window.showError = function(msg) {
+                originalShowError(msg);
+                window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+            };
+        }
+        
+        // ─── MUTATION OBSERVER ───
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' || mutation.type === 'childList') {
+                    const signalView = document.getElementById('signalView');
+                    const errorView = document.getElementById('errorView');
+                    
+                    if (signalView && signalView.classList && signalView.classList.contains('active')) {
+                        if (!signalGenerated) {
+                            signalGenerated = true;
+                            signalSuccess = true;
+                            window.parent.postMessage({ type: 'signalResult', success: true }, '*');
+                        }
+                    }
+                    
+                    if (errorView && errorView.classList && errorView.classList.contains('active')) {
+                        if (!signalGenerated) {
+                            signalGenerated = true;
+                            signalSuccess = false;
+                            window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+                        }
+                    }
+                }
+            });
+        });
+        
+        setTimeout(() => {
+            const targetNode = document.body;
+            if (targetNode) {
+                observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+            }
+        }, 1000);
+        
+        console.log('✅ Signal detection injected');
+    <\/script>
+    `;
+    
+    // Append inject script to tool HTML
+    htmlContent = htmlContent + injectScript;
     iframe.srcdoc = htmlContent;
     
-    // Track recent tool
     if (!recentTools.includes(index)) {
         recentTools.unshift(index);
         if (recentTools.length > 5) recentTools.pop();
@@ -1653,9 +1847,7 @@ function openToolFullscreen(index) {
 }
 
 function minimizeTool() {
-    // Save current tool data before minimizing
     saveCurrentToolData();
-    
     isToolMinimized = true;
     sessionStorage.setItem('brt_tool_minimized', 'true');
     document.getElementById('toolFullscreen').classList.remove('active');
@@ -1672,17 +1864,11 @@ function saveCurrentToolData() {
     } catch(e) {}
 }
 
-// Listen for data save from iframe
+// ─── POST MESSAGE LISTENER ───
 window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'saveToolData') {
-        const cacheKey = 'tool_' + event.data.toolIndex;
-        toolDataCache[cacheKey] = event.data.htmlContent;
-        localStorage.setItem('brt_tool_cache', JSON.stringify(toolDataCache));
-    }
-    
-    // Signal generation from tool
-    if (event.data && event.data.type === 'signalGenerated') {
-        if (appState.currentUser && appState.currentUser.credits > 0) {
+    // Signal result from inject script
+    if (event.data && event.data.type === 'signalResult') {
+        if (event.data.success === true) {
             const success = deductCredit();
             if (success) {
                 document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
@@ -1690,16 +1876,22 @@ window.addEventListener('message', function(event) {
                     success: true, 
                     credits: appState.currentUser.credits 
                 }, '*');
-                alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
             }
         } else {
             document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
                 type: 'signalResult', 
                 success: false, 
-                message: 'Insufficient credits!' 
+                error: event.data.error || 'Signal generation failed' 
             }, '*');
-            openModal('noCreditsPopup');
         }
+        return;
+    }
+    
+    // Save tool data
+    if (event.data && event.data.type === 'saveToolData') {
+        const cacheKey = 'tool_' + event.data.toolIndex;
+        toolDataCache[cacheKey] = event.data.htmlContent;
+        localStorage.setItem('brt_tool_cache', JSON.stringify(toolDataCache));
     }
 });
 
@@ -1895,18 +2087,16 @@ function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 window.openModal = openModal; window.closeModal = closeModal;
 
-// ─── LOGO CLICK - NO POPUP FOR USERS (Only effects) ───
+// ─── LOGO CLICK - NO POPUP FOR USERS ───
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault();
-    // Only admin login via home page, no popups for users
     const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
     if (adminLoggedIn) {
         logoClickCounter++;
         const requiredClicks = appState.logoClickCount || 2;
         if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
     }
-    // Normal users - just effects, no popups
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
     e.preventDefault();
