@@ -1091,7 +1091,6 @@
         <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
             <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
-            <!-- Bug 5 Fix: Separate fields for UTR and Transaction ID -->
             <label>UTR Number</label>
             <input type="text" id="utrInput" placeholder="Enter UTR number">
             <label style="margin-top:4px;">Transaction ID</label>
@@ -1184,7 +1183,7 @@ let appState = {
     socialMedia: [], 
     logoClickCount: 2,
     darkMode: true,
-    creditsPerSignal: 1, // Bug 3 Fix: Admin configurable credits per signal
+    creditsPerSignal: 1,
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
         { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1202,7 +1201,7 @@ let openTools = [];
 let recentTools = [];
 let isToolMinimized = false;
 let toolDataCache = {};
-let isDeducting = false; // Prevent multiple deduction calls
+let isDeducting = false;
 
 function applyTheme(darkMode) {
     if (darkMode === false) {
@@ -1351,7 +1350,6 @@ document.getElementById('dashAdminLogoutBtn').addEventListener('click', function
     }
 });
 
-// ─── RESET TODAY USED AT 12 AM ───
 function resetTodayUsed() {
     const now = new Date();
     const lastReset = localStorage.getItem('lastResetDate');
@@ -1391,6 +1389,7 @@ onValue(dbRef, (snapshot) => {
         }
         if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
         if (val.creditsPerSignal !== undefined) { appState.creditsPerSignal = val.creditsPerSignal; }
+        if (val.qrCodeBase64 !== undefined) { appState.qrCodeBase64 = val.qrCodeBase64; loadQRPreview(); }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1426,6 +1425,8 @@ function loadLocalState() {
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
+    const qrData = localStorage.getItem('brt_qr');
+    if (qrData) { appState.qrCodeBase64 = qrData; }
     
     const savedCache = localStorage.getItem('brt_tool_cache');
     if (savedCache) {
@@ -1493,7 +1494,6 @@ function loadLocalState() {
         isToolMinimized = true;
     }
     
-    // Bug 1 & Bug 4 Fix: Restore tool ONLY if it was open before refresh
     const wasToolOpen = sessionStorage.getItem('brt_tool_open') === 'true';
     if (wasToolOpen && openTools.length > 0 && currentToolIndex >= 0) {
         const tool = appState.tools[currentToolIndex];
@@ -1507,8 +1507,6 @@ function loadLocalState() {
             if (toolDataCache[cacheKey]) {
                 htmlContent = toolDataCache[cacheKey];
             }
-            
-            // Bug 4 Fix: Prepare HTML with inject script (same as openToolFullscreen)
             htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
             iframe.srcdoc = htmlContent;
             
@@ -1518,7 +1516,6 @@ function loadLocalState() {
             isToolMinimized = false;
         }
     } else {
-        // If tool was not open, ensure session flag is cleared
         sessionStorage.removeItem('brt_tool_open');
     }
 }
@@ -1529,12 +1526,11 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── PREPARE TOOL HTML WITH INJECT SCRIPT (Bug 4 Fix) ───
+// ─── PREPARE TOOL HTML WITH INJECT SCRIPT ───
 function prepareToolHTML(index, htmlContent) {
     const user = appState.currentUser;
     if (!user) return htmlContent;
     
-    // Inject user data
     htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
     htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
     htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
@@ -1545,13 +1541,12 @@ function prepareToolHTML(index, htmlContent) {
         // ─── SIGNAL DETECTION ───
         let signalGenerated = false;
         let signalSuccess = false;
+        let signalSent = false; // <-- FIX: Prevents duplicate deduction
         
-        // User info from parent
         const USER_EMAIL = '${user.email}';
         const USER_NAME = '${user.name || user.email.split('@')[0]}';
         const USER_CREDITS = ${user.credits || 0};
         
-        // Listen for button clicks - Signal buttons detect
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('button');
             if (!btn) return;
@@ -1559,7 +1554,6 @@ function prepareToolHTML(index, htmlContent) {
             const text = btn.textContent || '';
             const btnId = btn.id || '';
             
-            // Check if it's a signal button
             if (text.includes('Signal') || text.includes('Get') || text.includes('Generate') || 
                 text.includes('BUY') || text.includes('SELL') || text.includes('TRADE') ||
                 text.toLowerCase().includes('signal') || text.toLowerCase().includes('get') || 
@@ -1568,6 +1562,7 @@ function prepareToolHTML(index, htmlContent) {
                 
                 signalGenerated = false;
                 signalSuccess = false;
+                signalSent = false; // Reset flag on new click
                 
                 setTimeout(() => {
                     watchForSignalResult();
@@ -1575,7 +1570,6 @@ function prepareToolHTML(index, htmlContent) {
             }
         });
         
-        // ─── WATCH FOR SIGNAL RESULT ───
         function watchForSignalResult() {
             const signalView = document.getElementById('signalView');
             const errorView = document.getElementById('errorView');
@@ -1599,8 +1593,9 @@ function prepareToolHTML(index, htmlContent) {
                      document.querySelector('[class*="signal"]').textContent.includes('✅'))
                 );
                 
-                if (isSuccess) {
+                if (isSuccess && !signalSent) {
                     clearInterval(checkInterval);
+                    signalSent = true;
                     signalSuccess = true;
                     signalGenerated = true;
                     window.parent.postMessage({ type: 'signalResult', success: true }, '*');
@@ -1617,8 +1612,9 @@ function prepareToolHTML(index, htmlContent) {
                       document.querySelector('[class*="error"]').textContent.includes('Error')))
                 );
                 
-                if (isFailure) {
+                if (isFailure && !signalSent) {
                     clearInterval(checkInterval);
+                    signalSent = true;
                     signalSuccess = false;
                     signalGenerated = true;
                     window.parent.postMessage({ type: 'signalResult', success: false }, '*');
@@ -1629,11 +1625,10 @@ function prepareToolHTML(index, htmlContent) {
                     return;
                 }
                 
-                if (attempts >= maxAttempts) {
+                if (attempts >= maxAttempts && !signalSent) {
                     clearInterval(checkInterval);
-                    if (!signalGenerated) {
-                        window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                    }
+                    signalSent = true;
+                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
                 }
             }, 500);
         }
@@ -1643,7 +1638,10 @@ function prepareToolHTML(index, htmlContent) {
             const originalRender = renderSignalResult;
             window.renderSignalResult = function(data) {
                 originalRender(data);
-                window.parent.postMessage({ type: 'signalResult', success: true }, '*');
+                if (!signalSent) {
+                    signalSent = true;
+                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
+                }
             };
         }
         
@@ -1651,7 +1649,10 @@ function prepareToolHTML(index, htmlContent) {
             const originalShowError = showError;
             window.showError = function(msg) {
                 originalShowError(msg);
-                window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+                if (!signalSent) {
+                    signalSent = true;
+                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
+                }
             };
         }
         
@@ -1662,20 +1663,18 @@ function prepareToolHTML(index, htmlContent) {
                     const signalView = document.getElementById('signalView');
                     const errorView = document.getElementById('errorView');
                     
-                    if (signalView && signalView.classList && signalView.classList.contains('active')) {
-                        if (!signalGenerated) {
-                            signalGenerated = true;
-                            signalSuccess = true;
-                            window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                        }
+                    if (signalView && signalView.classList && signalView.classList.contains('active') && !signalSent) {
+                        signalSent = true;
+                        signalGenerated = true;
+                        signalSuccess = true;
+                        window.parent.postMessage({ type: 'signalResult', success: true }, '*');
                     }
                     
-                    if (errorView && errorView.classList && errorView.classList.contains('active')) {
-                        if (!signalGenerated) {
-                            signalGenerated = true;
-                            signalSuccess = false;
-                            window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                        }
+                    if (errorView && errorView.classList && errorView.classList.contains('active') && !signalSent) {
+                        signalSent = true;
+                        signalGenerated = true;
+                        signalSuccess = false;
+                        window.parent.postMessage({ type: 'signalResult', success: false }, '*');
                     }
                 }
             });
@@ -1747,7 +1746,6 @@ function updateSwitchButtons() {
     container.innerHTML = '';
     const tools = appState.tools || [];
     
-    // Show only first 2 tools in openTools
     const displayTools = openTools.slice(0, 2);
     
     if (displayTools.length === 0) {
@@ -1772,7 +1770,6 @@ function updateSwitchButtons() {
     });
 }
 
-// ─── SWITCH TOOL WITHOUT CLOSING ───
 function switchTool(index) {
     if (!appState.tools[index]) return;
     if (index === currentToolIndex) return;
@@ -1810,14 +1807,12 @@ function openToolFullscreen(index) {
     const tool = tools[index];
     if (!tool) return;
     
-    // Bug 1 Fix: Set session flag when tool opens
     sessionStorage.setItem('brt_tool_open', 'true');
     
     isToolMinimized = false;
     sessionStorage.setItem('brt_tool_minimized', 'false');
     document.getElementById('recentToolsMini').style.display = 'none';
     
-    // If tool not in open list, add it (max 2)
     if (!openTools.includes(index)) {
         if (openTools.length >= 2) {
             openTools.shift();
@@ -1841,7 +1836,6 @@ function openToolFullscreen(index) {
         htmlContent = toolDataCache[cacheKey];
     }
     
-    // Bug 4 Fix: Use prepareToolHTML to inject script
     htmlContent = prepareToolHTML(index, htmlContent);
     iframe.srcdoc = htmlContent;
     
@@ -1858,7 +1852,7 @@ function minimizeTool() {
     saveCurrentToolData();
     isToolMinimized = true;
     sessionStorage.setItem('brt_tool_minimized', 'true');
-    sessionStorage.removeItem('brt_tool_open'); // Clear open flag
+    sessionStorage.removeItem('brt_tool_open');
     document.getElementById('toolFullscreen').classList.remove('active');
     document.getElementById('recentToolsMini').style.display = 'block';
     updateRecentToolsMini();
@@ -1877,6 +1871,11 @@ function saveCurrentToolData() {
 window.addEventListener('message', function(event) {
     // Signal result from inject script
     if (event.data && event.data.type === 'signalResult') {
+        // Prevent duplicate processing using isDeducting flag
+        if (isDeducting) {
+            console.log('⚠️ Deduction already in progress, skipping duplicate signal.');
+            return;
+        }
         if (event.data.success === true) {
             const success = deductCredit();
             if (success) {
@@ -1937,7 +1936,7 @@ document.getElementById('toolFullscreenClose').addEventListener('click', functio
     window._currentTool = null;
     isToolMinimized = true;
     sessionStorage.setItem('brt_tool_minimized', 'true');
-    sessionStorage.removeItem('brt_tool_open'); // Clear open flag
+    sessionStorage.removeItem('brt_tool_open');
     if (recentTools.length > 0) {
         document.getElementById('recentToolsMini').style.display = 'block';
         updateRecentToolsMini();
@@ -1966,14 +1965,14 @@ window.openAccountModal = openAccountModal;
 
 // ─── SIGNAL GENERATION (credit deduction) - STRICT ───
 function deductCredit() {
-    if (isDeducting) return false; // Prevent re-entrancy
+    if (isDeducting) return false;
     isDeducting = true;
     
     try {
         const user = appState.currentUser;
         if (!user) return false;
         
-        // Bug 3 Fix: Use creditsPerSignal from appState (admin configurable)
+        // Use admin configured credits per signal (Bug 1 Fix)
         const creditsToDeduct = appState.creditsPerSignal || 1;
         
         if (user.credits < creditsToDeduct) {
@@ -2104,7 +2103,6 @@ function loadQRPreview() { const container = document.getElementById('qrDisplayC
 window.submitManualPayment = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
     
-    // Bug 5 Fix: Get both UTR and Transaction ID
     const utr = document.getElementById('utrInput').value.trim();
     const txId = document.getElementById('transactionIdInput').value.trim();
     
@@ -2117,7 +2115,7 @@ window.submitManualPayment = function() {
         return;
     }
     
-    const transactionId = utr || txId; // Use whichever is filled
+    const transactionId = utr || txId;
     
     const paymentRecord = { 
         userEmail: appState.currentUser.email, 
