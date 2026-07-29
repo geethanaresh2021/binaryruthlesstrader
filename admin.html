@@ -204,7 +204,7 @@
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
-        /* ===== SMOOTH CONTAINERS - NO ZOOM ===== */
+        /* ===== SMOOTH CONTAINERS - NO ZOOM, ONLY BORDER GLOW ===== */
         .red-container {
             background: var(--container-bg);
             border: 2px solid var(--container-border);
@@ -223,9 +223,7 @@
             border-color: rgba(255, 0, 51, 0.6);
             box-shadow: 0 0 30px rgba(255, 0, 51, 0.15);
         }
-        .red-container:active {
-            transform: scale(0.97);
-        }
+        /* NO transform: scale() on active */
         
         .fb-status-dot-sm {
             width: 7px; height: 7px; border-radius: 50%; display: inline-block;
@@ -289,7 +287,7 @@
             border-color: #FF0033;
             box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
         }
-        .social-icons-header a:active { transform: scale(0.95); }
+        /* NO transform: scale() */
         
         .nav-links {
             display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
@@ -301,10 +299,7 @@
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
         .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); box-shadow: 0 0 20px rgba(255,0,51,0.05); }
-        .nav-links button:active { transform: scale(0.95); }
-        .nav-links button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
-        .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
-        .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
+        /* NO transform: scale() */
         
         .admin-dash-grid {
             display: grid;
@@ -327,7 +322,6 @@
             border-color: #FF0033;
             box-shadow: 0 0 30px rgba(255, 0, 51, 0.12);
         }
-        .admin-dash-card:active { transform: scale(0.97); }
         .admin-dash-card .icon { font-size: 1.4rem; color: #FFD700; display: block; margin-bottom: 2px; transition: all 0.3s ease; }
         .admin-dash-card:hover .icon { transform: scale(1.1); }
         .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.3rem; font-weight: 700; display: block; margin: 2px 0; }
@@ -367,7 +361,6 @@
             border-color: rgba(255, 0, 51, 0.3);
             box-shadow: 0 0 24px rgba(255, 0, 51, 0.05);
         }
-        .admin-section:active { transform: scale(0.97); }
         .admin-section h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         
         .admin-section .field-group { margin-bottom: 8px; }
@@ -413,7 +406,7 @@
             box-shadow: 0 0 20px rgba(255,255,255,0.1);
             border-color: #FF0033;
         }
-        .admin-section .btn-row .btn-edit:active { transform: scale(0.95); }
+        .admin-section .btn-row .btn-edit:active { /* NO transform */ }
         
         .admin-section .btn-row .btn-save {
             flex: 1;
@@ -435,7 +428,7 @@
             box-shadow: 0 0 20px rgba(255,0,51,0.15);
             border-color: #FF0033;
         }
-        .admin-section .btn-row .btn-save:active { transform: scale(0.95); }
+        .admin-section .btn-row .btn-save:active { /* NO transform */ }
         .admin-section .btn-row .btn-save.show { display: block; }
         .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
         
@@ -518,7 +511,7 @@
             font-weight: 700;
         }
         .modal-close:hover { color: var(--text-primary); background: rgba(255,0,51,0.06); border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.08); }
-        .modal-close:active { transform: scale(0.8); }
+        .modal-close:active { /* NO transform */ }
         .modal h2 { 
             color: var(--popup-label); 
             text-align: center; 
@@ -563,7 +556,7 @@
             font-size: 0.75rem; 
         }
         .modal .btn-submit:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.3); border-color: #FF0033; }
-        .modal .btn-submit:active { transform: scale(0.97); }
+        .modal .btn-submit:active { /* NO transform */ }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
@@ -1146,6 +1139,7 @@
         .social-icons-header a, #chatUserList .chat-user-item {
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
+        /* Hover states - ONLY border glow, NO transform/scale */
         .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
         .tools-list .tool-item:hover, .social-list .social-item:hover,
         .features-list .feature-item:hover,
@@ -1158,6 +1152,20 @@
         .social-icons-header a:hover, #chatUserList .chat-user-item:hover {
             border-color: rgba(255, 0, 51, 0.4);
             box-shadow: 0 0 25px rgba(255, 0, 51, 0.1);
+            /* NO transform: scale() or translate() */
+        }
+        /* Active states - NO transform at all */
+        .red-container:active, .admin-dash-card:active, .admin-section:active,
+        .tools-list .tool-item:active, .social-list .social-item:active,
+        .features-list .feature-item:active,
+        .modal .btn-submit:active, .modal-close:active,
+        .nav-links button:active, .admin-section .btn-edit:active,
+        .admin-section .btn-save:active,
+        .tools-list .tool-item .tool-actions button:active,
+        .social-list .social-item .social-actions button:active,
+        .features-list .feature-item .feature-actions button:active,
+        .social-icons-header a:active, #chatUserList .chat-user-item:active {
+            /* NO transform: scale() at all */
         }
         
         /* Toast notification */
@@ -1666,7 +1674,6 @@ let appState = {
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
 let currentEditSection = null;
-let connectionCheckInterval = null;
 
 // ─── TOAST ───
 function showToast(message, isError = false) {
@@ -1698,7 +1705,6 @@ window.toggleDarkMode = function() {
     track.classList.toggle('active');
     const isDark = track.classList.contains('active');
     document.getElementById('darkModeLabel').textContent = isDark ? 'Dark' : 'Light';
-    // Save immediately on toggle
     appState.darkMode = isDark;
     saveLocalState();
 };
@@ -1721,7 +1727,7 @@ window.hidePasswordPopup = function() {
     window.location.href = 'index.html';
 };
 
-// ─── SAVE LOCAL STATE ─── FIXED ───
+// ─── SAVE LOCAL STATE ───
 function saveLocalState() {
     localStorage.setItem('brt_data', JSON.stringify(appState));
     if (isFirebaseConnected) {
@@ -1739,7 +1745,7 @@ function saveLocalState() {
     }
 }
 
-// ─── FIREBASE LISTENER ─── FIXED ───
+// ─── FIREBASE LISTENER ───
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true;
     document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
@@ -1747,10 +1753,8 @@ onValue(dbRef, (snapshot) => {
     
     const val = snapshot.val();
     if (val) {
-        // Merge data without overriding current session state
         const oldPassword = appState.password;
         appState = { ...appState, ...val };
-        // Keep password from session
         if (oldPassword) appState.password = oldPassword;
         
         updateUI();
@@ -1778,7 +1782,9 @@ onValue(dbRef, (snapshot) => {
             document.getElementById('darkModeLabel').textContent = 'Light';
         }
         
+        // LOGO SYNC FIX
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+            appState.logoBase64 = val.logoBase64;
             applyAdminLogo(val.logoBase64);
             localStorage.setItem('brt_logo', val.logoBase64);
         }
@@ -1804,7 +1810,6 @@ onValue(dbRef, (snapshot) => {
             renderRevenueData(currentRevenueTab);
         }
     } else {
-        // If no data, initialize
         saveLocalState();
     }
 }, (error) => {
@@ -1814,7 +1819,7 @@ onValue(dbRef, (snapshot) => {
     showToast('❌ Firebase connection failed! Check console.', true);
 });
 
-// ─── CHECK CONNECTION EVERY 10 SECONDS ───
+// ─── CHECK CONNECTION ───
 setInterval(() => {
     if (!isFirebaseConnected) {
         document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red';
