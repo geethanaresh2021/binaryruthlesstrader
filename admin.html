@@ -5,28 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader - Admin</title>
     
-    <!-- Eruda Mobile Console -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda@2.4.1/eruda.min.js"></script>
-    <script>
-        eruda.init();
-        console.log('🔍 Eruda Console Initialized!');
-        console.log('📱 Admin Panel - SMS Debug Mode Active');
-    </script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- EmailJS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
+    <!-- FCM SDK (Firebase Messaging) -->
     <script type="importmap">
         {
             "imports": {
                 "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
                 "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js",
+                "firebase/messaging": "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js"
             }
         }
     </script>
@@ -1157,7 +1148,7 @@
             transform: scale(0.97);
         }
         
-        /* Toast notification */
+        /* Toast notification (for general use only) */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -1443,45 +1434,7 @@
                 </div>
             </div>
             
-            <!-- 10. Email Configuration -->
-            <div class="admin-section" style="border-color:rgba(0,150,255,0.2);">
-                <h4 style="color:#0096FF;">📧 Email Configuration</h4>
-                <div class="field-group">
-                    <label>Mobile Number (SMS Gateway)</label>
-                    <input type="text" id="emailMobile" placeholder="Enter admin mobile number" disabled>
-                </div>
-                <div class="field-group">
-                    <label>Email (Backup)</label>
-                    <input type="email" id="emailAdminEmail" placeholder="Enter admin email" disabled>
-                </div>
-                <div class="field-group">
-                    <label>Network (SMS Gateway)</label>
-                    <select id="emailNetwork" disabled>
-                        <option value="airtel">Airtel</option>
-                        <option value="jio">Jio</option>
-                        <option value="vi">Vi (Vodafone Idea)</option>
-                        <option value="bsnl">BSNL</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>EmailJS Service ID</label>
-                    <input type="text" id="emailServiceId" placeholder="service_xxxxx" disabled>
-                </div>
-                <div class="field-group">
-                    <label>EmailJS Template ID</label>
-                    <input type="text" id="emailTemplateId" placeholder="template_xxxxx" disabled>
-                </div>
-                <div class="field-group">
-                    <label>EmailJS Public Key</label>
-                    <input type="text" id="emailPublicKey" placeholder="user_xxxxx" disabled>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="saveEmailConfig()">💾 Save</button>
-                </div>
-            </div>
-            
-            <!-- 11. Admin Access -->
+            <!-- 10. Admin Access -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
                 <div class="field-group"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
@@ -1502,7 +1455,7 @@
                 </div>
             </div>
             
-            <!-- 12. Change Password -->
+            <!-- 11. Change Password -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🔐 Change Password</h4>
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
@@ -1630,7 +1583,8 @@
     "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
         "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js",
+        "firebase/messaging": "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js"
     }
 }
 </script>
@@ -1639,10 +1593,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
-
-// Initialize EmailJS with default key (will be updated from config)
-const DEFAULT_EMAILJS_KEY = 'YFhS63TUMYVIbTmzy';
-emailjs.init(DEFAULT_EMAILJS_KEY);
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
@@ -1659,6 +1610,10 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
+
+// Initialize FCM
+const messaging = getMessaging(app);
+const VAPID_KEY = 'YOUR_VAPID_KEY_HERE'; // Firebase Console నుండి తీసుకోండి
 
 let appState = {
     password: 'admin123', 
@@ -1700,87 +1655,42 @@ let appState = {
         messagingSenderId: '533209261799',
         appId: '1:533209261799:web:a398ab21b0f913683ea442',
         measurementId: 'G-WQCXCMV5PR'
-    },
-    emailMobile: '',
-    emailAdminEmail: '',
-    emailNetwork: 'airtel',
-    emailServiceId: 'service_oy7de13',
-    emailTemplateId: 'template_9msjt2q',
-    emailPublicKey: 'YFhS63TUMYVIbTmzy'
+    }
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
 
-// ─── EMAILJS SEND FUNCTION WITH DEBUG LOGS ───
-function sendAdminSMS(type, data) {
-    console.log('📧 sendAdminSMS() called with type:', type);
-    console.log('📦 Data received:', data);
-    
-    // Read config from appState (which is synced with Firebase/LocalStorage)
-    const mobile = appState.emailMobile || '';
-    const network = appState.emailNetwork || 'airtel';
-    const serviceId = appState.emailServiceId || 'service_oy7de13';
-    const templateId = appState.emailTemplateId || 'template_9msjt2q';
-    const publicKey = appState.emailPublicKey || 'YFhS63TUMYVIbTmzy';
-    
-    console.log('📱 Admin Mobile:', mobile);
-    console.log('🌐 Network:', network);
-    console.log('🔑 Service ID:', serviceId);
-    console.log('🔑 Template ID:', templateId);
-    console.log('🔑 Public Key:', publicKey);
-    
-    if (!mobile || mobile.length < 10) {
-        console.log('⚠️ Admin mobile number not configured or invalid');
-        showToast('⚠️ SMS: Mobile number not configured!', true);
+// ─── FCM TOKEN REQUEST ───
+function requestFCMToken() {
+    if (!VAPID_KEY || VAPID_KEY === 'YOUR_VAPID_KEY_HERE') {
+        console.warn('⚠️ VAPID Key not configured. FCM notifications will not work.');
         return;
     }
     
-    // Construct SMS Gateway Email
-    let emailDomain = '';
-    switch(network.toLowerCase()) {
-        case 'airtel': emailDomain = '@airtelap.com'; break;
-        case 'jio': emailDomain = '@jio.com'; break;
-        case 'vi': emailDomain = '@ideacellular.net'; break;
-        case 'bsnl': emailDomain = '@bsnl.in'; break;
-        default: emailDomain = '@airtelap.com';
-    }
-    const recipientEmail = mobile + emailDomain;
-    console.log('📧 Gateway Email:', recipientEmail);
-    
-    // Prepare email data
-    const emailData = {
-        to_email: recipientEmail,
-        type: type === 'payment' ? 'Payment Request' : 'Verification Request',
-        message: data.message || 'New request from user!',
-        amount: data.amount || '',
-        credits: data.credits || '',
-        user: data.user || 'Unknown User',
-        accountId: data.accountId || 'N/A',
-        date: new Date().toLocaleString('en-IN', { 
-            day: '2-digit', month: '2-digit', year: 'numeric', 
-            hour: '2-digit', minute: '2-digit' 
+    getToken(messaging, { vapidKey: VAPID_KEY })
+        .then((currentToken) => {
+            if (currentToken) {
+                console.log('✅ FCM Token:', currentToken);
+                // Token ni Firebase Database లో Save చేయండి
+                set(ref(database, 'brt_data/adminFCMToken'), currentToken)
+                    .then(() => console.log('✅ FCM Token saved to Firebase'))
+                    .catch((err) => console.error('❌ Error saving FCM token:', err));
+            } else {
+                console.log('❌ No registration token available.');
+            }
         })
-    };
-    console.log('📨 Email Data:', emailData);
-    
-    // Initialize EmailJS with current public key
-    emailjs.init(publicKey);
-    console.log('🔐 EmailJS initialized with public key:', publicKey);
-    
-    // Send email via EmailJS
-    console.log('🚀 Sending email via EmailJS...');
-    emailjs.send(serviceId, templateId, emailData)
-        .then(function(response) {
-            console.log('✅ SMS sent successfully!', response);
-            console.log('📬 Response Status:', response.status, response.text);
-            showToast('✅ SMS Alert sent to Admin!');
-        })
-        .catch(function(error) {
-            console.log('❌ Failed to send SMS:', error);
-            console.log('❌ Error details:', error.text || error.message);
-            showToast('❌ Failed to send SMS alert - Check Console', true);
+        .catch((err) => {
+            console.error('❌ FCM Token Error:', err);
         });
 }
+
+// ─── FCM Foreground Message Listener ───
+onMessage(messaging, (payload) => {
+    console.log('📩 Foreground Notification:', payload);
+    const title = payload.notification?.title || 'New Alert';
+    const body = payload.notification?.body || 'Check admin panel for details';
+    showToast('🔔 ' + title + ': ' + body);
+});
 
 // ─── TOAST ───
 function showToast(message, isError = false) {
@@ -1793,24 +1703,6 @@ function showToast(message, isError = false) {
     }, 4000);
 }
 window.showToast = showToast;
-
-// ─── EMAIL CONFIG ───
-window.saveEmailConfig = function() {
-    appState.emailMobile = document.getElementById('emailMobile').value.trim();
-    appState.emailAdminEmail = document.getElementById('emailAdminEmail').value.trim();
-    appState.emailNetwork = document.getElementById('emailNetwork').value;
-    appState.emailServiceId = document.getElementById('emailServiceId').value.trim();
-    appState.emailTemplateId = document.getElementById('emailTemplateId').value.trim();
-    appState.emailPublicKey = document.getElementById('emailPublicKey').value.trim();
-    
-    saveLocalState();
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('emailMobile').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
-    showToast('✅ Email configuration saved!');
-    console.log('📧 Email config saved:', appState);
-};
 
 // ─── APPLY THEME ───
 function applyTheme(darkMode) {
@@ -2033,7 +1925,6 @@ function updatePendingCounts() {
     document.getElementById('verifiedUsersCount').textContent = verifiedUsers.length;
     document.getElementById('verifiedUsersCount').className = 'count gold';
     
-    // Update Total Revenue
     const allPayments = appState.payments || [];
     const successPayments = allPayments.filter(p => p.status === 'success');
     const totalRevenue = successPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
@@ -2167,7 +2058,6 @@ function renderRevenueData(tab) {
         });
         const total = monthPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
         
-        // Group by day
         const dayGroups = {};
         monthPayments.forEach(p => {
             const day = new Date(p.date).getDate();
@@ -2210,7 +2100,6 @@ function renderRevenueData(tab) {
         });
         const total = yearPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
         
-        // Group by month
         const monthGroups = {};
         yearPayments.forEach(p => {
             const month = new Date(p.date).getMonth() + 1;
@@ -2239,9 +2128,6 @@ function renderRevenueData(tab) {
 }
 
 // ─── FIREBASE LISTENER ───
-let previousPayments = [];
-let previousVerifications = [];
-
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true; 
     document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
@@ -2253,18 +2139,9 @@ onValue(dbRef, (snapshot) => {
             const newPending = newPayments.filter(p => p.status === 'pending');
             const oldPending = oldPayments.filter(p => p.status === 'pending');
             if (newPending.length > oldPending.length) {
-                const diff = newPending.find(p => !oldPending.find(op => op.transactionId === p.transactionId));
-                if (diff) {
-                    const user = (val.users || []).find(u => u.email === diff.userEmail);
-                    console.log('🆕 New pending payment detected!', diff);
-                    sendAdminSMS('payment', {
-                        message: `New payment request from ${user ? user.name || user.email : diff.userEmail}!`,
-                        amount: diff.amount || '',
-                        credits: diff.credits || '',
-                        user: user ? user.name || user.email : diff.userEmail,
-                        accountId: user ? user.accountId || 'N/A' : 'N/A'
-                    });
-                }
+                // New pending payment detected - trigger FCM notification
+                // Notification will be sent via Cloud Function
+                console.log('🆕 New pending payment detected!');
             }
         }
         
@@ -2274,16 +2151,9 @@ onValue(dbRef, (snapshot) => {
             const newPending = newVerifications.filter(r => r.status === 'pending');
             const oldPending = oldVerifications.filter(r => r.status === 'pending');
             if (newPending.length > oldPending.length) {
-                const diff = newPending.find(r => !oldPending.find(or => or.userEmail === r.userEmail && or.accountId === r.accountId));
-                if (diff) {
-                    console.log('🆕 New pending verification detected!', diff);
-                    sendAdminSMS('verification', {
-                        message: `New verification request from ${diff.userName || diff.userEmail}!`,
-                        credits: diff.freeCredits || appState.offerCredits || 10,
-                        user: diff.userName || diff.userEmail,
-                        accountId: diff.accountId || 'N/A'
-                    });
-                }
+                // New pending verification detected - trigger FCM notification
+                // Notification will be sent via Cloud Function
+                console.log('🆕 New pending verification detected!');
             }
         }
         
@@ -2318,13 +2188,6 @@ onValue(dbRef, (snapshot) => {
             localStorage.setItem('brt_logo', val.logoBase64);
         }
         
-        if (val.emailMobile !== undefined) document.getElementById('emailMobile').value = val.emailMobile || '';
-        if (val.emailAdminEmail !== undefined) document.getElementById('emailAdminEmail').value = val.emailAdminEmail || '';
-        if (val.emailNetwork !== undefined) document.getElementById('emailNetwork').value = val.emailNetwork || 'airtel';
-        if (val.emailServiceId !== undefined) document.getElementById('emailServiceId').value = val.emailServiceId || 'service_oy7de13';
-        if (val.emailTemplateId !== undefined) document.getElementById('emailTemplateId').value = val.emailTemplateId || 'template_9msjt2q';
-        if (val.emailPublicKey !== undefined) document.getElementById('emailPublicKey').value = val.emailPublicKey || 'YFhS63TUMYVIbTmzy';
-        
         if (val.offerName !== undefined) document.getElementById('offerName').value = val.offerName;
         if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
         if (val.creditsPerSignal !== undefined) {
@@ -2341,9 +2204,6 @@ onValue(dbRef, (snapshot) => {
             document.getElementById('fbAppId').value = val.firebaseConfig.appId || '';
             document.getElementById('fbMeasurementId').value = val.firebaseConfig.measurementId || '';
         }
-        
-        previousPayments = newPayments;
-        previousVerifications = newVerifications;
         
         if (document.getElementById('revenuePopup').classList.contains('active')) {
             renderRevenueData(currentRevenueTab);
@@ -2414,13 +2274,6 @@ function loadLocalState() {
         document.getElementById('fbMeasurementId').value = appState.firebaseConfig.measurementId || '';
     }
     
-    if (appState.emailMobile) document.getElementById('emailMobile').value = appState.emailMobile;
-    if (appState.emailAdminEmail) document.getElementById('emailAdminEmail').value = appState.emailAdminEmail;
-    if (appState.emailNetwork) document.getElementById('emailNetwork').value = appState.emailNetwork;
-    if (appState.emailServiceId) document.getElementById('emailServiceId').value = appState.emailServiceId;
-    if (appState.emailTemplateId) document.getElementById('emailTemplateId').value = appState.emailTemplateId;
-    if (appState.emailPublicKey) document.getElementById('emailPublicKey').value = appState.emailPublicKey;
-    
     updateUI(); 
     renderUsersList(); 
     renderBrokerList(); 
@@ -2472,6 +2325,8 @@ if (adminSession === 'true') {
     document.getElementById('adminArea').style.display = 'block'; 
     document.getElementById('passwordOverlay').classList.remove('active'); 
     loadLocalState(); 
+    // Request FCM Token after login
+    requestFCMToken();
 } else { 
     showPasswordPopup(); 
 }
@@ -2519,6 +2374,8 @@ window.adminLogin = function() {
         document.getElementById('adminArea').style.display = 'block'; 
         document.getElementById('adminPassInput').value = ''; 
         loadLocalState(); 
+        // Request FCM Token after login
+        requestFCMToken();
     } 
 };
 
@@ -3526,9 +3383,12 @@ function disableEditFields(section) {
     });
 }
 
-if (adminLoggedIn) { loadLocalState(); } else { showPasswordPopup(); }
-console.log('⚙️ Admin Panel Loaded with Eruda Console - SMS Debug Mode Active');
-console.log('📱 To test SMS, create a new pending payment or verification.');
+if (adminLoggedIn) { 
+    loadLocalState(); 
+    requestFCMToken();
+} else { 
+    showPasswordPopup(); 
+}
 
 // Expose functions globally
 window.adminApprovePayment = adminApprovePayment; window.adminRejectPayment = adminRejectPayment;
@@ -3551,9 +3411,6 @@ window.editFeature = editFeature; window.adminUpdateFeature = adminUpdateFeature
 window.adminSaveFirebase = adminSaveFirebase;
 window.toggleDarkMode = toggleDarkMode;
 window.saveCreditsPerSignal = saveCreditsPerSignal;
-window.saveEmailConfig = saveEmailConfig;
-window.sendAdminSMS = sendAdminSMS;
-window.showToast = showToast;
 </script>
 </body>
 </html>
