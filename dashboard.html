@@ -542,23 +542,16 @@
         .tool-fullscreen-header .header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
             min-width: 0;
             overflow: hidden;
             justify-content: flex-end;
         }
-        .tool-fullscreen-header .header-right .tool-name-display {
-            color: var(--text-secondary);
-            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
-            font-family: 'Orbitron', sans-serif;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
         /* Tool switch buttons container - scrolling */
         .tool-switch-container {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             overflow-x: auto;
             overflow-y: hidden;
             flex: 1;
@@ -574,15 +567,18 @@
             background: rgba(255,215,0,0.08);
             border: 1px solid rgba(255,215,0,0.15);
             color: #FFD700;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: clamp(0.4rem, 0.6vw, 0.6rem);
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
             white-space: nowrap;
             flex-shrink: 0;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .tool-fullscreen-header .header-right .tool-switch-btn:hover {
             background: rgba(255,215,0,0.15);
@@ -877,8 +873,7 @@
             .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
             .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
             .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
-            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.45rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.45rem; padding: 2px 8px; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; max-width: 80px; }
             .tool-fullscreen-close { font-size: 1.5rem; }
             .recent-tools-mini { padding: 8px 14px; }
             .recent-tools-mini .mini-title { font-size: 0.55rem; }
@@ -917,17 +912,14 @@
             .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.55rem; }
             .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
             .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
-            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.4rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; }
+            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.35rem; padding: 2px 6px; max-width: 60px; }
             .tool-fullscreen-close { font-size: 1.3rem; }
             .recent-tools-mini { padding: 6px 12px; }
             .recent-tools-mini .mini-title { font-size: 0.5rem; }
             .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
             .history-item { font-size: 0.5rem; padding: 3px 4px; }
             .history-empty { font-size: 0.5rem; }
-            /* ─── MOBILE: Tool switch container scroll ─── */
             .tool-switch-container { gap: 4px; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -1065,7 +1057,6 @@
             <span class="today-used-tool" id="toolHeaderTodayUsed">📊 Today: 0</span>
         </div>
         <div class="header-right">
-            <span class="tool-name-display" id="toolHeaderName">Tool</span>
             <div class="tool-switch-container" id="toolSwitchContainer">
                 <!-- Tool buttons will be added here dynamically -->
             </div>
@@ -1100,8 +1091,11 @@
         <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
             <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
-            <label>Transaction ID / UTR</label>
-            <input type="text" id="transactionIdInput" placeholder="Enter Transaction ID or UTR number">
+            <!-- Bug 5 Fix: Separate fields for UTR and Transaction ID -->
+            <label>UTR Number</label>
+            <input type="text" id="utrInput" placeholder="Enter UTR number">
+            <label style="margin-top:4px;">Transaction ID</label>
+            <input type="text" id="transactionIdInput" placeholder="Enter Transaction ID">
             <label style="margin-top:4px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
             <button class="btn-submit btn-gold" style="margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
         </div>
@@ -1172,13 +1166,25 @@ const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
 let appState = {
-    offerCredits: 10, upiId: 'binary@ruthless', paymentInstructions: 'Please transfer the amount to the UPI ID below.',
-    qrCodeBase64: '', creditPrice: 2, paymentApprovalMode: 'manual', paymentGateway: 'none', paymentEnvironment: 'test',
+    offerCredits: 10, 
+    upiId: 'binary@ruthless', 
+    paymentInstructions: 'Please transfer the amount to the UPI ID below.',
+    qrCodeBase64: '', 
+    creditPrice: 2, 
+    paymentApprovalMode: 'manual', 
+    paymentGateway: 'none', 
+    paymentEnvironment: 'test',
     creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
-    users: [], currentUser: null,
-    logoBase64: '', payments: [], chats: {},
-    tools: [], socialMedia: [], logoClickCount: 2,
+    users: [], 
+    currentUser: null,
+    logoBase64: '', 
+    payments: [], 
+    chats: {},
+    tools: [], 
+    socialMedia: [], 
+    logoClickCount: 2,
     darkMode: true,
+    creditsPerSignal: 1, // Bug 3 Fix: Admin configurable credits per signal
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
         { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1196,6 +1202,7 @@ let openTools = [];
 let recentTools = [];
 let isToolMinimized = false;
 let toolDataCache = {};
+let isDeducting = false; // Prevent multiple deduction calls
 
 function applyTheme(darkMode) {
     if (darkMode === false) {
@@ -1383,6 +1390,7 @@ onValue(dbRef, (snapshot) => {
             renderFeatures();
         }
         if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
+        if (val.creditsPerSignal !== undefined) { appState.creditsPerSignal = val.creditsPerSignal; }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1423,17 +1431,14 @@ function loadLocalState() {
     if (savedCache) {
         try { toolDataCache = JSON.parse(savedCache); } catch(e) {}
     }
-    
     const savedRecent = localStorage.getItem('brt_recent_tools');
     if (savedRecent) {
         try { recentTools = JSON.parse(savedRecent); } catch(e) {}
     }
-    
     const savedOpenTools = localStorage.getItem('brt_open_tools');
     if (savedOpenTools) {
         try { openTools = JSON.parse(savedOpenTools); } catch(e) {}
     }
-    
     const savedCurrent = localStorage.getItem('brt_current_tool');
     if (savedCurrent !== null) {
         currentToolIndex = parseInt(savedCurrent);
@@ -1488,7 +1493,9 @@ function loadLocalState() {
         isToolMinimized = true;
     }
     
-    if (openTools.length > 0 && currentToolIndex >= 0) {
+    // Bug 1 & Bug 4 Fix: Restore tool ONLY if it was open before refresh
+    const wasToolOpen = sessionStorage.getItem('brt_tool_open') === 'true';
+    if (wasToolOpen && openTools.length > 0 && currentToolIndex >= 0) {
         const tool = appState.tools[currentToolIndex];
         if (tool) {
             const overlay = document.getElementById('toolFullscreen');
@@ -1500,13 +1507,9 @@ function loadLocalState() {
             if (toolDataCache[cacheKey]) {
                 htmlContent = toolDataCache[cacheKey];
             }
-            // Inject user email
-            const user = appState.currentUser;
-            if (user) {
-                htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
-                htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
-                htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
-            }
+            
+            // Bug 4 Fix: Prepare HTML with inject script (same as openToolFullscreen)
+            htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
             iframe.srcdoc = htmlContent;
             
             updateToolHeader();
@@ -1514,6 +1517,9 @@ function loadLocalState() {
             document.getElementById('recentToolsMini').style.display = 'none';
             isToolMinimized = false;
         }
+    } else {
+        // If tool was not open, ensure session flag is cleared
+        sessionStorage.removeItem('brt_tool_open');
     }
 }
 
@@ -1523,159 +1529,12 @@ function applyLogo() {
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
 }
 
-// ─── RENDER TOOLS ───
-function renderTools() {
-    const container = document.getElementById('toolsContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    const tools = appState.tools || [];
-    const visibleTools = tools.filter(tool => tool.visibility === 'visible');
-    if (visibleTools.length === 0) { 
-        container.innerHTML = ''; 
-        return; 
-    }
-    visibleTools.forEach((tool, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'tool-btn';
-        
-        let toolNameHtml = tool.name || 'Untitled Tool';
-        if (toolNameHtml.includes('RUTHLESS')) {
-            toolNameHtml = toolNameHtml.replace(/RUTHLESS/g, '<span class="ruthless-in-tool">RUTHLESS</span>');
-        }
-        
-        const showFire = tool.showFire !== undefined ? tool.showFire : true;
-        
-        btn.innerHTML = `
-            <div class="tool-name">
-                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
-                ${toolNameHtml}
-                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
-            </div>
-            ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
-        `;
-        const globalIdx = appState.tools.indexOf(tool);
-        btn.addEventListener('click', function() { 
-            openToolFullscreen(globalIdx); 
-        });
-        container.appendChild(btn);
-    });
-}
-
-function updateToolHeader() {
+// ─── PREPARE TOOL HTML WITH INJECT SCRIPT (Bug 4 Fix) ───
+function prepareToolHTML(index, htmlContent) {
     const user = appState.currentUser;
-    if (!user) return;
-    document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
-    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
-    document.getElementById('toolHeaderTodayUsed').textContent = '📊 Today: ' + (user.todayUsed || 0);
-}
-
-function updateSwitchButtons() {
-    const container = document.getElementById('toolSwitchContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    const tools = appState.tools || [];
+    if (!user) return htmlContent;
     
-    // Show only first 2 tools in openTools
-    const displayTools = openTools.slice(0, 2);
-    
-    if (displayTools.length === 0) {
-        container.innerHTML = '<span style="color:var(--text-muted);font-size:0.5rem;white-space:nowrap;">No tools</span>';
-        return;
-    }
-    
-    displayTools.forEach((toolIdx, slot) => {
-        if (tools[toolIdx]) {
-            const btn = document.createElement('button');
-            btn.className = 'tool-switch-btn';
-            btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
-            if (currentToolIndex === toolIdx) {
-                btn.classList.add('active-tool');
-            }
-            btn.addEventListener('click', function() {
-                if (currentToolIndex !== toolIdx) {
-                    switchTool(toolIdx);
-                }
-            });
-            container.appendChild(btn);
-        }
-    });
-}
-
-// ─── SWITCH TOOL WITHOUT CLOSING ───
-function switchTool(index) {
-    if (!appState.tools[index]) return;
-    if (index === currentToolIndex) return;
-    
-    saveCurrentToolData();
-    
-    currentToolIndex = index;
-    localStorage.setItem('brt_current_tool', currentToolIndex);
-    
-    const tool = appState.tools[currentToolIndex];
-    const iframe = document.getElementById('toolFullscreenIframe');
-    
-    const cacheKey = 'tool_' + currentToolIndex;
-    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
-    // Inject user email
-    const user = appState.currentUser;
-    if (user) {
-        htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
-        htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
-        htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
-    }
-    iframe.srcdoc = htmlContent;
-    
-    document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
-    updateSwitchButtons();
-    updateToolHeader();
-}
-
-function openToolFullscreen(index) {
-    const user = appState.currentUser;
-    if (!user) { alert('Please login first!'); return; }
-    if (user.blocked) { alert('🚫 Account blocked'); return; }
-    if (user.credits < 1) {
-        openModal('noCreditsPopup');
-        return;
-    }
-    
-    const tools = appState.tools || [];
-    const tool = tools[index];
-    if (!tool) return;
-    
-    isToolMinimized = false;
-    sessionStorage.setItem('brt_tool_minimized', 'false');
-    document.getElementById('recentToolsMini').style.display = 'none';
-    
-    // If tool not in open list, add it (max 2)
-    if (!openTools.includes(index)) {
-        if (openTools.length >= 2) {
-            openTools.shift();
-        }
-        openTools.push(index);
-        localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
-    }
-    
-    currentToolIndex = index;
-    localStorage.setItem('brt_current_tool', currentToolIndex);
-    
-    updateToolHeader();
-    document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
-    
-    const overlay = document.getElementById('toolFullscreen');
-    const iframe = document.getElementById('toolFullscreenIframe');
-    overlay.classList.add('active');
-    
-    const cacheKey = 'tool_' + index;
-    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
-    
-    // Inject user email and credits into tool
+    // Inject user data
     htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
     htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
     htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
@@ -1833,8 +1692,157 @@ function openToolFullscreen(index) {
     <\/script>
     `;
     
-    // Append inject script to tool HTML
-    htmlContent = htmlContent + injectScript;
+    return htmlContent + injectScript;
+}
+
+// ─── RENDER TOOLS ───
+function renderTools() {
+    const container = document.getElementById('toolsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    const tools = appState.tools || [];
+    const visibleTools = tools.filter(tool => tool.visibility === 'visible');
+    if (visibleTools.length === 0) { 
+        container.innerHTML = ''; 
+        return; 
+    }
+    visibleTools.forEach((tool, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'tool-btn';
+        
+        let toolNameHtml = tool.name || 'Untitled Tool';
+        if (toolNameHtml.includes('RUTHLESS')) {
+            toolNameHtml = toolNameHtml.replace(/RUTHLESS/g, '<span class="ruthless-in-tool">RUTHLESS</span>');
+        }
+        
+        const showFire = tool.showFire !== undefined ? tool.showFire : true;
+        
+        btn.innerHTML = `
+            <div class="tool-name">
+                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
+                ${toolNameHtml}
+                ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
+            </div>
+            ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
+        `;
+        const globalIdx = appState.tools.indexOf(tool);
+        btn.addEventListener('click', function() { 
+            openToolFullscreen(globalIdx); 
+        });
+        container.appendChild(btn);
+    });
+}
+
+function updateToolHeader() {
+    const user = appState.currentUser;
+    if (!user) return;
+    document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
+    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+    document.getElementById('toolHeaderTodayUsed').textContent = '📊 Today: ' + (user.todayUsed || 0);
+}
+
+function updateSwitchButtons() {
+    const container = document.getElementById('toolSwitchContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    const tools = appState.tools || [];
+    
+    // Show only first 2 tools in openTools
+    const displayTools = openTools.slice(0, 2);
+    
+    if (displayTools.length === 0) {
+        return;
+    }
+    
+    displayTools.forEach((toolIdx, slot) => {
+        if (tools[toolIdx]) {
+            const btn = document.createElement('button');
+            btn.className = 'tool-switch-btn';
+            btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
+            if (currentToolIndex === toolIdx) {
+                btn.classList.add('active-tool');
+            }
+            btn.addEventListener('click', function() {
+                if (currentToolIndex !== toolIdx) {
+                    switchTool(toolIdx);
+                }
+            });
+            container.appendChild(btn);
+        }
+    });
+}
+
+// ─── SWITCH TOOL WITHOUT CLOSING ───
+function switchTool(index) {
+    if (!appState.tools[index]) return;
+    if (index === currentToolIndex) return;
+    
+    saveCurrentToolData();
+    
+    currentToolIndex = index;
+    localStorage.setItem('brt_current_tool', currentToolIndex);
+    
+    const tool = appState.tools[currentToolIndex];
+    const iframe = document.getElementById('toolFullscreenIframe');
+    
+    const cacheKey = 'tool_' + currentToolIndex;
+    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
+    if (toolDataCache[cacheKey]) {
+        htmlContent = toolDataCache[cacheKey];
+    }
+    htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
+    iframe.srcdoc = htmlContent;
+    
+    updateSwitchButtons();
+    updateToolHeader();
+}
+
+function openToolFullscreen(index) {
+    const user = appState.currentUser;
+    if (!user) { alert('Please login first!'); return; }
+    if (user.blocked) { alert('🚫 Account blocked'); return; }
+    if (user.credits < 1) {
+        openModal('noCreditsPopup');
+        return;
+    }
+    
+    const tools = appState.tools || [];
+    const tool = tools[index];
+    if (!tool) return;
+    
+    // Bug 1 Fix: Set session flag when tool opens
+    sessionStorage.setItem('brt_tool_open', 'true');
+    
+    isToolMinimized = false;
+    sessionStorage.setItem('brt_tool_minimized', 'false');
+    document.getElementById('recentToolsMini').style.display = 'none';
+    
+    // If tool not in open list, add it (max 2)
+    if (!openTools.includes(index)) {
+        if (openTools.length >= 2) {
+            openTools.shift();
+        }
+        openTools.push(index);
+        localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
+    }
+    
+    currentToolIndex = index;
+    localStorage.setItem('brt_current_tool', currentToolIndex);
+    
+    updateToolHeader();
+    
+    const overlay = document.getElementById('toolFullscreen');
+    const iframe = document.getElementById('toolFullscreenIframe');
+    overlay.classList.add('active');
+    
+    const cacheKey = 'tool_' + index;
+    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
+    if (toolDataCache[cacheKey]) {
+        htmlContent = toolDataCache[cacheKey];
+    }
+    
+    // Bug 4 Fix: Use prepareToolHTML to inject script
+    htmlContent = prepareToolHTML(index, htmlContent);
     iframe.srcdoc = htmlContent;
     
     if (!recentTools.includes(index)) {
@@ -1850,6 +1858,7 @@ function minimizeTool() {
     saveCurrentToolData();
     isToolMinimized = true;
     sessionStorage.setItem('brt_tool_minimized', 'true');
+    sessionStorage.removeItem('brt_tool_open'); // Clear open flag
     document.getElementById('toolFullscreen').classList.remove('active');
     document.getElementById('recentToolsMini').style.display = 'block';
     updateRecentToolsMini();
@@ -1928,6 +1937,7 @@ document.getElementById('toolFullscreenClose').addEventListener('click', functio
     window._currentTool = null;
     isToolMinimized = true;
     sessionStorage.setItem('brt_tool_minimized', 'true');
+    sessionStorage.removeItem('brt_tool_open'); // Clear open flag
     if (recentTools.length > 0) {
         document.getElementById('recentToolsMini').style.display = 'block';
         updateRecentToolsMini();
@@ -1956,17 +1966,34 @@ window.openAccountModal = openAccountModal;
 
 // ─── SIGNAL GENERATION (credit deduction) - STRICT ───
 function deductCredit() {
-    const user = appState.currentUser;
-    if (!user) return false;
-    if (user.credits < 1) return false;
-    user.credits -= 1;
-    user.signalsUsed = (user.signalsUsed || 0) + 1;
-    user.todayUsed = (user.todayUsed || 0) + 1;
-    user.totalUsed = (user.totalUsed || 0) + 1;
-    saveLocalState();
-    updateUI();
-    updateToolHeader();
-    return true;
+    if (isDeducting) return false; // Prevent re-entrancy
+    isDeducting = true;
+    
+    try {
+        const user = appState.currentUser;
+        if (!user) return false;
+        
+        // Bug 3 Fix: Use creditsPerSignal from appState (admin configurable)
+        const creditsToDeduct = appState.creditsPerSignal || 1;
+        
+        if (user.credits < creditsToDeduct) {
+            isDeducting = false;
+            return false;
+        }
+        
+        user.credits -= creditsToDeduct;
+        user.signalsUsed = (user.signalsUsed || 0) + 1;
+        user.todayUsed = (user.todayUsed || 0) + 1;
+        user.totalUsed = (user.totalUsed || 0) + 1;
+        saveLocalState();
+        updateUI();
+        updateToolHeader();
+        isDeducting = false;
+        return true;
+    } catch(e) {
+        isDeducting = false;
+        return false;
+    }
 }
 
 function updateUI() {
@@ -2063,7 +2090,7 @@ window.selectCreditPack = function(idx) {
     document.getElementById('proceedToPayBtn').style.display = 'block'; document.getElementById('paymentOptionsContainer').style.display = 'none';
     document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = '';
 };
-window.openAddCreditsModal = function() { if (!appState.currentUser) return; selectedCreditPack = null; document.getElementById('selectedPackDisplay').classList.remove('active'); document.getElementById('proceedToPayBtn').style.display = 'none'; document.getElementById('paymentOptionsContainer').style.display = 'none'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = ''; document.getElementById('transactionIdInput').value = ''; renderCreditPacks(); openModal('addCreditsModal'); };
+window.openAddCreditsModal = function() { if (!appState.currentUser) return; selectedCreditPack = null; document.getElementById('selectedPackDisplay').classList.remove('active'); document.getElementById('proceedToPayBtn').style.display = 'none'; document.getElementById('paymentOptionsContainer').style.display = 'none'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = ''; document.getElementById('utrInput').value = ''; document.getElementById('transactionIdInput').value = ''; renderCreditPacks(); openModal('addCreditsModal'); };
 window.showPaymentOptions = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
     document.getElementById('creditPacksContainer').style.display = 'none'; document.getElementById('proceedToPayBtn').style.display = 'none';
@@ -2076,11 +2103,47 @@ window.showPaymentOptions = function() {
 function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:160px;max-height:160px;border-radius:6px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
 window.submitManualPayment = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
-    const txId = document.getElementById('transactionIdInput').value.trim(); if (!txId || txId.length < 6) { document.getElementById('addCreditsError').textContent = '❌ Enter valid Transaction ID or UTR (min 6 chars)'; return; }
-    const paymentRecord = { userEmail: appState.currentUser.email, credits: selectedCreditPack.credits, amount: selectedCreditPack.price, transactionId: txId, status: 'pending', paymentMode: 'manual', date: new Date().toISOString(), screenshot: 'none' };
-    if (!appState.payments) appState.payments = []; appState.payments.push(paymentRecord); saveLocalState(); updateUI();
-    document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('transactionIdInput').value = '';
-    setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
+    
+    // Bug 5 Fix: Get both UTR and Transaction ID
+    const utr = document.getElementById('utrInput').value.trim();
+    const txId = document.getElementById('transactionIdInput').value.trim();
+    
+    if (!utr && !txId) {
+        document.getElementById('addCreditsError').textContent = '❌ Please enter UTR Number or Transaction ID';
+        return;
+    }
+    if ((utr && utr.length < 6) || (txId && txId.length < 6)) {
+        document.getElementById('addCreditsError').textContent = '❌ Enter at least 6 characters';
+        return;
+    }
+    
+    const transactionId = utr || txId; // Use whichever is filled
+    
+    const paymentRecord = { 
+        userEmail: appState.currentUser.email, 
+        credits: selectedCreditPack.credits, 
+        amount: selectedCreditPack.price, 
+        transactionId: transactionId,
+        utr: utr,
+        transactionIdField: txId,
+        status: 'pending', 
+        paymentMode: 'manual', 
+        date: new Date().toISOString(), 
+        screenshot: 'none' 
+    };
+    if (!appState.payments) appState.payments = []; 
+    appState.payments.push(paymentRecord); 
+    saveLocalState(); 
+    updateUI();
+    document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; 
+    document.getElementById('addCreditsError').textContent = ''; 
+    document.getElementById('utrInput').value = '';
+    document.getElementById('transactionIdInput').value = '';
+    setTimeout(() => { 
+        closeModal('addCreditsModal'); 
+        alert('✅ Payment submitted successfully!'); 
+        document.getElementById('creditPacksContainer').style.display = 'block'; 
+    }, 1500);
 };
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
