@@ -996,6 +996,45 @@
             .chat-messages-wrapper { min-height: 200px; }
         }
         
+        /* ===== CREDITS PER SIGNAL SETTING ===== */
+        .credits-per-signal-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .credits-per-signal-group input {
+            width: 80px;
+            padding: 6px 10px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,0,51,0.1);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.7rem;
+            text-align: center;
+            outline: none;
+        }
+        .credits-per-signal-group input:focus {
+            border-color: #FF0033;
+        }
+        .credits-per-signal-group .save-btn-small {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #FF0033;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .credits-per-signal-group .save-btn-small:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,0,51,0.2);
+        }
+        
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
         .cursor-glow.active { opacity: 1; }
         @media (hover: none) { .cursor-glow { display: none !important; } }
@@ -1133,6 +1172,20 @@
                 </div>
                 <div class="btn-row">
                     <button class="btn-save show" onclick="saveDarkMode()" style="background:#FF0033;color:#fff;">💾 Save Dark Mode</button>
+                </div>
+            </div>
+            
+            <!-- Credits Per Signal Setting - Bug 3 Fix -->
+            <div class="admin-section" style="border-color:rgba(0,255,102,0.15);">
+                <h4 style="color:#00FF66;">💎 Credits Per Signal</h4>
+                <div class="credits-per-signal-group">
+                    <span style="font-size:0.6rem;color:var(--text-secondary);">How many credits to deduct per successful signal:</span>
+                    <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled />
+                    <button class="save-btn-small" id="saveCreditsPerSignalBtn" style="display:none;" onclick="saveCreditsPerSignal()">💾 Save</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button>
                 </div>
             </div>
             
@@ -1468,6 +1521,7 @@ let appState = {
     paymentApprovalMode: 'manual', 
     paymentGateway: 'none', 
     paymentEnvironment: 'test',
+    creditsPerSignal: 1, // Bug 3 Fix: Admin configurable
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
         { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1766,6 +1820,10 @@ onValue(dbRef, (snapshot) => {
         if (val.features !== undefined) localStorage.setItem('brt_features', JSON.stringify(val.features));
         if (val.offerName !== undefined) document.getElementById('offerName').value = val.offerName;
         if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
+        if (val.creditsPerSignal !== undefined) {
+            appState.creditsPerSignal = val.creditsPerSignal;
+            document.getElementById('creditsPerSignalInput').value = val.creditsPerSignal;
+        }
         if (val.firebaseConfig) {
             document.getElementById('fbApiKey').value = val.firebaseConfig.apiKey || '';
             document.getElementById('fbAuthDomain').value = val.firebaseConfig.authDomain || '';
@@ -1799,6 +1857,16 @@ function loadLocalState() {
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
     const featuresData = localStorage.getItem('brt_features');
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
+    
+    // Load credits per signal
+    const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
+    if (creditsPerSignalData) {
+        const val = parseInt(creditsPerSignalData);
+        if (!isNaN(val) && val > 0) {
+            appState.creditsPerSignal = val;
+        }
+    }
+    
     applyTheme(appState.darkMode);
     const track = document.getElementById('darkModeToggleTrack');
     if (appState.darkMode) {
@@ -1810,6 +1878,9 @@ function loadLocalState() {
     }
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
+    if (appState.creditsPerSignal) {
+        document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
+    }
     if (appState.firebaseConfig) {
         document.getElementById('fbApiKey').value = appState.firebaseConfig.apiKey || '';
         document.getElementById('fbAuthDomain').value = appState.firebaseConfig.authDomain || '';
@@ -1842,7 +1913,28 @@ function updateUI() {
     document.getElementById('notificationEmail').value = appState.notificationEmail || '';
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
+    if (appState.creditsPerSignal) {
+        document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
+    }
 }
+
+// ─── CREDITS PER SIGNAL SAVE ───
+window.saveCreditsPerSignal = function() {
+    const input = document.getElementById('creditsPerSignalInput');
+    const value = parseInt(input.value);
+    if (isNaN(value) || value < 1) {
+        alert('Please enter a valid number (minimum 1)');
+        return;
+    }
+    appState.creditsPerSignal = value;
+    localStorage.setItem('brt_credits_per_signal', value);
+    saveLocalState();
+    disableEditFields(document.querySelector('.admin-section'));
+    const btn = document.getElementById('creditsPerSignalInput').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    alert('✅ Credits Per Signal saved: ' + value);
+};
 
 let adminSession = sessionStorage.getItem('admin_logged_in');
 if (adminSession === 'true') { adminLoggedIn = true; document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('passwordOverlay').classList.remove('active'); loadLocalState(); } else { showPasswordPopup(); }
@@ -1875,7 +1967,7 @@ window.changeAdminPassword = function() {
     document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
-// ─── PENDING PAYMENTS - BIGGER TEXT, AMOUNT GREEN, CREDITS YELLOW ───
+// ─── PENDING PAYMENTS - DETAILS ONE BELOW ANOTHER ───
 function renderPendingPayments() {
     const container = document.getElementById('pendingPaymentsList'); 
     if (!container) return; 
@@ -2674,6 +2766,7 @@ window.editFeature = editFeature; window.adminUpdateFeature = adminUpdateFeature
 window.adminSaveFirebase = adminSaveFirebase;
 window.toggleDarkMode = toggleDarkMode;
 window.saveDarkMode = saveDarkMode;
+window.saveCreditsPerSignal = saveCreditsPerSignal;
 </script>
 </body>
 </html>
