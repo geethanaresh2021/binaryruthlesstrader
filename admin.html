@@ -204,14 +204,14 @@
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
-        /* ===== SMOOTH CONTAINERS ===== */
+        /* ===== SMOOTH CONTAINERS - NO ZOOM ===== */
         .red-container {
             background: var(--container-bg);
             border: 2px solid var(--container-border);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             display: flex;
             justify-content: space-between;
@@ -220,8 +220,8 @@
             gap: 4px;
         }
         .red-container:hover {
-            border-color: rgba(255, 0, 51, 0.5);
-            box-shadow: 0 0 30px var(--shadow-color);
+            border-color: rgba(255, 0, 51, 0.6);
+            box-shadow: 0 0 30px rgba(255, 0, 51, 0.15);
         }
         
         .fb-status-dot-sm {
@@ -277,14 +277,13 @@
             color: var(--text-secondary);
             font-size: 0.65rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         .social-icons-header a:hover {
             color: #FF0033;
             border-color: #FF0033;
-            transform: translateY(-2px);
             box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
         }
         .social-icons-header a:active { transform: scale(0.95); }
@@ -295,10 +294,10 @@
         .nav-links button {
             padding: 1px 8px; border-radius: 12px; border: 1px solid var(--nav-link-border);
             background: var(--nav-link-bg); color: var(--nav-link-color); font-size: 0.4rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s ease;
+            cursor: pointer; transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
-        .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); }
+        .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); box-shadow: 0 0 20px rgba(255,0,51,0.05); }
         .nav-links button:active { transform: scale(0.95); }
         .nav-links button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
@@ -317,12 +316,14 @@
             padding: 14px 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        .admin-dash-card:hover { border-color: #FF0033; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
-        .admin-dash-card:active { transform: scale(0.97); }
+        .admin-dash-card:hover {
+            border-color: #FF0033;
+            box-shadow: 0 0 30px rgba(255, 0, 51, 0.12);
+        }
         .admin-dash-card .icon { font-size: 1.4rem; color: #FFD700; display: block; margin-bottom: 2px; transition: all 0.3s ease; }
         .admin-dash-card:hover .icon { transform: scale(1.1); }
         .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.3rem; font-weight: 700; display: block; margin: 2px 0; }
@@ -356,9 +357,12 @@
             padding: 14px 16px;
             margin-bottom: 10px;
             background: var(--section-bg);
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .admin-section:hover { border-color: rgba(255,0,51,0.15); box-shadow: 0 0 24px var(--shadow-color); }
+        .admin-section:hover {
+            border-color: rgba(255, 0, 51, 0.3);
+            box-shadow: 0 0 24px rgba(255, 0, 51, 0.05);
+        }
         .admin-section h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         
         .admin-section .field-group { margin-bottom: 8px; }
@@ -392,7 +396,7 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 0.55rem;
             text-transform: uppercase;
@@ -401,8 +405,8 @@
             color: var(--btn-edit-color);
         }
         .admin-section .btn-row .btn-edit:hover { 
-            box-shadow: 0 0 24px rgba(255,255,255,0.15); 
-            transform: scale(1.02); 
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            border-color: #FF0033;
         }
         .admin-section .btn-row .btn-edit:active { transform: scale(0.95); }
         
@@ -413,7 +417,7 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 0.55rem;
             text-transform: uppercase;
@@ -423,8 +427,8 @@
             display: none;
         }
         .admin-section .btn-row .btn-save:hover { 
-            box-shadow: 0 0 24px rgba(255,0,51,0.2); 
-            transform: scale(1.02); 
+            box-shadow: 0 0 20px rgba(255,0,51,0.15);
+            border-color: #FF0033;
         }
         .admin-section .btn-row .btn-save:active { transform: scale(0.95); }
         .admin-section .btn-row .btn-save.show { display: block; }
@@ -505,10 +509,10 @@
             cursor: pointer; 
             background: none; 
             border: none; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
             font-weight: 700;
         }
-        .modal-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255,0,51,0.06); }
+        .modal-close:hover { color: var(--text-primary); background: rgba(255,0,51,0.06); border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.08); }
         .modal-close:active { transform: scale(0.8); }
         .modal h2 { 
             color: var(--popup-label); 
@@ -549,11 +553,11 @@
             font-weight: 700; 
             border: none; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
             font-family: 'Inter', sans-serif; 
             font-size: 0.75rem; 
         }
-        .modal .btn-submit:hover { transform: scale(1.02); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+        .modal .btn-submit:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.3); border-color: #FF0033; }
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
@@ -633,7 +637,7 @@
             font-size: 0.6rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .revenue-tabs button.active {
             background: #FF0033;
@@ -642,6 +646,7 @@
         }
         .revenue-tabs button:hover {
             border-color: #FF0033;
+            box-shadow: 0 0 20px rgba(255,0,51,0.08);
         }
         .revenue-filter {
             display: flex;
@@ -835,9 +840,12 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
         }
-        .tools-list .tool-item:hover { border-color: rgba(255,0,51,0.15); transform: translateX(4px); }
+        .tools-list .tool-item:hover { 
+            border-color: rgba(255,0,51,0.3);
+            box-shadow: 0 0 20px rgba(255,0,51,0.05);
+        }
         .tools-list .tool-item .tool-info { flex: 1; }
         .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.6rem; font-family: 'Orbitron', sans-serif; }
         .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.45rem; margin-top: 1px; }
@@ -850,9 +858,12 @@
             font-size: 0.45rem; 
             font-weight: 700; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
         }
-        .tools-list .tool-item .tool-actions button:hover { transform: scale(1.04); }
+        .tools-list .tool-item .tool-actions button:hover { 
+            border-color: #FF0033;
+            box-shadow: 0 0 20px rgba(255,0,51,0.08);
+        }
         .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
@@ -876,9 +887,12 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
         }
-        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); transform: translateX(4px); }
+        .social-list .social-item:hover { 
+            border-color: rgba(255,0,51,0.3);
+            box-shadow: 0 0 20px rgba(255,0,51,0.05);
+        }
         .social-list .social-item .social-info { flex: 1; }
         .social-list .social-item .social-name { color: #FFD700; font-size: 0.55rem; }
         .social-list .social-item .social-url { color: var(--text-secondary); font-size: 0.45rem; }
@@ -890,9 +904,12 @@
             font-size: 0.4rem; 
             font-weight: 700; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
         }
-        .social-list .social-item .social-actions button:hover { transform: scale(1.04); }
+        .social-list .social-item .social-actions button:hover { 
+            border-color: #FF0033;
+            box-shadow: 0 0 20px rgba(255,0,51,0.08);
+        }
         .social-list .social-item .social-actions .btn-edit-social { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
         .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
@@ -906,11 +923,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .features-list .feature-item:hover {
-            border-color: rgba(255,0,51,0.15);
-            transform: translateX(4px);
+            border-color: rgba(255,0,51,0.3);
+            box-shadow: 0 0 20px rgba(255,0,51,0.05);
         }
         .features-list .feature-item .feature-info { flex: 1; }
         .features-list .feature-item .feature-name { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
@@ -923,9 +940,12 @@
             font-size: 0.4rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .features-list .feature-item .feature-actions button:hover { transform: scale(1.04); }
+        .features-list .feature-item .feature-actions button:hover {
+            border-color: #FF0033;
+            box-shadow: 0 0 20px rgba(255,0,51,0.08);
+        }
         .features-list .feature-item .feature-actions .btn-edit-feature { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .features-list .feature-item .feature-actions .btn-delete-feature { background: #FF0033; color: #fff; }
         .features-list .feature-item .feature-actions .btn-toggle-feature { background: #FFD700; color: #000; }
@@ -1110,7 +1130,7 @@
         .cursor-glow.active { opacity: 1; }
         @media (hover: none) { .cursor-glow { display: none !important; } }
         
-        /* Smooth transitions only - no scale/zoom */
+        /* ===== NO ZOOM EFFECTS - ONLY BORDER GLOW ===== */
         .red-container, .admin-dash-card, .admin-section, .tools-list .tool-item,
         .social-list .social-item, .features-list .feature-item,
         .modal .btn-submit, .modal-close, .nav-links button,
@@ -1119,8 +1139,9 @@
         .social-list .social-item .social-actions button,
         .features-list .feature-item .feature-actions button,
         .social-icons-header a, #chatUserList .chat-user-item {
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
+        /* Hover states - only border glow, no transform/scale */
         .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
         .tools-list .tool-item:hover, .social-list .social-item:hover,
         .features-list .feature-item:hover,
@@ -1131,8 +1152,11 @@
         .social-list .social-item .social-actions button:hover,
         .features-list .feature-item .feature-actions button:hover,
         .social-icons-header a:hover, #chatUserList .chat-user-item:hover {
-            transform: translateY(-2px);
+            border-color: rgba(255, 0, 51, 0.4);
+            box-shadow: 0 0 25px rgba(255, 0, 51, 0.1);
+            /* No transform: scale() or translate() */
         }
+        /* Active states - minimal scale only for button feedback */
         .red-container:active, .admin-dash-card:active, .admin-section:active,
         .tools-list .tool-item:active, .social-list .social-item:active,
         .features-list .feature-item:active,
@@ -1146,7 +1170,7 @@
             transform: scale(0.97);
         }
         
-        /* Toast notification (for general use only) */
+        /* Toast notification */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -1159,7 +1183,7 @@
             font-weight: 700;
             font-size: 0.8rem;
             box-shadow: 0 4px 20px rgba(0,255,102,0.3);
-            z-index: 99999;
+            z-index: 999999;
             display: none;
             animation: slideUp 0.5s ease;
             border: 2px solid #00FF66;
@@ -1651,6 +1675,7 @@ let appState = {
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
+let currentEditSection = null; // Track which section is in edit mode
 
 // ─── TOAST ───
 function showToast(message, isError = false) {
@@ -1699,7 +1724,6 @@ function applyAdminLogo(logoBase64) {
 
 window.hidePasswordPopup = function() {
     document.getElementById('passwordOverlay').classList.remove('active');
-    // Redirect to home page and ensure admin area is hidden
     window.location.href = 'index.html';
 };
 
@@ -2809,7 +2833,10 @@ function loadChatMessages() {
         box.innerHTML += `<div class="msg ${cls}">${c.message}<span class="time">${time}</span></div>`; 
         if (c.sender === 'user' && !c.read) c.read = true; 
     });
-    box.scrollTop = box.scrollHeight; 
+    // Auto-scroll with timeout
+    setTimeout(() => {
+        box.scrollTop = box.scrollHeight;
+    }, 100);
     saveLocalState(); 
     updateChatNotification();
 }
@@ -2878,6 +2905,8 @@ window.adminSavePaymentSettings = function() {
             saveLocalState(); 
             loadQRPreview(); 
             disableEditFields(document.querySelector('.admin-section')); 
+            // Reset file input
+            fileInput.value = '';
         }; 
         reader.readAsDataURL(fileInput.files[0]); 
     } else { 
@@ -3288,11 +3317,21 @@ window.saveAdminSettings = function() {
 // ─── EDIT/SAVE FUNCTIONS ───
 function enableEdit(btn) { 
     const section = btn.closest('.admin-section'); 
-    if (!section) return; 
+    if (!section) return;
+    
+    // If another section is in edit mode, disable it first
+    if (currentEditSection && currentEditSection !== section) {
+        // Find the edit button in the current edit section and disable it
+        const prevSection = currentEditSection;
+        disableEditFields(prevSection);
+    }
+    
     section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); 
     section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
     btn.style.display = 'none';
     section.classList.add('editable');
+    currentEditSection = section;
+    
     const lists = section.querySelectorAll('.item-list');
     lists.forEach(list => {
         if (list.id === 'creditPackList') renderCreditPackList();
@@ -3309,6 +3348,9 @@ function disableEditFields(section) {
         b.textContent = '✏️ Edit'; 
     }); 
     section.classList.remove('editable');
+    if (currentEditSection === section) {
+        currentEditSection = null;
+    }
     const lists = section.querySelectorAll('.item-list');
     lists.forEach(list => {
         if (list.id === 'creditPackList') renderCreditPackList();
