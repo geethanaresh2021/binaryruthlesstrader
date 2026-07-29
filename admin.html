@@ -10,14 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- FCM SDK (Firebase Messaging) -->
     <script type="importmap">
         {
             "imports": {
                 "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
                 "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js",
-                "firebase/messaging": "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js"
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
             }
         }
     </script>
@@ -1215,7 +1213,7 @@
             </div>
         </div>
         
-        <div id="adminDashboard">
+        <div id="adminDashboard" style="display:none;">
             <div class="admin-dash-grid">
                 <div class="admin-dash-card" onclick="openPendingPaymentsPopup()">
                     <span class="icon">💳</span>
@@ -1246,7 +1244,7 @@
             </div>
         </div>
         
-        <div id="adminArea">
+        <div id="adminArea" style="display:none;">
             
             <!-- 1. Offer Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
@@ -1583,8 +1581,7 @@
     "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
         "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js",
-        "firebase/messaging": "https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging.js"
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
     }
 }
 </script>
@@ -1593,7 +1590,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
@@ -1610,10 +1606,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
-
-// Initialize FCM
-const messaging = getMessaging(app);
-const VAPID_KEY = 'YOUR_VAPID_KEY_HERE'; // Firebase Console నుండి తీసుకోండి
 
 let appState = {
     password: 'admin123', 
@@ -1659,38 +1651,6 @@ let appState = {
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
-
-// ─── FCM TOKEN REQUEST ───
-function requestFCMToken() {
-    if (!VAPID_KEY || VAPID_KEY === 'YOUR_VAPID_KEY_HERE') {
-        console.warn('⚠️ VAPID Key not configured. FCM notifications will not work.');
-        return;
-    }
-    
-    getToken(messaging, { vapidKey: VAPID_KEY })
-        .then((currentToken) => {
-            if (currentToken) {
-                console.log('✅ FCM Token:', currentToken);
-                // Token ni Firebase Database లో Save చేయండి
-                set(ref(database, 'brt_data/adminFCMToken'), currentToken)
-                    .then(() => console.log('✅ FCM Token saved to Firebase'))
-                    .catch((err) => console.error('❌ Error saving FCM token:', err));
-            } else {
-                console.log('❌ No registration token available.');
-            }
-        })
-        .catch((err) => {
-            console.error('❌ FCM Token Error:', err);
-        });
-}
-
-// ─── FCM Foreground Message Listener ───
-onMessage(messaging, (payload) => {
-    console.log('📩 Foreground Notification:', payload);
-    const title = payload.notification?.title || 'New Alert';
-    const body = payload.notification?.body || 'Check admin panel for details';
-    showToast('🔔 ' + title + ': ' + body);
-});
 
 // ─── TOAST ───
 function showToast(message, isError = false) {
@@ -1739,6 +1699,7 @@ function applyAdminLogo(logoBase64) {
 
 window.hidePasswordPopup = function() {
     document.getElementById('passwordOverlay').classList.remove('active');
+    // Redirect to home page and ensure admin area is hidden
     window.location.href = 'index.html';
 };
 
@@ -2133,30 +2094,6 @@ onValue(dbRef, (snapshot) => {
     document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
     const val = snapshot.val();
     if (val) {
-        const newPayments = val.payments || [];
-        const oldPayments = appState.payments || [];
-        if (newPayments.length > oldPayments.length) {
-            const newPending = newPayments.filter(p => p.status === 'pending');
-            const oldPending = oldPayments.filter(p => p.status === 'pending');
-            if (newPending.length > oldPending.length) {
-                // New pending payment detected - trigger FCM notification
-                // Notification will be sent via Cloud Function
-                console.log('🆕 New pending payment detected!');
-            }
-        }
-        
-        const newVerifications = val.verificationRequests || [];
-        const oldVerifications = appState.verificationRequests || [];
-        if (newVerifications.length > oldVerifications.length) {
-            const newPending = newVerifications.filter(r => r.status === 'pending');
-            const oldPending = oldVerifications.filter(r => r.status === 'pending');
-            if (newPending.length > oldPending.length) {
-                // New pending verification detected - trigger FCM notification
-                // Notification will be sent via Cloud Function
-                console.log('🆕 New pending verification detected!');
-            }
-        }
-        
         appState = { ...appState, ...val };
         updateUI();
         renderUsersList();
@@ -2325,8 +2262,6 @@ if (adminSession === 'true') {
     document.getElementById('adminArea').style.display = 'block'; 
     document.getElementById('passwordOverlay').classList.remove('active'); 
     loadLocalState(); 
-    // Request FCM Token after login
-    requestFCMToken();
 } else { 
     showPasswordPopup(); 
 }
@@ -2374,8 +2309,6 @@ window.adminLogin = function() {
         document.getElementById('adminArea').style.display = 'block'; 
         document.getElementById('adminPassInput').value = ''; 
         loadLocalState(); 
-        // Request FCM Token after login
-        requestFCMToken();
     } 
 };
 
@@ -3385,7 +3318,6 @@ function disableEditFields(section) {
 
 if (adminLoggedIn) { 
     loadLocalState(); 
-    requestFCMToken();
 } else { 
     showPasswordPopup(); 
 }
