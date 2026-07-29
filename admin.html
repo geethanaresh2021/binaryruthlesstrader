@@ -661,7 +661,7 @@
         .modal .chat-msg-list::-webkit-scrollbar { width: 5px; }
         .modal .chat-msg-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        /* Incoming (User → Admin): White Background, Black Text */
+        /* Incoming (User → Admin): Background Red, Text Black */
         .modal .chat-msg-list .msg.admin { 
             background: #FF0033 !important; 
             color: #000000 !important; 
@@ -677,7 +677,7 @@
             align-self: flex-start;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        /* Outgoing (Admin → User): White Background, Black Text */
+        /* Outgoing (Admin → User): Background White, Text Black */
         .modal .chat-msg-list .msg.user { 
             background: #ffffff !important; 
             color: #000000 !important; 
@@ -907,7 +907,13 @@
             font-weight: 600;
         }
         
-        /* ===== CHAT USER LIST - BLACK BG, ONLY USER NAMES ===== */
+        /* ===== CHAT USER LIST - BLACK BG, 25% WIDTH ===== */
+        .chat-popup-layout {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 6px;
+            min-height: 350px;
+        }
         #chatUserList {
             background: #000000 !important;
             border: 1px solid rgba(255,0,51,0.15) !important;
@@ -916,7 +922,19 @@
             max-height: 400px;
             overflow-y: auto;
             min-width: 180px;
+            flex: 0 0 25%;
+            width: 25%;
+        }
+        .chat-messages-wrapper {
             flex: 1;
+            border: 1px solid rgba(255,0,51,0.06);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            min-height: 350px;
+            background: #000000 !important;
+            overflow: hidden;
         }
         #chatUserList .chat-user-item {
             color: #ffffff !important;
@@ -929,6 +947,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #chatUserList .chat-user-item .user-name-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
         }
         #chatUserList .chat-user-item:hover {
             background: rgba(255,0,51,0.08) !important;
@@ -958,76 +985,15 @@
         #chatUserList::-webkit-scrollbar { width: 4px; }
         #chatUserList::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        /* ─── CHAT SELECTED USER NAME ─── */
-        .chat-selected-user {
-            font-size: 0.6rem;
-            color: #FFD700;
-            font-family: 'Orbitron', sans-serif;
-            padding: 4px 8px;
-            background: rgba(255,215,0,0.05);
-            border-radius: 4px;
-            border: 1px solid rgba(255,215,0,0.08);
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chat-selected-user .clear-btn {
-            background: none;
-            border: none;
-            color: #FF0033;
-            cursor: pointer;
-            font-size: 0.8rem;
-            padding: 0 4px;
-        }
-        
         @media (max-width: 768px) {
-            .scroll-content { padding: 0 12px; }
-            .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 300px; }
-            .admin-dash-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .admin-dash-card { padding: 10px 8px; }
-            .admin-dash-card .count { font-size: 1.2rem; }
-            .payment-settings-grid { grid-template-columns: 1fr; }
-            .firebase-config-grid { grid-template-columns: 1fr; }
-            .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; flex-direction: column; align-items: stretch; gap: 2px; }
-            .brand-left { justify-content: center; }
-            .nav-links { justify-content: center; }
-            .admin-section { padding: 10px 12px; }
-            .modal .user-list-scroll { max-height: 300px; }
-            .modal .user-list-item { font-size: 0.6rem; padding: 8px 12px; }
-            .modal .chat-msg-list { max-height: 250px; }
-            .social-icons-header { justify-content: center; }
-            #chatUserList { max-height: 300px; min-width: 140px; }
-            #chatUserList .chat-user-item { font-size: 0.6rem !important; padding: 8px 10px !important; }
-            .modal .user-detail-row { font-size: 0.6rem; padding: 4px 0; }
+            .chat-popup-layout { flex-direction: column; gap: 6px; min-height: auto; }
+            #chatUserList { flex: 1; width: 100%; min-width: auto; max-height: 200px; }
+            .chat-messages-wrapper { min-height: 250px; }
         }
         @media (max-width: 480px) {
-            .admin-dash-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-            .admin-dash-card { padding: 8px 4px; }
-            .admin-dash-card .count { font-size: 1rem; }
-            .admin-dash-card .icon { font-size: 1.1rem; }
-            .brand-name-sm { font-size: 0.6rem; }
-            .nav-links button { font-size: 0.35rem; padding: 1px 5px; }
-            .admin-section { padding: 8px 10px; }
-            .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 250px; }
-            .modal h2 { font-size: 0.85rem; }
-            .modal label { font-size: 0.48rem; }
-            .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
-            .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
-            .modal .user-list-item { font-size: 0.5rem; padding: 6px 8px; }
-            .modal .user-list-scroll { max-height: 250px; }
-            .modal .chat-msg-list { max-height: 200px; }
-            .modal .chat-msg-list .msg { font-size: 0.65rem; padding: 4px 8px; }
-            .dark-mode-toggle-admin .toggle-track { width: 32px; height: 16px; }
-            .dark-mode-toggle-admin .toggle-track .toggle-thumb { width: 10px; height: 10px; }
-            .dark-mode-toggle-admin .toggle-track.active .toggle-thumb { left: 18px; }
-            .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
-            .logo-icon-sm { font-size: 1rem; }
-            .logo-img-sm { max-height: 1rem; }
-            #chatUserList { max-height: 250px; min-width: 100px; }
+            #chatUserList { max-height: 150px; }
             #chatUserList .chat-user-item { font-size: 0.5rem !important; padding: 6px 8px !important; }
-            .modal .user-detail-row { font-size: 0.5rem; padding: 3px 0; }
-            .chat-selected-user { font-size: 0.5rem; padding: 3px 6px; }
+            .chat-messages-wrapper { min-height: 200px; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -1214,6 +1180,11 @@
                     <div class="field-group"><label>Show Fire 🔥</label>
                         <select id="newToolFire"><option value="true">Yes</option><option value="false">No</option></select>
                     </div>
+                    <div class="field-group">
+                        <label>🎯 Trigger Button Names</label>
+                        <input type="text" id="newToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL, Trade" />
+                        <small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers (Signal, Get, Generate, BUY, SELL)</small>
+                    </div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminAddTool()" style="background:#FF0033;color:#fff;">💾 Save Tool</button>
                         <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
@@ -1227,6 +1198,11 @@
                     <div class="field-group"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
                     <div class="field-group"><label>Show Fire 🔥</label>
                         <select id="editToolFire"><option value="true">Yes</option><option value="false">No</option></select>
+                    </div>
+                    <div class="field-group">
+                        <label>🎯 Trigger Button Names</label>
+                        <input type="text" id="editToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL" />
+                        <small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers.</small>
                     </div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminUpdateTool()" style="background:#FF0033;color:#fff;">💾 Update Tool</button>
@@ -1416,11 +1392,11 @@
         <button class="modal-close" onclick="closeModal('chatPopup')">✕</button>
         <h2>💬 Chat</h2>
         <input class="search-input" id="chatSearchInput" placeholder="Search users..." oninput="filterChatUsers()">
-        <div style="display:flex;gap:10px;margin-bottom:6px;min-height:350px;">
-            <!-- Left: Only User Names -->
-            <div id="chatUserList" style="background:#000000 !important;border:1px solid rgba(255,0,51,0.15) !important;border-radius:8px;padding:8px;max-height:400px;overflow-y:auto;min-width:180px;flex:1;"></div>
-            <!-- Right: Chat Messages -->
-            <div style="flex:2.5;border:1px solid rgba(255,0,51,0.06);border-radius:8px;padding:8px;display:flex;flex-direction:column;min-height:350px;background:#000000 !important;">
+        <div class="chat-popup-layout">
+            <!-- Left: Only User Names - 25% -->
+            <div id="chatUserList" style="background:#000000 !important;border:1px solid rgba(255,0,51,0.15) !important;border-radius:8px;padding:8px;max-height:400px;overflow-y:auto;flex:0 0 25%;width:25%;min-width:180px;"></div>
+            <!-- Right: Chat Messages - 75% -->
+            <div class="chat-messages-wrapper" style="background:#000000 !important;">
                 <div class="chat-selected-user" id="chatSelectedUserDisplay">
                     <span>Select a user to chat</span>
                     <button class="clear-btn" onclick="clearSelectedChatUser()" style="display:none;">✕</button>
@@ -1919,28 +1895,28 @@ function renderPendingPayments() {
         
         container.innerHTML += `
             <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Name:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${userName}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Account ID:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${accountId}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Amount:</span>
                         <span style="color:#00FF66;font-weight:700;font-size:0.8rem;">₹${p.amount}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Credits:</span>
                         <span style="color:#FFD700;font-weight:700;font-size:0.8rem;">${p.credits}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;grid-column:1/2;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Txn ID / UTR:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${p.transactionId || 'N/A'}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;grid-column:2/3;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Date:</span>
                         <span style="color:var(--text-secondary);font-size:0.6rem;">${p.date ? new Date(p.date).toLocaleString() : 'N/A'}</span>
                     </div>
@@ -2002,20 +1978,20 @@ function renderPendingVerifications() {
         const actualIdx = appState.verificationRequests.indexOf(req);
         container.innerHTML += `
             <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Name:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.userName || 'N/A'}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Gmail:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.userEmail}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Account ID:</span>
                         <span style="color:#ffffff;font-weight:700;font-size:0.75rem;">${req.accountId || 'N/A'}</span>
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:3px 0;font-weight:600;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);padding:2px 0;font-weight:600;display:flex;justify-content:space-between;">
                         <span style="color:var(--text-muted);">Broker:</span>
                         <span style="color:#FFD700;font-weight:700;font-size:0.75rem;">${req.broker || 'N/A'}</span>
                     </div>
@@ -2262,7 +2238,7 @@ window.chatWithUser = function() {
     }, 300); 
 };
 
-// ─── CHAT - ONLY USER NAMES ON LEFT ───
+// ─── CHAT - ONLY USER NAMES ON LEFT (25%) ───
 function openChatPopup() { 
     openModal('chatPopup'); 
     updateChatUserList(); 
@@ -2316,10 +2292,8 @@ function updateChatUserList(filter = '') {
         const unreadCount = c.unread > 0 ? `<span class="unread-count">${c.unread}</span>` : '';
         container.innerHTML += `
             <div class="chat-user-item ${isSelected ? 'selected' : ''}" onclick="window.selectChatUser('${c.user.email}')">
-                <span style="color:#ffffff;font-size:0.7rem;font-weight:${isSelected ? '700' : '400'};">
-                    ${c.user.name || c.user.email}
-                </span>
-                <span style="display:flex;align-items:center;gap:4px;">
+                <span class="user-name-text">${c.user.name || c.user.email}</span>
+                <span style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
                     ${unreadBadge}
                     ${unreadCount}
                 </span>
@@ -2472,12 +2446,19 @@ function renderToolsList() {
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
         const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
         const fireBtnClass = fireStatus ? '' : 'off';
+        
+        // Display triggers
+        const triggerText = tool.triggers && tool.triggers.length > 0 
+            ? '🎯 ' + tool.triggers.join(', ') 
+            : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
+        
         container.innerHTML += `
             <div class="tool-item">
                 <div class="tool-info">
                     <div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>
                     ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
                     <div class="tool-status">${statusText} | Fire: ${fireStatus ? '✅' : '❌'}</div>
+                    <div style="font-size:0.4rem;color:var(--text-secondary);">${triggerText}</div>
                 </div>
                 <div class="tool-actions">
                     <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
@@ -2507,9 +2488,11 @@ window.editTool = function(idx) {
     document.getElementById('editToolHtml').value = tool.htmlCode || '';
     document.getElementById('editToolStatus').value = tool.visibility || 'visible';
     document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true';
+    document.getElementById('editToolTriggers').value = (tool.triggers || []).join(', ');
     document.getElementById('editToolForm').style.display = 'block';
     document.getElementById('addToolForm').style.display = 'none';
 };
+
 window.adminUpdateTool = function() {
     const idx = parseInt(document.getElementById('editToolIndex').value);
     const name = document.getElementById('editToolName').value.trim();
@@ -2517,10 +2500,18 @@ window.adminUpdateTool = function() {
     const htmlCode = document.getElementById('editToolHtml').value.trim();
     const visibility = document.getElementById('editToolStatus').value;
     const showFire = document.getElementById('editToolFire').value === 'true';
+    
+    // Get triggers
+    const triggersInput = document.getElementById('editToolTriggers').value.trim();
+    let triggers = [];
+    if (triggersInput) {
+        triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    }
+    
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
-    appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire };
+    appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
@@ -2529,6 +2520,7 @@ window.adminUpdateTool = function() {
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Update Tool'; }, 2000);
 };
+
 window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
 window.deleteTool = function(idx) { 
     if (confirm('Delete this tool?')) { 
@@ -2538,18 +2530,27 @@ window.deleteTool = function(idx) {
         renderToolsList(); 
     } 
 };
-window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; };
+window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; document.getElementById('newToolTriggers').value = ''; };
+
 window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim();
     const subName = document.getElementById('newToolSubName').value.trim();
     const htmlCode = document.getElementById('newToolHtml').value.trim();
     const visibility = document.getElementById('newToolStatus').value;
     const showFire = document.getElementById('newToolFire').value === 'true';
+    
+    // Get triggers
+    const triggersInput = document.getElementById('newToolTriggers').value.trim();
+    let triggers = [];
+    if (triggersInput) {
+        triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    }
+    
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
     if (!appState.tools) appState.tools = [];
-    appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire });
+    appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
