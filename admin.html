@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader - Admin</title>
     
+    <!-- Eruda Mobile Console -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda@2.4.1/eruda.min.js"></script>
+    <script>
+        eruda.init();
+        console.log('🔍 Eruda Console Initialized!');
+        console.log('📱 Admin Panel - SMS Debug Mode Active');
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -1238,7 +1246,7 @@
                     <span class="count green" id="chatNotificationCount">0</span>
                     <span class="label">Chat Messages</span>
                 </div>
-                <!-- NEW: Total Revenue Card -->
+                <!-- Total Revenue Card -->
                 <div class="admin-dash-card" onclick="openRevenuePopup()" style="border-color:rgba(255,215,0,0.3);">
                     <span class="icon">💰</span>
                     <span class="count gold" id="totalRevenueCount">₹0</span>
@@ -1632,10 +1640,9 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
-// Initialize EmailJS
-(function() {
-    emailjs.init("YFhS63TUMYVIbTmzy");
-})();
+// Initialize EmailJS with default key (will be updated from config)
+const DEFAULT_EMAILJS_KEY = 'YFhS63TUMYVIbTmzy';
+emailjs.init(DEFAULT_EMAILJS_KEY);
 
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
@@ -1704,21 +1711,33 @@ let appState = {
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
 
-// ─── EMAILJS SEND FUNCTION ───
+// ─── EMAILJS SEND FUNCTION WITH DEBUG LOGS ───
 function sendAdminSMS(type, data) {
+    console.log('📧 sendAdminSMS() called with type:', type);
+    console.log('📦 Data received:', data);
+    
+    // Read config from appState (which is synced with Firebase/LocalStorage)
     const mobile = appState.emailMobile || '';
     const network = appState.emailNetwork || 'airtel';
     const serviceId = appState.emailServiceId || 'service_oy7de13';
     const templateId = appState.emailTemplateId || 'template_9msjt2q';
     const publicKey = appState.emailPublicKey || 'YFhS63TUMYVIbTmzy';
     
+    console.log('📱 Admin Mobile:', mobile);
+    console.log('🌐 Network:', network);
+    console.log('🔑 Service ID:', serviceId);
+    console.log('🔑 Template ID:', templateId);
+    console.log('🔑 Public Key:', publicKey);
+    
     if (!mobile || mobile.length < 10) {
-        console.log('⚠️ Admin mobile number not configured');
+        console.log('⚠️ Admin mobile number not configured or invalid');
+        showToast('⚠️ SMS: Mobile number not configured!', true);
         return;
     }
     
+    // Construct SMS Gateway Email
     let emailDomain = '';
-    switch(network) {
+    switch(network.toLowerCase()) {
         case 'airtel': emailDomain = '@airtelap.com'; break;
         case 'jio': emailDomain = '@jio.com'; break;
         case 'vi': emailDomain = '@ideacellular.net'; break;
@@ -1726,7 +1745,9 @@ function sendAdminSMS(type, data) {
         default: emailDomain = '@airtelap.com';
     }
     const recipientEmail = mobile + emailDomain;
+    console.log('📧 Gateway Email:', recipientEmail);
     
+    // Prepare email data
     const emailData = {
         to_email: recipientEmail,
         type: type === 'payment' ? 'Payment Request' : 'Verification Request',
@@ -1740,17 +1761,24 @@ function sendAdminSMS(type, data) {
             hour: '2-digit', minute: '2-digit' 
         })
     };
+    console.log('📨 Email Data:', emailData);
     
+    // Initialize EmailJS with current public key
     emailjs.init(publicKey);
+    console.log('🔐 EmailJS initialized with public key:', publicKey);
     
+    // Send email via EmailJS
+    console.log('🚀 Sending email via EmailJS...');
     emailjs.send(serviceId, templateId, emailData)
         .then(function(response) {
             console.log('✅ SMS sent successfully!', response);
+            console.log('📬 Response Status:', response.status, response.text);
             showToast('✅ SMS Alert sent to Admin!');
         })
         .catch(function(error) {
             console.log('❌ Failed to send SMS:', error);
-            showToast('❌ Failed to send SMS alert', true);
+            console.log('❌ Error details:', error.text || error.message);
+            showToast('❌ Failed to send SMS alert - Check Console', true);
         });
 }
 
@@ -1781,6 +1809,7 @@ window.saveEmailConfig = function() {
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
     showToast('✅ Email configuration saved!');
+    console.log('📧 Email config saved:', appState);
 };
 
 // ─── APPLY THEME ───
@@ -2227,6 +2256,7 @@ onValue(dbRef, (snapshot) => {
                 const diff = newPending.find(p => !oldPending.find(op => op.transactionId === p.transactionId));
                 if (diff) {
                     const user = (val.users || []).find(u => u.email === diff.userEmail);
+                    console.log('🆕 New pending payment detected!', diff);
                     sendAdminSMS('payment', {
                         message: `New payment request from ${user ? user.name || user.email : diff.userEmail}!`,
                         amount: diff.amount || '',
@@ -2246,6 +2276,7 @@ onValue(dbRef, (snapshot) => {
             if (newPending.length > oldPending.length) {
                 const diff = newPending.find(r => !oldPending.find(or => or.userEmail === r.userEmail && or.accountId === r.accountId));
                 if (diff) {
+                    console.log('🆕 New pending verification detected!', diff);
                     sendAdminSMS('verification', {
                         message: `New verification request from ${diff.userName || diff.userEmail}!`,
                         credits: diff.freeCredits || appState.offerCredits || 10,
@@ -2314,7 +2345,6 @@ onValue(dbRef, (snapshot) => {
         previousPayments = newPayments;
         previousVerifications = newVerifications;
         
-        // Refresh revenue if popup is open
         if (document.getElementById('revenuePopup').classList.contains('active')) {
             renderRevenueData(currentRevenueTab);
         }
@@ -3497,7 +3527,8 @@ function disableEditFields(section) {
 }
 
 if (adminLoggedIn) { loadLocalState(); } else { showPasswordPopup(); }
-console.log('⚙️ Admin Panel Loaded with Total Revenue Feature');
+console.log('⚙️ Admin Panel Loaded with Eruda Console - SMS Debug Mode Active');
+console.log('📱 To test SMS, create a new pending payment or verification.');
 
 // Expose functions globally
 window.adminApprovePayment = adminApprovePayment; window.adminRejectPayment = adminRejectPayment;
