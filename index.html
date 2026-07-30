@@ -1271,7 +1271,7 @@
             text-shadow: 0 0 20px rgba(255, 0, 51, 0.1);
         }
 
-        /* ─── INFO POPUP (for Login/Verify messages) ─── */
+        /* ─── POPUP CONTAINER (for Login/Verify messages) ─── */
         .info-popup-overlay {
             position: fixed;
             top: 0;
@@ -1372,12 +1372,6 @@
         }
         .info-popup .popup-btn.btn-white:hover {
             box-shadow: 0 6px 28px rgba(255, 255, 255, 0.2);
-        }
-
-        /* ─── POPUP BUTTON CENTER ─── */
-        .info-popup .popup-btn.center-btn {
-            display: block;
-            margin: 0 auto;
         }
 
         @keyframes modalSlide {
@@ -1519,12 +1513,6 @@
             height: 60px;
             resize: vertical;
             font-size: 0.7rem;
-        }
-
-        /* ─── ACCOUNT ID ONLY NUMBERS ─── */
-        .modal input[type="text"].account-id-input {
-            -webkit-user-select: text;
-            user-select: text;
         }
 
         .modal .btn-submit {
@@ -2004,7 +1992,7 @@
             <span class="popup-icon" id="infoPopupIcon">ℹ️</span>
             <h3 id="infoPopupTitle">Info</h3>
             <p id="infoPopupMessage">Message here</p>
-            <button class="popup-btn center-btn" id="infoPopupBtn" style="display:none;">Continue</button>
+            <button class="popup-btn" id="infoPopupBtn" style="display:none;">Continue</button>
         </div>
     </div>
 
@@ -2014,7 +2002,7 @@
             <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
             <h2>🔐 LOGIN</h2>
             <label>Gmail / Email</label>
-            <input type="email" id="loginEmail" placeholder="your@gmail.com" />
+            <input type="email" id="loginEmail" placeholder="your@email.com" />
             <label>Account ID</label>
             <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="loginError"></div>
@@ -2035,7 +2023,7 @@
                 <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
             </div>
             <label>Gmail / Email</label>
-            <input type="email" id="signupEmail" placeholder="your@gmail.com" />
+            <input type="email" id="signupEmail" placeholder="your@email.com" />
             <div class="error-msg" id="signupError"></div>
             <div class="success-msg" id="signupSuccess"></div>
             <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
@@ -2050,11 +2038,11 @@
             <label>Full Name</label>
             <input type="text" id="verifyName" placeholder="Enter your full name" />
             <label>Gmail / Email</label>
-            <input type="email" id="verifyEmail" placeholder="your@gmail.com" />
+            <input type="email" id="verifyEmail" placeholder="your@email.com" />
             <label>Select Your Broker</label>
             <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
             <label>Account ID</label>
-            <input type="text" class="account-id-input" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" id="verifyAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="verifyError"></div>
             <div class="success-msg" id="verifySuccess"></div>
             <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
@@ -2316,7 +2304,7 @@
             if (btnText) {
                 btn.style.display = 'block';
                 btn.textContent = btnText;
-                btn.className = 'popup-btn center-btn';
+                btn.className = 'popup-btn';
                 if (btnText.toLowerCase().includes('signup') || btnText.toLowerCase().includes('continue')) {
                     btn.classList.add('btn-gold');
                 } else {
@@ -2342,11 +2330,6 @@
         }
 
         document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
-
-        // ─── EMAIL VALIDATION (GMAIL ONLY) ───
-        function isValidEmail(email) {
-            return /^[^\s@]+@gmail\.com$/.test(email);
-        }
 
         // ─── FIREBASE ───
         onValue(dbRef, (snapshot) => {
@@ -2495,18 +2478,12 @@
                 errorEl.textContent = '❌ Enter email and account ID';
                 return;
             }
-
-            // Validate Gmail
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
             
             // Check if user exists
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
             
             if (!user) {
-                // User not found - Show signup popup with button in center
+                // User not found - Show signup popup
                 showInfoPopup(
                     '📝',
                     'Account Not Found!',
@@ -2576,16 +2553,8 @@
             const successEl = document.getElementById('signupSuccess');
             errorEl.textContent = '';
             successEl.textContent = '';
-            
             if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
             if (!email) { errorEl.textContent = '❌ Enter email'; return; }
-
-            // Validate Gmail
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
-
             const brokerData = appState.brokers.find(b => b.name === broker);
             if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
             if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
@@ -2602,7 +2571,6 @@
                 freeCredits: 0,
                 signalsUsed: 0,
                 todayUsed: 0,
-                totalUsed: 0,
                 blocked: false,
                 registeredAt: new Date().toISOString()
             };
@@ -2631,38 +2599,14 @@
             
             if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
             if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
-
-            // Validate Gmail
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
-
             if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
-            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID (Numbers only)'; return; }
+            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID'; return; }
             
-            // Check if user exists - if not, create one
-            let user = appState.users.find(u => u.email === email);
+            // Check if user exists
+            const user = appState.users.find(u => u.email === email);
             if (!user) {
-                // Create new user if not exists
-                const brokerData = appState.brokers.find(b => b.name === broker);
-                user = {
-                    email,
-                    accountId: accountId,
-                    name: name,
-                    broker: broker,
-                    verified: false,
-                    deposit: 0,
-                    requiredDeposit: brokerData ? brokerData.minDeposit : 0,
-                    credits: 0,
-                    freeCredits: 0,
-                    signalsUsed: 0,
-                    todayUsed: 0,
-                    totalUsed: 0,
-                    blocked: false,
-                    registeredAt: new Date().toISOString()
-                };
-                appState.users.push(user);
+                errorEl.textContent = '❌ User not found. Please sign up first.';
+                return;
             }
             
             if (user.blocked) {
@@ -2869,7 +2813,6 @@
         window.handleLogin = handleLogin;
         window.handleSignup = handleSignup;
         window.handleVerify = handleVerify;
-        window.isValidEmail = isValidEmail;
     </script>
 </body>
 </html>
