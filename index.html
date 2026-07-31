@@ -46,7 +46,7 @@
     </script>
 
     <style>
-        /* ─── CSS VARIABLES FOR DARK/LIGHT MODE ─── */
+        /* ─── CSS VARIABLES (Dark Theme Only) ─── */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
@@ -92,55 +92,6 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #fff;
             --popup-label: #FFD700;
-            --popup-close-color: #FF0033;
-        }
-
-        /* Light Mode */
-        [data-theme="light"] {
-            --bg-primary: #f0f0f5;
-            --bg-secondary: #e8e8ee;
-            --bg-card: rgba(0,0,0,0.02);
-            --bg-container: rgba(255,0,51,0.02);
-            --text-primary: #111111;
-            --text-secondary: #444444;
-            --text-muted: #777777;
-            --border-color: rgba(255,0,51,0.2);
-            --border-light: rgba(0,0,0,0.06);
-            --border-visible: rgba(255,0,51,0.25);
-            --shadow-color: rgba(255,0,51,0.05);
-            --input-bg: rgba(255,255,255,0.7);
-            --modal-bg: rgba(255,255,255,0.97);
-            --overlay-bg: rgba(0,0,0,0.5);
-            --red-container-bg: rgba(255,0,51,0.02);
-            --user-card-bg: rgba(0,0,0,0.02);
-            --feature-card-bg: rgba(0,0,0,0.02);
-            --stat-item-hover: rgba(0,0,0,0.02);
-            --social-icon-bg: rgba(0,0,0,0.02);
-            --social-icon-border: rgba(255,0,51,0.08);
-            --tool-btn-bg: rgba(255,215,0,0.04);
-            --tool-btn-border: rgba(255,215,0,0.12);
-            --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.04), rgba(255,215,0,0.02));
-            --offer-banner-border: rgba(255,215,0,0.12);
-            --footer-border: rgba(255,0,51,0.04);
-            --admin-nav-bg: rgba(255,255,255,0.85);
-            --admin-nav-border: rgba(255,0,51,0.12);
-            --user-logout-bg: rgba(255,255,255,0.85);
-            --user-logout-border: rgba(255,0,51,0.12);
-            --brand-tagline-color: #999;
-            --container-bg: rgba(255,0,51,0.02);
-            --container-border: rgba(255,0,51,0.2);
-            --section-bg: rgba(0,0,0,0.01);
-            --section-border: rgba(255,0,51,0.06);
-            --btn-edit-bg: #000000;
-            --btn-edit-color: #ffffff;
-            --btn-save-bg: #FF0033;
-            --btn-save-color: #ffffff;
-            --toggle-bg: #ccc;
-            --toggle-thumb: #fff;
-            --popup-bg: rgba(255,255,255,0.97);
-            --popup-border: rgba(255,0,51,0.2);
-            --popup-text: #111;
-            --popup-label: #FF0033;
             --popup-close-color: #FF0033;
         }
 
@@ -2090,11 +2041,10 @@
             offerCredits: 10,
             offerName: 'FREE SIGNAL OFFER',
             offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
-            darkMode: true,
             brokers: [
-                { name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
+                { id: 'broker_1', name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000,
                     rules: 'Verify email, deposit ₹1000' },
-                { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
+                { id: 'broker_2', name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500,
                     rules: 'Verify phone, deposit ₹500' }
             ],
             users: [],
@@ -2115,18 +2065,28 @@
             upiId: 'binary@ruthless',
             paymentInstructions: 'Please transfer the amount to the UPI ID.',
             qrCodeBase64: '',
-            creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
-            chats: {}
+            creditPacks: [{ id: 'pack_1', credits: 50, price: 99 }, { id: 'pack_2', credits: 100, price: 199 }, { id: 'pack_3', credits: 250, price: 349 }, { id: 'pack_4', credits: 500, price: 599 }],
+            chats: {},
+            paymentApprovalMode: 'manual',
+            razorpayKeyId: '',
+            razorpayKeySecret: '',
+            creditsPerSignal: 1,
+            logoBase64: ''
         };
 
         let isFirebaseConnected = false;
 
-        // ─── APPLY THEME ───
-        function applyTheme(darkMode) {
-            if (darkMode === false) {
-                document.documentElement.setAttribute('data-theme', 'light');
+        // ─── APPLY LOGO ───
+        function applyLogo(logoBase64) {
+            const logoIcon = document.getElementById('logoIcon');
+            const logoImg = document.getElementById('logoImage');
+            if (logoBase64) {
+                logoIcon.style.display = 'none';
+                logoImg.src = logoBase64;
+                logoImg.style.display = 'block';
             } else {
-                document.documentElement.removeAttribute('data-theme');
+                logoIcon.style.display = 'block';
+                logoImg.style.display = 'none';
             }
         }
 
@@ -2322,7 +2282,6 @@
                 } else {
                     btn.classList.add('btn-white');
                 }
-                // Remove old click listeners
                 const newBtn = btn.cloneNode(true);
                 btn.parentNode.replaceChild(newBtn, btn);
                 newBtn.addEventListener('click', function(e) {
@@ -2360,11 +2319,11 @@
                 if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
                 if (val.offerName !== undefined) appState.offerName = val.offerName;
                 if (val.offerDescription !== undefined) appState.offerDescription = val.offerDescription;
-                if (val.darkMode !== undefined) {
-                    appState.darkMode = val.darkMode;
-                    applyTheme(appState.darkMode);
+                if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
+                    appState.logoBase64 = val.logoBase64;
+                    applyLogo(val.logoBase64);
+                    localStorage.setItem('brt_logo', val.logoBase64);
                 }
-                if (val.logoBase64 !== undefined && val.logoBase64 !== '') applyLogo(val.logoBase64);
                 if (val.socialMedia !== undefined) {
                     appState.socialMedia = val.socialMedia;
                     localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
@@ -2379,6 +2338,14 @@
                     localStorage.setItem('brt_features', JSON.stringify(val.features));
                     renderFeatures();
                 }
+                if (val.brokers !== undefined) {
+                    appState.brokers = val.brokers;
+                    localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+                }
+                if (val.creditPacks !== undefined) {
+                    appState.creditPacks = val.creditPacks;
+                    localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
+                }
                 if (currentUserEmail) {
                     const found = appState.users.find(u => u.email === currentUserEmail);
                     if (found) appState.currentUser = found;
@@ -2386,6 +2353,8 @@
                 }
                 updateUI();
                 updateOfferBanner();
+                renderSocialMedia();
+                renderFeatures();
             }
         }, (error) => {
             isFirebaseConnected = false;
@@ -2407,7 +2376,10 @@
                 } catch (e) { console.error(e); }
             }
             const logoData = localStorage.getItem('brt_logo');
-            if (logoData) applyLogo(logoData);
+            if (logoData) {
+                appState.logoBase64 = logoData;
+                applyLogo(logoData);
+            }
             const socialData = localStorage.getItem('brt_social');
             if (socialData) {
                 try {
@@ -2429,26 +2401,26 @@
                     if (parsed.length > 0) appState.features = parsed;
                 } catch (e) {}
             }
-            applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
+            const brokersData = localStorage.getItem('brt_brokers');
+            if (brokersData) {
+                try {
+                    const parsed = JSON.parse(brokersData);
+                    if (parsed.length > 0) appState.brokers = parsed;
+                } catch (e) {}
+            }
+            const creditPacksData = localStorage.getItem('brt_creditPacks');
+            if (creditPacksData) {
+                try {
+                    const parsed = JSON.parse(creditPacksData);
+                    if (parsed.length > 0) appState.creditPacks = parsed;
+                } catch (e) {}
+            }
             updateUI();
             renderSocialMedia();
             renderFeatures();
             updateOfferBanner();
             checkAdminSession();
             checkUserSession();
-        }
-
-        function applyLogo(logoBase64) {
-            const logoIcon = document.getElementById('logoIcon');
-            const logoImg = document.getElementById('logoImage');
-            if (logoBase64) {
-                logoIcon.style.display = 'none';
-                logoImg.src = logoBase64;
-                logoImg.style.display = 'block';
-            } else {
-                logoIcon.style.display = 'block';
-                logoImg.style.display = 'none';
-            }
         }
 
         function updateUI() {
@@ -2496,17 +2468,14 @@
                 return;
             }
 
-            // Validate Gmail
             if (!isValidEmail(email)) {
                 errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
                 return;
             }
             
-            // Check if user exists
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
             
             if (!user) {
-                // User not found - Show signup popup with button in center
                 showInfoPopup(
                     '📝',
                     'Account Not Found!',
@@ -2526,15 +2495,12 @@
                 return;
             }
             
-            // Check if user is verified
             if (!user.verified) {
-                // Check if user has a pending verification request
                 const pendingRequest = appState.verificationRequests?.find(
                     req => req.userEmail === email && req.status === 'pending'
                 );
                 
                 if (pendingRequest) {
-                    // Pending verification - Show popup
                     showInfoPopup(
                         '⏳',
                         'Verification Pending!',
@@ -2543,7 +2509,6 @@
                         null
                     );
                 } else {
-                    // No pending verification - Show signup popup
                     showInfoPopup(
                         '✅',
                         'Not Verified Yet!',
@@ -2559,7 +2524,6 @@
                 return;
             }
             
-            // User is verified - Login success
             appState.currentUser = user;
             sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
@@ -2580,7 +2544,6 @@
             if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
             if (!email) { errorEl.textContent = '❌ Enter email'; return; }
 
-            // Validate Gmail
             if (!isValidEmail(email)) {
                 errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
                 return;
@@ -2632,7 +2595,6 @@
             if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
             if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
 
-            // Validate Gmail
             if (!isValidEmail(email)) {
                 errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
                 return;
@@ -2641,10 +2603,8 @@
             if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
             if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID (Numbers only)'; return; }
             
-            // Check if user exists - if not, create one
             let user = appState.users.find(u => u.email === email);
             if (!user) {
-                // Create new user if not exists
                 const brokerData = appState.brokers.find(b => b.name === broker);
                 user = {
                     email,
@@ -2675,7 +2635,6 @@
                 return;
             }
             
-            // Check if user already has a pending request
             const existingPending = appState.verificationRequests?.find(
                 req => req.userEmail === email && req.status === 'pending'
             );
@@ -2684,7 +2643,6 @@
                 return;
             }
             
-            // Create verification request
             const newRequest = {
                 userName: name,
                 userEmail: email,
@@ -2698,13 +2656,11 @@
             if (!appState.verificationRequests) appState.verificationRequests = [];
             appState.verificationRequests.push(newRequest);
             
-            // Update user's name and accountId
             user.name = name;
             user.accountId = accountId;
             
             saveLocalState();
             
-            // Show success popup
             showInfoPopup(
                 '✅',
                 'Verification Submitted!',
@@ -2713,7 +2669,6 @@
                 null
             );
             
-            // Clear form
             document.getElementById('verifyName').value = '';
             document.getElementById('verifyEmail').value = '';
             document.getElementById('verifyAccountId').value = '';
@@ -2846,7 +2801,6 @@
         loadLocalState();
         console.log('🏠 Home Page Loaded');
         console.log('🔑 Admin Password: ' + appState.password);
-        console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
         console.log('📢 Offer: ' + appState.offerName + ' - ' + appState.offerCredits + ' credits');
 
         document.addEventListener('keydown', (e) => {
@@ -2856,14 +2810,12 @@
             }
         });
 
-        // ─── CLOSE INFO POPUP ON OVERLAY CLICK ───
         document.getElementById('infoPopup').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeInfoPopup();
             }
         });
 
-        // Expose functions globally
         window.showInfoPopup = showInfoPopup;
         window.closeInfoPopup = closeInfoPopup;
         window.handleLogin = handleLogin;
