@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binary Ruthless Trader - Admin</title>
+    <title>Binary Ruthless Trader - Admin Panel</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,221 +21,794 @@
     </script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+        /* ================================
+           SECTION 1: CSS VARIABLES & RESET
+           ================================ */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111;
+            --bg-card: rgba(255,255,255,0.02);
+            --text-primary: #ffffff;
+            --text-secondary: #aaa;
+            --text-muted: #666;
+            --border-color: rgba(255,0,51,0.15);
+            --border-hover: rgba(255,0,51,0.3);
+            --border-active: #FF0033;
+            --input-bg: rgba(255,255,255,0.04);
+            --shadow-color: rgba(255,0,51,0.06);
+            --btn-edit-bg: #2a2a2a;
+            --btn-edit-color: #fff;
+            --btn-save-bg: #FF0033;
+            --btn-save-color: #fff;
+            --btn-add-bg: #FFD700;
+            --btn-add-color: #000;
+            --btn-delete-bg: #FF0033;
+            --btn-delete-color: #fff;
+            --modal-bg: #1a1a1a;
+            --popup-bg: rgba(0,0,0,0.85);
+            --popup-border: rgba(255,0,51,0.15);
+            --gold: #FFD700;
+            --green: #00FF66;
+            --red: #FF0033;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; }
+        input, select, button, textarea { font-size: 16px !important; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,0,51,0.03); }
+        ::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
+
+        /* ================================
+           SECTION 2: APP CONTAINER
+           ================================ */
         .app { max-width: 1200px; margin: 0 auto; padding: 10px 16px; }
-        
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,0,51,0.15); margin-bottom: 12px; }
+
+        /* ================================
+           SECTION 3: HEADER
+           ================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .header:hover { border-color: var(--border-hover); box-shadow: 0 0 20px var(--shadow-color); }
+        .header:active { border-color: var(--border-active); }
         .header-left { display: flex; align-items: center; gap: 10px; }
-        .header-logo { font-size: 1.2rem; color: #FF0033; font-family: 'Orbitron', sans-serif; font-weight: 900; }
-        .header-logo .ruth { color: #FF0033; }
-        .header-status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .header-status.green { background: #00FF66; }
-        .header-status.red { background: #FF0033; }
+        .header-logo { font-size: 1.2rem; font-family: 'Orbitron', sans-serif; font-weight: 900; }
+        .header-logo .ruth { color: var(--red); }
+        .header-status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; transition: 0.3s; }
+        .header-status.green { background: var(--green); box-shadow: 0 0 12px rgba(0,255,102,0.4); }
+        .header-status.red { background: var(--red); box-shadow: 0 0 12px rgba(255,0,51,0.4); }
         .header-nav { display: flex; gap: 6px; flex-wrap: wrap; }
-        .header-nav button { padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: #aaa; font-size: 0.55rem; cursor: pointer; transition: 0.3s; }
-        .header-nav button:hover { border-color: #FF0033; color: #fff; }
-        .header-nav .logout { border-color: rgba(255,0,51,0.2); color: #FF0033; }
+        .header-nav button {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.55rem;
+            cursor: pointer;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+        .header-nav button:hover { border-color: var(--red); color: var(--text-primary); }
+        .header-nav .logout { border-color: rgba(255,0,51,0.2); color: var(--red); }
+        .header-nav .logout:hover { background: rgba(255,0,51,0.06); }
+
+        /* ================================
+           SECTION 4: STATS DASHBOARD CARDS
+           ================================ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover { border-color: var(--border-hover); box-shadow: 0 0 20px var(--shadow-color); }
+        .stat-card:active { border-color: var(--border-active); box-shadow: 0 0 30px rgba(255,0,51,0.1); }
+        .stat-card .icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
+        .stat-card .count {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: block;
+            margin: 2px 0;
+        }
+        .stat-card .count.green { color: var(--green); }
+        .stat-card .count.red { color: var(--red); }
+        .stat-card .count.gold { color: var(--gold); }
+        .stat-card .label { font-size: 0.45rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ================================
+           SECTION 5: SETTINGS SECTIONS
+           ================================ */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover { border-color: var(--border-hover); box-shadow: 0 0 20px var(--shadow-color); }
+        .section:active { border-color: var(--border-active); box-shadow: 0 0 30px rgba(255,0,51,0.08); }
         
-        /* Stats Grid */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
-        .stat-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .stat-card:hover { border-color: rgba(255,0,51,0.3); }
-        .stat-card .icon { font-size: 1.2rem; }
-        .stat-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.1rem; font-weight: 700; display: block; margin: 2px 0; }
-        .stat-card .count.green { color: #00FF66; }
-        .stat-card .count.red { color: #FF0033; }
-        .stat-card .count.gold { color: #FFD700; }
-        .stat-card .label { font-size: 0.45rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Sections */
-        .section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; transition: 0.3s; }
-        .section:hover { border-color: rgba(255,0,51,0.2); }
-        .section.active { border-color: #FF0033; }
-        .section-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-        .section-head h3 { font-size: 0.7rem; font-family: 'Orbitron', sans-serif; color: #FFD700; letter-spacing: 0.5px; }
-        .section-head .actions { display: flex; gap: 4px; }
-        .section-head .actions button { padding: 3px 10px; border-radius: 4px; border: none; font-size: 0.45rem; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Inter', sans-serif; }
-        .section-head .actions .btn-edit { background: #2a2a2a; color: #fff; }
-        .section-head .actions .btn-edit:hover { background: #3a3a3a; }
-        .section-head .actions .btn-save { background: #FF0033; color: #fff; display: none; }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .section-head h3 {
+            font-size: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+        .section-head .actions { display: flex; gap: 4px; flex-wrap: wrap; }
+        .section-head .actions button {
+            padding: 3px 10px;
+            border-radius: 4px;
+            border: none;
+            font-size: 0.45rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .section-head .actions .btn-edit { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
+        .section-head .actions .btn-edit:hover { box-shadow: 0 0 16px rgba(255,255,255,0.05); }
+        .section-head .actions .btn-save {
+            background: var(--btn-save-bg);
+            color: var(--btn-save-color);
+            display: none;
+        }
         .section-head .actions .btn-save.show { display: inline-block; }
-        .section-head .actions .btn-save:hover { background: #ff1a44; }
-        .section-head .actions .btn-add { background: #FFD700; color: #000; }
-        .section-head .actions .btn-add:hover { background: #ffe44d; }
-        
+        .section-head .actions .btn-save:hover { box-shadow: 0 0 16px rgba(255,0,51,0.2); }
+        .section-head .actions .btn-add { background: var(--btn-add-bg); color: var(--btn-add-color); }
+        .section-head .actions .btn-add:hover { box-shadow: 0 0 16px rgba(255,215,0,0.2); }
+
+        /* ================================
+           SECTION 6: FORM FIELDS
+           ================================ */
         .field { margin-bottom: 5px; }
-        .field label { font-size: 0.45rem; color: #888; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
-        .field input, .field select, .field textarea { width: 100%; padding: 5px 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; color: #fff; font-size: 0.6rem; outline: none; transition: 0.3s; font-family: 'Inter', sans-serif; }
-        .field input:focus, .field select:focus, .field textarea:focus { border-color: #FF0033; }
+        .field:last-child { margin-bottom: 0; }
+        .field label {
+            font-size: 0.45rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 5px 8px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.6rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: var(--border-active);
+            box-shadow: 0 0 12px rgba(255,0,51,0.04);
+        }
         .field textarea { height: 36px; resize: vertical; }
         .field input:disabled, .field textarea:disabled { opacity: 0.5; cursor: not-allowed; }
+        
         .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .row2 .field { margin-bottom: 0; }
         .row2 .field.full { grid-column: 1 / -1; }
-        
-        /* List */
-        .list { max-height: 140px; overflow-y: auto; margin-top: 4px; border: 1px solid rgba(255,255,255,0.04); border-radius: 4px; padding: 2px; }
-        .list::-webkit-scrollbar { width: 4px; }
-        .list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.5rem; }
-        .list-item .name { color: #FFD700; }
-        .list-item .detail { color: #aaa; }
-        .list-item .item-actions { display: none; gap: 4px; }
-        .list-item .item-actions button { background: none; border: none; cursor: pointer; font-size: 0.45rem; padding: 2px 4px; border-radius: 2px; transition: 0.3s; }
-        .list-item .item-actions .edit { color: #FFD700; }
-        .list-item .item-actions .edit:hover { background: rgba(255,215,0,0.1); }
-        .list-item .item-actions .del { color: #FF0033; }
-        .list-item .item-actions .del:hover { background: rgba(255,0,51,0.1); }
-        .list-item .item-actions .toggle { color: #00FF66; }
-        .list-item .item-actions .toggle:hover { background: rgba(0,255,102,0.1); }
+
+        /* ================================
+           SECTION 7: ITEM LISTS (CRUD)
+           ================================ */
+        .list-container {
+            max-height: 140px;
+            overflow-y: auto;
+            margin-top: 4px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 4px;
+            padding: 2px;
+        }
+        .list-container::-webkit-scrollbar { width: 4px; }
+        .list-container::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.5rem;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+        .list-item:hover { background: rgba(255,0,51,0.03); }
+        .list-item .name { color: var(--gold); }
+        .list-item .detail { color: var(--text-secondary); }
+        .list-item .item-actions {
+            display: none;
+            gap: 4px;
+            align-items: center;
+        }
+        .list-item .item-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.45rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+        .list-item .item-actions .edit { color: var(--gold); }
+        .list-item .item-actions .edit:hover { background: rgba(255,215,0,0.08); }
+        .list-item .item-actions .del { color: var(--red); }
+        .list-item .item-actions .del:hover { background: rgba(255,0,51,0.08); }
+        .list-item .item-actions .toggle { color: var(--green); }
+        .list-item .item-actions .toggle:hover { background: rgba(0,255,102,0.08); }
+        .list-item .item-actions .fire { color: #FF4500; }
+        .list-item .item-actions .fire:hover { background: rgba(255,69,0,0.08); }
         .editable .list-item .item-actions { display: flex; }
-        
-        /* Add/Edit Forms */
-        .add-form, .edit-form { display: none; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.04); }
+
+        .status-badge {
+            font-size: 0.35rem;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .status-badge.visible { background: rgba(0,255,102,0.1); color: var(--green); }
+        .status-badge.hidden { background: rgba(255,0,51,0.1); color: var(--red); }
+
+        /* ================================
+           SECTION 8: ADD / EDIT FORMS
+           ================================ */
+        .add-form, .edit-form {
+            display: none;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
         .add-form.show, .edit-form.show { display: block; }
-        .add-form .btn-row, .edit-form .btn-row { display: flex; gap: 4px; margin-top: 4px; }
-        .add-form .btn-row button, .edit-form .btn-row button { flex: 1; padding: 4px; border-radius: 4px; border: none; font-size: 0.45rem; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Inter', sans-serif; }
-        .add-form .btn-row .save-btn { background: #FF0033; color: #fff; }
-        .add-form .btn-row .save-btn:hover { background: #ff1a44; }
-        .add-form .btn-row .cancel-btn, .edit-form .btn-row .cancel-btn { background: #333; color: #fff; }
-        .add-form .btn-row .cancel-btn:hover, .edit-form .btn-row .cancel-btn:hover { background: #444; }
-        .edit-form .btn-row .update-btn { background: #FFD700; color: #000; }
-        .edit-form .btn-row .update-btn:hover { background: #ffe44d; }
-        
-        /* Payment Fields */
-        .payment-fields { padding: 6px 8px; border: 1px solid rgba(255,215,0,0.06); border-radius: 6px; margin-top: 4px; background: rgba(255,215,0,0.02); }
+        .add-form .btn-row, .edit-form .btn-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .add-form .btn-row button, .edit-form .btn-row button {
+            flex: 1;
+            padding: 4px;
+            border-radius: 4px;
+            border: none;
+            font-size: 0.45rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .add-form .btn-row .save-btn { background: var(--red); color: #fff; }
+        .add-form .btn-row .save-btn:hover { box-shadow: 0 0 16px rgba(255,0,51,0.2); }
+        .add-form .btn-row .cancel-btn { background: #333; color: #fff; }
+        .add-form .btn-row .cancel-btn:hover { box-shadow: 0 0 16px rgba(255,255,255,0.05); }
+        .edit-form .btn-row .update-btn { background: var(--gold); color: #000; }
+        .edit-form .btn-row .update-btn:hover { box-shadow: 0 0 16px rgba(255,215,0,0.2); }
+        .edit-form .btn-row .cancel-btn { background: #333; color: #fff; }
+        .edit-form .btn-row .cancel-btn:hover { box-shadow: 0 0 16px rgba(255,255,255,0.05); }
+
+        /* ================================
+           SECTION 9: PAYMENT SETTINGS
+           ================================ */
+        .payment-fields {
+            padding: 6px 8px;
+            border: 1px solid rgba(255,215,0,0.06);
+            border-radius: 6px;
+            margin-top: 4px;
+            background: rgba(255,215,0,0.02);
+        }
         .payment-fields .field { margin-bottom: 3px; }
         .payment-fields .field:last-child { margin-bottom: 0; }
         .qr-preview { max-width: 80px; max-height: 80px; border-radius: 4px; margin-top: 2px; }
-        
-        .tools-list .tool-item, .social-list .social-item, .features-list .feature-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.5rem; background: rgba(255,255,255,0.01); border-radius: 4px; margin-bottom: 2px; }
-        .tools-list .tool-item .tool-info, .social-list .social-item .social-info, .features-list .feature-item .feature-info { flex: 1; }
-        .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.5rem; }
-        .tools-list .tool-item .tool-subname { color: #888; font-size: 0.4rem; }
-        .tools-list .tool-item .tool-actions, .social-list .social-item .social-actions, .features-list .feature-item .feature-actions { display: none; gap: 4px; }
-        .tools-list .tool-item .tool-actions button, .social-list .social-item .social-actions button, .features-list .feature-item .feature-actions button { background: none; border: none; cursor: pointer; font-size: 0.4rem; padding: 2px 4px; border-radius: 2px; transition: 0.3s; }
-        .tools-list .tool-item .tool-actions .edit { color: #FFD700; }
-        .tools-list .tool-item .tool-actions .edit:hover { background: rgba(255,215,0,0.1); }
-        .tools-list .tool-item .tool-actions .del { color: #FF0033; }
-        .tools-list .tool-item .tool-actions .del:hover { background: rgba(255,0,51,0.1); }
-        .tools-list .tool-item .tool-actions .toggle { color: #00FF66; }
-        .tools-list .tool-item .tool-actions .toggle:hover { background: rgba(0,255,102,0.1); }
+
+        /* ================================
+           SECTION 10: TOOLS / SOCIAL / FEATURES LISTS
+           ================================ */
+        .tools-list .tool-item,
+        .social-list .social-item,
+        .features-list .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.5rem;
+            background: rgba(255,255,255,0.01);
+            border-radius: 4px;
+            margin-bottom: 2px;
+            transition: background 0.2s ease;
+        }
+        .tools-list .tool-item:hover,
+        .social-list .social-item:hover,
+        .features-list .feature-item:hover { background: rgba(255,0,51,0.03); }
+        .tools-list .tool-item .tool-info,
+        .social-list .social-item .social-info,
+        .features-list .feature-item .feature-info { flex: 1; }
+        .tools-list .tool-item .tool-name { color: var(--gold); font-size: 0.5rem; }
+        .tools-list .tool-item .tool-subname { color: var(--text-muted); font-size: 0.4rem; }
+        .tools-list .tool-item .tool-actions,
+        .social-list .social-item .social-actions,
+        .features-list .feature-item .feature-actions {
+            display: none;
+            gap: 4px;
+            align-items: center;
+        }
+        .tools-list .tool-item .tool-actions button,
+        .social-list .social-item .social-actions button,
+        .features-list .feature-item .feature-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.4rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+        }
+        .tools-list .tool-item .tool-actions .edit,
+        .social-list .social-item .social-actions .edit,
+        .features-list .feature-item .feature-actions .edit { color: var(--gold); }
+        .tools-list .tool-item .tool-actions .edit:hover,
+        .social-list .social-item .social-actions .edit:hover,
+        .features-list .feature-item .feature-actions .edit:hover { background: rgba(255,215,0,0.08); }
+        .tools-list .tool-item .tool-actions .del,
+        .social-list .social-item .social-actions .del,
+        .features-list .feature-item .feature-actions .del { color: var(--red); }
+        .tools-list .tool-item .tool-actions .del:hover,
+        .social-list .social-item .social-actions .del:hover,
+        .features-list .feature-item .feature-actions .del:hover { background: rgba(255,0,51,0.08); }
+        .tools-list .tool-item .tool-actions .toggle,
+        .social-list .social-item .social-actions .toggle,
+        .features-list .feature-item .feature-actions .toggle { color: var(--green); }
+        .tools-list .tool-item .tool-actions .toggle:hover,
+        .social-list .social-item .social-actions .toggle:hover,
+        .features-list .feature-item .feature-actions .toggle:hover { background: rgba(0,255,102,0.08); }
         .tools-list .tool-item .tool-actions .fire { color: #FF4500; }
-        .tools-list .tool-item .tool-actions .fire:hover { background: rgba(255,69,0,0.1); }
+        .tools-list .tool-item .tool-actions .fire:hover { background: rgba(255,69,0,0.08); }
         .editable .tools-list .tool-item .tool-actions,
         .editable .social-list .social-item .social-actions,
         .editable .features-list .feature-item .feature-actions { display: flex; }
-        
-        .status-badge { font-size: 0.35rem; padding: 1px 6px; border-radius: 8px; font-weight: 600; }
-        .status-badge.visible { background: rgba(0,255,102,0.12); color: #00FF66; }
-        .status-badge.hidden { background: rgba(255,0,51,0.12); color: #FF0033; }
-        
-        .credits-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .credits-group input { width: 60px; padding: 3px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; color: #fff; font-size: 0.55rem; text-align: center; outline: none; }
-        .credits-group input:focus { border-color: #FF0033; }
-        
-        .firebase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+
+        /* ================================
+           SECTION 11: CREDITS PER SIGNAL
+           ================================ */
+        .credits-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .credits-group input {
+            width: 60px;
+            padding: 3px 6px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.55rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .credits-group input:focus { border-color: var(--border-active); }
+        .credits-group span { font-size: 0.55rem; color: var(--text-muted); }
+
+        /* ================================
+           SECTION 12: FIREBASE CONFIG
+           ================================ */
+        .firebase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
         .firebase-grid .field { margin-bottom: 0; }
         .firebase-grid .field.full { grid-column: 1 / -1; }
-        
-        /* Password Overlay */
-        .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(8px); }
+
+        /* ================================
+           SECTION 13: PASSWORD OVERLAY
+           ================================ */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--popup-bg);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+        }
         .password-overlay.active { display: flex; }
-        .password-box { background: #1a1a1a; border: 1px solid #FF0033; border-radius: 12px; padding: 30px 24px; width: 100%; max-width: 340px; text-align: center; }
-        .password-box .lock { font-size: 2.2rem; color: #FF0033; }
-        .password-box h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin: 8px 0 14px; letter-spacing: 1px; }
-        .password-box input { width: 100%; padding: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: #fff; font-size: 0.8rem; text-align: center; outline: none; }
-        .password-box input:focus { border-color: #FF0033; }
-        .password-box .btn-enter { width: 100%; padding: 8px; margin-top: 10px; border-radius: 6px; border: none; font-weight: 700; cursor: not-allowed; font-size: 0.65rem; text-transform: uppercase; background: rgba(255,0,51,0.1); color: #666; transition: 0.3s; }
-        .password-box .btn-enter.enabled { background: #FF0033; color: #fff; cursor: pointer; }
-        .password-box .btn-enter.enabled:hover { background: #ff1a44; }
-        .password-box .error { color: #FF0033; font-size: 0.55rem; margin-top: 6px; min-height: 16px; font-family: 'Roboto Mono', monospace; }
-        .password-box .close { position: absolute; top: 10px; right: 14px; color: #FF0033; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-        .password-box { position: relative; }
-        
-        /* Modals */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 16px; backdrop-filter: blur(8px); }
+        .password-box {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-active);
+            border-radius: 12px;
+            padding: 28px 22px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            position: relative;
+        }
+        .password-box .close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: var(--red);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .password-box .lock { font-size: 2.2rem; color: var(--red); }
+        .password-box h2 {
+            color: var(--gold);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            margin: 8px 0 14px;
+            letter-spacing: 1px;
+        }
+        .password-box input {
+            width: 100%;
+            padding: 8px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,0,51,0.12);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .password-box input:focus { border-color: var(--border-active); }
+        .password-box .btn-enter {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 700;
+            cursor: not-allowed;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            background: rgba(255,0,51,0.08);
+            color: var(--text-muted);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .password-box .btn-enter.enabled {
+            background: var(--red);
+            color: #fff;
+            cursor: pointer;
+        }
+        .password-box .btn-enter.enabled:hover { box-shadow: 0 0 20px rgba(255,0,51,0.2); }
+        .password-box .error {
+            color: var(--red);
+            font-size: 0.55rem;
+            margin-top: 6px;
+            min-height: 16px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* ================================
+           SECTION 14: MODALS (POPUPS)
+           ================================ */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--popup-bg);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            padding: 16px;
+            backdrop-filter: blur(8px);
+        }
         .overlay.active { display: flex; }
-        .modal { background: #1a1a1a; border: 1px solid rgba(255,0,51,0.15); border-radius: 12px; padding: 20px; width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal {
+            background: var(--modal-bg);
+            border: 1px solid var(--popup-border);
+            border-radius: 12px;
+            padding: 18px 16px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
         .modal::-webkit-scrollbar { width: 4px; }
-        .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal .close { position: absolute; top: 8px; right: 12px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; }
-        .modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
-        .modal label { font-size: 0.5rem; color: #888; display: block; margin: 4px 0 2px; text-transform: uppercase; letter-spacing: 0.3px; }
-        .modal input, .modal select, .modal textarea { width: 100%; padding: 5px 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; color: #fff; font-size: 0.6rem; outline: none; }
-        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; }
+        .modal::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+        .modal .close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 1.2rem;
+            color: var(--red);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .modal h2 {
+            color: var(--gold);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .modal label {
+            font-size: 0.5rem;
+            color: var(--text-muted);
+            display: block;
+            margin: 4px 0 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .modal input, .modal select, .modal textarea {
+            width: 100%;
+            padding: 5px 8px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.6rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--border-active); }
         .modal textarea { height: 40px; resize: vertical; }
-        .modal .btn-submit { width: 100%; padding: 6px; margin-top: 6px; border-radius: 4px; border: none; font-weight: 700; cursor: pointer; font-size: 0.6rem; transition: 0.3s; }
-        .modal .btn-submit.primary { background: #FF0033; color: #fff; }
-        .modal .btn-submit.primary:hover { background: #ff1a44; }
-        .modal .btn-submit.gold { background: #FFD700; color: #000; }
-        .modal .btn-submit.gold:hover { background: #ffe44d; }
-        .modal .btn-submit.green { background: #00FF66; color: #000; }
-        .modal .btn-submit.green:hover { background: #1aff75; }
-        
-        .modal .user-item { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; font-size: 0.6rem; align-items: center; border-radius: 4px; }
-        .modal .user-item:hover { background: rgba(255,0,51,0.05); }
+        .modal .btn-submit {
+            width: 100%;
+            padding: 6px;
+            margin-top: 6px;
+            border-radius: 4px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.6rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .modal .btn-submit.primary { background: var(--red); color: #fff; }
+        .modal .btn-submit.primary:hover { box-shadow: 0 0 16px rgba(255,0,51,0.15); }
+        .modal .btn-submit.gold { background: var(--gold); color: #000; }
+        .modal .btn-submit.gold:hover { box-shadow: 0 0 16px rgba(255,215,0,0.15); }
+        .modal .btn-submit.green { background: var(--green); color: #000; }
+        .modal .btn-submit.green:hover { box-shadow: 0 0 16px rgba(0,255,102,0.15); }
+
+        /* ================================
+           SECTION 15: USER LIST IN MODAL
+           ================================ */
+        .modal .user-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            font-size: 0.6rem;
+            align-items: center;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        .modal .user-item:hover { background: rgba(255,0,51,0.04); }
         .modal .user-item .status { font-size: 0.5rem; font-weight: 600; }
-        .modal .user-item .status.verified { color: #00FF66; }
-        .modal .user-item .status.admin { color: #FFD700; }
-        .modal .user-item .status.pending { color: #FFD700; }
-        .modal .user-item .status.blocked { color: #FF0033; }
-        .modal .user-item .credits { color: #FFD700; font-family: 'Roboto Mono', monospace; }
-        .modal .user-scroll { max-height: 300px; overflow-y: auto; margin-top: 4px; border: 1px solid rgba(255,255,255,0.04); border-radius: 4px; padding: 4px; }
+        .modal .user-item .status.verified { color: var(--green); }
+        .modal .user-item .status.admin { color: var(--gold); }
+        .modal .user-item .status.pending { color: var(--gold); }
+        .modal .user-item .status.blocked { color: var(--red); }
+        .modal .user-item .credits { color: var(--gold); font-family: 'Roboto Mono', monospace; }
+        .modal .user-scroll {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 4px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 4px;
+            padding: 4px;
+        }
         .modal .user-scroll::-webkit-scrollbar { width: 4px; }
-        .modal .user-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .modal .detail-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .modal .detail-row .label { color: #666; }
-        .modal .detail-row .value { color: #FFD700; }
-        .modal .detail-row .value.green { color: #00FF66; }
-        .modal .detail-row .value.red { color: #FF0033; }
-        
-        .modal .btn-group { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
-        .modal .btn-group button { flex: 1; min-width: 50px; padding: 4px; border-radius: 4px; border: none; font-size: 0.45rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .modal .btn-group .give { background: #00FF66; color: #000; }
-        .modal .btn-group .block { background: #FF0033; color: #fff; }
-        .modal .btn-group .remove { background: #FFD700; color: #000; }
+        .modal .user-scroll::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+
+        .modal .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 0.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .modal .detail-row .label { color: var(--text-muted); }
+        .modal .detail-row .value { color: var(--gold); }
+        .modal .detail-row .value.green { color: var(--green); }
+        .modal .detail-row .value.red { color: var(--red); }
+
+        .modal .btn-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .modal .btn-group button {
+            flex: 1;
+            min-width: 50px;
+            padding: 4px;
+            border-radius: 4px;
+            border: none;
+            font-size: 0.45rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .modal .btn-group .give { background: var(--green); color: #000; }
+        .modal .btn-group .give:hover { box-shadow: 0 0 16px rgba(0,255,102,0.15); }
+        .modal .btn-group .block { background: var(--red); color: #fff; }
+        .modal .btn-group .block:hover { box-shadow: 0 0 16px rgba(255,0,51,0.15); }
+        .modal .btn-group .remove { background: var(--gold); color: #000; }
+        .modal .btn-group .remove:hover { box-shadow: 0 0 16px rgba(255,215,0,0.15); }
         .modal .btn-group .chat { background: #0088cc; color: #fff; }
-        
-        /* Chat */
+        .modal .btn-group .chat:hover { box-shadow: 0 0 16px rgba(0,136,204,0.15); }
+
+        /* ================================
+           SECTION 16: CHAT UI
+           ================================ */
         .chat-layout { display: flex; gap: 8px; min-height: 280px; }
-        .chat-users { flex: 0 0 25%; min-width: 150px; max-height: 300px; overflow-y: auto; background: #000; border: 1px solid rgba(255,0,51,0.08); border-radius: 6px; padding: 4px; }
-        .chat-users .user { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; font-size: 0.55rem; display: flex; justify-content: space-between; align-items: center; border-radius: 4px; transition: 0.3s; }
-        .chat-users .user:hover { background: rgba(255,0,51,0.06); }
-        .chat-users .user.selected { background: rgba(255,0,51,0.1); border-left: 2px solid #FF0033; }
-        .chat-users .user .unread { background: #FF0033; color: #fff; font-size: 0.4rem; padding: 1px 5px; border-radius: 8px; }
+        .chat-users {
+            flex: 0 0 25%;
+            min-width: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #000;
+            border: 1px solid rgba(255,0,51,0.06);
+            border-radius: 6px;
+            padding: 4px;
+        }
         .chat-users::-webkit-scrollbar { width: 4px; }
-        .chat-users::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .chat-messages { flex: 1; border: 1px solid rgba(255,255,255,0.04); border-radius: 6px; padding: 6px; display: flex; flex-direction: column; min-height: 280px; background: #000; }
-        .chat-messages .msgs { flex: 1; max-height: 240px; overflow-y: auto; }
-        .chat-messages .msgs .msg { padding: 4px 8px; margin: 2px 0; border-radius: 4px; font-size: 0.6rem; max-width: 85%; word-wrap: break-word; line-height: 1.4; }
-        .chat-messages .msgs .msg.admin { background: #FF0033; color: #000; align-self: flex-start; }
-        .chat-messages .msgs .msg.user { background: #fff; color: #000; align-self: flex-end; }
-        .chat-messages .msgs .msg .time { font-size: 0.4rem; color: #666; margin-left: 4px; }
-        .chat-messages .msgs { display: flex; flex-direction: column; }
-        .chat-messages .input-area { display: flex; gap: 4px; margin-top: 4px; }
-        .chat-messages .input-area input { flex: 1; padding: 4px 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; color: #fff; font-size: 0.55rem; outline: none; }
-        .chat-messages .input-area input:focus { border-color: #FF0033; }
-        .chat-messages .input-area button { padding: 4px 12px; border-radius: 4px; border: none; background: #0088cc; color: #fff; font-size: 0.5rem; cursor: pointer; transition: 0.3s; }
-        .chat-messages .input-area button:hover { background: #0099dd; }
-        .chat-selected { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.55rem; color: #FFD700; }
-        .chat-selected .clear { color: #FF0033; cursor: pointer; background: none; border: none; font-size: 0.8rem; }
+        .chat-users::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+        .chat-users .user {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            font-size: 0.55rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        .chat-users .user:hover { background: rgba(255,0,51,0.05); }
+        .chat-users .user.selected { background: rgba(255,0,51,0.08); border-left: 2px solid var(--red); }
+        .chat-users .user .unread { background: var(--red); color: #fff; font-size: 0.4rem; padding: 1px 5px; border-radius: 8px; }
+
+        .chat-messages {
+            flex: 1;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 6px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+            background: #000;
+        }
+        .chat-messages .msgs {
+            flex: 1;
+            max-height: 240px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages .msgs::-webkit-scrollbar { width: 4px; }
+        .chat-messages .msgs::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+        .chat-messages .msgs .msg {
+            padding: 4px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        .chat-messages .msgs .msg.admin {
+            background: var(--red);
+            color: #000;
+            align-self: flex-start;
+        }
+        .chat-messages .msgs .msg.user {
+            background: #fff;
+            color: #000;
+            align-self: flex-end;
+        }
+        .chat-messages .msgs .msg .time { font-size: 0.4rem; color: var(--text-muted); margin-left: 4px; }
         
+        .chat-messages .chat-selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 4px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.55rem;
+            color: var(--gold);
+        }
+        .chat-messages .chat-selected .clear {
+            color: var(--red);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+        }
+        .chat-messages .input-area {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .chat-messages .input-area input {
+            flex: 1;
+            padding: 4px 8px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.55rem;
+            outline: none;
+        }
+        .chat-messages .input-area input:focus { border-color: var(--border-active); }
+        .chat-messages .input-area button {
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: none;
+            background: #0088cc;
+            color: #fff;
+            font-size: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .chat-messages .input-area button:hover { box-shadow: 0 0 12px rgba(0,136,204,0.2); }
+
+        /* ================================
+           SECTION 17: RESPONSIVE
+           ================================ */
         @media (max-width: 768px) {
             .row2 { grid-template-columns: 1fr; }
             .firebase-grid { grid-template-columns: 1fr; }
             .chat-layout { flex-direction: column; }
             .chat-users { flex: 1; width: 100%; min-width: auto; max-height: 120px; }
             .chat-messages { min-height: 200px; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .header { flex-direction: column; align-items: stretch; gap: 6px; }
             .header-nav { justify-content: center; }
         }
         @media (max-width: 480px) {
-            .stats { grid-template-columns: 1fr 1fr; gap: 4px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
             .stat-card { padding: 8px; }
             .stat-card .count { font-size: 0.9rem; }
             .section { padding: 8px 10px; }
@@ -244,7 +817,18 @@
             .chat-messages { min-height: 160px; }
         }
         
-        .cursor-glow { position: fixed; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.03), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s; }
+        .cursor-glow {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,51,0.03), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
         .cursor-glow.active { opacity: 1; }
         @media (hover: none) { .cursor-glow { display: none !important; } }
         
@@ -264,7 +848,9 @@
 
 <div class="app">
     
-    <!-- Header -->
+    <!-- ================================
+         HEADER
+         ================================ -->
     <div class="header">
         <div class="header-left">
             <span class="header-logo">BINARY <span class="ruth">RUTHLESS</span> TRADER</span>
@@ -277,8 +863,10 @@
         </div>
     </div>
     
-    <!-- Stats -->
-    <div class="stats" id="adminStats">
+    <!-- ================================
+         STATS DASHBOARD CARDS
+         ================================ -->
+    <div class="stats-grid" id="adminStats">
         <div class="stat-card" onclick="openPendingPayments()">
             <div class="icon">💳</div>
             <span class="count green" id="pendingPaymentsCount">0</span>
@@ -306,10 +894,14 @@
         </div>
     </div>
     
-    <!-- Admin Area -->
+    <!-- ================================
+         ADMIN AREA - ALL SECTIONS
+         ================================ -->
     <div id="adminArea">
         
-        <!-- 1. Offer Settings -->
+        <!-- ================================
+             SECTION 1: OFFER SETTINGS
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>🎁 Offer Settings</h3>
@@ -318,11 +910,19 @@
                     <button class="btn-save" onclick="saveOffer()">💾 Save</button>
                 </div>
             </div>
-            <div class="field"><label>Offer Name</label><input type="text" id="offerName" value="FREE SIGNAL OFFER" disabled></div>
-            <div class="field"><label>Offer Description</label><textarea id="offerDescription" disabled>Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!</textarea></div>
+            <div class="field">
+                <label>Offer Name</label>
+                <input type="text" id="offerName" value="FREE SIGNAL OFFER" disabled>
+            </div>
+            <div class="field">
+                <label>Offer Description</label>
+                <textarea id="offerDescription" disabled>Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!</textarea>
+            </div>
         </div>
         
-        <!-- 2. Payment Settings -->
+        <!-- ================================
+             SECTION 2: PAYMENT SETTINGS
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>💳 Payment Settings</h3>
@@ -331,24 +931,43 @@
                     <button class="btn-save" onclick="savePaymentSettings()">💾 Save</button>
                 </div>
             </div>
-            <div class="field"><label>Approval Mode</label>
+            <div class="field">
+                <label>Approval Mode</label>
                 <select id="paymentApprovalMode" disabled onchange="togglePaymentMode(this.value)">
                     <option value="manual">Manual</option>
                     <option value="razorpay">Razorpay</option>
                 </select>
             </div>
             <div id="manualFields" class="payment-fields">
-                <div class="field"><label>UPI ID</label><input type="text" id="upiIdInput" placeholder="binary@ruthless" disabled></div>
-                <div class="field"><label>Instructions</label><textarea id="paymentInstructionsInput" disabled></textarea></div>
-                <div class="field"><label>QR Code</label><input type="file" id="qrUploadInput" accept="image/*" onchange="previewQR(event)" disabled><div id="qrPreview" style="margin-top:2px;"></div></div>
+                <div class="field">
+                    <label>UPI ID</label>
+                    <input type="text" id="upiIdInput" placeholder="binary@ruthless" disabled>
+                </div>
+                <div class="field">
+                    <label>Instructions</label>
+                    <textarea id="paymentInstructionsInput" disabled></textarea>
+                </div>
+                <div class="field">
+                    <label>QR Code</label>
+                    <input type="file" id="qrUploadInput" accept="image/*" onchange="previewQR(event)" disabled>
+                    <div id="qrPreview" style="margin-top:2px;"></div>
+                </div>
             </div>
             <div id="razorpayFields" class="payment-fields" style="display:none;">
-                <div class="field"><label>Razorpay Key ID</label><input type="text" id="razorpayKeyIdInput" placeholder="rzp_live_xxxx" disabled></div>
-                <div class="field"><label>Razorpay Key Secret</label><input type="text" id="razorpayKeySecretInput" placeholder="xxxx" disabled></div>
+                <div class="field">
+                    <label>Razorpay Key ID</label>
+                    <input type="text" id="razorpayKeyIdInput" placeholder="rzp_live_xxxx" disabled>
+                </div>
+                <div class="field">
+                    <label>Razorpay Key Secret</label>
+                    <input type="text" id="razorpayKeySecretInput" placeholder="xxxx" disabled>
+                </div>
             </div>
         </div>
         
-        <!-- 3. Credit Packs -->
+        <!-- ================================
+             SECTION 3: CREDIT PACKS
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>📦 Credit Packs</h3>
@@ -358,11 +977,17 @@
                     <button class="btn-save" onclick="addCreditPack()">💾 Save</button>
                 </div>
             </div>
-            <div id="creditPackList" class="list"></div>
+            <div id="creditPackList" class="list-container"></div>
             <div class="add-form" id="addCreditPackForm">
                 <div class="row2">
-                    <div class="field"><label>Credits</label><input type="number" id="packCredits" placeholder="100"></div>
-                    <div class="field"><label>Price (₹)</label><input type="number" id="packPrice" placeholder="99"></div>
+                    <div class="field">
+                        <label>Credits</label>
+                        <input type="number" id="packCredits" placeholder="100">
+                    </div>
+                    <div class="field">
+                        <label>Price (₹)</label>
+                        <input type="number" id="packPrice" placeholder="99">
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="save-btn" onclick="addCreditPack()">💾 Save</button>
@@ -372,8 +997,14 @@
             <div class="edit-form" id="editCreditPackForm">
                 <input type="hidden" id="editPackId">
                 <div class="row2">
-                    <div class="field"><label>Credits</label><input type="number" id="editPackCredits"></div>
-                    <div class="field"><label>Price (₹)</label><input type="number" id="editPackPrice"></div>
+                    <div class="field">
+                        <label>Credits</label>
+                        <input type="number" id="editPackCredits">
+                    </div>
+                    <div class="field">
+                        <label>Price (₹)</label>
+                        <input type="number" id="editPackPrice">
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="update-btn" onclick="updateCreditPack()">💾 Update</button>
@@ -382,7 +1013,9 @@
             </div>
         </div>
         
-        <!-- 4. Credits Per Signal -->
+        <!-- ================================
+             SECTION 4: CREDITS PER SIGNAL
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3 style="color:#00FF66;">💎 Credits Per Signal</h3>
@@ -392,12 +1025,14 @@
                 </div>
             </div>
             <div class="credits-group">
-                <span style="font-size:0.55rem;color:#888;">Credits to deduct:</span>
+                <span>Credits to deduct per signal:</span>
                 <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled>
             </div>
         </div>
         
-        <!-- 5. Broker Manager -->
+        <!-- ================================
+             SECTION 5: BROKER MANAGER
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>🏢 Broker Manager</h3>
@@ -407,13 +1042,25 @@
                     <button class="btn-save" onclick="addBroker()">💾 Save</button>
                 </div>
             </div>
-            <div id="brokerList" class="list"></div>
+            <div id="brokerList" class="list-container"></div>
             <div class="add-form" id="addBrokerForm">
                 <div class="row2">
-                    <div class="field"><label>Name</label><input type="text" id="brokerName" placeholder="Broker name"></div>
-                    <div class="field"><label>Affiliate Link</label><input type="text" id="brokerLink" placeholder="https://..."></div>
-                    <div class="field"><label>Min Deposit</label><input type="number" id="brokerMinDeposit" placeholder="1000"></div>
-                    <div class="field"><label>Rules</label><input type="text" id="brokerRules" placeholder="Rules"></div>
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" id="brokerName" placeholder="Broker name">
+                    </div>
+                    <div class="field">
+                        <label>Affiliate Link</label>
+                        <input type="text" id="brokerLink" placeholder="https://...">
+                    </div>
+                    <div class="field">
+                        <label>Min Deposit</label>
+                        <input type="number" id="brokerMinDeposit" placeholder="1000">
+                    </div>
+                    <div class="field">
+                        <label>Rules</label>
+                        <input type="text" id="brokerRules" placeholder="Rules">
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="save-btn" onclick="addBroker()">💾 Save</button>
@@ -423,10 +1070,22 @@
             <div class="edit-form" id="editBrokerForm">
                 <input type="hidden" id="editBrokerId">
                 <div class="row2">
-                    <div class="field"><label>Name</label><input type="text" id="editBrokerName"></div>
-                    <div class="field"><label>Affiliate Link</label><input type="text" id="editBrokerLink"></div>
-                    <div class="field"><label>Min Deposit</label><input type="number" id="editBrokerMinDeposit"></div>
-                    <div class="field"><label>Rules</label><input type="text" id="editBrokerRules"></div>
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" id="editBrokerName">
+                    </div>
+                    <div class="field">
+                        <label>Affiliate Link</label>
+                        <input type="text" id="editBrokerLink">
+                    </div>
+                    <div class="field">
+                        <label>Min Deposit</label>
+                        <input type="number" id="editBrokerMinDeposit">
+                    </div>
+                    <div class="field">
+                        <label>Rules</label>
+                        <input type="text" id="editBrokerRules">
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="update-btn" onclick="updateBroker()">💾 Update</button>
@@ -435,7 +1094,9 @@
             </div>
         </div>
         
-        <!-- 6. Tools Manager -->
+        <!-- ================================
+             SECTION 6: TOOLS MANAGER
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>🛠️ Tools Manager</h3>
@@ -447,14 +1108,38 @@
             </div>
             <div id="toolsList" class="tools-list"></div>
             <div class="add-form" id="addToolForm">
-                <div class="field"><label>Tool Name</label><input type="text" id="newToolName" placeholder="Tool name"></div>
-                <div class="field"><label>Sub Name</label><input type="text" id="newToolSubName" placeholder="Sub name"></div>
-                <div class="field"><label>HTML Code</label><textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:60px;"></textarea></div>
-                <div class="row2">
-                    <div class="field"><label>Status</label><select id="newToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field"><label>Show Fire 🔥</label><select id="newToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
+                <div class="field">
+                    <label>Tool Name</label>
+                    <input type="text" id="newToolName" placeholder="Tool name">
                 </div>
-                <div class="field"><label>Triggers</label><input type="text" id="newToolTriggers" placeholder="Signal, Get, Generate"></div>
+                <div class="field">
+                    <label>Sub Name</label>
+                    <input type="text" id="newToolSubName" placeholder="Sub name">
+                </div>
+                <div class="field">
+                    <label>HTML Code</label>
+                    <textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:60px;"></textarea>
+                </div>
+                <div class="row2">
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="newToolStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Show Fire 🔥</label>
+                        <select id="newToolFire">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Triggers</label>
+                    <input type="text" id="newToolTriggers" placeholder="Signal, Get, Generate">
+                </div>
                 <div class="btn-row">
                     <button class="save-btn" onclick="addTool()">💾 Save</button>
                     <button class="cancel-btn" onclick="toggleAddForm('tool')">Cancel</button>
@@ -462,14 +1147,38 @@
             </div>
             <div class="edit-form" id="editToolForm">
                 <input type="hidden" id="editToolIndex">
-                <div class="field"><label>Tool Name</label><input type="text" id="editToolName"></div>
-                <div class="field"><label>Sub Name</label><input type="text" id="editToolSubName"></div>
-                <div class="field"><label>HTML Code</label><textarea id="editToolHtml" style="height:60px;"></textarea></div>
-                <div class="row2">
-                    <div class="field"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field"><label>Show Fire 🔥</label><select id="editToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
+                <div class="field">
+                    <label>Tool Name</label>
+                    <input type="text" id="editToolName">
                 </div>
-                <div class="field"><label>Triggers</label><input type="text" id="editToolTriggers"></div>
+                <div class="field">
+                    <label>Sub Name</label>
+                    <input type="text" id="editToolSubName">
+                </div>
+                <div class="field">
+                    <label>HTML Code</label>
+                    <textarea id="editToolHtml" style="height:60px;"></textarea>
+                </div>
+                <div class="row2">
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="editToolStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Show Fire 🔥</label>
+                        <select id="editToolFire">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Triggers</label>
+                    <input type="text" id="editToolTriggers">
+                </div>
                 <div class="btn-row">
                     <button class="update-btn" onclick="updateTool()">💾 Update</button>
                     <button class="cancel-btn" onclick="closeEditForm('editToolForm')">Cancel</button>
@@ -477,7 +1186,9 @@
             </div>
         </div>
         
-        <!-- 7. Social Media -->
+        <!-- ================================
+             SECTION 7: SOCIAL MEDIA
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>📱 Social Media</h3>
@@ -490,10 +1201,25 @@
             <div id="socialList" class="social-list"></div>
             <div class="add-form" id="addSocialForm">
                 <div class="row2">
-                    <div class="field"><label>Platform</label><input type="text" id="newSocialName" placeholder="Telegram"></div>
-                    <div class="field"><label>URL</label><input type="text" id="newSocialUrl" placeholder="https://..."></div>
-                    <div class="field"><label>Icon</label><input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane"></div>
-                    <div class="field"><label>Status</label><select id="newSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field">
+                        <label>Platform</label>
+                        <input type="text" id="newSocialName" placeholder="Telegram">
+                    </div>
+                    <div class="field">
+                        <label>URL</label>
+                        <input type="text" id="newSocialUrl" placeholder="https://...">
+                    </div>
+                    <div class="field">
+                        <label>Icon</label>
+                        <input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane">
+                    </div>
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="newSocialStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="save-btn" onclick="addSocial()">💾 Save</button>
@@ -503,10 +1229,25 @@
             <div class="edit-form" id="editSocialForm">
                 <input type="hidden" id="editSocialIndex">
                 <div class="row2">
-                    <div class="field"><label>Platform</label><input type="text" id="editSocialName"></div>
-                    <div class="field"><label>URL</label><input type="text" id="editSocialUrl"></div>
-                    <div class="field"><label>Icon</label><input type="text" id="editSocialIcon"></div>
-                    <div class="field"><label>Status</label><select id="editSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field">
+                        <label>Platform</label>
+                        <input type="text" id="editSocialName">
+                    </div>
+                    <div class="field">
+                        <label>URL</label>
+                        <input type="text" id="editSocialUrl">
+                    </div>
+                    <div class="field">
+                        <label>Icon</label>
+                        <input type="text" id="editSocialIcon">
+                    </div>
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="editSocialStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="update-btn" onclick="updateSocial()">💾 Update</button>
@@ -515,7 +1256,9 @@
             </div>
         </div>
         
-        <!-- 8. Features Manager -->
+        <!-- ================================
+             SECTION 8: FEATURES MANAGER
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>⚡ Features Manager</h3>
@@ -528,10 +1271,25 @@
             <div id="featuresList" class="features-list"></div>
             <div class="add-form" id="addFeatureForm">
                 <div class="row2">
-                    <div class="field"><label>Icon</label><input type="text" id="newFeatureIcon" placeholder="🧠" value="🧠"></div>
-                    <div class="field"><label>Name</label><input type="text" id="newFeatureName" placeholder="Feature name"></div>
-                    <div class="field"><label>Description</label><input type="text" id="newFeatureDesc" placeholder="Short description"></div>
-                    <div class="field"><label>Status</label><select id="newFeatureStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field">
+                        <label>Icon</label>
+                        <input type="text" id="newFeatureIcon" placeholder="🧠" value="🧠">
+                    </div>
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" id="newFeatureName" placeholder="Feature name">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input type="text" id="newFeatureDesc" placeholder="Short description">
+                    </div>
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="newFeatureStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="save-btn" onclick="addFeature()">💾 Save</button>
@@ -541,10 +1299,25 @@
             <div class="edit-form" id="editFeatureForm">
                 <input type="hidden" id="editFeatureIndex">
                 <div class="row2">
-                    <div class="field"><label>Icon</label><input type="text" id="editFeatureIcon"></div>
-                    <div class="field"><label>Name</label><input type="text" id="editFeatureName"></div>
-                    <div class="field"><label>Description</label><input type="text" id="editFeatureDesc"></div>
-                    <div class="field"><label>Status</label><select id="editFeatureStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="field">
+                        <label>Icon</label>
+                        <input type="text" id="editFeatureIcon">
+                    </div>
+                    <div class="field">
+                        <label>Name</label>
+                        <input type="text" id="editFeatureName">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input type="text" id="editFeatureDesc">
+                    </div>
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="editFeatureStatus">
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="btn-row">
                     <button class="update-btn" onclick="updateFeature()">💾 Update</button>
@@ -553,7 +1326,9 @@
             </div>
         </div>
         
-        <!-- 9. Firebase Config -->
+        <!-- ================================
+             SECTION 9: FIREBASE CONFIG
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>🔥 Firebase Config</h3>
@@ -563,18 +1338,44 @@
                 </div>
             </div>
             <div class="firebase-grid">
-                <div class="field"><label>API Key</label><input type="text" id="fbApiKey" disabled></div>
-                <div class="field"><label>Auth Domain</label><input type="text" id="fbAuthDomain" disabled></div>
-                <div class="field"><label>Database URL</label><input type="text" id="fbDbUrl" disabled></div>
-                <div class="field"><label>Project ID</label><input type="text" id="fbProjectId" disabled></div>
-                <div class="field"><label>Storage Bucket</label><input type="text" id="fbStorageBucket" disabled></div>
-                <div class="field"><label>Messaging Sender ID</label><input type="text" id="fbMessagingSenderId" disabled></div>
-                <div class="field full"><label>App ID</label><input type="text" id="fbAppId" disabled></div>
-                <div class="field full"><label>Measurement ID</label><input type="text" id="fbMeasurementId" disabled></div>
+                <div class="field">
+                    <label>API Key</label>
+                    <input type="text" id="fbApiKey" disabled>
+                </div>
+                <div class="field">
+                    <label>Auth Domain</label>
+                    <input type="text" id="fbAuthDomain" disabled>
+                </div>
+                <div class="field">
+                    <label>Database URL</label>
+                    <input type="text" id="fbDbUrl" disabled>
+                </div>
+                <div class="field">
+                    <label>Project ID</label>
+                    <input type="text" id="fbProjectId" disabled>
+                </div>
+                <div class="field">
+                    <label>Storage Bucket</label>
+                    <input type="text" id="fbStorageBucket" disabled>
+                </div>
+                <div class="field">
+                    <label>Messaging Sender ID</label>
+                    <input type="text" id="fbMessagingSenderId" disabled>
+                </div>
+                <div class="field full">
+                    <label>App ID</label>
+                    <input type="text" id="fbAppId" disabled>
+                </div>
+                <div class="field full">
+                    <label>Measurement ID</label>
+                    <input type="text" id="fbMeasurementId" disabled>
+                </div>
             </div>
         </div>
         
-        <!-- 10. Admin Access -->
+        <!-- ================================
+             SECTION 10: ADMIN ACCESS
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3>🖱️ Admin Access</h3>
@@ -583,11 +1384,19 @@
                     <button class="btn-save" onclick="saveAdminSettings()">💾 Save</button>
                 </div>
             </div>
-            <div class="field"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
-            <div class="field"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
+            <div class="field">
+                <label>Upload Logo (PNG/JPG)</label>
+                <input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled>
+            </div>
+            <div class="field">
+                <label>Clicks on Logo</label>
+                <input type="number" id="logoClickCount" value="2" min="1" max="20" disabled>
+            </div>
         </div>
         
-        <!-- 11. Change Password -->
+        <!-- ================================
+             SECTION 11: CHANGE PASSWORD
+             ================================ -->
         <div class="section">
             <div class="section-head">
                 <h3 style="color:#FFD700;">🔐 Change Password</h3>
@@ -597,34 +1406,137 @@
                 </div>
             </div>
             <div class="row2">
-                <div class="field"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
-                <div class="field"><label>Confirm Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm password" disabled></div>
+                <div class="field">
+                    <label>New Password</label>
+                    <input type="password" id="adminNewPassword" placeholder="Enter new password" disabled>
+                </div>
+                <div class="field">
+                    <label>Confirm Password</label>
+                    <input type="password" id="adminConfirmPassword" placeholder="Confirm password" disabled>
+                </div>
             </div>
         </div>
         
+    </div><!-- end adminArea -->
+    
+    <!-- ================================
+         PASSWORD OVERLAY
+         ================================ -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <button class="close" onclick="hidePassword()">✕</button>
+            <div class="lock">🔐</div>
+            <h2>ENTER ADMIN PASSWORD</h2>
+            <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkPassword()">
+            <button class="btn-enter" id="adminLoginBtn" onclick="loginAdmin()">Enter</button>
+            <div class="error" id="adminPassError"></div>
+        </div>
     </div>
-</div>
 
-<!-- Password Overlay -->
-<div class="password-overlay" id="passwordOverlay">
-    <div class="password-box">
-        <button class="close" onclick="hidePassword()">✕</button>
-        <div class="lock">🔐</div>
-        <h2>ENTER ADMIN PASSWORD</h2>
-        <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkPassword()">
-        <button class="btn-enter" id="adminLoginBtn" onclick="loginAdmin()">Enter</button>
-        <div class="error" id="adminPassError"></div>
+    <!-- ================================
+         MODAL 1: PENDING PAYMENTS
+         ================================ -->
+    <div class="overlay" id="paymentsModal">
+        <div class="modal">
+            <button class="close" onclick="closeModal('paymentsModal')">✕</button>
+            <h2>⏳ Pending Payments</h2>
+            <div id="paymentsList" style="max-height:380px;overflow-y:auto;"></div>
+            <div id="noPayments" style="color:#666;text-align:center;padding:20px;font-size:0.6rem;">No pending payments</div>
+        </div>
     </div>
-</div>
 
-<!-- Modals -->
-<div class="overlay" id="paymentsModal"><div class="modal"><button class="close" onclick="closeModal('paymentsModal')">✕</button><h2>⏳ Pending Payments</h2><div id="paymentsList" style="max-height:380px;overflow-y:auto;"></div><div id="noPayments" style="color:#666;text-align:center;padding:20px;font-size:0.6rem;">No pending payments</div></div></div>
-<div class="overlay" id="verificationsModal"><div class="modal"><button class="close" onclick="closeModal('verificationsModal')">✕</button><h2>⏳ Pending Verifications</h2><div id="verificationsList" style="max-height:380px;overflow-y:auto;"></div><div id="noVerifications" style="color:#666;text-align:center;padding:20px;font-size:0.6rem;">No pending verifications</div></div></div>
-<div class="overlay" id="usersModal"><div class="modal" style="max-width:780px;"><button class="close" onclick="closeModal('usersModal')">✕</button><h2>👤 Users</h2><div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;"><button class="btn-submit primary" style="flex:1;font-size:0.55rem;padding:4px;" onclick="showVerifiedUsers()">✅ Verified Users</button><button class="btn-submit gold" style="flex:1;font-size:0.55rem;padding:4px;" onclick="showAddUserForm()">➕ Add User</button></div><div id="usersContent"></div></div></div>
-<div class="overlay" id="userDetailModal"><div class="modal" style="max-width:600px;"><button class="close" onclick="closeModal('userDetailModal')">✕</button><h2 id="userDetailTitle">👤 User Details</h2><div id="userDetailContent"></div><div class="btn-group"><button class="give" onclick="giveFreeCredits()">🎁 Give</button><button class="block" onclick="blockUser()">🚫 Block</button><button class="remove" onclick="removeUser()">🗑️ Remove</button><button class="chat" onclick="chatWithUser()">💬 Chat</button></div><div style="margin-top:4px;"><label style="font-size:0.45rem;color:#888;">Add Free Credits</label><input type="number" id="freeCreditsInput" placeholder="Enter credits" style="width:100%;padding:3px 6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;font-size:0.55rem;outline:none;"><button class="btn-submit green" style="margin-top:2px;font-size:0.5rem;padding:3px;" onclick="giveFreeCredits()">Add Credits</button></div></div></div>
-<div class="overlay" id="revenueModal"><div class="modal" style="max-width:500px;"><button class="close" onclick="closeModal('revenueModal')">✕</button><h2>💰 Total Revenue</h2><div style="padding:8px 0;"><div class="detail-row"><span class="label">Total Revenue</span><span class="value gold" id="revenueTotal">₹0</span></div><div class="detail-row"><span class="label">Total Transactions</span><span class="value" id="revenueTotalTxn">0</span></div><div class="detail-row"><span class="label">Successful Payments</span><span class="value green" id="revenueSuccess">0</span></div><div class="detail-row"><span class="label">Failed Payments</span><span class="value red" id="revenueFailed">0</span></div></div><button class="btn-submit gold" onclick="closeModal('revenueModal')" style="font-size:0.55rem;padding:4px;">Close</button></div></div>
+    <!-- ================================
+         MODAL 2: PENDING VERIFICATIONS
+         ================================ -->
+    <div class="overlay" id="verificationsModal">
+        <div class="modal">
+            <button class="close" onclick="closeModal('verificationsModal')">✕</button>
+            <h2>⏳ Pending Verifications</h2>
+            <div id="verificationsList" style="max-height:380px;overflow-y:auto;"></div>
+            <div id="noVerifications" style="color:#666;text-align:center;padding:20px;font-size:0.6rem;">No pending verifications</div>
+        </div>
+    </div>
 
-<div class="overlay" id="chatModal"><div class="modal" style="max-width:780px;"><button class="close" onclick="closeModal('chatModal')">✕</button><h2>💬 Chat</h2><input id="chatSearch" placeholder="Search users..." style="width:100%;padding:4px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#00FF66;font-size:0.55rem;outline:none;margin-bottom:4px;" oninput="filterChatUsers()"><div class="chat-layout"><div class="chat-users" id="chatUserList"></div><div class="chat-messages"><div class="chat-selected" id="chatSelectedDisplay"><span>Select a user to chat</span><button class="clear" onclick="clearChatUser()" style="display:none;">✕</button></div><div class="msgs" id="chatMsgBox"></div><div class="input-area"><input type="text" id="chatInput" placeholder="Type message..."><button onclick="sendChatMsg()">Send</button></div></div></div></div></div>
+    <!-- ================================
+         MODAL 3: USERS
+         ================================ -->
+    <div class="overlay" id="usersModal">
+        <div class="modal" style="max-width:780px;">
+            <button class="close" onclick="closeModal('usersModal')">✕</button>
+            <h2>👤 Users</h2>
+            <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                <button class="btn-submit primary" style="flex:1;font-size:0.55rem;padding:4px;" onclick="showVerifiedUsers()">✅ Verified Users</button>
+                <button class="btn-submit gold" style="flex:1;font-size:0.55rem;padding:4px;" onclick="showAddUserForm()">➕ Add User</button>
+            </div>
+            <div id="usersContent"></div>
+        </div>
+    </div>
+
+    <!-- ================================
+         MODAL 4: USER DETAIL
+         ================================ -->
+    <div class="overlay" id="userDetailModal">
+        <div class="modal" style="max-width:600px;">
+            <button class="close" onclick="closeModal('userDetailModal')">✕</button>
+            <h2 id="userDetailTitle">👤 User Details</h2>
+            <div id="userDetailContent"></div>
+            <div class="btn-group">
+                <button class="give" onclick="giveFreeCredits()">🎁 Give</button>
+                <button class="block" onclick="blockUser()">🚫 Block</button>
+                <button class="remove" onclick="removeUser()">🗑️ Remove</button>
+                <button class="chat" onclick="chatWithUser()">💬 Chat</button>
+            </div>
+            <div style="margin-top:4px;">
+                <label style="font-size:0.45rem;color:#888;">Add Free Credits</label>
+                <input type="number" id="freeCreditsInput" placeholder="Enter credits" style="width:100%;padding:3px 6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;font-size:0.55rem;outline:none;">
+                <button class="btn-submit green" style="margin-top:2px;font-size:0.5rem;padding:3px;" onclick="giveFreeCredits()">Add Credits</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================
+         MODAL 5: REVENUE
+         ================================ -->
+    <div class="overlay" id="revenueModal">
+        <div class="modal" style="max-width:500px;">
+            <button class="close" onclick="closeModal('revenueModal')">✕</button>
+            <h2>💰 Total Revenue</h2>
+            <div style="padding:8px 0;">
+                <div class="detail-row"><span class="label">Total Revenue</span><span class="value gold" id="revenueTotal">₹0</span></div>
+                <div class="detail-row"><span class="label">Total Transactions</span><span class="value" id="revenueTotalTxn">0</span></div>
+                <div class="detail-row"><span class="label">Successful Payments</span><span class="value green" id="revenueSuccess">0</span></div>
+                <div class="detail-row"><span class="label">Failed Payments</span><span class="value red" id="revenueFailed">0</span></div>
+            </div>
+            <button class="btn-submit gold" onclick="closeModal('revenueModal')" style="font-size:0.55rem;padding:4px;">Close</button>
+        </div>
+    </div>
+
+    <!-- ================================
+         MODAL 6: CHAT
+         ================================ -->
+    <div class="overlay" id="chatModal">
+        <div class="modal" style="max-width:780px;">
+            <button class="close" onclick="closeModal('chatModal')">✕</button>
+            <h2>💬 Chat</h2>
+            <input id="chatSearch" placeholder="Search users..." style="width:100%;padding:4px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#00FF66;font-size:0.55rem;outline:none;margin-bottom:4px;" oninput="filterChatUsers()">
+            <div class="chat-layout">
+                <div class="chat-users" id="chatUserList"></div>
+                <div class="chat-messages">
+                    <div class="chat-selected" id="chatSelectedDisplay">
+                        <span>Select a user to chat</span>
+                        <button class="clear" onclick="clearChatUser()" style="display:none;">✕</button>
+                    </div>
+                    <div class="msgs" id="chatMsgBox"></div>
+                    <div class="input-area">
+                        <input type="text" id="chatInput" placeholder="Type message...">
+                        <button onclick="sendChatMsg()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end app -->
 
 <script type="importmap">
 {
@@ -641,6 +1553,9 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
+// ================================
+// FIREBASE CONFIG
+// ================================
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
     authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -657,6 +1572,9 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
+// ================================
+// APP STATE
+// ================================
 let appState = {
     password: 'admin123',
     offerCredits: 10,
@@ -699,14 +1617,28 @@ let appState = {
     }
 };
 
-let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
+let isFirebaseConnected = false;
+let adminLoggedIn = false;
+let selectedUserDetail = null;
+let chatSelectedUser = null;
 
-// ─── HELPERS ───
-function getChatKey(email) { return email ? email.replace(/[.#$\/\[\]]/g, '_') : ''; }
+// ================================
+// UTILITY FUNCTIONS
+// ================================
 
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-window.openModal = openModal; window.closeModal = closeModal;
+function getChatKey(email) {
+    return email ? email.replace(/[.#$\/\[\]]/g, '_') : '';
+}
+
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+window.openModal = openModal;
+window.closeModal = closeModal;
 
 function enableEdit(btn) {
     const section = btn.closest('.section');
@@ -714,8 +1646,8 @@ function enableEdit(btn) {
     section.querySelectorAll('.btn-save').forEach(el => el.classList.add('show'));
     btn.style.display = 'none';
     section.classList.add('editable');
-    // Refresh lists
-    const list = section.querySelector('.list, .tools-list, .social-list, .features-list');
+    
+    const list = section.querySelector('.list-container, .tools-list, .social-list, .features-list');
     if (list) {
         if (list.id === 'creditPackList') renderCreditPacks();
         else if (list.id === 'brokerList') renderBrokers();
@@ -737,78 +1669,16 @@ function toggleAddForm(type) {
     const form = document.getElementById('add' + type.charAt(0).toUpperCase() + type.slice(1) + 'Form');
     if (form) form.classList.toggle('show');
 }
+window.toggleAddForm = toggleAddForm;
 
 function closeEditForm(id) {
     document.getElementById(id).classList.remove('show');
 }
+window.closeEditForm = closeEditForm;
 
-// ─── PASSWORD ───
-window.hidePassword = function() {
-    document.getElementById('passwordOverlay').classList.remove('active');
-    window.location.href = 'index.html';
-};
-
-window.checkPassword = function() {
-    const pass = document.getElementById('adminPassInput').value;
-    const btn = document.getElementById('adminLoginBtn');
-    if (pass === appState.password) {
-        btn.disabled = false;
-        btn.classList.add('enabled');
-        document.getElementById('adminPassError').textContent = '';
-    } else {
-        btn.disabled = true;
-        btn.classList.remove('enabled');
-        document.getElementById('adminPassError').textContent = pass.length > 0 ? '❌ Incorrect password' : '';
-    }
-};
-
-window.loginAdmin = function() {
-    if (document.getElementById('adminPassInput').value === appState.password) {
-        adminLoggedIn = true;
-        sessionStorage.setItem('admin_logged_in', 'true');
-        document.getElementById('passwordOverlay').classList.remove('active');
-        document.getElementById('adminArea').style.display = 'block';
-        document.getElementById('adminStats').style.display = 'grid';
-        loadLocalState();
-    }
-};
-
-document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !document.getElementById('adminLoginBtn').disabled) loginAdmin();
-});
-
-document.getElementById('adminLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('admin_logged_in');
-    sessionStorage.removeItem('user_logged_in');
-    window.location.href = 'index.html';
-});
-
-// ─── FIREBASE ───
 function saveLocalState() {
     localStorage.setItem('brt_data', JSON.stringify(appState));
     if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
-}
-
-onValue(dbRef, (snapshot) => {
-    isFirebaseConnected = true;
-    document.getElementById('adminStatusDot').className = 'header-status green';
-    const val = snapshot.val();
-    if (val) {
-        appState = { ...appState, ...val };
-        updateUI();
-        renderAll();
-    }
-}, (error) => {
-    isFirebaseConnected = false;
-    document.getElementById('adminStatusDot').className = 'header-status red';
-    console.error(error);
-});
-
-function loadLocalState() {
-    const local = localStorage.getItem('brt_data');
-    if (local) { try { appState = { ...appState, ...JSON.parse(local) }; } catch(e) {} }
-    updateUI();
-    renderAll();
 }
 
 function updateUI() {
@@ -821,6 +1691,7 @@ function updateUI() {
     document.getElementById('paymentApprovalMode').value = appState.paymentApprovalMode || 'manual';
     document.getElementById('razorpayKeyIdInput').value = appState.razorpayKeyId || '';
     document.getElementById('razorpayKeySecretInput').value = appState.razorpayKeySecret || '';
+    
     if (appState.firebaseConfig) {
         document.getElementById('fbApiKey').value = appState.firebaseConfig.apiKey || '';
         document.getElementById('fbAuthDomain').value = appState.firebaseConfig.authDomain || '';
@@ -831,6 +1702,7 @@ function updateUI() {
         document.getElementById('fbAppId').value = appState.firebaseConfig.appId || '';
         document.getElementById('fbMeasurementId').value = appState.firebaseConfig.measurementId || '';
     }
+    
     togglePaymentMode(appState.paymentApprovalMode || 'manual');
     loadQRPreview();
     updateCounts();
@@ -845,7 +1717,18 @@ function renderAll() {
     updateCounts();
 }
 
-// ─── COUNTS ───
+function loadLocalState() {
+    const local = localStorage.getItem('brt_data');
+    if (local) {
+        try { appState = { ...appState, ...JSON.parse(local) }; } catch(e) {}
+    }
+    updateUI();
+    renderAll();
+}
+
+// ================================
+// UPDATE COUNTS
+// ================================
 function updateCounts() {
     const payments = appState.payments || [];
     const pendingPayments = payments.filter(p => p.status === 'pending');
@@ -875,7 +1758,9 @@ function updateCounts() {
     document.getElementById('chatNotificationCount').className = 'count ' + (totalUnread > 0 ? 'red' : 'green');
 }
 
-// ─── PAYMENT MODE TOGGLE ───
+// ================================
+// PAYMENT MODE TOGGLE
+// ================================
 window.togglePaymentMode = function(mode) {
     document.getElementById('manualFields').style.display = mode === 'manual' ? 'block' : 'none';
     document.getElementById('razorpayFields').style.display = mode === 'razorpay' ? 'block' : 'none';
@@ -902,13 +1787,20 @@ window.previewQR = function(event) {
     }
 };
 
-// ─── SAVE FUNCTIONS ───
+// ================================
+// SECTION 1: OFFER SETTINGS
+// ================================
 window.saveOffer = function() {
-    appState.offerName = document.getElementById('offerName').value.trim() || 'FREE SIGNAL OFFER';
-    appState.offerDescription = document.getElementById('offerDescription').value.trim();
-    const match = appState.offerDescription.match(/\d+/);
-    appState.offerCredits = match ? parseInt(match[0]) || 10 : 10;
+    const name = document.getElementById('offerName').value.trim() || 'FREE SIGNAL OFFER';
+    const description = document.getElementById('offerDescription').value.trim();
+    const match = description.match(/\d+/);
+    const credits = match ? parseInt(match[0]) || 10 : 10;
+    
+    appState.offerName = name;
+    appState.offerDescription = description;
+    appState.offerCredits = credits;
     saveLocalState();
+    
     const section = document.getElementById('offerName').closest('.section');
     disableEdit(section);
     const btn = section.querySelector('.btn-save');
@@ -916,12 +1808,17 @@ window.saveOffer = function() {
     setTimeout(() => btn.textContent = '💾 Save', 2000);
 };
 
+// ================================
+// SECTION 2: PAYMENT SETTINGS
+// ================================
 window.savePaymentSettings = function() {
     const mode = document.getElementById('paymentApprovalMode').value;
     appState.paymentApprovalMode = mode;
+    
     if (mode === 'manual') {
         appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless';
         appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
+        
         const fileInput = document.getElementById('qrUploadInput');
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
@@ -938,6 +1835,7 @@ window.savePaymentSettings = function() {
         appState.razorpayKeyId = document.getElementById('razorpayKeyIdInput').value.trim();
         appState.razorpayKeySecret = document.getElementById('razorpayKeySecretInput').value.trim();
     }
+    
     saveLocalState();
     const section = document.getElementById('paymentApprovalMode').closest('.section');
     disableEdit(section);
@@ -946,93 +1844,23 @@ window.savePaymentSettings = function() {
     setTimeout(() => btn.textContent = '💾 Save', 2000);
 };
 
-window.saveCreditsPerSignal = function() {
-    const val = parseInt(document.getElementById('creditsPerSignalInput').value);
-    if (isNaN(val) || val < 1) { alert('Enter valid number (minimum 1)'); return; }
-    appState.creditsPerSignal = val;
-    saveLocalState();
-    const section = document.getElementById('creditsPerSignalInput').closest('.section');
-    disableEdit(section);
-    const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
-    alert('✅ Credits Per Signal saved: ' + val);
-};
-
-window.saveFirebase = function() {
-    appState.firebaseConfig = {
-        apiKey: document.getElementById('fbApiKey').value.trim(),
-        authDomain: document.getElementById('fbAuthDomain').value.trim(),
-        databaseURL: document.getElementById('fbDbUrl').value.trim(),
-        projectId: document.getElementById('fbProjectId').value.trim(),
-        storageBucket: document.getElementById('fbStorageBucket').value.trim(),
-        messagingSenderId: document.getElementById('fbMessagingSenderId').value.trim(),
-        appId: document.getElementById('fbAppId').value.trim(),
-        measurementId: document.getElementById('fbMeasurementId').value.trim()
-    };
-    saveLocalState();
-    const section = document.getElementById('fbApiKey').closest('.section');
-    disableEdit(section);
-    const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
-    alert('✅ Firebase config saved!');
-};
-
-window.saveAdminSettings = function() {
-    appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
-    const file = document.getElementById('logoUpload').files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            appState.logoBase64 = e.target.result;
-            localStorage.setItem('brt_logo', appState.logoBase64);
-            saveLocalState();
-            disableEdit(document.getElementById('logoClickCount').closest('.section'));
-            const btn = document.getElementById('logoClickCount').closest('.section').querySelector('.btn-save');
-            btn.textContent = '✅ Saved';
-            setTimeout(() => btn.textContent = '💾 Save', 2000);
-        };
-        reader.readAsDataURL(file);
-        return;
-    }
-    saveLocalState();
-    const section = document.getElementById('logoClickCount').closest('.section');
-    disableEdit(section);
-    const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
-};
-
-window.changePassword = function() {
-    const newPass = document.getElementById('adminNewPassword').value;
-    const confirmPass = document.getElementById('adminConfirmPassword').value;
-    if (newPass.length < 4) { alert('Password must be at least 4 characters!'); return; }
-    if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
-    appState.password = newPass;
-    saveLocalState();
-    const section = document.getElementById('adminNewPassword').closest('.section');
-    disableEdit(section);
-    document.getElementById('adminNewPassword').value = '';
-    document.getElementById('adminConfirmPassword').value = '';
-    const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
-    alert('✅ Password changed successfully!');
-};
-
-// ─── CREDIT PACKS ───
+// ================================
+// SECTION 3: CREDIT PACKS
+// ================================
 function renderCreditPacks() {
     const list = document.getElementById('creditPackList');
     if (!list) return;
     list.innerHTML = '';
     const packs = appState.creditPacks || [];
+    
     if (packs.length === 0) {
         list.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:6px;">No packs added</div>';
         return;
     }
+    
     const section = list.closest('.section');
     const isEditable = section && section.classList.contains('editable');
+    
     packs.forEach(p => {
         const actions = isEditable ? `
             <div class="item-actions">
@@ -1047,14 +1875,21 @@ function renderCreditPacks() {
 window.addCreditPack = function() {
     const credits = parseInt(document.getElementById('packCredits').value);
     const price = parseInt(document.getElementById('packPrice').value);
-    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
+    
+    if (!credits || credits <= 0 || !price || price <= 0) {
+        alert('Enter valid credits and price');
+        return;
+    }
+    
     if (!appState.creditPacks) appState.creditPacks = [];
     appState.creditPacks.push({ id: 'pack_' + Date.now(), credits, price });
     saveLocalState();
     renderCreditPacks();
+    
     document.getElementById('packCredits').value = '';
     document.getElementById('packPrice').value = '';
     document.getElementById('addCreditPackForm').classList.remove('show');
+    
     const section = document.getElementById('packCredits').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1074,13 +1909,19 @@ window.updateCreditPack = function() {
     const id = document.getElementById('editPackId').value;
     const credits = parseInt(document.getElementById('editPackCredits').value);
     const price = parseInt(document.getElementById('editPackPrice').value);
-    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
+    
+    if (!credits || credits <= 0 || !price || price <= 0) {
+        alert('Enter valid credits and price');
+        return;
+    }
+    
     const index = appState.creditPacks.findIndex(p => p.id === id);
     if (index === -1) return;
     appState.creditPacks[index] = { ...appState.creditPacks[index], credits, price };
     saveLocalState();
     renderCreditPacks();
     document.getElementById('editCreditPackForm').classList.remove('show');
+    
     const section = document.getElementById('editPackCredits').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1095,18 +1936,43 @@ window.deleteCreditPack = function(id) {
     }
 };
 
-// ─── BROKERS ───
+// ================================
+// SECTION 4: CREDITS PER SIGNAL
+// ================================
+window.saveCreditsPerSignal = function() {
+    const val = parseInt(document.getElementById('creditsPerSignalInput').value);
+    if (isNaN(val) || val < 1) {
+        alert('Enter valid number (minimum 1)');
+        return;
+    }
+    appState.creditsPerSignal = val;
+    saveLocalState();
+    
+    const section = document.getElementById('creditsPerSignalInput').closest('.section');
+    disableEdit(section);
+    const btn = section.querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    alert('✅ Credits Per Signal saved: ' + val);
+};
+
+// ================================
+// SECTION 5: BROKER MANAGER
+// ================================
 function renderBrokers() {
     const list = document.getElementById('brokerList');
     if (!list) return;
     list.innerHTML = '';
     const brokers = appState.brokers || [];
+    
     if (brokers.length === 0) {
         list.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:6px;">No brokers added</div>';
         return;
     }
+    
     const section = list.closest('.section');
     const isEditable = section && section.classList.contains('editable');
+    
     brokers.forEach(b => {
         const actions = isEditable ? `
             <div class="item-actions">
@@ -1123,16 +1989,23 @@ window.addBroker = function() {
     const link = document.getElementById('brokerLink').value.trim();
     const minDeposit = parseInt(document.getElementById('brokerMinDeposit').value) || 0;
     const rules = document.getElementById('brokerRules').value.trim();
-    if (!name || !link) { alert('Enter name and link'); return; }
+    
+    if (!name || !link) {
+        alert('Enter name and link');
+        return;
+    }
+    
     if (!appState.brokers) appState.brokers = [];
     appState.brokers.push({ id: 'broker_' + Date.now(), name, link, minDeposit, rules });
     saveLocalState();
     renderBrokers();
+    
     document.getElementById('brokerName').value = '';
     document.getElementById('brokerLink').value = '';
     document.getElementById('brokerMinDeposit').value = '';
     document.getElementById('brokerRules').value = '';
     document.getElementById('addBrokerForm').classList.remove('show');
+    
     const section = document.getElementById('brokerName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1156,13 +2029,19 @@ window.updateBroker = function() {
     const link = document.getElementById('editBrokerLink').value.trim();
     const minDeposit = parseInt(document.getElementById('editBrokerMinDeposit').value) || 0;
     const rules = document.getElementById('editBrokerRules').value.trim();
-    if (!name || !link) { alert('Enter name and link'); return; }
+    
+    if (!name || !link) {
+        alert('Enter name and link');
+        return;
+    }
+    
     const index = appState.brokers.findIndex(b => b.id === id);
     if (index === -1) return;
     appState.brokers[index] = { ...appState.brokers[index], name, link, minDeposit, rules };
     saveLocalState();
     renderBrokers();
     document.getElementById('editBrokerForm').classList.remove('show');
+    
     const section = document.getElementById('editBrokerName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1177,23 +2056,30 @@ window.deleteBroker = function(id) {
     }
 };
 
-// ─── TOOLS ───
+// ================================
+// SECTION 6: TOOLS MANAGER
+// ================================
 function renderTools() {
     const container = document.getElementById('toolsList');
     if (!container) return;
     container.innerHTML = '';
     const tools = appState.tools || [];
+    
     if (tools.length === 0) {
         container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:6px;">No tools added</div>';
         return;
     }
+    
     const section = container.closest('.section');
     const isEditable = section && section.classList.contains('editable');
+    
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢' : '🔴';
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
         const fireText = fireStatus ? '🔥' : '❌';
         const triggers = tool.triggers && tool.triggers.length > 0 ? tool.triggers.join(', ') : 'Default';
+        const statusClass = tool.visibility === 'visible' ? 'visible' : 'hidden';
+        
         let actions = '';
         if (isEditable) {
             actions = `
@@ -1205,12 +2091,14 @@ function renderTools() {
                 </div>
             `;
         }
+        
         container.innerHTML += `
             <div class="tool-item">
                 <div class="tool-info">
                     <div class="tool-name">${tool.sticker || '🎯'} ${tool.name || 'Untitled'}</div>
                     ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
-                    <span style="font-size:0.4rem;color:#888;">${statusText} | ${triggers}</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                    <span style="font-size:0.4rem;color:#666;margin-left:4px;">${triggers}</span>
                 </div>
                 ${actions}
             </div>
@@ -1249,14 +2137,17 @@ window.updateTool = function() {
     const visibility = document.getElementById('editToolStatus').value;
     const showFire = document.getElementById('editToolFire').value === 'true';
     const triggers = document.getElementById('editToolTriggers').value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    
     if (!name) { alert('Enter tool name'); return; }
     if (!htmlCode) { alert('Enter HTML code'); return; }
+    
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎]/) ? name.charAt(0) : '🎯';
     appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderTools();
     document.getElementById('editToolForm').classList.remove('show');
+    
     const section = document.getElementById('editToolName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1288,39 +2179,51 @@ window.addTool = function() {
     const visibility = document.getElementById('newToolStatus').value;
     const showFire = document.getElementById('newToolFire').value === 'true';
     const triggers = document.getElementById('newToolTriggers').value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    
     if (!name) { alert('Enter tool name'); return; }
     if (!htmlCode) { alert('Enter HTML code'); return; }
+    
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎]/) ? name.charAt(0) : '🎯';
+    
     if (!appState.tools) appState.tools = [];
     appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderTools();
+    
     document.getElementById('newToolName').value = '';
     document.getElementById('newToolSubName').value = '';
     document.getElementById('newToolHtml').value = '';
     document.getElementById('newToolTriggers').value = '';
     document.getElementById('addToolForm').classList.remove('show');
+    
     const section = document.getElementById('newToolName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => btn.textContent = '💾 Save', 2000);
 };
 
-// ─── SOCIAL ───
+// ================================
+// SECTION 7: SOCIAL MEDIA
+// ================================
 function renderSocial() {
     const container = document.getElementById('socialList');
     if (!container) return;
     container.innerHTML = '';
     const socials = appState.socialMedia || [];
+    
     if (socials.length === 0) {
         container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:6px;">No social media added</div>';
         return;
     }
+    
     const section = container.closest('.section');
     const isEditable = section && section.classList.contains('editable');
+    
     socials.forEach((s, idx) => {
         const statusText = s.visibility === 'visible' ? '🟢' : '🔴';
+        const statusClass = s.visibility === 'visible' ? 'visible' : 'hidden';
+        
         let actions = '';
         if (isEditable) {
             actions = `
@@ -1331,12 +2234,15 @@ function renderSocial() {
                 </div>
             `;
         }
+        
         container.innerHTML += `
             <div class="social-item">
                 <div class="social-info">
-                    <span style="color:#FFD700;font-size:0.5rem;"><i class="${s.icon || 'fas fa-link'}"></i> ${s.name}</span>
+                    <span style="color:#FFD700;font-size:0.5rem;">
+                        <i class="${s.icon || 'fas fa-link'}"></i> ${s.name}
+                    </span>
                     <span style="color:#888;font-size:0.4rem;display:block;">${s.url}</span>
-                    <span class="status-badge ${s.visibility === 'visible' ? 'visible' : 'hidden'}">${statusText}</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
                 </div>
                 ${actions}
             </div>
@@ -1362,12 +2268,18 @@ window.updateSocial = function() {
     const url = document.getElementById('editSocialUrl').value.trim();
     const icon = document.getElementById('editSocialIcon').value.trim();
     const visibility = document.getElementById('editSocialStatus').value;
-    if (!name || !url) { alert('Enter name and URL'); return; }
+    
+    if (!name || !url) {
+        alert('Enter name and URL');
+        return;
+    }
+    
     appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility };
     saveLocalState();
     localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
     renderSocial();
     document.getElementById('editSocialForm').classList.remove('show');
+    
     const section = document.getElementById('editSocialName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1397,36 +2309,50 @@ window.addSocial = function() {
     const url = document.getElementById('newSocialUrl').value.trim();
     const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link';
     const visibility = document.getElementById('newSocialStatus').value;
-    if (!name || !url) { alert('Enter name and URL'); return; }
+    
+    if (!name || !url) {
+        alert('Enter name and URL');
+        return;
+    }
+    
     if (!appState.socialMedia) appState.socialMedia = [];
     appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility });
     saveLocalState();
     localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
     renderSocial();
+    
     document.getElementById('newSocialName').value = '';
     document.getElementById('newSocialUrl').value = '';
     document.getElementById('newSocialIcon').value = '';
     document.getElementById('addSocialForm').classList.remove('show');
+    
     const section = document.getElementById('newSocialName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => btn.textContent = '💾 Save', 2000);
 };
 
-// ─── FEATURES ───
+// ================================
+// SECTION 8: FEATURES MANAGER
+// ================================
 function renderFeatures() {
     const container = document.getElementById('featuresList');
     if (!container) return;
     container.innerHTML = '';
     const features = appState.features || [];
+    
     if (features.length === 0) {
         container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:6px;">No features added</div>';
         return;
     }
+    
     const section = container.closest('.section');
     const isEditable = section && section.classList.contains('editable');
+    
     features.forEach((f, idx) => {
         const statusText = f.visibility === 'visible' ? '🟢' : '🔴';
+        const statusClass = f.visibility === 'visible' ? 'visible' : 'hidden';
+        
         let actions = '';
         if (isEditable) {
             actions = `
@@ -1437,12 +2363,15 @@ function renderFeatures() {
                 </div>
             `;
         }
+        
         container.innerHTML += `
             <div class="feature-item">
                 <div class="feature-info">
-                    <span style="color:#FFD700;font-size:0.5rem;">${f.icon || '🧠'} ${f.name || 'Feature'}</span>
+                    <span style="color:#FFD700;font-size:0.5rem;">
+                        ${f.icon || '🧠'} ${f.name || 'Feature'}
+                    </span>
                     <span style="color:#888;font-size:0.4rem;display:block;">${f.desc || ''}</span>
-                    <span class="status-badge ${f.visibility === 'visible' ? 'visible' : 'hidden'}">${statusText}</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
                 </div>
                 ${actions}
             </div>
@@ -1468,12 +2397,18 @@ window.updateFeature = function() {
     const name = document.getElementById('editFeatureName').value.trim();
     const desc = document.getElementById('editFeatureDesc').value.trim();
     const visibility = document.getElementById('editFeatureStatus').value;
-    if (!name) { alert('Enter feature name'); return; }
+    
+    if (!name) {
+        alert('Enter feature name');
+        return;
+    }
+    
     appState.features[idx] = { ...appState.features[idx], icon, name, desc, visibility };
     saveLocalState();
     localStorage.setItem('brt_features', JSON.stringify(appState.features));
     renderFeatures();
     document.getElementById('editFeatureForm').classList.remove('show');
+    
     const section = document.getElementById('editFeatureName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
@@ -1503,27 +2438,122 @@ window.addFeature = function() {
     const name = document.getElementById('newFeatureName').value.trim();
     const desc = document.getElementById('newFeatureDesc').value.trim();
     const visibility = document.getElementById('newFeatureStatus').value;
-    if (!name) { alert('Enter feature name'); return; }
+    
+    if (!name) {
+        alert('Enter feature name');
+        return;
+    }
+    
     if (!appState.features) appState.features = [];
     appState.features.push({ id: 'feat_' + Date.now(), icon, name, desc, visibility });
     saveLocalState();
     localStorage.setItem('brt_features', JSON.stringify(appState.features));
     renderFeatures();
+    
     document.getElementById('newFeatureName').value = '';
     document.getElementById('newFeatureDesc').value = '';
     document.getElementById('addFeatureForm').classList.remove('show');
+    
     const section = document.getElementById('newFeatureName').closest('.section');
     const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => btn.textContent = '💾 Save', 2000);
 };
 
-// ─── PENDING PAYMENTS ───
+// ================================
+// SECTION 9: FIREBASE CONFIG
+// ================================
+window.saveFirebase = function() {
+    appState.firebaseConfig = {
+        apiKey: document.getElementById('fbApiKey').value.trim(),
+        authDomain: document.getElementById('fbAuthDomain').value.trim(),
+        databaseURL: document.getElementById('fbDbUrl').value.trim(),
+        projectId: document.getElementById('fbProjectId').value.trim(),
+        storageBucket: document.getElementById('fbStorageBucket').value.trim(),
+        messagingSenderId: document.getElementById('fbMessagingSenderId').value.trim(),
+        appId: document.getElementById('fbAppId').value.trim(),
+        measurementId: document.getElementById('fbMeasurementId').value.trim()
+    };
+    
+    saveLocalState();
+    const section = document.getElementById('fbApiKey').closest('.section');
+    disableEdit(section);
+    const btn = section.querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    alert('✅ Firebase config saved!');
+};
+
+// ================================
+// SECTION 10: ADMIN ACCESS
+// ================================
+window.saveAdminSettings = function() {
+    appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
+    
+    const file = document.getElementById('logoUpload').files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            appState.logoBase64 = e.target.result;
+            localStorage.setItem('brt_logo', appState.logoBase64);
+            saveLocalState();
+            disableEdit(document.getElementById('logoClickCount').closest('.section'));
+            const btn = document.getElementById('logoClickCount').closest('.section').querySelector('.btn-save');
+            btn.textContent = '✅ Saved';
+            setTimeout(() => btn.textContent = '💾 Save', 2000);
+        };
+        reader.readAsDataURL(file);
+        return;
+    }
+    
+    saveLocalState();
+    const section = document.getElementById('logoClickCount').closest('.section');
+    disableEdit(section);
+    const btn = section.querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => btn.textContent = '💾 Save', 2000);
+};
+
+// ================================
+// SECTION 11: CHANGE PASSWORD
+// ================================
+window.changePassword = function() {
+    const newPass = document.getElementById('adminNewPassword').value;
+    const confirmPass = document.getElementById('adminConfirmPassword').value;
+    
+    if (newPass.length < 4) {
+        alert('Password must be at least 4 characters!');
+        return;
+    }
+    
+    if (newPass !== confirmPass) {
+        alert('Passwords do not match!');
+        return;
+    }
+    
+    appState.password = newPass;
+    saveLocalState();
+    
+    const section = document.getElementById('adminNewPassword').closest('.section');
+    disableEdit(section);
+    document.getElementById('adminNewPassword').value = '';
+    document.getElementById('adminConfirmPassword').value = '';
+    
+    const btn = section.querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    alert('✅ Password changed successfully!');
+};
+
+// ================================
+// MODAL 1: PENDING PAYMENTS
+// ================================
 window.openPendingPayments = function() {
     const container = document.getElementById('paymentsList');
     container.innerHTML = '';
     const payments = appState.payments || [];
     const pending = payments.filter(p => p.status === 'pending');
+    
     if (pending.length === 0) {
         document.getElementById('noPayments').style.display = 'block';
     } else {
@@ -1532,6 +2562,7 @@ window.openPendingPayments = function() {
             const actualIdx = appState.payments.indexOf(p);
             const user = appState.users.find(u => u.email === p.userEmail);
             const userName = user ? user.name || user.email : p.userEmail;
+            
             container.innerHTML += `
                 <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.06);border-radius:4px;padding:8px 10px;margin-bottom:4px;">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:0.55rem;">
@@ -1575,12 +2606,15 @@ window.rejectPayment = function(idx) {
     }
 };
 
-// ─── PENDING VERIFICATIONS ───
+// ================================
+// MODAL 2: PENDING VERIFICATIONS
+// ================================
 window.openPendingVerifications = function() {
     const container = document.getElementById('verificationsList');
     container.innerHTML = '';
     const requests = appState.verificationRequests || [];
     const pending = requests.filter(r => r.status === 'pending');
+    
     if (pending.length === 0) {
         document.getElementById('noVerifications').style.display = 'block';
     } else {
@@ -1613,6 +2647,7 @@ window.approveVerification = function(idx) {
     if (!request || request.status !== 'pending') return;
     const input = document.getElementById('vfc_' + idx);
     const freeCredits = input ? parseInt(input.value) || appState.offerCredits || 10 : appState.offerCredits || 10;
+    
     if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
         request.status = 'approved';
         const user = appState.users.find(u => u.email === request.userEmail);
@@ -1640,7 +2675,9 @@ window.rejectVerification = function(idx) {
     }
 };
 
-// ─── USERS ───
+// ================================
+// MODAL 3: USERS
+// ================================
 window.openUsers = function() {
     showVerifiedUsers();
     openModal('usersModal');
@@ -1648,7 +2685,10 @@ window.openUsers = function() {
 
 window.showVerifiedUsers = function() {
     const container = document.getElementById('usersContent');
-    container.innerHTML = `<input id="userSearch" placeholder="Search users..." style="width:100%;padding:4px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#00FF66;font-size:0.55rem;outline:none;margin-bottom:4px;" oninput="searchUsers()"><div class="user-scroll" id="usersList"></div>`;
+    container.innerHTML = `
+        <input id="userSearch" placeholder="Search users..." style="width:100%;padding:4px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#00FF66;font-size:0.55rem;outline:none;margin-bottom:4px;" oninput="searchUsers()">
+        <div class="user-scroll" id="usersList"></div>
+    `;
     renderUsersList();
 };
 
@@ -1668,10 +2708,12 @@ function renderUsersList(filter = '') {
         (u.broker || '').toLowerCase().includes(filter) ||
         (u.accountId || '').toLowerCase().includes(filter)
     );
+    
     if (filtered.length === 0) {
         container.innerHTML = '<div style="color:#666;font-size:0.5rem;text-align:center;padding:12px;">No users found</div>';
         return;
     }
+    
     filtered.forEach((u, idx) => {
         const actualIdx = appState.users.indexOf(u);
         const statusText = u.adminAdded ? 'Admin' : 'Verified';
@@ -1708,8 +2750,10 @@ window.addUserFromPopup = function() {
     const broker = document.getElementById('addUserBroker').value;
     const credits = parseInt(document.getElementById('addUserFreeCredits').value) || 0;
     const errorEl = document.getElementById('addUserError');
+    
     if (!name || !email || !accountId) { errorEl.textContent = '❌ Fill all fields'; return; }
     if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists!'; return; }
+    
     const brokerData = appState.brokers.find(b => b.name === broker);
     appState.users.push({
         name, email, accountId, broker: broker || 'Manual',
@@ -1720,12 +2764,16 @@ window.addUserFromPopup = function() {
         blocked: false,
         registeredAt: new Date().toISOString()
     });
+    
     saveLocalState();
     updateCounts();
     errorEl.textContent = '✅ User added!';
     setTimeout(() => { showVerifiedUsers(); }, 1000);
 };
 
+// ================================
+// MODAL 4: USER DETAIL
+// ================================
 window.openUserDetail = function(idx) {
     const user = appState.users[idx];
     if (!user) return;
@@ -1774,6 +2822,7 @@ window.giveFreeCredits = function() {
     if (!selectedUserDetail) return;
     const credits = parseInt(document.getElementById('freeCreditsInput').value);
     if (isNaN(credits) || credits <= 0) { alert('Enter valid amount'); return; }
+    
     selectedUserDetail.freeCredits = (selectedUserDetail.freeCredits || 0) + credits;
     selectedUserDetail.credits = (selectedUserDetail.credits || 0) + credits;
     saveLocalState();
@@ -1820,20 +2869,26 @@ window.chatWithUser = function() {
     }, 300);
 };
 
-// ─── REVENUE ───
+// ================================
+// MODAL 5: REVENUE
+// ================================
 window.openRevenue = function() {
     const payments = appState.payments || [];
     const successPayments = payments.filter(p => p.status === 'success');
     const failedPayments = payments.filter(p => p.status === 'failed');
     const totalRevenue = successPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    
     document.getElementById('revenueTotal').textContent = '₹' + totalRevenue;
     document.getElementById('revenueTotalTxn').textContent = payments.length;
     document.getElementById('revenueSuccess').textContent = successPayments.length;
     document.getElementById('revenueFailed').textContent = failedPayments.length;
+    
     openModal('revenueModal');
 };
 
-// ─── CHAT ───
+// ================================
+// MODAL 6: CHAT
+// ================================
 window.openChat = function() {
     chatSelectedUser = null;
     document.getElementById('chatSelectedDisplay').innerHTML = '<span>Select a user to chat</span><button class="clear" onclick="clearChatUser()" style="display:none;">✕</button>';
@@ -1850,6 +2905,7 @@ function renderChatUsers(filter = '') {
     const container = document.getElementById('chatUserList');
     if (!container) return;
     container.innerHTML = '';
+    
     const chatUsers = [];
     const chatKeys = Object.keys(appState.chats || {});
     chatKeys.forEach(key => {
@@ -1861,6 +2917,7 @@ function renderChatUsers(filter = '') {
             chatUsers.push({ user, unread, key });
         }
     });
+    
     chatUsers.sort((a, b) => {
         const msgsA = appState.chats[a.key] || [];
         const msgsB = appState.chats[b.key] || [];
@@ -1868,14 +2925,17 @@ function renderChatUsers(filter = '') {
         const timeB = msgsB.length > 0 ? msgsB[msgsB.length - 1].timestamp : 0;
         return new Date(timeB) - new Date(timeA);
     });
+    
     const filtered = chatUsers.filter(c =>
         (c.user.name || '').toLowerCase().includes(filter) ||
         c.user.email.toLowerCase().includes(filter)
     );
+    
     if (filtered.length === 0) {
         container.innerHTML = '<div style="color:#666;font-size:0.45rem;text-align:center;padding:12px;">No chat users</div>';
         return;
     }
+    
     filtered.forEach(c => {
         const isSelected = chatSelectedUser === c.user.email;
         const unreadBadge = c.unread > 0 ? `<span class="unread">${c.unread}</span>` : '';
@@ -1912,12 +2972,15 @@ function loadChatMessages() {
         box.innerHTML = '<div style="color:#666;text-align:center;padding:16px;font-size:0.5rem;">Select a user to chat</div>';
         return;
     }
+    
     const key = getChatKey(chatSelectedUser);
     const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
+    
     if (msgs.length === 0) {
         box.innerHTML = '<div style="color:#666;text-align:center;padding:16px;font-size:0.5rem;">No messages</div>';
         return;
     }
+    
     box.innerHTML = '';
     msgs.forEach(c => {
         const cls = c.sender === 'admin' ? 'admin' : 'user';
@@ -1933,11 +2996,21 @@ function loadChatMessages() {
 window.sendChatMsg = function() {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
-    if (!msg || !chatSelectedUser) { alert('Select a user and enter message'); return; }
+    if (!msg || !chatSelectedUser) {
+        alert('Select a user and enter message');
+        return;
+    }
+    
     const key = getChatKey(chatSelectedUser);
     if (!appState.chats) appState.chats = {};
     if (!appState.chats[key]) appState.chats[key] = [];
-    appState.chats[key].push({ sender: 'admin', message: msg, timestamp: new Date().toISOString(), read: false });
+    appState.chats[key].push({
+        sender: 'admin',
+        message: msg,
+        timestamp: new Date().toISOString(),
+        read: false
+    });
+    
     saveLocalState();
     input.value = '';
     loadChatMessages();
@@ -1949,7 +3022,85 @@ document.getElementById('chatInput')?.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') sendChatMsg();
 });
 
-// ─── INIT ───
+// ================================
+// PASSWORD OVERLAY
+// ================================
+window.hidePassword = function() {
+    document.getElementById('passwordOverlay').classList.remove('active');
+    window.location.href = 'index.html';
+};
+
+window.checkPassword = function() {
+    const pass = document.getElementById('adminPassInput').value;
+    const btn = document.getElementById('adminLoginBtn');
+    if (pass === appState.password) {
+        btn.disabled = false;
+        btn.classList.add('enabled');
+        document.getElementById('adminPassError').textContent = '';
+    } else {
+        btn.disabled = true;
+        btn.classList.remove('enabled');
+        document.getElementById('adminPassError').textContent = pass.length > 0 ? '❌ Incorrect password' : '';
+    }
+};
+
+window.loginAdmin = function() {
+    if (document.getElementById('adminPassInput').value === appState.password) {
+        adminLoggedIn = true;
+        sessionStorage.setItem('admin_logged_in', 'true');
+        document.getElementById('passwordOverlay').classList.remove('active');
+        document.getElementById('adminArea').style.display = 'block';
+        document.getElementById('adminStats').style.display = 'grid';
+        loadLocalState();
+    }
+};
+
+document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('adminLoginBtn').disabled) loginAdmin();
+});
+
+document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+    sessionStorage.removeItem('admin_logged_in');
+    sessionStorage.removeItem('user_logged_in');
+    window.location.href = 'index.html';
+});
+
+// ================================
+// FIREBASE ON VALUE
+// ================================
+onValue(dbRef, (snapshot) => {
+    isFirebaseConnected = true;
+    document.getElementById('adminStatusDot').className = 'header-status green';
+    const val = snapshot.val();
+    if (val) {
+        appState = { ...appState, ...val };
+        updateUI();
+        renderAll();
+    }
+}, (error) => {
+    isFirebaseConnected = false;
+    document.getElementById('adminStatusDot').className = 'header-status red';
+    console.error(error);
+});
+
+// ================================
+// CURSOR GLOW
+// ================================
+const glow = document.getElementById('cursorGlow');
+if (window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('mousemove', (e) => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+        glow.classList.add('active');
+    });
+    document.addEventListener('mouseleave', () => {
+        glow.classList.remove('active');
+    });
+}
+
+// ================================
+// INITIALIZATION
+// ================================
 let adminSession = sessionStorage.getItem('admin_logged_in');
 if (adminSession === 'true') {
     adminLoggedIn = true;
@@ -1964,7 +3115,7 @@ if (adminSession === 'true') {
     setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
 }
 
-console.log('⚙️ Admin Panel Loaded - Simple & Clean UI');
+console.log('⚙️ Admin Panel Loaded - All 78+ Functions Ready');
 </script>
 </body>
 </html>
