@@ -21,7 +21,7 @@
     </script>
     
     <style>
-        /* ===== CSS VARIABLES FOR DARK/LIGHT MODE ===== */
+        /* ===== CSS VARIABLES ===== */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
@@ -204,15 +204,15 @@
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
+        /* ===== SMOOTH CONTAINERS - NO ZOOM/SCALE ===== */
         .red-container {
             background: var(--container-bg);
             border: 2px solid var(--container-border);
             border-radius: 18px;
             padding: 4px 12px 3px 12px;
             margin: 6px 0 4px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             position: relative;
-            will-change: transform;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -221,11 +221,8 @@
         }
         .red-container:hover {
             border-color: rgba(255, 0, 51, 0.5);
-            box-shadow: 0 0 60px var(--shadow-color);
-            transform: scale(1.012) translateY(-1px);
+            box-shadow: 0 0 30px var(--shadow-color);
         }
-        .red-container::after { content: ''; position: absolute; inset: -2px; border-radius: 18px; padding: 2px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
-        .red-container:hover::after { opacity: 1; }
         
         .fb-status-dot-sm {
             width: 7px; height: 7px; border-radius: 50%; display: inline-block;
@@ -280,44 +277,17 @@
             color: var(--text-secondary);
             font-size: 0.65rem;
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            animation: socialGlow 2s ease-in-out infinite;
         }
-        .social-icons-header a:nth-child(1) { animation-delay: 0s; }
-        .social-icons-header a:nth-child(2) { animation-delay: 0.4s; }
-        .social-icons-header a:nth-child(3) { animation-delay: 0.8s; }
-        .social-icons-header a:nth-child(4) { animation-delay: 1.2s; }
         .social-icons-header a:hover {
             color: #FF0033;
             border-color: #FF0033;
-            transform: translateY(-2px) scale(1.15);
+            transform: translateY(-2px);
             box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
-            animation-play-state: paused;
         }
-        .social-icons-header a:active { transform: scale(0.9); }
-        .social-icons-header a::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.15), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .social-icons-header a:hover::before { opacity: 1; }
-        
-        @keyframes socialGlow {
-            0%, 100% {
-                border-color: rgba(255, 0, 51, 0.15);
-                box-shadow: 0 0 10px rgba(255, 0, 51, 0.05);
-            }
-            50% {
-                border-color: rgba(255, 0, 51, 0.8);
-                box-shadow: 0 0 25px rgba(255, 0, 51, 0.3), 0 0 50px rgba(255, 0, 51, 0.1);
-            }
-        }
+        .social-icons-header a:active { transform: scale(0.95); }
         
         .nav-links {
             display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
@@ -325,11 +295,11 @@
         .nav-links button {
             padding: 1px 8px; border-radius: 12px; border: 1px solid var(--nav-link-border);
             background: var(--nav-link-bg); color: var(--nav-link-color); font-size: 0.4rem; font-weight: 600;
-            cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer; transition: all 0.3s ease;
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
-        .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); transform: scale(1.1); box-shadow: 0 2px 14px rgba(255,0,51,0.06); }
-        .nav-links button:active { transform: scale(0.93); }
+        .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); }
+        .nav-links button:active { transform: scale(0.95); }
         .nav-links button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
@@ -347,18 +317,15 @@
             padding: 14px 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            will-change: transform;
         }
-        .admin-dash-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, rgba(255,0,51,0.03), transparent 70%); opacity: 0; transition: all 0.6s ease; pointer-events: none; }
-        .admin-dash-card:hover { border-color: #FF0033; transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
-        .admin-dash-card:hover::before { opacity: 1; }
+        .admin-dash-card:hover { border-color: #FF0033; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
         .admin-dash-card:active { transform: scale(0.97); }
         .admin-dash-card .icon { font-size: 1.4rem; color: #FFD700; display: block; margin-bottom: 2px; transition: all 0.3s ease; }
         .admin-dash-card:hover .icon { transform: scale(1.1); }
-        .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.5rem; font-weight: 700; display: block; margin: 2px 0; transition: all 0.3s ease; }
+        .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.5rem; font-weight: 700; display: block; margin: 2px 0; }
         .admin-dash-card .count.green { color: #00FF66; }
         .admin-dash-card .count.red { color: #FF0033; }
         .admin-dash-card .count.gold { color: #FFD700; }
@@ -367,7 +334,7 @@
         .password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); display: none; justify-content: center; align-items: center; z-index: 10001; padding: 20px; backdrop-filter: blur(12px); }
         .password-overlay.active { display: flex; }
         .password-modal { background: var(--password-modal-bg); backdrop-filter: blur(20px); border: 2px solid var(--password-modal-border); border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
-        .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
         .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
         .password-modal .close-btn:active { transform: scale(0.9); }
         .password-modal .lock-icon { font-size: 2.4rem; color: #FF0033; margin-bottom: 8px; }
@@ -391,7 +358,7 @@
             background: var(--section-bg);
             transition: all 0.3s ease;
         }
-        .admin-section:hover { border-color: rgba(255,0,51,0.12); box-shadow: 0 0 24px var(--shadow-color); }
+        .admin-section:hover { border-color: rgba(255,0,51,0.15); box-shadow: 0 0 24px var(--shadow-color); }
         .admin-section h4 { color: #FFD700; font-size: 0.7rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         
         .admin-section .field-group { margin-bottom: 8px; }
@@ -425,7 +392,7 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 0.55rem;
             text-transform: uppercase;
@@ -437,7 +404,7 @@
             box-shadow: 0 0 24px rgba(255,255,255,0.15); 
             transform: scale(1.02); 
         }
-        .admin-section .btn-row .btn-edit:active { transform: scale(0.97); }
+        .admin-section .btn-row .btn-edit:active { transform: scale(0.95); }
         
         .admin-section .btn-row .btn-save {
             flex: 1;
@@ -446,7 +413,7 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 0.55rem;
             text-transform: uppercase;
@@ -459,12 +426,12 @@
             box-shadow: 0 0 24px rgba(255,0,51,0.2); 
             transform: scale(1.02); 
         }
-        .admin-section .btn-row .btn-save:active { transform: scale(0.97); }
+        .admin-section .btn-row .btn-save:active { transform: scale(0.95); }
         .admin-section .btn-row .btn-save.show { display: block; }
         .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
         
         .admin-section .item-list { 
-            max-height: 100px; 
+            max-height: 150px; 
             overflow-y: auto; 
             margin-top: 6px; 
             border: 1px solid rgba(255,0,51,0.05); 
@@ -476,15 +443,20 @@
         .admin-section .list-item { 
             display: flex; 
             justify-content: space-between; 
-            padding: 3px 6px; 
+            padding: 4px 8px; 
             border-bottom: 1px solid rgba(255,255,255,0.03); 
-            font-size: 0.5rem; 
+            font-size: 0.55rem; 
             align-items: center; 
         }
         .admin-section .list-item .name { color: #FFD700; }
         .admin-section .list-item .detail { color: var(--text-secondary); }
-        .admin-section .list-item .del-btn { background: none; border: none; color: #FF0033; cursor: pointer; font-size: 0.55rem; }
-        .admin-section .list-item .del-btn:hover { text-shadow: 0 0 10px rgba(255,0,51,0.3); }
+        .admin-section .list-item .list-actions { display: none; gap: 4px; }
+        .admin-section .list-item .list-actions button { 
+            background: none; border: none; cursor: pointer; font-size: 0.6rem; padding: 0 4px; 
+        }
+        .admin-section .list-item .list-actions .edit-btn { color: #FFD700; }
+        .admin-section .list-item .list-actions .del-btn { color: #FF0033; }
+        .admin-section.editable .list-item .list-actions { display: flex; }
         
         .payment-settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .payment-settings-grid .field-group { margin-bottom: 0; }
@@ -533,7 +505,7 @@
             cursor: pointer; 
             background: none; 
             border: none; 
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: all 0.3s ease; 
             font-weight: 700;
         }
         .modal-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255,0,51,0.06); }
@@ -565,9 +537,9 @@
             font-family: 'Inter', sans-serif; 
             font-size: 0.8rem; 
             outline: none; 
-            transition: all 0.4s ease; 
+            transition: all 0.3s ease; 
         }
-        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.04); transform: scale(1.01); }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255,0,51,0.04); }
         .modal textarea { height: 60px; resize: vertical; font-size: 0.7rem; }
         .modal .btn-submit { 
             width: 100%; 
@@ -577,11 +549,11 @@
             font-weight: 700; 
             border: none; 
             cursor: pointer; 
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: all 0.3s ease; 
             font-family: 'Inter', sans-serif; 
             font-size: 0.75rem; 
         }
-        .modal .btn-submit:hover { transform: scale(1.03); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+        .modal .btn-submit:hover { transform: scale(1.02); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
@@ -602,7 +574,7 @@
         }
         .modal .search-input:focus { border-color: #FF0033; }
         
-        /* ===== USER LIST - BIGGER & CLEARER ===== */
+        /* ===== USER LIST ===== */
         .modal .user-list-item { 
             display: flex; 
             justify-content: space-between; 
@@ -645,7 +617,7 @@
         .modal .user-detail-row .value.green { color: #00FF66; }
         .modal .user-detail-row .value.red { color: #FF0033; }
         
-        /* ===== CHAT - BLACK BACKGROUND, TEXT BLACK ===== */
+        /* ===== CHAT ===== */
         .modal .chat-msg-list { 
             max-height: 320px; 
             overflow-y: auto; 
@@ -661,7 +633,6 @@
         .modal .chat-msg-list::-webkit-scrollbar { width: 5px; }
         .modal .chat-msg-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        /* Incoming (User → Admin): Background Red, Text Black */
         .modal .chat-msg-list .msg.admin { 
             background: #FF0033 !important; 
             color: #000000 !important; 
@@ -677,7 +648,6 @@
             align-self: flex-start;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        /* Outgoing (Admin → User): Background White, Text Black */
         .modal .chat-msg-list .msg.user { 
             background: #ffffff !important; 
             color: #000000 !important; 
@@ -907,7 +877,7 @@
             font-weight: 600;
         }
         
-        /* ===== CHAT USER LIST - BLACK BG, 25% WIDTH ===== */
+        /* ===== CHAT USER LIST ===== */
         .chat-popup-layout {
             display: flex;
             gap: 10px;
@@ -1039,6 +1009,7 @@
         .cursor-glow.active { opacity: 1; }
         @media (hover: none) { .cursor-glow { display: none !important; } }
         
+        /* Smooth transitions only - no scale/zoom */
         .red-container, .admin-dash-card, .admin-section, .tools-list .tool-item,
         .social-list .social-item, .features-list .feature-item,
         .modal .btn-submit, .modal-close, .nav-links button,
@@ -1047,9 +1018,7 @@
         .social-list .social-item .social-actions button,
         .features-list .feature-item .feature-actions button,
         .social-icons-header a, #chatUserList .chat-user-item {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.4s ease, border-color 0.4s ease;
-            will-change: transform;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
         }
         .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
         .tools-list .tool-item:hover, .social-list .social-item:hover,
@@ -1061,7 +1030,7 @@
         .social-list .social-item .social-actions button:hover,
         .features-list .feature-item .feature-actions button:hover,
         .social-icons-header a:hover, #chatUserList .chat-user-item:hover {
-            transform: scale(1.04) translateY(-2px);
+            transform: translateY(-2px);
         }
         .red-container:active, .admin-dash-card:active, .admin-section:active,
         .tools-list .tool-item:active, .social-list .social-item:active,
@@ -1135,16 +1104,7 @@
         
         <div id="adminArea">
             
-            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
-                <h4 style="color:#FFD700;">🔐 Change Password</h4>
-                <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
-                <div class="field-group"><label>Confirm New Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm new password" disabled></div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
-                </div>
-            </div>
-            
+            <!-- 1. Offer Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
                 <div class="field-group">
@@ -1161,34 +1121,7 @@
                 </div>
             </div>
             
-            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
-                <h4 style="color:#FFD700;">🌓 Dark Mode</h4>
-                <div class="dark-mode-toggle-admin">
-                    <span class="toggle-label" id="darkModeLabel">Dark</span>
-                    <div class="toggle-track" id="darkModeToggleTrack" onclick="toggleDarkMode()">
-                        <div class="toggle-thumb"></div>
-                    </div>
-                    <span class="toggle-label" id="darkModeLabelLight">Light</span>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-save show" onclick="saveDarkMode()" style="background:#FF0033;color:#fff;">💾 Save Dark Mode</button>
-                </div>
-            </div>
-            
-            <!-- Credits Per Signal Setting - Bug 3 Fix -->
-            <div class="admin-section" style="border-color:rgba(0,255,102,0.15);">
-                <h4 style="color:#00FF66;">💎 Credits Per Signal</h4>
-                <div class="credits-per-signal-group">
-                    <span style="font-size:0.6rem;color:var(--text-secondary);">How many credits to deduct per successful signal:</span>
-                    <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled />
-                    <button class="save-btn-small" id="saveCreditsPerSignalBtn" style="display:none;" onclick="saveCreditsPerSignal()">💾 Save</button>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button>
-                </div>
-            </div>
-            
+            <!-- 2. Payment Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">💳 Payment Settings</h4>
                 <div class="field-group"><label>Approval Mode</label><select id="paymentApprovalMode" disabled><option value="manual">Manual</option><option value="auto">Auto</option></select></div>
@@ -1205,6 +1138,7 @@
                 </div>
             </div>
             
+            <!-- 3. Credit Packs -->
             <div class="admin-section">
                 <h4>📦 Credit Packs</h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
@@ -1221,6 +1155,35 @@
                 <div id="creditPackList" class="item-list" style="max-height:130px;margin-top:4px;"></div>
             </div>
             
+            <!-- 4. Credits Per Signal -->
+            <div class="admin-section" style="border-color:rgba(0,255,102,0.15);">
+                <h4 style="color:#00FF66;">💎 Credits Per Signal</h4>
+                <div class="credits-per-signal-group">
+                    <span style="font-size:0.6rem;color:var(--text-secondary);">How many credits to deduct per successful signal:</span>
+                    <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled />
+                    <button class="save-btn-small" id="saveCreditsPerSignalBtn" style="display:none;" onclick="saveCreditsPerSignal()">💾 Save</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button>
+                </div>
+            </div>
+            
+            <!-- 5. Broker Manager -->
+            <div class="admin-section">
+                <h4>🏢 Broker Manager</h4>
+                <div class="field-group"><label>Name</label><input type="text" id="adminBrokerName" disabled></div>
+                <div class="field-group"><label>Affiliate Link</label><input type="text" id="adminBrokerLink" disabled></div>
+                <div class="field-group"><label>Min Deposit</label><input type="number" id="adminBrokerMinDeposit" disabled></div>
+                <div class="field-group"><label>Rules</label><input type="text" id="adminBrokerRules" disabled></div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="adminAddBroker()">💾 Add</button>
+                </div>
+                <div id="brokerList" class="item-list"></div>
+            </div>
+            
+            <!-- 6. Tools Manager -->
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
                 <div id="toolsList" class="tools-list"></div>
@@ -1230,14 +1193,8 @@
                     <div class="field-group"><label>Sub Name</label><input type="text" id="newToolSubName" placeholder="Enter sub name"></div>
                     <div class="field-group"><label>HTML Code</label><textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="newToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field-group"><label>Show Fire 🔥</label>
-                        <select id="newToolFire"><option value="true">Yes</option><option value="false">No</option></select>
-                    </div>
-                    <div class="field-group">
-                        <label>🎯 Trigger Button Names</label>
-                        <input type="text" id="newToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL, Trade" />
-                        <small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers (Signal, Get, Generate, BUY, SELL)</small>
-                    </div>
+                    <div class="field-group"><label>Show Fire 🔥</label><select id="newToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
+                    <div class="field-group"><label>🎯 Trigger Button Names</label><input type="text" id="newToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL, Trade" /><small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers (Signal, Get, Generate, BUY, SELL)</small></div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminAddTool()" style="background:#FF0033;color:#fff;">💾 Save Tool</button>
                         <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
@@ -1249,14 +1206,8 @@
                     <div class="field-group"><label>Sub Name</label><input type="text" id="editToolSubName"></div>
                     <div class="field-group"><label>HTML Code</label><textarea id="editToolHtml" style="height:100px;"></textarea></div>
                     <div class="field-group"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field-group"><label>Show Fire 🔥</label>
-                        <select id="editToolFire"><option value="true">Yes</option><option value="false">No</option></select>
-                    </div>
-                    <div class="field-group">
-                        <label>🎯 Trigger Button Names</label>
-                        <input type="text" id="editToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL" />
-                        <small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers.</small>
-                    </div>
+                    <div class="field-group"><label>Show Fire 🔥</label><select id="editToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
+                    <div class="field-group"><label>🎯 Trigger Button Names</label><input type="text" id="editToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL" /><small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers.</small></div>
                     <div class="btn-row">
                         <button class="btn-save show" onclick="adminUpdateTool()" style="background:#FF0033;color:#fff;">💾 Update Tool</button>
                         <button class="btn-edit" onclick="document.getElementById('editToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
@@ -1264,6 +1215,7 @@
                 </div>
             </div>
             
+            <!-- 7. Social Media -->
             <div class="admin-section">
                 <h4>📱 Social Media</h4>
                 <div id="socialList" class="social-list"></div>
@@ -1291,6 +1243,7 @@
                 </div>
             </div>
             
+            <!-- 8. Features Manager -->
             <div class="admin-section">
                 <h4>⚡ Features Manager</h4>
                 <div id="featuresList" class="features-list"></div>
@@ -1318,28 +1271,7 @@
                 </div>
             </div>
             
-            <div class="admin-section">
-                <h4>🖼️ Logo Update</h4>
-                <div class="field-group"><label>Upload PNG/JPG</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminSaveLogo()">💾 Save</button>
-                </div>
-            </div>
-            
-            <div class="admin-section">
-                <h4>🏢 Brokers</h4>
-                <div class="field-group"><label>Name</label><input type="text" id="adminBrokerName" disabled></div>
-                <div class="field-group"><label>Affiliate Link</label><input type="text" id="adminBrokerLink" disabled></div>
-                <div class="field-group"><label>Min Deposit</label><input type="number" id="adminBrokerMinDeposit" disabled></div>
-                <div class="field-group"><label>Rules</label><input type="text" id="adminBrokerRules" disabled></div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminAddBroker()">💾 Add</button>
-                </div>
-                <div id="brokerList" class="item-list"></div>
-            </div>
-            
+            <!-- 9. Firebase Configuration -->
             <div class="admin-section">
                 <h4>🔥 Firebase Configuration</h4>
                 <div class="firebase-config-grid">
@@ -1358,14 +1290,39 @@
                 </div>
             </div>
             
+            <!-- 10. Admin Access -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
+                <!-- Logo Upload -->
+                <div class="field-group"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
+                <!-- Dark Mode Toggle -->
+                <div class="field-group">
+                    <label>Dark Mode</label>
+                    <div class="dark-mode-toggle-admin">
+                        <span class="toggle-label" id="darkModeLabel">Dark</span>
+                        <div class="toggle-track" id="darkModeToggleTrack" onclick="toggleDarkMode()">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                        <span class="toggle-label" id="darkModeLabelLight">Light</span>
+                    </div>
+                </div>
                 <div class="field-group"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
                 <div class="field-group"><label>Mobile</label><input type="text" id="notificationMobile" placeholder="+91..." disabled></div>
                 <div class="field-group"><label>Email</label><input type="email" id="notificationEmail" placeholder="admin@..." disabled></div>
                 <div class="btn-row">
                     <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
                     <button class="btn-save" onclick="saveAdminSettings()">💾 Save</button>
+                </div>
+            </div>
+            
+            <!-- 11. Change Password -->
+            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
+                <h4 style="color:#FFD700;">🔐 Change Password</h4>
+                <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
+                <div class="field-group"><label>Confirm New Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm new password" disabled></div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
                 </div>
             </div>
             
@@ -1506,8 +1463,8 @@ let appState = {
     upiId: 'binary@ruthless',
     paymentInstructions: 'Please transfer the amount to the UPI ID.',
     qrCodeBase64: '', 
-    creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
-    brokers: [{ name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email' }, { name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone' }],
+    creditPacks: [{ id: 'pack_1', credits: 50, price: 99 }, { id: 'pack_2', credits: 100, price: 199 }, { id: 'pack_3', credits: 250, price: 349 }, { id: 'pack_4', credits: 500, price: 599 }],
+    brokers: [{ id: 'broker_1', name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email' }, { id: 'broker_2', name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone' }],
     users: [], 
     payments: [], 
     verificationRequests: [],
@@ -1521,7 +1478,7 @@ let appState = {
     paymentApprovalMode: 'manual', 
     paymentGateway: 'none', 
     paymentEnvironment: 'test',
-    creditsPerSignal: 1, // Bug 3 Fix: Admin configurable
+    creditsPerSignal: 1,
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
         { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1561,18 +1518,6 @@ window.toggleDarkMode = function() {
     track.classList.toggle('active');
     const isDark = track.classList.contains('active');
     document.getElementById('darkModeLabel').textContent = isDark ? 'Dark' : 'Light';
-};
-
-window.saveDarkMode = function() {
-    const isDark = document.getElementById('darkModeToggleTrack').classList.contains('active');
-    appState.darkMode = isDark;
-    applyTheme(isDark);
-    saveLocalState();
-    const btn = document.querySelector('.dark-mode-toggle-admin').closest('.admin-section').querySelector('.btn-save');
-    if (btn) {
-        btn.textContent = '✅ Saved';
-        setTimeout(() => { btn.textContent = '💾 Save Dark Mode'; }, 2000);
-    }
 };
 
 function applyAdminLogo(logoBase64) {
@@ -1858,7 +1803,6 @@ function loadLocalState() {
     const featuresData = localStorage.getItem('brt_features');
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
     
-    // Load credits per signal
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
     if (creditsPerSignalData) {
         const val = parseInt(creditsPerSignalData);
@@ -1967,7 +1911,7 @@ window.changeAdminPassword = function() {
     document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
-// ─── PENDING PAYMENTS - DETAILS ONE BELOW ANOTHER ───
+// ─── PENDING PAYMENTS ───
 function renderPendingPayments() {
     const container = document.getElementById('pendingPaymentsList'); 
     if (!container) return; 
@@ -2054,7 +1998,7 @@ window.adminRejectPayment = function(idx) {
     } 
 };
 
-// ─── PENDING VERIFICATIONS - DETAILS ONE BELOW ANOTHER ───
+// ─── PENDING VERIFICATIONS ───
 function renderPendingVerifications() {
     const container = document.getElementById('pendingVerificationsList'); 
     if (!container) return; 
@@ -2140,7 +2084,7 @@ window.adminRejectVerification = function(idx) {
     } 
 };
 
-// ─── USERS LIST - BIGGER & CLEARER ───
+// ─── USERS LIST ───
 function renderUsersList() {
     // This is called internally
 }
@@ -2229,7 +2173,7 @@ window.adminAddUserFromPopup = function() {
     setTimeout(() => { showVerifiedUsers(); successEl.textContent = ''; }, 1500);
 };
 
-// ─── USER DETAIL POPUP - BIGGER & CLEARER ───
+// ─── USER DETAIL POPUP ───
 window.openUserDetailPopup = function(idx) {
     const user = appState.users[idx]; 
     if (!user) return; 
@@ -2330,7 +2274,7 @@ window.chatWithUser = function() {
     }, 300); 
 };
 
-// ─── CHAT - ONLY USER NAMES ON LEFT (25%) ───
+// ─── CHAT ───
 function openChatPopup() { 
     openModal('chatPopup'); 
     updateChatUserList(); 
@@ -2359,7 +2303,6 @@ function updateChatUserList(filter = '') {
         } 
     });
     
-    // Sort by most recent message
     chatUsers.sort((a, b) => { 
         const msgsA = appState.chats[a.key] || [];
         const msgsB = appState.chats[b.key] || [];
@@ -2477,32 +2420,137 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 window.openModal = openModal; window.closeModal = closeModal;
 
 function loadPaymentSettings() { document.getElementById('paymentApprovalMode').value = appState.paymentApprovalMode || 'manual'; document.getElementById('paymentGateway').value = appState.paymentGateway || 'none'; document.getElementById('paymentEnvironment').value = appState.paymentEnvironment || 'test'; document.getElementById('upiIdInput').value = appState.upiId || 'binary@ruthless'; document.getElementById('paymentInstructionsInput').value = appState.paymentInstructions || ''; }
+
 window.adminSavePaymentSettings = function() {
-    appState.paymentApprovalMode = document.getElementById('paymentApprovalMode').value; appState.paymentGateway = document.getElementById('paymentGateway').value; appState.paymentEnvironment = document.getElementById('paymentEnvironment').value;
-    appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless'; appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
-    const fileInput = document.getElementById('qrUploadInput'); if (fileInput.files && fileInput.files[0]) { const reader = new FileReader(); reader.onload = function(e) { appState.qrCodeBase64 = e.target.result; saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }; reader.readAsDataURL(fileInput.files[0]); } else { saveLocalState(); loadQRPreview(); disableEditFields(document.querySelector('.admin-section')); }
+    appState.paymentApprovalMode = document.getElementById('paymentApprovalMode').value; 
+    appState.paymentGateway = document.getElementById('paymentGateway').value; 
+    appState.paymentEnvironment = document.getElementById('paymentEnvironment').value;
+    appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless'; 
+    appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
+    
+    const fileInput = document.getElementById('qrUploadInput'); 
+    if (fileInput.files && fileInput.files[0]) { 
+        const reader = new FileReader(); 
+        reader.onload = function(e) { 
+            appState.qrCodeBase64 = e.target.result; 
+            saveLocalState(); 
+            loadQRPreview(); 
+            disableEditFields(document.querySelector('.admin-section')); 
+        }; 
+        reader.readAsDataURL(fileInput.files[0]); 
+    } else { 
+        saveLocalState(); 
+        loadQRPreview(); 
+        disableEditFields(document.querySelector('.admin-section')); 
+    }
     const btn = document.getElementById('paymentInstructionsInput').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
-function loadQRPreview() { const container = document.getElementById('qrPreviewContainer'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`; } else { container.innerHTML = ''; } }
-function previewQRImage(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; }; reader.readAsDataURL(file); } }
 
+function loadQRPreview() { 
+    const container = document.getElementById('qrPreviewContainer'); 
+    if (!container) return; 
+    if (appState.qrCodeBase64) { 
+        container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`; 
+    } else { 
+        container.innerHTML = ''; 
+    } 
+}
+
+function previewQRImage(event) { 
+    const file = event.target.files[0]; 
+    if (file) { 
+        const reader = new FileReader(); 
+        reader.onload = function(e) { 
+            document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; 
+        }; 
+        reader.readAsDataURL(file); 
+    } 
+}
+
+// ─── CREDIT PACKS - ADD, EDIT, DELETE ───
 window.adminAddCreditPack = function() {
-    const credits = parseInt(document.getElementById('packCredits').value); const price = parseInt(document.getElementById('packPrice').value);
+    const credits = parseInt(document.getElementById('packCredits').value); 
+    const price = parseInt(document.getElementById('packPrice').value);
     if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
-    if (!appState.creditPacks) appState.creditPacks = []; appState.creditPacks.push({ credits, price }); saveLocalState(); renderCreditPackList(); document.getElementById('packCredits').value = ''; document.getElementById('packPrice').value = ''; disableEditFields(document.querySelector('.admin-section'));
+    if (!appState.creditPacks) appState.creditPacks = []; 
+    const newPack = { id: 'pack_' + Date.now(), credits, price };
+    appState.creditPacks.push(newPack); 
+    saveLocalState(); 
+    renderCreditPackList(); 
+    document.getElementById('packCredits').value = ''; 
+    document.getElementById('packPrice').value = ''; 
+    disableEditFields(document.querySelector('.admin-section'));
     const btn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Add Pack'; }, 2000);
 };
-window.adminDeleteCreditPack = function(idx) { if (confirm('Delete this pack?')) { appState.creditPacks.splice(idx, 1); saveLocalState(); renderCreditPackList(); } };
+
+window.adminDeleteCreditPack = function(id) { 
+    if (confirm('Delete this pack?')) { 
+        appState.creditPacks = appState.creditPacks.filter(p => p.id !== id); 
+        saveLocalState(); 
+        renderCreditPackList(); 
+    } 
+};
+
+window.adminEditCreditPack = function(id) {
+    const pack = appState.creditPacks.find(p => p.id === id);
+    if (!pack) return;
+    document.getElementById('packCredits').value = pack.credits;
+    document.getElementById('packPrice').value = pack.price;
+    // Change button to update
+    const saveBtn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
+    saveBtn.textContent = '🔄 Update Pack';
+    saveBtn.onclick = function() { adminUpdateCreditPack(id); };
+};
+
+window.adminUpdateCreditPack = function(id) {
+    const credits = parseInt(document.getElementById('packCredits').value); 
+    const price = parseInt(document.getElementById('packPrice').value);
+    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
+    const index = appState.creditPacks.findIndex(p => p.id === id);
+    if (index === -1) return;
+    appState.creditPacks[index] = { ...appState.creditPacks[index], credits, price };
+    saveLocalState();
+    renderCreditPackList();
+    document.getElementById('packCredits').value = '';
+    document.getElementById('packPrice').value = '';
+    disableEditFields(document.querySelector('.admin-section'));
+    const saveBtn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
+    saveBtn.textContent = '✅ Saved';
+    setTimeout(() => { saveBtn.textContent = '💾 Add Pack'; saveBtn.onclick = adminAddCreditPack; }, 2000);
+};
+
 function renderCreditPackList() {
-    const list = document.getElementById('creditPackList'); if (!list) return; list.innerHTML = '';
-    const packs = appState.creditPacks || []; if (packs.length === 0) { list.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:4px;">No packs</div>'; return; }
-    packs.forEach((p, idx) => { list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span><button class="del-btn" onclick="window.adminDeleteCreditPack(${idx})">✕</button></div>`; });
+    const list = document.getElementById('creditPackList'); 
+    if (!list) return; 
+    list.innerHTML = '';
+    const packs = appState.creditPacks || []; 
+    if (packs.length === 0) { 
+        list.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:4px;">No packs</div>'; 
+        return; 
+    }
+    // Check if section is editable
+    const section = list.closest('.admin-section');
+    const isEditable = section && section.classList.contains('editable');
+    
+    packs.forEach((p) => { 
+        let actions = '';
+        if (isEditable) {
+            actions = `
+                <div class="list-actions" style="display:flex;gap:4px;">
+                    <button class="edit-btn" onclick="window.adminEditCreditPack('${p.id}')">✏️</button>
+                    <button class="del-btn" onclick="window.adminDeleteCreditPack('${p.id}')">✕</button>
+                </div>
+            `;
+        }
+        list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span>${actions}</div>`; 
+    });
 }
 
+// ─── OFFER SAVE ───
 window.adminSaveOffer = function() {
     const name = document.getElementById('offerName').value.trim() || 'FREE SIGNAL OFFER';
     const description = document.getElementById('offerDescription').value.trim() || 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
@@ -2538,12 +2586,7 @@ function renderToolsList() {
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
         const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
         const fireBtnClass = fireStatus ? '' : 'off';
-        
-        // Display triggers
-        const triggerText = tool.triggers && tool.triggers.length > 0 
-            ? '🎯 ' + tool.triggers.join(', ') 
-            : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
-        
+        const triggerText = tool.triggers && tool.triggers.length > 0 ? '🎯 ' + tool.triggers.join(', ') : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
         container.innerHTML += `
             <div class="tool-item">
                 <div class="tool-info">
@@ -2592,14 +2635,11 @@ window.adminUpdateTool = function() {
     const htmlCode = document.getElementById('editToolHtml').value.trim();
     const visibility = document.getElementById('editToolStatus').value;
     const showFire = document.getElementById('editToolFire').value === 'true';
-    
-    // Get triggers
     const triggersInput = document.getElementById('editToolTriggers').value.trim();
     let triggers = [];
     if (triggersInput) {
         triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
     }
-    
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
@@ -2630,14 +2670,11 @@ window.adminAddTool = function() {
     const htmlCode = document.getElementById('newToolHtml').value.trim();
     const visibility = document.getElementById('newToolStatus').value;
     const showFire = document.getElementById('newToolFire').value === 'true';
-    
-    // Get triggers
     const triggersInput = document.getElementById('newToolTriggers').value.trim();
     let triggers = [];
     if (triggersInput) {
         triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
     }
-    
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
@@ -2687,6 +2724,7 @@ window.adminAddSocial = function() {
     setTimeout(() => { btn.textContent = '💾 Save Social'; }, 2000);
 };
 
+// ─── LOGO SAVE ───
 window.adminSaveLogo = function() {
     const file = document.getElementById('logoUpload').files[0];
     if (file) { const reader = new FileReader(); reader.onload = (e) => { 
@@ -2702,37 +2740,115 @@ window.adminSaveLogo = function() {
     }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
 };
 
+// ─── BROKER LIST ───
 function renderBrokerList() {
     const list = document.getElementById('brokerList'); if (!list) return; list.innerHTML = '';
-    appState.brokers.forEach((b, idx) => { list.innerHTML += `<div class="list-item"><span class="name">${b.name}</span><span class="detail">₹${b.minDeposit}</span><button class="del-btn" onclick="window.adminDeleteBroker(${idx})">✕</button></div>`; });
+    // Check if section is editable
+    const section = list.closest('.admin-section');
+    const isEditable = section && section.classList.contains('editable');
+    
+    appState.brokers.forEach((b) => { 
+        let actions = '';
+        if (isEditable) {
+            actions = `
+                <div class="list-actions" style="display:flex;gap:4px;">
+                    <button class="edit-btn" onclick="window.adminEditBroker('${b.id}')">✏️</button>
+                    <button class="del-btn" onclick="window.adminDeleteBroker('${b.id}')">✕</button>
+                </div>
+            `;
+        }
+        list.innerHTML += `<div class="list-item"><span class="name">${b.name}</span><span class="detail">₹${b.minDeposit}</span>${actions}</div>`; 
+    });
 }
+
 window.adminAddBroker = function() {
-    const name = document.getElementById('adminBrokerName').value.trim(); const link = document.getElementById('adminBrokerLink').value.trim(); const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; const rules = document.getElementById('adminBrokerRules').value.trim();
+    const name = document.getElementById('adminBrokerName').value.trim(); 
+    const link = document.getElementById('adminBrokerLink').value.trim(); 
+    const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; 
+    const rules = document.getElementById('adminBrokerRules').value.trim();
     if (!name || !link) { alert('Enter name and link'); return; }
-    appState.brokers.push({ name, link, minDeposit, rules }); saveLocalState(); renderBrokerList(); disableEditFields(document.querySelector('.admin-section'));
+    const newBroker = { id: 'broker_' + Date.now(), name, link, minDeposit, rules };
+    appState.brokers.push(newBroker); 
+    saveLocalState(); 
+    renderBrokerList(); 
+    disableEditFields(document.querySelector('.admin-section'));
     const btn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Add'; }, 2000);
 };
-window.adminDeleteBroker = function(idx) { if (confirm('Delete this broker?')) { appState.brokers.splice(idx, 1); saveLocalState(); renderBrokerList(); } };
 
+window.adminDeleteBroker = function(id) { 
+    if (confirm('Delete this broker?')) { 
+        appState.brokers = appState.brokers.filter(b => b.id !== id); 
+        saveLocalState(); 
+        renderBrokerList(); 
+    } 
+};
+
+window.adminEditBroker = function(id) {
+    const broker = appState.brokers.find(b => b.id === id);
+    if (!broker) return;
+    document.getElementById('adminBrokerName').value = broker.name;
+    document.getElementById('adminBrokerLink').value = broker.link;
+    document.getElementById('adminBrokerMinDeposit').value = broker.minDeposit;
+    document.getElementById('adminBrokerRules').value = broker.rules || '';
+    // Change button to update
+    const saveBtn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
+    saveBtn.textContent = '🔄 Update Broker';
+    saveBtn.onclick = function() { adminUpdateBroker(id); };
+};
+
+window.adminUpdateBroker = function(id) {
+    const name = document.getElementById('adminBrokerName').value.trim(); 
+    const link = document.getElementById('adminBrokerLink').value.trim(); 
+    const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; 
+    const rules = document.getElementById('adminBrokerRules').value.trim();
+    if (!name || !link) { alert('Enter name and link'); return; }
+    const index = appState.brokers.findIndex(b => b.id === id);
+    if (index === -1) return;
+    appState.brokers[index] = { ...appState.brokers[index], name, link, minDeposit, rules };
+    saveLocalState();
+    renderBrokerList();
+    document.getElementById('adminBrokerName').value = '';
+    document.getElementById('adminBrokerLink').value = '';
+    document.getElementById('adminBrokerMinDeposit').value = '';
+    document.getElementById('adminBrokerRules').value = '';
+    disableEditFields(document.querySelector('.admin-section'));
+    const saveBtn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
+    saveBtn.textContent = '✅ Saved';
+    setTimeout(() => { saveBtn.textContent = '💾 Add'; saveBtn.onclick = adminAddBroker; }, 2000);
+};
+
+// ─── ADMIN SETTINGS SAVE ───
 window.saveAdminSettings = function() {
     appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
     appState.notificationMobile = document.getElementById('notificationMobile').value.trim();
     appState.notificationEmail = document.getElementById('notificationEmail').value.trim();
-    saveLocalState(); localStorage.setItem('brt_logo_click_count', appState.logoClickCount); disableEditFields(document.querySelector('.admin-section'));
+    // Dark mode already saved separately
+    saveLocalState(); 
+    localStorage.setItem('brt_logo_click_count', appState.logoClickCount); 
+    disableEditFields(document.querySelector('.admin-section'));
     const btn = document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
+// ─── EDIT/SAVE FUNCTIONS ───
 function enableEdit(btn) { 
     const section = btn.closest('.admin-section'); 
     if (!section) return; 
     section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); 
     section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
-    btn.style.display = 'none'; 
+    btn.style.display = 'none';
+    section.classList.add('editable');
+    // Re-render lists inside section to show edit/delete buttons
+    const lists = section.querySelectorAll('.item-list');
+    lists.forEach(list => {
+        if (list.id === 'creditPackList') renderCreditPackList();
+        else if (list.id === 'brokerList') renderBrokerList();
+    });
 }
+
 function disableEditFields(section) { 
     if (!section) return; 
     section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = true); 
@@ -2741,6 +2857,13 @@ function disableEditFields(section) {
         b.style.display = 'block'; 
         b.textContent = '✏️ Edit'; 
     }); 
+    section.classList.remove('editable');
+    // Re-render lists to hide edit/delete buttons
+    const lists = section.querySelectorAll('.item-list');
+    lists.forEach(list => {
+        if (list.id === 'creditPackList') renderCreditPackList();
+        else if (list.id === 'brokerList') renderBrokerList();
+    });
 }
 
 if (adminLoggedIn) { loadLocalState(); } else { showPasswordPopup(); }
@@ -2752,9 +2875,9 @@ window.adminApproveVerification = adminApproveVerification; window.adminRejectVe
 window.openUserDetailPopup = openUserDetailPopup; window.giveFreeCredits = giveFreeCredits; window.blockUser = blockUser; window.removeUser = removeUser; window.chatWithUser = chatWithUser;
 window.openPendingPaymentsPopup = openPendingPaymentsPopup; window.openPendingVerificationsPopup = openPendingVerificationsPopup; window.openUsersPopup = openUsersPopup; window.openChatPopup = openChatPopup;
 window.showVerifiedUsers = showVerifiedUsers; window.showAddUserForm = showAddUserForm; window.adminAddUserFromPopup = adminAddUserFromPopup; window.searchUsersInPopup = searchUsersInPopup;
-window.adminAddCreditPack = adminAddCreditPack; window.adminDeleteCreditPack = adminDeleteCreditPack;
+window.adminAddCreditPack = adminAddCreditPack; window.adminDeleteCreditPack = adminDeleteCreditPack; window.adminEditCreditPack = adminEditCreditPack; window.adminUpdateCreditPack = adminUpdateCreditPack;
 window.adminSavePaymentSettings = adminSavePaymentSettings; window.adminSaveLogo = adminSaveLogo;
-window.adminAddBroker = adminAddBroker; window.adminDeleteBroker = adminDeleteBroker;
+window.adminAddBroker = adminAddBroker; window.adminDeleteBroker = adminDeleteBroker; window.adminEditBroker = adminEditBroker; window.adminUpdateBroker = adminUpdateBroker;
 window.adminSaveOffer = adminSaveOffer; window.saveAdminSettings = saveAdminSettings;
 window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
 window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.toggleToolVisibility = toggleToolVisibility; window.deleteTool = deleteTool; window.showAddToolForm = showAddToolForm; window.adminAddTool = adminAddTool;
@@ -2765,7 +2888,6 @@ window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; wi
 window.editFeature = editFeature; window.adminUpdateFeature = adminUpdateFeature; window.toggleFeatureVisibility = toggleFeatureVisibility; window.deleteFeature = deleteFeature; window.showAddFeatureForm = showAddFeatureForm; window.adminAddFeature = adminAddFeature;
 window.adminSaveFirebase = adminSaveFirebase;
 window.toggleDarkMode = toggleDarkMode;
-window.saveDarkMode = saveDarkMode;
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 </script>
 </body>
