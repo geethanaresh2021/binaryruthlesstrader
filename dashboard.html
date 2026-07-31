@@ -25,11 +25,11 @@
     <style>
         /* ─── RESET & BASE ─── */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: var(--bg-primary, #0a0a0a); color: var(--text-primary, #fff); font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; transition: background 0.4s ease, color 0.4s ease; }
+        html, body { width: 100%; min-height: 100vh; background: #0a0a0a; color: #ffffff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
         
-        /* ─── CSS VARIABLES FOR DARK/LIGHT MODE ─── */
+        /* ─── CSS VARIABLES (Dark Theme Only) ─── */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
@@ -71,51 +71,6 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #fff;
             --popup-label: #FFD700;
-            --popup-close-color: #FF0033;
-        }
-
-        /* Light Mode */
-        [data-theme="light"] {
-            --bg-primary: #f0f0f5;
-            --bg-secondary: #e8e8ee;
-            --bg-card: rgba(0,0,0,0.02);
-            --text-primary: #111111;
-            --text-secondary: #444444;
-            --text-muted: #777777;
-            --border-color: rgba(255,0,51,0.2);
-            --border-light: rgba(0,0,0,0.06);
-            --shadow-color: rgba(255,0,51,0.05);
-            --input-bg: rgba(255,255,255,0.7);
-            --modal-bg: rgba(255,255,255,0.97);
-            --overlay-bg: rgba(0,0,0,0.5);
-            --red-container-bg: rgba(255,0,51,0.02);
-            --user-card-bg: rgba(0,0,0,0.02);
-            --feature-card-bg: rgba(0,0,0,0.02);
-            --stat-item-hover: rgba(0,0,0,0.02);
-            --social-icon-bg: rgba(0,0,0,0.02);
-            --social-icon-border: rgba(255,0,51,0.08);
-            --tool-btn-bg: rgba(255,215,0,0.04);
-            --tool-btn-border: rgba(255,215,0,0.12);
-            --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.04), rgba(255,215,0,0.02));
-            --offer-banner-border: rgba(255,215,0,0.12);
-            --footer-border: rgba(255,0,51,0.04);
-            --admin-nav-bg: rgba(255,255,255,0.85);
-            --admin-nav-border: rgba(255,0,51,0.12);
-            --user-logout-bg: rgba(255,255,255,0.85);
-            --user-logout-border: rgba(255,0,51,0.12);
-            --brand-tagline-color: #999;
-            --container-bg: rgba(255,0,51,0.02);
-            --container-border: rgba(255,0,51,0.2);
-            --section-bg: rgba(0,0,0,0.01);
-            --section-border: rgba(255,0,51,0.06);
-            --btn-edit-bg: #000000;
-            --btn-edit-color: #ffffff;
-            --btn-save-bg: #FF0033;
-            --btn-save-color: #ffffff;
-            --popup-bg: rgba(255,255,255,0.97);
-            --popup-border: rgba(255,0,51,0.2);
-            --popup-text: #111;
-            --popup-label: #FF0033;
             --popup-close-color: #FF0033;
         }
         
@@ -1173,7 +1128,7 @@ let appState = {
     paymentApprovalMode: 'manual', 
     paymentGateway: 'none', 
     paymentEnvironment: 'test',
-    creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
+    creditPacks: [{ id: 'pack_1', credits: 50, price: 99 }, { id: 'pack_2', credits: 100, price: 199 }, { id: 'pack_3', credits: 250, price: 349 }, { id: 'pack_4', credits: 500, price: 599 }],
     users: [], 
     currentUser: null,
     logoBase64: '', 
@@ -1182,7 +1137,6 @@ let appState = {
     tools: [], 
     socialMedia: [], 
     logoClickCount: 2,
-    darkMode: true,
     creditsPerSignal: 1,
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
@@ -1203,11 +1157,16 @@ let isToolMinimized = false;
 let toolDataCache = {};
 let isDeducting = false;
 
-function applyTheme(darkMode) {
-    if (darkMode === false) {
-        document.documentElement.setAttribute('data-theme', 'light');
+function applyLogo(logoBase64) {
+    const logoIcon = document.getElementById('logoIcon');
+    const logoImg = document.getElementById('logoImage');
+    if (logoBase64) {
+        logoIcon.style.display = 'none';
+        logoImg.src = logoBase64;
+        logoImg.style.display = 'block';
     } else {
-        document.documentElement.removeAttribute('data-theme');
+        logoIcon.style.display = 'block';
+        logoImg.style.display = 'none';
     }
 }
 
@@ -1370,16 +1329,16 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
-        if (val.darkMode !== undefined) {
-            appState.darkMode = val.darkMode;
-            applyTheme(appState.darkMode);
-        }
         if (val.tools !== undefined) { 
             appState.tools = val.tools; 
             renderTools(); 
             localStorage.setItem('brt_tools', JSON.stringify(val.tools)); 
         }
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(); }
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') { 
+            appState.logoBase64 = val.logoBase64; 
+            applyLogo(val.logoBase64);
+            localStorage.setItem('brt_logo', val.logoBase64);
+        }
         if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
         if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); renderSocialMedia(); }
         if (val.features !== undefined) { 
@@ -1390,6 +1349,9 @@ onValue(dbRef, (snapshot) => {
         if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
         if (val.creditsPerSignal !== undefined) { appState.creditsPerSignal = val.creditsPerSignal; }
         if (val.qrCodeBase64 !== undefined) { appState.qrCodeBase64 = val.qrCodeBase64; loadQRPreview(); }
+        if (val.paymentApprovalMode !== undefined) { appState.paymentApprovalMode = val.paymentApprovalMode; }
+        if (val.upiId !== undefined) { appState.upiId = val.upiId; }
+        if (val.paymentInstructions !== undefined) { appState.paymentInstructions = val.paymentInstructions; }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1418,7 +1380,11 @@ function loadLocalState() {
     if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) { console.error(e); } }
     const toolsData = localStorage.getItem('brt_tools');
     if (toolsData) { try { const parsedTools = JSON.parse(toolsData); if (parsedTools.length > 0) appState.tools = parsedTools; } catch(e) {} }
-    const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(); }
+    const logoData = localStorage.getItem('brt_logo'); 
+    if (logoData) { 
+        appState.logoBase64 = logoData; 
+        applyLogo(logoData); 
+    }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
     const featuresData = localStorage.getItem('brt_features');
@@ -1427,6 +1393,12 @@ function loadLocalState() {
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
     const qrData = localStorage.getItem('brt_qr');
     if (qrData) { appState.qrCodeBase64 = qrData; }
+    const upiData = localStorage.getItem('brt_upi');
+    if (upiData) { appState.upiId = upiData; }
+    const paymentInstructionsData = localStorage.getItem('brt_payment_instructions');
+    if (paymentInstructionsData) { appState.paymentInstructions = paymentInstructionsData; }
+    const paymentApprovalModeData = localStorage.getItem('brt_payment_approval_mode');
+    if (paymentApprovalModeData) { appState.paymentApprovalMode = paymentApprovalModeData; }
     
     const savedCache = localStorage.getItem('brt_tool_cache');
     if (savedCache) {
@@ -1444,8 +1416,6 @@ function loadLocalState() {
     if (savedCurrent !== null) {
         currentToolIndex = parseInt(savedCurrent);
     }
-    
-    applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
     
     const session = getActiveSession();
     if (session.type === 'admin') {
@@ -1486,6 +1456,7 @@ function loadLocalState() {
     }
     resetTodayUsed();
     updateUI(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
+    renderSocialMedia();
     
     const toolMinimized = sessionStorage.getItem('brt_tool_minimized') === 'true';
     if (toolMinimized && recentTools.length > 0) {
@@ -1520,13 +1491,6 @@ function loadLocalState() {
     }
 }
 
-function applyLogo() {
-    const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
-    if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; }
-    else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
-}
-
-// ─── PREPARE TOOL HTML WITH INJECT SCRIPT ───
 function prepareToolHTML(index, htmlContent) {
     const user = appState.currentUser;
     if (!user) return htmlContent;
@@ -1538,10 +1502,9 @@ function prepareToolHTML(index, htmlContent) {
     // ─── INJECT SCRIPT FOR SIGNAL DETECTION ───
     const injectScript = `
     <script>
-        // ─── SIGNAL DETECTION ───
         let signalGenerated = false;
         let signalSuccess = false;
-        let signalSent = false; // <-- FIX: Prevents duplicate deduction
+        let signalSent = false;
         
         const USER_EMAIL = '${user.email}';
         const USER_NAME = '${user.name || user.email.split('@')[0]}';
@@ -1562,7 +1525,7 @@ function prepareToolHTML(index, htmlContent) {
                 
                 signalGenerated = false;
                 signalSuccess = false;
-                signalSent = false; // Reset flag on new click
+                signalSent = false;
                 
                 setTimeout(() => {
                     watchForSignalResult();
@@ -1582,7 +1545,6 @@ function prepareToolHTML(index, htmlContent) {
             const checkInterval = setInterval(() => {
                 attempts++;
                 
-                // Check success
                 const isSuccess = (
                     (signalView && signalView.classList && signalView.classList.contains('active')) ||
                     (statusView && statusView.classList && statusView.classList.contains('active') && 
@@ -1602,7 +1564,6 @@ function prepareToolHTML(index, htmlContent) {
                     return;
                 }
                 
-                // Check failure
                 const isFailure = (
                     (errorView && errorView.classList && errorView.classList.contains('active')) ||
                     (document.querySelector('#errorView.active')) ||
@@ -1633,7 +1594,6 @@ function prepareToolHTML(index, htmlContent) {
             }, 500);
         }
         
-        // ─── OVERRIDE RENDER FUNCTIONS ───
         if (typeof renderSignalResult === 'function') {
             const originalRender = renderSignalResult;
             window.renderSignalResult = function(data) {
@@ -1656,7 +1616,6 @@ function prepareToolHTML(index, htmlContent) {
             };
         }
         
-        // ─── MUTATION OBSERVER ───
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' || mutation.type === 'childList') {
@@ -1694,7 +1653,6 @@ function prepareToolHTML(index, htmlContent) {
     return htmlContent + injectScript;
 }
 
-// ─── RENDER TOOLS ───
 function renderTools() {
     const container = document.getElementById('toolsContainer');
     if (!container) return;
@@ -1867,11 +1825,8 @@ function saveCurrentToolData() {
     } catch(e) {}
 }
 
-// ─── POST MESSAGE LISTENER ───
 window.addEventListener('message', function(event) {
-    // Signal result from inject script
     if (event.data && event.data.type === 'signalResult') {
-        // Prevent duplicate processing using isDeducting flag
         if (isDeducting) {
             console.log('⚠️ Deduction already in progress, skipping duplicate signal.');
             return;
@@ -1895,7 +1850,6 @@ window.addEventListener('message', function(event) {
         return;
     }
     
-    // Save tool data
     if (event.data && event.data.type === 'saveToolData') {
         const cacheKey = 'tool_' + event.data.toolIndex;
         toolDataCache[cacheKey] = event.data.htmlContent;
@@ -1943,7 +1897,6 @@ document.getElementById('toolFullscreenClose').addEventListener('click', functio
     }
 });
 
-// ─── ACCOUNT MODAL ───
 function openAccountModal() {
     const user = appState.currentUser;
     if (!user) return;
@@ -1963,7 +1916,6 @@ function openAccountModal() {
 }
 window.openAccountModal = openAccountModal;
 
-// ─── SIGNAL GENERATION (credit deduction) - STRICT ───
 function deductCredit() {
     if (isDeducting) return false;
     isDeducting = true;
@@ -1972,7 +1924,6 @@ function deductCredit() {
         const user = appState.currentUser;
         if (!user) return false;
         
-        // Use admin configured credits per signal (Bug 1 Fix)
         const creditsToDeduct = appState.creditsPerSignal || 1;
         
         if (user.credits < creditsToDeduct) {
@@ -2029,7 +1980,6 @@ function updateChatBadge() {
     }
 }
 
-// ─── CHAT ───
 function renderChatMessages() {
     const container = document.getElementById('chatContainer'); 
     if (!container || !appState.currentUser) return; 
@@ -2061,7 +2011,6 @@ window.sendChatMessage = function() {
     appState.chats[key].push({ sender: 'user', message: msg, timestamp: new Date().toISOString(), read: false }); saveLocalState(); input.value = ''; renderChatMessages();
 };
 
-// ─── PAYMENT HISTORY ───
 function renderPaymentHistory() {
     const container = document.getElementById('paymentHistoryList'); if (!container) return; container.innerHTML = '';
     const payments = appState.payments || []; const userPayments = payments.filter(p => p.userEmail === appState.currentUser?.email);
@@ -2074,7 +2023,6 @@ function renderPaymentHistory() {
 }
 window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
 
-// ─── CREDIT PACKS ───
 function renderCreditPacks() {
     const container = document.getElementById('creditPacksList'); if (!container) return; container.innerHTML = '';
     const packs = appState.creditPacks || []; packs.forEach((pack, idx) => {
@@ -2148,7 +2096,6 @@ function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 window.openModal = openModal; window.closeModal = closeModal;
 
-// ─── LOGO CLICK - NO POPUP FOR USERS ───
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault();
@@ -2232,7 +2179,6 @@ console.log('📊 Dashboard Loaded');
 console.log('👤 User: ' + (appState.currentUser?.email || 'None'));
 console.log('🛠️ Tools: ' + (appState.tools?.length || 0) + ' tools loaded');
 console.log('💬 Unread Chats: ' + chatUnreadCount);
-console.log('🌓 Dark Mode: ' + (appState.darkMode ? 'On' : 'Off'));
 </script>
 </body>
 </html>
