@@ -356,7 +356,7 @@
         .user-info-container .user-actions .btn-gold { background: #FFD700; color: #000; }
         .user-info-container .user-actions .btn-green { background: #00FF66; color: #000; }
         .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
-        .user-info-container .user-actions .btn-account { background: #ffffff; color: #000000; }
+        .user-info-container .user-actions .btn-account { background: #8B5CF6; color: #fff; }
         .btn-chat-wrapper { position: relative; display: inline-block; }
         .chat-badge { 
             position: absolute; top: -6px; right: -6px; 
@@ -368,7 +368,6 @@
         .chat-badge.active { display: flex; animation: pulseRed 1s ease-in-out infinite; }
         .chat-badge.has-count { border-radius: 10px; min-width: 18px; height: 18px; font-size: 0.45rem; line-height: 18px; padding: 0 5px; }
         
-        /* ─── CREDITS CONTAINER ─── */
         .credits-container {
             background: rgba(0,255,102,0.02); border: 2px solid rgba(0,255,102,0.06);
             border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px;
@@ -377,8 +376,8 @@
         }
         .credits-container:hover { border-color: rgba(0,255,102,0.2); transform: scale(1.01); }
         .credits-container .credit-item { text-align: center; }
-        .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700; }
-        .credits-container .credit-item .label { font-size: 0.55rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: block; }
+        .credits-container .credit-item .number { font-family: 'Roboto Mono', monospace; font-size: clamp(1rem, 1.6vw, 1.6rem); font-weight: 700; color: #FFD700; }
+        .credits-container .credit-item .label { font-size: 0.48rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; display: block; }
         .credits-container .credit-item .number.green { color: #00FF66; }
         
         /* ─── TOOLS CONTAINER ─── */
@@ -488,109 +487,75 @@
         }
         .tool-fullscreen-overlay.active { display: flex; }
         
-        /* Slim Top Bar - BIGGER TEXT, SINGLE LINE, SCROLLING */
+        /* Slim Top Bar */
         .tool-fullscreen-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 8px 16px; 
+            padding: 4px 12px; 
             flex-shrink: 0; 
             background: rgba(0,0,0,0.95); 
             z-index: 1; 
             position: relative;
-            border-bottom: 2px solid rgba(255,0,51,0.15);
-            min-height: 52px;
-            gap: 10px;
-            flex-wrap: nowrap;
-            overflow: hidden;
-            width: 100%;
+            border-bottom: 1px solid rgba(255,0,51,0.15);
+            min-height: 36px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .tool-fullscreen-header .header-left {
             display: flex;
             align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-            flex-wrap: nowrap;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .tool-fullscreen-header .header-left .user-name-tool {
             color: #FFD700;
-            font-size: clamp(0.85rem, 1.2vw, 1.2rem);
+            font-size: 0.6rem;
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             font-weight: 700;
-            white-space: nowrap;
         }
         .tool-fullscreen-header .header-left .credits-tool {
             color: #00FF66;
-            font-size: clamp(0.75rem, 1vw, 1rem);
+            font-size: 0.55rem;
             font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            white-space: nowrap;
         }
-        .tool-fullscreen-header .header-left .today-used-tool {
-            color: #FFD700;
-            font-size: clamp(0.65rem, 0.9vw, 0.9rem);
-            font-weight: 700;
-            white-space: nowrap;
+        .tool-fullscreen-header .header-left .used-tool {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
         }
         .tool-fullscreen-header .header-left .divider {
             color: var(--text-muted);
-            font-size: 0.7rem;
-            flex-shrink: 0;
+            font-size: 0.5rem;
         }
-        /* ─── HEADER RIGHT - TOOL NAMES WITH SCROLLING ─── */
         .tool-fullscreen-header .header-right {
             display: flex;
             align-items: center;
-            gap: 6px;
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            justify-content: flex-end;
+            gap: 8px;
         }
-        /* Tool switch buttons container - scrolling */
-        .tool-switch-container {
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            flex: 1;
-            min-width: 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 2px 0;
-        }
-        .tool-switch-container::-webkit-scrollbar {
-            display: none;
-        }
-        .tool-fullscreen-header .header-right .tool-switch-btn {
+        .tool-fullscreen-header .header-right .recent-tools-btn {
             background: rgba(255,215,0,0.08);
             border: 1px solid rgba(255,215,0,0.15);
             color: #FFD700;
             padding: 2px 10px;
             border-radius: 12px;
-            font-size: clamp(0.4rem, 0.6vw, 0.6rem);
+            font-size: 0.45rem;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
-            white-space: nowrap;
-            flex-shrink: 0;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        .tool-fullscreen-header .header-right .tool-switch-btn:hover {
+        .tool-fullscreen-header .header-right .recent-tools-btn:hover {
             background: rgba(255,215,0,0.15);
             transform: scale(1.05);
         }
-        .tool-fullscreen-header .header-right .tool-switch-btn.active-tool {
-            background: rgba(255,0,51,0.12);
-            border-color: rgba(255,0,51,0.3);
-            color: #FF0033;
+        .tool-fullscreen-header .header-right .tool-name-display {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
         }
         .tool-fullscreen-close { 
-            font-size: 1.8rem; 
+            font-size: 1.4rem; 
             color: #FF0033; 
             cursor: pointer; 
             background: none; 
@@ -599,7 +564,6 @@
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
             padding: 0 6px;
             line-height: 1;
-            flex-shrink: 0;
         }
         .tool-fullscreen-close:hover { 
             transform: scale(1.2) rotate(90deg); 
@@ -613,7 +577,7 @@
         .recent-tools-mini {
             display: none;
             margin: 4px 0;
-            padding: 10px 18px;
+            padding: 8px 16px;
             background: var(--tool-btn-bg);
             border: 2px solid var(--tool-btn-border);
             border-radius: 10px;
@@ -627,12 +591,12 @@
         }
         .recent-tools-mini .mini-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #FFD700;
             letter-spacing: 1px;
         }
         .recent-tools-mini .mini-sub {
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             color: var(--text-secondary);
             margin-top: 2px;
         }
@@ -699,13 +663,13 @@
         .history-list { max-height: 280px; overflow-y: auto; }
         .history-list::-webkit-scrollbar { width: 3px; }
         .history-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .history-item { display: flex; justify-content: space-between; padding: 4px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.6rem; align-items: center; }
+        .history-item { display: flex; justify-content: space-between; padding: 4px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.5rem; align-items: center; }
         .history-item .status-success { color: #00FF66; }
         .history-item .status-failed { color: #FF0033; }
         .history-item .status-pending { color: #FFD700; }
         .history-item .amount { color: #FFD700; }
         .history-item .date { color: var(--text-muted); font-size: 0.4rem; }
-        .history-empty { text-align: center; color: var(--text-muted); font-size: 0.55rem; padding: 16px; }
+        .history-empty { text-align: center; color: var(--text-muted); font-size: 0.45rem; padding: 16px; }
         
         /* ─── CHAT CONTAINER - BLACK BACKGROUND ─── */
         .chat-container { 
@@ -723,10 +687,9 @@
         .chat-container::-webkit-scrollbar { width: 5px; }
         .chat-container::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
         
-        /* Chat Messages - Background same, Text Black */
         .chat-message.admin { 
             background: #FF0033 !important; 
-            color: #000000 !important; 
+            color: #ffffff !important; 
             align-self: flex-start; 
             border-bottom-left-radius: 4px;
             padding: 8px 14px;
@@ -739,7 +702,7 @@
         }
         .chat-message.user { 
             background: #ffffff !important; 
-            color: #000000 !important; 
+            color: #FF0033 !important; 
             align-self: flex-end; 
             border-bottom-right-radius: 4px;
             padding: 8px 14px;
@@ -785,23 +748,18 @@
         }
         .chat-input-area button:hover { transform: scale(1.04); }
         
-        /* ─── ACCOUNT DETAILS MODAL - BIGGER TEXT ─── */
+        /* ─── ACCOUNT DETAILS MODAL ─── */
         .account-detail-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 6px 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
-            font-size: 0.85rem;
+            font-size: 0.65rem;
         }
-        .account-detail-row .label { color: var(--text-muted); font-weight: 500; }
+        .account-detail-row .label { color: var(--text-muted); }
         .account-detail-row .value { color: #FFD700; font-weight: 600; }
         .account-detail-row .value.green { color: #00FF66; }
         .account-detail-row .value.red { color: #FF0033; }
-        
-        /* ─── PAYMENT HISTORY - BIGGER TEXT ─── */
-        .history-item { font-size: 0.7rem; padding: 6px 8px; }
-        .history-item .date { font-size: 0.5rem; }
-        .history-empty { font-size: 0.6rem; }
         
         /* ─── FEATURES ─── */
         .features-section { padding: 4px 0 4px; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); flex-shrink: 0; margin-top: 6px; }
@@ -845,7 +803,6 @@
         .footer .brand { color: #FF0033; font-weight: 700; transition: all 0.3s ease; }
         .footer:hover .brand { text-shadow: 0 0 20px rgba(255,0,51,0.1); }
         
-        /* ─── MOBILE VIEW ─── */
         @media (max-width: 768px) {
             .scroll-content { padding: 0 12px; }
             .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
@@ -856,8 +813,7 @@
             .credit-pack { min-width: 70px; max-width: 100px; }
             .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
             .user-info-container .user-actions { justify-content: center; }
-            .credits-container { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 4px; }
-            .credits-container .credit-item { flex: 1; min-width: 80px; }
+            .credits-container { flex-direction: column; gap: 2px; }
             .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
             .admin-nav-bar .nav-label { font-size: 0.35rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
@@ -869,16 +825,13 @@
             .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
             .chat-message { font-size: 0.75rem; padding: 6px 10px; }
             .chat-container { max-height: 250px; min-height: 100px; }
-            .tool-fullscreen-header { padding: 4px 10px; min-height: 42px; }
-            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
-            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
-            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; max-width: 80px; }
-            .tool-fullscreen-close { font-size: 1.5rem; }
-            .recent-tools-mini { padding: 8px 14px; }
-            .recent-tools-mini .mini-title { font-size: 0.55rem; }
-            .account-detail-row { font-size: 0.7rem; padding: 6px 0; }
-            .history-item { font-size: 0.6rem; padding: 4px 6px; }
+            .tool-fullscreen-header { padding: 2px 8px; min-height: 30px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.5rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.45rem; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.4rem; }
+            .tool-fullscreen-close { font-size: 1.2rem; }
+            .recent-tools-mini { padding: 6px 12px; }
+            .recent-tools-mini .mini-title { font-size: 0.5rem; }
         }
         @media (max-width: 480px) {
             .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
@@ -890,8 +843,7 @@
             .credit-pack .price { font-size: 0.55rem; }
             .user-info-container .user-name { font-size: 0.6rem; }
             .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
-            .credits-container .credit-item .number { font-size: 0.95rem; }
-            .credits-container .credit-item .label { font-size: 0.4rem; }
+            .credits-container .credit-item .number { font-size: 0.85rem; }
             .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
             .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
@@ -908,18 +860,15 @@
             .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
             .chat-message { font-size: 0.7rem; padding: 5px 8px; }
             .chat-container { max-height: 200px; min-height: 80px; }
-            .tool-fullscreen-header { padding: 3px 8px; min-height: 36px; }
-            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.55rem; }
-            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
-            .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
-            .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.35rem; padding: 2px 6px; max-width: 60px; }
-            .tool-fullscreen-close { font-size: 1.3rem; }
-            .recent-tools-mini { padding: 6px 12px; }
-            .recent-tools-mini .mini-title { font-size: 0.5rem; }
-            .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
-            .history-item { font-size: 0.5rem; padding: 3px 4px; }
-            .history-empty { font-size: 0.5rem; }
-            .tool-switch-container { gap: 4px; }
+            .tool-fullscreen-header { padding: 2px 6px; min-height: 26px; }
+            .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.4rem; }
+            .tool-fullscreen-header .header-left .credits-tool { font-size: 0.4rem; }
+            .tool-fullscreen-header .header-left .used-tool { font-size: 0.35rem; }
+            .tool-fullscreen-header .header-right .tool-name-display { font-size: 0.35rem; }
+            .tool-fullscreen-close { font-size: 1rem; }
+            .recent-tools-mini { padding: 4px 10px; }
+            .recent-tools-mini .mini-title { font-size: 0.45rem; }
+            .account-detail-row { font-size: 0.5rem; padding: 4px 0; }
         }
         
         .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
@@ -930,7 +879,7 @@
         .stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
         .modal .btn-submit, .modal-close, .user-info-container, .credits-container,
         .tool-btn, .user-logout-btn, .recent-tools-mini,
-        .tool-fullscreen-header .header-right .tool-switch-btn {
+        .tool-fullscreen-header .header-right .recent-tools-btn {
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.4s ease, border-color 0.4s ease;
             will-change: transform;
@@ -987,10 +936,10 @@
                 </div>
                 <div class="brand-tagline">AI POWERED TRADING</div>
                 <div class="social-icons" id="dashSocialIcons">
-                    <a href="#"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
@@ -1012,6 +961,7 @@
         <div class="credits-container" id="creditsContainer">
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
             <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
+            <div class="credit-item"><span class="number" id="dashTotalUsed">0</span><span class="label">Total Used</span></div>
         </div>
         
         <!-- RECENT TOOLS MINI BUTTON -->
@@ -1054,12 +1004,11 @@
             <span class="divider">|</span>
             <span class="credits-tool" id="toolHeaderCredits">💰 0</span>
             <span class="divider">|</span>
-            <span class="today-used-tool" id="toolHeaderTodayUsed">📊 Today: 0</span>
+            <span class="used-tool" id="toolHeaderUsed">📊 Used: 0</span>
         </div>
         <div class="header-right">
-            <div class="tool-switch-container" id="toolSwitchContainer">
-                <!-- Tool buttons will be added here dynamically -->
-            </div>
+            <span class="tool-name-display" id="toolHeaderName">Tool</span>
+            <button class="recent-tools-btn" id="toolHeaderRecentBtn" onclick="minimizeTool()">📌 Recent</button>
             <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
         </div>
     </div>
@@ -1091,10 +1040,7 @@
         <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
             <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
-            <label>UTR Number</label>
-            <input type="text" id="utrInput" placeholder="Enter UTR number">
-            <label style="margin-top:4px;">Transaction ID</label>
-            <input type="text" id="transactionIdInput" placeholder="Enter Transaction ID">
+            <label>Transaction ID / UTR</label><input type="text" id="transactionIdInput" placeholder="Enter UPI Transaction ID">
             <label style="margin-top:4px;">Screenshot (Optional)</label><input type="file" id="screenshotUploadInput" accept="image/*">
             <button class="btn-submit btn-gold" style="margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
         </div>
@@ -1165,25 +1111,13 @@ const database = getDatabase(app);
 const dbRef = ref(database, 'brt_data');
 
 let appState = {
-    offerCredits: 10, 
-    upiId: 'binary@ruthless', 
-    paymentInstructions: 'Please transfer the amount to the UPI ID below.',
-    qrCodeBase64: '', 
-    creditPrice: 2, 
-    paymentApprovalMode: 'manual', 
-    paymentGateway: 'none', 
-    paymentEnvironment: 'test',
+    offerCredits: 10, upiId: 'binary@ruthless', paymentInstructions: 'Please transfer the amount to the UPI ID below.',
+    qrCodeBase64: '', creditPrice: 2, paymentApprovalMode: 'manual', paymentGateway: 'none', paymentEnvironment: 'test',
     creditPacks: [{ credits: 50, price: 99 }, { credits: 100, price: 199 }, { credits: 250, price: 349 }, { credits: 500, price: 599 }],
-    users: [], 
-    currentUser: null,
-    logoBase64: '', 
-    payments: [], 
-    chats: {},
-    tools: [], 
-    socialMedia: [], 
-    logoClickCount: 2,
+    users: [], currentUser: null,
+    logoBase64: '', payments: [], chats: {},
+    tools: [], socialMedia: [], logoClickCount: 2,
     darkMode: true,
-    creditsPerSignal: 1,
     features: [
         { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
         { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
@@ -1197,11 +1131,8 @@ let appState = {
 let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
 let currentToolIndex = -1;
-let openTools = [];
 let recentTools = [];
 let isToolMinimized = false;
-let toolDataCache = {};
-let isDeducting = false;
 
 function applyTheme(darkMode) {
     if (darkMode === false) {
@@ -1350,6 +1281,7 @@ document.getElementById('dashAdminLogoutBtn').addEventListener('click', function
     }
 });
 
+// ─── RESET TODAY USED AT 12 AM ───
 function resetTodayUsed() {
     const now = new Date();
     const lastReset = localStorage.getItem('lastResetDate');
@@ -1388,8 +1320,6 @@ onValue(dbRef, (snapshot) => {
             renderFeatures();
         }
         if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
-        if (val.creditsPerSignal !== undefined) { appState.creditsPerSignal = val.creditsPerSignal; }
-        if (val.qrCodeBase64 !== undefined) { appState.qrCodeBase64 = val.qrCodeBase64; loadQRPreview(); }
         
         const session = getActiveSession();
         if (session.type === 'user' && currentUserEmail) {
@@ -1403,11 +1333,6 @@ onValue(dbRef, (snapshot) => {
         
         resetTodayUsed();
         updateUI(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
-        
-        if (document.getElementById('toolFullscreen').classList.contains('active')) {
-            updateToolHeader();
-            updateSwitchButtons();
-        }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
@@ -1425,25 +1350,6 @@ function loadLocalState() {
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
-    const qrData = localStorage.getItem('brt_qr');
-    if (qrData) { appState.qrCodeBase64 = qrData; }
-    
-    const savedCache = localStorage.getItem('brt_tool_cache');
-    if (savedCache) {
-        try { toolDataCache = JSON.parse(savedCache); } catch(e) {}
-    }
-    const savedRecent = localStorage.getItem('brt_recent_tools');
-    if (savedRecent) {
-        try { recentTools = JSON.parse(savedRecent); } catch(e) {}
-    }
-    const savedOpenTools = localStorage.getItem('brt_open_tools');
-    if (savedOpenTools) {
-        try { openTools = JSON.parse(savedOpenTools); } catch(e) {}
-    }
-    const savedCurrent = localStorage.getItem('brt_current_tool');
-    if (savedCurrent !== null) {
-        currentToolIndex = parseInt(savedCurrent);
-    }
     
     applyTheme(appState.darkMode !== undefined ? appState.darkMode : true);
     
@@ -1486,212 +1392,12 @@ function loadLocalState() {
     }
     resetTodayUsed();
     updateUI(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
-    
-    const toolMinimized = sessionStorage.getItem('brt_tool_minimized') === 'true';
-    if (toolMinimized && recentTools.length > 0) {
-        document.getElementById('recentToolsMini').style.display = 'block';
-        updateRecentToolsMini();
-        isToolMinimized = true;
-    }
-    
-    const wasToolOpen = sessionStorage.getItem('brt_tool_open') === 'true';
-    if (wasToolOpen && openTools.length > 0 && currentToolIndex >= 0) {
-        const tool = appState.tools[currentToolIndex];
-        if (tool) {
-            const overlay = document.getElementById('toolFullscreen');
-            const iframe = document.getElementById('toolFullscreenIframe');
-            overlay.classList.add('active');
-            
-            const cacheKey = 'tool_' + currentToolIndex;
-            let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-            if (toolDataCache[cacheKey]) {
-                htmlContent = toolDataCache[cacheKey];
-            }
-            htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
-            iframe.srcdoc = htmlContent;
-            
-            updateToolHeader();
-            updateSwitchButtons();
-            document.getElementById('recentToolsMini').style.display = 'none';
-            isToolMinimized = false;
-        }
-    } else {
-        sessionStorage.removeItem('brt_tool_open');
-    }
 }
 
 function applyLogo() {
     const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
     if (appState.logoBase64) { logoIcon.style.display = 'none'; logoImg.src = appState.logoBase64; logoImg.style.display = 'block'; }
     else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
-}
-
-// ─── PREPARE TOOL HTML WITH INJECT SCRIPT ───
-function prepareToolHTML(index, htmlContent) {
-    const user = appState.currentUser;
-    if (!user) return htmlContent;
-    
-    htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
-    htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
-    htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
-    
-    // ─── INJECT SCRIPT FOR SIGNAL DETECTION ───
-    const injectScript = `
-    <script>
-        // ─── SIGNAL DETECTION ───
-        let signalGenerated = false;
-        let signalSuccess = false;
-        let signalSent = false; // <-- FIX: Prevents duplicate deduction
-        
-        const USER_EMAIL = '${user.email}';
-        const USER_NAME = '${user.name || user.email.split('@')[0]}';
-        const USER_CREDITS = ${user.credits || 0};
-        
-        document.addEventListener('click', function(e) {
-            const btn = e.target.closest('button');
-            if (!btn) return;
-            
-            const text = btn.textContent || '';
-            const btnId = btn.id || '';
-            
-            if (text.includes('Signal') || text.includes('Get') || text.includes('Generate') || 
-                text.includes('BUY') || text.includes('SELL') || text.includes('TRADE') ||
-                text.toLowerCase().includes('signal') || text.toLowerCase().includes('get') || 
-                btnId === 'generateSignalBtn' || btnId === 'btnSignal' ||
-                btnId === 'getSignalBtn') {
-                
-                signalGenerated = false;
-                signalSuccess = false;
-                signalSent = false; // Reset flag on new click
-                
-                setTimeout(() => {
-                    watchForSignalResult();
-                }, 500);
-            }
-        });
-        
-        function watchForSignalResult() {
-            const signalView = document.getElementById('signalView');
-            const errorView = document.getElementById('errorView');
-            const waitingView = document.getElementById('waitingView');
-            const statusView = document.getElementById('statusView');
-            
-            let attempts = 0;
-            const maxAttempts = 40;
-            
-            const checkInterval = setInterval(() => {
-                attempts++;
-                
-                // Check success
-                const isSuccess = (
-                    (signalView && signalView.classList && signalView.classList.contains('active')) ||
-                    (statusView && statusView.classList && statusView.classList.contains('active') && 
-                     statusView.textContent && statusView.textContent.includes('✅')) ||
-                    (document.querySelector('#signalView.active')) ||
-                    (document.querySelector('[class*="signal"]') && 
-                     document.querySelector('[class*="signal"]').textContent && 
-                     document.querySelector('[class*="signal"]').textContent.includes('✅'))
-                );
-                
-                if (isSuccess && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
-                    signalSuccess = true;
-                    signalGenerated = true;
-                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                    return;
-                }
-                
-                // Check failure
-                const isFailure = (
-                    (errorView && errorView.classList && errorView.classList.contains('active')) ||
-                    (document.querySelector('#errorView.active')) ||
-                    (document.querySelector('[class*="error"]') && 
-                     document.querySelector('[class*="error"]').textContent && 
-                     (document.querySelector('[class*="error"]').textContent.includes('❌') ||
-                      document.querySelector('[class*="error"]').textContent.includes('Error')))
-                );
-                
-                if (isFailure && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
-                    signalSuccess = false;
-                    signalGenerated = true;
-                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                    return;
-                }
-                
-                if (waitingView && waitingView.classList && waitingView.classList.contains('active')) {
-                    return;
-                }
-                
-                if (attempts >= maxAttempts && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
-                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                }
-            }, 500);
-        }
-        
-        // ─── OVERRIDE RENDER FUNCTIONS ───
-        if (typeof renderSignalResult === 'function') {
-            const originalRender = renderSignalResult;
-            window.renderSignalResult = function(data) {
-                originalRender(data);
-                if (!signalSent) {
-                    signalSent = true;
-                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                }
-            };
-        }
-        
-        if (typeof showError === 'function') {
-            const originalShowError = showError;
-            window.showError = function(msg) {
-                originalShowError(msg);
-                if (!signalSent) {
-                    signalSent = true;
-                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                }
-            };
-        }
-        
-        // ─── MUTATION OBSERVER ───
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' || mutation.type === 'childList') {
-                    const signalView = document.getElementById('signalView');
-                    const errorView = document.getElementById('errorView');
-                    
-                    if (signalView && signalView.classList && signalView.classList.contains('active') && !signalSent) {
-                        signalSent = true;
-                        signalGenerated = true;
-                        signalSuccess = true;
-                        window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                    }
-                    
-                    if (errorView && errorView.classList && errorView.classList.contains('active') && !signalSent) {
-                        signalSent = true;
-                        signalGenerated = true;
-                        signalSuccess = false;
-                        window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                    }
-                }
-            });
-        });
-        
-        setTimeout(() => {
-            const targetNode = document.body;
-            if (targetNode) {
-                observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-            }
-        }, 1000);
-        
-        console.log('✅ Signal detection injected');
-    <\/script>
-    `;
-    
-    return htmlContent + injectScript;
 }
 
 // ─── RENDER TOOLS ───
@@ -1724,74 +1430,12 @@ function renderTools() {
             </div>
             ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
         `;
-        const globalIdx = appState.tools.indexOf(tool);
         btn.addEventListener('click', function() { 
+            const globalIdx = appState.tools.indexOf(tool);
             openToolFullscreen(globalIdx); 
         });
         container.appendChild(btn);
     });
-}
-
-function updateToolHeader() {
-    const user = appState.currentUser;
-    if (!user) return;
-    document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
-    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
-    document.getElementById('toolHeaderTodayUsed').textContent = '📊 Today: ' + (user.todayUsed || 0);
-}
-
-function updateSwitchButtons() {
-    const container = document.getElementById('toolSwitchContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    const tools = appState.tools || [];
-    
-    const displayTools = openTools.slice(0, 2);
-    
-    if (displayTools.length === 0) {
-        return;
-    }
-    
-    displayTools.forEach((toolIdx, slot) => {
-        if (tools[toolIdx]) {
-            const btn = document.createElement('button');
-            btn.className = 'tool-switch-btn';
-            btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
-            if (currentToolIndex === toolIdx) {
-                btn.classList.add('active-tool');
-            }
-            btn.addEventListener('click', function() {
-                if (currentToolIndex !== toolIdx) {
-                    switchTool(toolIdx);
-                }
-            });
-            container.appendChild(btn);
-        }
-    });
-}
-
-function switchTool(index) {
-    if (!appState.tools[index]) return;
-    if (index === currentToolIndex) return;
-    
-    saveCurrentToolData();
-    
-    currentToolIndex = index;
-    localStorage.setItem('brt_current_tool', currentToolIndex);
-    
-    const tool = appState.tools[currentToolIndex];
-    const iframe = document.getElementById('toolFullscreenIframe');
-    
-    const cacheKey = 'tool_' + currentToolIndex;
-    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
-    htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
-    iframe.srcdoc = htmlContent;
-    
-    updateSwitchButtons();
-    updateToolHeader();
 }
 
 function openToolFullscreen(index) {
@@ -1807,101 +1451,39 @@ function openToolFullscreen(index) {
     const tool = tools[index];
     if (!tool) return;
     
-    sessionStorage.setItem('brt_tool_open', 'true');
-    
+    // Reset minimized state
     isToolMinimized = false;
-    sessionStorage.setItem('brt_tool_minimized', 'false');
     document.getElementById('recentToolsMini').style.display = 'none';
     
-    if (!openTools.includes(index)) {
-        if (openTools.length >= 2) {
-            openTools.shift();
-        }
-        openTools.push(index);
-        localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
-    }
-    
     currentToolIndex = index;
-    localStorage.setItem('brt_current_tool', currentToolIndex);
     
-    updateToolHeader();
+    // Update header
+    document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
+    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+    document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
+    document.getElementById('toolHeaderName').textContent = tool.name || 'Tool';
     
+    // Show fullscreen
     const overlay = document.getElementById('toolFullscreen');
     const iframe = document.getElementById('toolFullscreenIframe');
     overlay.classList.add('active');
+    iframe.srcdoc = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
     
-    const cacheKey = 'tool_' + index;
-    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
-    
-    htmlContent = prepareToolHTML(index, htmlContent);
-    iframe.srcdoc = htmlContent;
-    
+    // Track recent tool
     if (!recentTools.includes(index)) {
         recentTools.unshift(index);
         if (recentTools.length > 5) recentTools.pop();
-        localStorage.setItem('brt_recent_tools', JSON.stringify(recentTools));
     }
     updateRecentToolsMini();
-    updateSwitchButtons();
 }
 
 function minimizeTool() {
-    saveCurrentToolData();
     isToolMinimized = true;
-    sessionStorage.setItem('brt_tool_minimized', 'true');
-    sessionStorage.removeItem('brt_tool_open');
     document.getElementById('toolFullscreen').classList.remove('active');
     document.getElementById('recentToolsMini').style.display = 'block';
     updateRecentToolsMini();
     window._currentTool = null;
 }
-
-function saveCurrentToolData() {
-    if (currentToolIndex === -1) return;
-    try {
-        const iframe = document.getElementById('toolFullscreenIframe');
-        iframe.contentWindow.postMessage({ type: 'saveData', toolIndex: currentToolIndex }, '*');
-    } catch(e) {}
-}
-
-// ─── POST MESSAGE LISTENER ───
-window.addEventListener('message', function(event) {
-    // Signal result from inject script
-    if (event.data && event.data.type === 'signalResult') {
-        // Prevent duplicate processing using isDeducting flag
-        if (isDeducting) {
-            console.log('⚠️ Deduction already in progress, skipping duplicate signal.');
-            return;
-        }
-        if (event.data.success === true) {
-            const success = deductCredit();
-            if (success) {
-                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                    type: 'signalResult', 
-                    success: true, 
-                    credits: appState.currentUser.credits 
-                }, '*');
-            }
-        } else {
-            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                type: 'signalResult', 
-                success: false, 
-                error: event.data.error || 'Signal generation failed' 
-            }, '*');
-        }
-        return;
-    }
-    
-    // Save tool data
-    if (event.data && event.data.type === 'saveToolData') {
-        const cacheKey = 'tool_' + event.data.toolIndex;
-        toolDataCache[cacheKey] = event.data.htmlContent;
-        localStorage.setItem('brt_tool_cache', JSON.stringify(toolDataCache));
-    }
-});
 
 function updateRecentToolsMini() {
     const mini = document.getElementById('recentToolsMini');
@@ -1919,6 +1501,7 @@ document.getElementById('recentToolsMini').addEventListener('click', function() 
     if (recentTools.length === 0) return;
     const lastTool = recentTools[0];
     if (appState.tools && appState.tools[lastTool]) {
+        // Check credits before opening
         const user = appState.currentUser;
         if (!user) { alert('Please login first!'); return; }
         if (user.blocked) { alert('🚫 Account blocked'); return; }
@@ -1931,16 +1514,8 @@ document.getElementById('recentToolsMini').addEventListener('click', function() 
 });
 
 document.getElementById('toolFullscreenClose').addEventListener('click', function() {
-    saveCurrentToolData();
     document.getElementById('toolFullscreen').classList.remove('active');
     window._currentTool = null;
-    isToolMinimized = true;
-    sessionStorage.setItem('brt_tool_minimized', 'true');
-    sessionStorage.removeItem('brt_tool_open');
-    if (recentTools.length > 0) {
-        document.getElementById('recentToolsMini').style.display = 'block';
-        updateRecentToolsMini();
-    }
 });
 
 // ─── ACCOUNT MODAL ───
@@ -1957,43 +1532,53 @@ function openAccountModal() {
         <div class="account-detail-row"><span class="label">Available Credits</span><span class="value green">${user.credits || 0}</span></div>
         <div class="account-detail-row"><span class="label">Free Credits</span><span class="value">${user.freeCredits || 0}</span></div>
         <div class="account-detail-row"><span class="label">Today Used</span><span class="value">${user.todayUsed || 0}</span></div>
-        <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.6rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
+        <div class="account-detail-row"><span class="label">Total Used</span><span class="value">${user.totalUsed || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Signals Generated</span><span class="value">${user.signalsUsed || 0}</span></div>
+        <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.5rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
     `;
     openModal('accountModal');
 }
 window.openAccountModal = openAccountModal;
 
-// ─── SIGNAL GENERATION (credit deduction) - STRICT ───
+// ─── SIGNAL GENERATION (credit deduction) ───
 function deductCredit() {
-    if (isDeducting) return false;
-    isDeducting = true;
-    
-    try {
-        const user = appState.currentUser;
-        if (!user) return false;
-        
-        // Use admin configured credits per signal (Bug 1 Fix)
-        const creditsToDeduct = appState.creditsPerSignal || 1;
-        
-        if (user.credits < creditsToDeduct) {
-            isDeducting = false;
-            return false;
-        }
-        
-        user.credits -= creditsToDeduct;
-        user.signalsUsed = (user.signalsUsed || 0) + 1;
-        user.todayUsed = (user.todayUsed || 0) + 1;
-        user.totalUsed = (user.totalUsed || 0) + 1;
-        saveLocalState();
-        updateUI();
-        updateToolHeader();
-        isDeducting = false;
-        return true;
-    } catch(e) {
-        isDeducting = false;
-        return false;
-    }
+    const user = appState.currentUser;
+    if (!user) return false;
+    if (user.credits < 1) return false;
+    user.credits -= 1;
+    user.signalsUsed = (user.signalsUsed || 0) + 1;
+    user.todayUsed = (user.todayUsed || 0) + 1;
+    user.totalUsed = (user.totalUsed || 0) + 1;
+    saveLocalState();
+    updateUI();
+    // Update tool header if open
+    document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+    document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
+    return true;
 }
+
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'signalGenerated') {
+        if (appState.currentUser && appState.currentUser.credits > 0) {
+            const success = deductCredit();
+            if (success) {
+                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                    type: 'signalResult', 
+                    success: true, 
+                    credits: appState.currentUser.credits 
+                }, '*');
+                alert('🎯 Signal Generated! Remaining credits: ' + appState.currentUser.credits);
+            }
+        } else {
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
+                type: 'signalResult', 
+                success: false, 
+                message: 'Insufficient credits!' 
+            }, '*');
+            openModal('noCreditsPopup');
+        }
+    }
+});
 
 function updateUI() {
     const user = appState.currentUser;
@@ -2001,8 +1586,13 @@ function updateUI() {
         document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; 
         document.getElementById('dashCredits').textContent = user.credits || 0; 
         document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0;
+        document.getElementById('dashTotalUsed').textContent = user.totalUsed || 0;
     }
-    updateToolHeader();
+    if (user && document.getElementById('toolFullscreen').classList.contains('active')) {
+        document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
+        document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
+        document.getElementById('toolHeaderUsed').textContent = '📊 Used: ' + (user.totalUsed || 0);
+    }
 }
 
 function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
@@ -2069,7 +1659,7 @@ function renderPaymentHistory() {
     userPayments.reverse().forEach(p => {
         const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
         const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
-        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:var(--text-muted);font-size:0.4rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
+        container.innerHTML += `<div class="history-item"><span class="${statusClass}">${statusText}</span><span class="amount">₹${p.amount}</span><span style="color:#888;">${p.credits}cr</span><span style="color:var(--text-muted);font-size:0.35rem;">${p.transactionId || 'N/A'}</span><span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span></div>`;
     });
 }
 window.openPaymentHistoryModal = function() { if (!appState.currentUser) return; renderPaymentHistory(); openModal('paymentHistoryModal'); };
@@ -2089,7 +1679,7 @@ window.selectCreditPack = function(idx) {
     document.getElementById('proceedToPayBtn').style.display = 'block'; document.getElementById('paymentOptionsContainer').style.display = 'none';
     document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = '';
 };
-window.openAddCreditsModal = function() { if (!appState.currentUser) return; selectedCreditPack = null; document.getElementById('selectedPackDisplay').classList.remove('active'); document.getElementById('proceedToPayBtn').style.display = 'none'; document.getElementById('paymentOptionsContainer').style.display = 'none'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = ''; document.getElementById('utrInput').value = ''; document.getElementById('transactionIdInput').value = ''; renderCreditPacks(); openModal('addCreditsModal'); };
+window.openAddCreditsModal = function() { if (!appState.currentUser) return; selectedCreditPack = null; document.getElementById('selectedPackDisplay').classList.remove('active'); document.getElementById('proceedToPayBtn').style.display = 'none'; document.getElementById('paymentOptionsContainer').style.display = 'none'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('addCreditsSuccess').textContent = ''; document.getElementById('transactionIdInput').value = ''; renderCreditPacks(); openModal('addCreditsModal'); };
 window.showPaymentOptions = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
     document.getElementById('creditPacksContainer').style.display = 'none'; document.getElementById('proceedToPayBtn').style.display = 'none';
@@ -2102,80 +1692,53 @@ window.showPaymentOptions = function() {
 function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:160px;max-height:160px;border-radius:6px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
 window.submitManualPayment = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
-    
-    const utr = document.getElementById('utrInput').value.trim();
-    const txId = document.getElementById('transactionIdInput').value.trim();
-    
-    if (!utr && !txId) {
-        document.getElementById('addCreditsError').textContent = '❌ Please enter UTR Number or Transaction ID';
-        return;
-    }
-    if ((utr && utr.length < 6) || (txId && txId.length < 6)) {
-        document.getElementById('addCreditsError').textContent = '❌ Enter at least 6 characters';
-        return;
-    }
-    
-    const transactionId = utr || txId;
-    
-    const paymentRecord = { 
-        userEmail: appState.currentUser.email, 
-        credits: selectedCreditPack.credits, 
-        amount: selectedCreditPack.price, 
-        transactionId: transactionId,
-        utr: utr,
-        transactionIdField: txId,
-        status: 'pending', 
-        paymentMode: 'manual', 
-        date: new Date().toISOString(), 
-        screenshot: 'none' 
-    };
-    if (!appState.payments) appState.payments = []; 
-    appState.payments.push(paymentRecord); 
-    saveLocalState(); 
-    updateUI();
-    document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; 
-    document.getElementById('addCreditsError').textContent = ''; 
-    document.getElementById('utrInput').value = '';
-    document.getElementById('transactionIdInput').value = '';
-    setTimeout(() => { 
-        closeModal('addCreditsModal'); 
-        alert('✅ Payment submitted successfully!'); 
-        document.getElementById('creditPacksContainer').style.display = 'block'; 
-    }, 1500);
+    const txId = document.getElementById('transactionIdInput').value.trim(); if (!txId || txId.length < 6) { document.getElementById('addCreditsError').textContent = '❌ Enter valid Transaction ID (min 6 chars)'; return; }
+    const paymentRecord = { userEmail: appState.currentUser.email, credits: selectedCreditPack.credits, amount: selectedCreditPack.price, transactionId: txId, status: 'pending', paymentMode: 'manual', date: new Date().toISOString(), screenshot: 'none' };
+    if (!appState.payments) appState.payments = []; appState.payments.push(paymentRecord); saveLocalState(); updateUI();
+    document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; document.getElementById('addCreditsError').textContent = ''; document.getElementById('transactionIdInput').value = '';
+    setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 window.openModal = openModal; window.closeModal = closeModal;
 
-// ─── LOGO CLICK - NO POPUP FOR USERS ───
+// ─── LOGO CLICK - ADMIN ACCESS (ONLY HOME PAGE) ───
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
-    e.preventDefault();
+    e.preventDefault(); 
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
     const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    if (adminLoggedIn) {
-        logoClickCounter++;
-        const requiredClicks = appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+    if (userLoggedIn && !adminLoggedIn) {
+        alert('🚫 Access Denied! Only Admin can access this page.');
+        return;
     }
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
-    e.preventDefault();
+    e.preventDefault(); 
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
     const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    if (adminLoggedIn) {
-        logoClickCounter++;
-        const requiredClicks = appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+    if (userLoggedIn && !adminLoggedIn) {
+        alert('🚫 Access Denied! Only Admin can access this page.');
+        return;
     }
+    logoClickCounter++;
+    const requiredClicks = appState.logoClickCount || 2;
+    if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
     if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
         const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        if (adminLoggedIn) {
-            logoClickCounter++;
-            const requiredClicks = appState.logoClickCount || 2;
-            if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+        if (userLoggedIn && !adminLoggedIn) {
+            alert('🚫 Access Denied! Only Admin can access this page.');
+            return;
         }
+        logoClickCounter++; const requiredClicks = appState.logoClickCount || 2;
+        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
     }
 });
 
