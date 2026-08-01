@@ -55,6 +55,7 @@
 
             <div class="red-container" id="redContainer">
 
+                <!-- Admin Nav Bar - Only visible when admin logged in -->
                 <div class="admin-nav-bar" id="adminNavBar">
                     <span class="nav-label">🔐</span>
                     <div class="nav-buttons">
@@ -64,6 +65,7 @@
                     </div>
                 </div>
 
+                <!-- User Logout Button - Only visible when user logged in -->
                 <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
 
                 <span class="fb-status-dot red" id="firebaseStatusDot"></span>
@@ -232,6 +234,7 @@
             }
         }
 
+        // ─── PREVENT COPY & RIGHT CLICK ───
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             return false;
@@ -247,6 +250,7 @@
             }
         });
 
+        // ─── CURSOR GLOW ───
         const glow = document.getElementById('cursorGlow');
         if (window.matchMedia('(hover: hover)').matches) {
             document.addEventListener('mousemove', (e) => {
@@ -259,19 +263,32 @@
             });
         }
 
+        // ─── CHECK USER SESSION ───
         function checkUserSession() {
             const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
             const userLogoutBtn = document.getElementById('userLogoutBtn');
             const adminNavBar = document.getElementById('adminNavBar');
+            
+            // Admin already logged in check
+            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+            
+            if (adminLoggedIn) {
+                adminNavBar.classList.add('visible');
+                userLogoutBtn.classList.remove('visible');
+                return true;
+            }
+            
             if (userLoggedIn) {
                 userLogoutBtn.classList.add('visible');
                 adminNavBar.classList.remove('visible');
             } else {
                 userLogoutBtn.classList.remove('visible');
+                adminNavBar.classList.remove('visible');
             }
             return userLoggedIn;
         }
 
+        // ─── USER LOGOUT ───
         document.getElementById('userLogoutBtn').addEventListener('click', function() {
             sessionStorage.removeItem('user_logged_in');
             appState.currentUser = null;
@@ -279,10 +296,12 @@
             window.location.href = 'index.html';
         });
 
+        // ─── CHECK ADMIN SESSION ───
         function checkAdminSession() {
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
             const navBar = document.getElementById('adminNavBar');
             const userLogoutBtn = document.getElementById('userLogoutBtn');
+            
             if (adminLoggedIn) {
                 navBar.classList.add('visible');
                 userLogoutBtn.classList.remove('visible');
@@ -291,11 +310,14 @@
                 const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
                 if (userLoggedIn) {
                     userLogoutBtn.classList.add('visible');
+                } else {
+                    userLogoutBtn.classList.remove('visible');
                 }
             }
             return adminLoggedIn;
         }
 
+        // ─── ADMIN LOGOUT ───
         document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
             sessionStorage.removeItem('admin_logged_in');
             sessionStorage.removeItem('user_logged_in');
@@ -306,6 +328,7 @@
             window.location.href = 'index.html';
         });
 
+        // ─── RENDER SOCIAL MEDIA ───
         function renderSocialMedia() {
             const container = document.getElementById('socialIconsContainer');
             if (!container) return;
@@ -359,6 +382,7 @@
             });
         }
 
+        // ─── RENDER FEATURES ───
         function renderFeatures() {
             const container = document.getElementById('featuresScroll');
             if (!container) return;
@@ -381,6 +405,7 @@
             });
         }
 
+        // ─── UPDATE OFFER BANNER ───
         function updateOfferBanner() {
             const credits = appState.offerCredits || 10;
             const name = appState.offerName || 'FREE SIGNAL OFFER';
@@ -399,6 +424,7 @@
             }
         }
 
+        // ─── INFO POPUP ───
         function showInfoPopup(icon, title, message, btnText, btnAction) {
             const popup = document.getElementById('infoPopup');
             document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
@@ -434,6 +460,7 @@
 
         document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
 
+        // ─── EMAIL VALIDATION ───
         function isValidEmail(email) {
             return /^[^\s@]+@gmail\.com$/.test(email);
         }
@@ -472,6 +499,7 @@
                 if (val.brokers !== undefined) {
                     appState.brokers = val.brokers;
                     localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+                    updateUI(); // Refresh broker list
                 }
                 if (val.creditPacks !== undefined) {
                     appState.creditPacks = val.creditPacks;
@@ -486,6 +514,8 @@
                 updateOfferBanner();
                 renderSocialMedia();
                 renderFeatures();
+                checkAdminSession();
+                checkUserSession();
             }
         }, (error) => {
             isFirebaseConnected = false;
@@ -493,11 +523,13 @@
             console.error('Firebase Error:', error);
         });
 
+        // ─── SAVE LOCAL STATE ───
         function saveLocalState() {
             localStorage.setItem('brt_data', JSON.stringify(appState));
             if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
         }
 
+        // ─── LOAD LOCAL STATE ───
         function loadLocalState() {
             const local = localStorage.getItem('brt_data');
             if (local) {
@@ -536,7 +568,10 @@
             if (brokersData) {
                 try {
                     const parsed = JSON.parse(brokersData);
-                    if (parsed.length > 0) appState.brokers = parsed;
+                    if (parsed.length > 0) {
+                        appState.brokers = parsed;
+                        updateUI(); // Refresh broker list
+                    }
                 } catch (e) {}
             }
             const creditPacksData = localStorage.getItem('brt_creditPacks');
@@ -554,6 +589,7 @@
             checkUserSession();
         }
 
+        // ─── UPDATE UI ───
         function updateUI() {
             const brokerSelect = document.getElementById('signupBroker');
             brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
@@ -573,11 +609,13 @@
             });
         }
 
+        // ─── MODAL HELPERS ───
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         window.closeModal = closeModal;
         window.openModal = openModal;
 
+        // ─── OFFER BANNER ───
         document.getElementById('offerBanner').addEventListener('click', function() {
             const signupCard = document.getElementById('signupCard');
             signupCard.classList.remove('highlight');
@@ -586,6 +624,7 @@
             setTimeout(() => { openModal('signupModal'); }, 500);
         });
 
+        // ─── HANDLE LOGIN ───
         window.handleLogin = function() {
             const email = document.getElementById('loginEmail').value.trim();
             const accountId = document.getElementById('loginAccountId').value.trim();
@@ -660,6 +699,7 @@
             window.location.href = 'dashboard.html';
         };
 
+        // ─── HANDLE SIGNUP ───
         window.handleSignup = function() {
             const broker = document.getElementById('signupBroker').value;
             const email = document.getElementById('signupEmail').value.trim();
@@ -704,6 +744,7 @@
             setTimeout(() => { closeModal('signupModal'); }, 1500);
         };
 
+        // ─── HANDLE VERIFY ───
         document.getElementById('verifySubmitBtn').addEventListener('click', function() {
             window.handleVerify();
         });
@@ -803,10 +844,12 @@
             successEl.textContent = '';
         };
 
+        // ─── BUTTON LISTENERS ───
         document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
         document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
         document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
 
+        // ─── BROKER INFO ───
         document.getElementById('signupBroker').addEventListener('change', function() {
             const brokerName = this.value;
             const infoDiv = document.getElementById('brokerInfo');
@@ -821,6 +864,7 @@
             }
         });
 
+        // ─── LOGO CLICK - ADMIN ACCESS ───
         let logoClickCounter = 0;
         document.getElementById('logoIcon').addEventListener('click', function(e) {
             e.preventDefault();
@@ -875,6 +919,7 @@
             }
         });
 
+        // ─── LOGO GLOW ───
         const logoGlow = document.getElementById('logoGlow');
 
         document.addEventListener('click', function(e) {
@@ -892,6 +937,7 @@
             }, 800);
         });
 
+        // ─── INIT ───
         loadLocalState();
         console.log('🏠 Home Page Loaded - Firebase Config from separate file');
 
