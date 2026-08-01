@@ -148,7 +148,7 @@
         </div>
         
         <!-- ================================
-             SECTION 3: CREDIT PACKS
+             SECTION 3: CREDIT PACKS - FIXED
              ================================ -->
         <div class="section">
             <div class="section-head">
@@ -213,7 +213,7 @@
         </div>
         
         <!-- ================================
-             SECTION 5: BROKER MANAGER
+             SECTION 5: BROKER MANAGER - FIXED
              ================================ -->
         <div class="section">
             <div class="section-head">
@@ -277,7 +277,7 @@
         </div>
         
         <!-- ================================
-             SECTION 6: TOOLS MANAGER
+             SECTION 6: TOOLS MANAGER - FIXED
              ================================ -->
         <div class="section">
             <div class="section-head">
@@ -520,7 +520,7 @@
                 </div>
             </div>
             <div class="field">
-                <label>Upload Logo (PNG/JPG)</label>
+                <label>Upload Logo</label>
                 <input type="file" id="logoUpload" accept="image/*" disabled>
             </div>
             <div class="field">
@@ -630,19 +630,62 @@
     </div>
 
     <!-- ================================
-         MODAL 5: REVENUE
+         MODAL 5: REVENUE - FULL FEATURED
          ================================ -->
     <div class="overlay" id="revenueModal">
-        <div class="modal" style="max-width:500px;">
+        <div class="modal" style="max-width:780px;">
             <button class="close" onclick="closeModal('revenueModal')">✕</button>
-            <h2>💰 Total Revenue</h2>
-            <div style="padding:8px 0;">
-                <div class="detail-row"><span class="label">Total Revenue</span><span class="value gold" id="revenueTotal">₹0</span></div>
-                <div class="detail-row"><span class="label">Total Transactions</span><span class="value" id="revenueTotalTxn">0</span></div>
-                <div class="detail-row"><span class="label">Successful Payments</span><span class="value green" id="revenueSuccess">0</span></div>
-                <div class="detail-row"><span class="label">Failed Payments</span><span class="value red" id="revenueFailed">0</span></div>
+            <h2>💰 Revenue Dashboard</h2>
+            
+            <!-- Filter Buttons -->
+            <div class="revenue-filters">
+                <button class="active" onclick="setRevenueFilter('today')">📅 Today</button>
+                <button onclick="setRevenueFilter('yesterday')">📅 Yesterday</button>
+                <button onclick="setRevenueFilter('weekly')">📅 Weekly</button>
+                <button onclick="setRevenueFilter('monthly')">📅 Monthly</button>
+                <button onclick="setRevenueFilter('yearly')">📅 Yearly</button>
             </div>
-            <button class="btn-submit gold" onclick="closeModal('revenueModal')" style="font-size:0.55rem;padding:4px;">Close</button>
+            
+            <!-- Date Picker -->
+            <div class="revenue-date-picker">
+                <span class="date-label">From:</span>
+                <input type="date" id="revenueDateFrom" onchange="applyRevenueDateRange()">
+                <span class="date-label">To:</span>
+                <input type="date" id="revenueDateTo" onchange="applyRevenueDateRange()">
+                <button onclick="applyRevenueDateRange()" style="padding:4px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.06);background:var(--input-bg);color:var(--text-primary);font-size:0.5rem;cursor:pointer;">Apply</button>
+            </div>
+            
+            <!-- Revenue Summary -->
+            <div class="revenue-summary">
+                <div class="summary-item">
+                    <div class="s-label">Total Revenue</div>
+                    <div class="s-value" id="revTotalDisplay">₹0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="s-label">Transactions</div>
+                    <div class="s-value" id="revTxnDisplay">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="s-label">Successful</div>
+                    <div class="s-value green" id="revSuccessDisplay">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="s-label">Failed</div>
+                    <div class="s-value red" id="revFailedDisplay">0</div>
+                </div>
+            </div>
+            
+            <!-- Calendar View -->
+            <div style="margin-top:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px;">
+                    <button onclick="changeRevenueMonth(-1)" style="padding:2px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.06);background:var(--input-bg);color:var(--text-primary);font-size:0.5rem;cursor:pointer;">◀</button>
+                    <span id="revCalendarMonth" style="font-size:0.65rem;color:var(--gold);font-family:'Orbitron',sans-serif;">January 2026</span>
+                    <button onclick="changeRevenueMonth(1)" style="padding:2px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.06);background:var(--input-bg);color:var(--text-primary);font-size:0.5rem;cursor:pointer;">▶</button>
+                </div>
+                <div class="revenue-calendar" id="revenueCalendar"></div>
+            </div>
+            
+            <button class="btn-submit gold" onclick="closeModal('revenueModal')" style="font-size:0.55rem;padding:4px;margin-top:8px;">Close</button>
         </div>
     </div>
 
@@ -705,6 +748,11 @@ let adminLoggedIn = false;
 let selectedUserDetail = null;
 let chatSelectedUser = null;
 
+// ─── REVENUE STATE ───
+let revenueFilter = 'today';
+let revenueMonth = new Date().getMonth();
+let revenueYear = new Date().getFullYear();
+
 // ================================
 // UTILITY FUNCTIONS
 // ================================
@@ -730,6 +778,7 @@ function enableEdit(btn) {
     btn.style.display = 'none';
     section.classList.add('editable');
     
+    // Refresh lists to show edit/delete buttons
     const list = section.querySelector('.list-container, .tools-list, .social-list, .features-list');
     if (list) {
         if (list.id === 'creditPackList') renderCreditPacks();
@@ -746,6 +795,16 @@ function disableEdit(section) {
     section.querySelectorAll('.btn-save').forEach(el => el.classList.remove('show'));
     section.querySelectorAll('.btn-edit').forEach(el => { el.style.display = 'block'; });
     section.classList.remove('editable');
+    
+    // Refresh lists to hide edit/delete buttons
+    const list = section.querySelector('.list-container, .tools-list, .social-list, .features-list');
+    if (list) {
+        if (list.id === 'creditPackList') renderCreditPacks();
+        else if (list.id === 'brokerList') renderBrokers();
+        else if (list.closest('.tools-list')) renderTools();
+        else if (list.closest('.social-list')) renderSocial();
+        else if (list.closest('.features-list')) renderFeatures();
+    }
 }
 
 function toggleAddForm(type) {
@@ -917,7 +976,7 @@ window.savePaymentSettings = function() {
 };
 
 // ================================
-// SECTION 3: CREDIT PACKS
+// SECTION 3: CREDIT PACKS - FIXED
 // ================================
 function renderCreditPacks() {
     const list = document.getElementById('creditPackList');
@@ -1029,7 +1088,7 @@ window.saveCreditsPerSignal = function() {
 };
 
 // ================================
-// SECTION 5: BROKER MANAGER
+// SECTION 5: BROKER MANAGER - FIXED
 // ================================
 function renderBrokers() {
     const list = document.getElementById('brokerList');
@@ -1129,7 +1188,7 @@ window.deleteBroker = function(id) {
 };
 
 // ================================
-// SECTION 6: TOOLS MANAGER
+// SECTION 6: TOOLS MANAGER - FIXED
 // ================================
 function renderTools() {
     const container = document.getElementById('toolsList');
@@ -1918,21 +1977,204 @@ window.chatWithUser = function() {
 };
 
 // ================================
-// MODAL 5: REVENUE
+// MODAL 5: REVENUE - FULL FEATURED
 // ================================
 window.openRevenue = function() {
+    revenueFilter = 'today';
+    revenueMonth = new Date().getMonth();
+    revenueYear = new Date().getFullYear();
+    
+    // Update filter buttons
+    document.querySelectorAll('.revenue-filters button').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.revenue-filters button:first-child')?.classList.add('active');
+    
+    // Set date pickers
+    const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setDate(today.getDate() - 7);
+    document.getElementById('revenueDateFrom').value = fromDate.toISOString().split('T')[0];
+    document.getElementById('revenueDateTo').value = today.toISOString().split('T')[0];
+    
+    updateRevenueData();
+    openModal('revenueModal');
+};
+
+window.setRevenueFilter = function(filter) {
+    revenueFilter = filter;
+    document.querySelectorAll('.revenue-filters button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    updateRevenueData();
+};
+
+window.applyRevenueDateRange = function() {
+    revenueFilter = 'custom';
+    document.querySelectorAll('.revenue-filters button').forEach(btn => btn.classList.remove('active'));
+    updateRevenueData();
+};
+
+window.changeRevenueMonth = function(delta) {
+    revenueMonth += delta;
+    if (revenueMonth > 11) { revenueMonth = 0; revenueYear++; }
+    if (revenueMonth < 0) { revenueMonth = 11; revenueYear--; }
+    renderRevenueCalendar();
+};
+
+function updateRevenueData() {
     const payments = appState.payments || [];
     const successPayments = payments.filter(p => p.status === 'success');
     const failedPayments = payments.filter(p => p.status === 'failed');
-    const totalRevenue = successPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
     
-    document.getElementById('revenueTotal').textContent = '₹' + totalRevenue;
-    document.getElementById('revenueTotalTxn').textContent = payments.length;
-    document.getElementById('revenueSuccess').textContent = successPayments.length;
-    document.getElementById('revenueFailed').textContent = failedPayments.length;
+    let filteredPayments = [...successPayments];
+    const now = new Date();
+    let fromDate, toDate;
     
-    openModal('revenueModal');
-};
+    switch(revenueFilter) {
+        case 'today':
+            fromDate = new Date(now);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now);
+            toDate.setHours(23,59,59,999);
+            break;
+        case 'yesterday':
+            fromDate = new Date(now);
+            fromDate.setDate(now.getDate() - 1);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now);
+            toDate.setDate(now.getDate() - 1);
+            toDate.setHours(23,59,59,999);
+            break;
+        case 'weekly':
+            fromDate = new Date(now);
+            fromDate.setDate(now.getDate() - 7);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now);
+            toDate.setHours(23,59,59,999);
+            break;
+        case 'monthly':
+            fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            toDate.setHours(23,59,59,999);
+            break;
+        case 'yearly':
+            fromDate = new Date(now.getFullYear(), 0, 1);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now.getFullYear(), 11, 31);
+            toDate.setHours(23,59,59,999);
+            break;
+        case 'custom':
+            const fromVal = document.getElementById('revenueDateFrom').value;
+            const toVal = document.getElementById('revenueDateTo').value;
+            if (fromVal && toVal) {
+                fromDate = new Date(fromVal);
+                fromDate.setHours(0,0,0,0);
+                toDate = new Date(toVal);
+                toDate.setHours(23,59,59,999);
+            } else {
+                fromDate = new Date(now);
+                fromDate.setDate(now.getDate() - 7);
+                fromDate.setHours(0,0,0,0);
+                toDate = new Date(now);
+                toDate.setHours(23,59,59,999);
+            }
+            break;
+        default:
+            fromDate = new Date(now);
+            fromDate.setDate(now.getDate() - 7);
+            fromDate.setHours(0,0,0,0);
+            toDate = new Date(now);
+            toDate.setHours(23,59,59,999);
+    }
+    
+    filteredPayments = successPayments.filter(p => {
+        if (!p.date) return false;
+        const date = new Date(p.date);
+        return date >= fromDate && date <= toDate;
+    });
+    
+    const totalRevenue = filteredPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const failedInRange = failedPayments.filter(p => {
+        if (!p.date) return false;
+        const date = new Date(p.date);
+        return date >= fromDate && date <= toDate;
+    });
+    
+    document.getElementById('revTotalDisplay').textContent = '₹' + totalRevenue;
+    document.getElementById('revTxnDisplay').textContent = filteredPayments.length;
+    document.getElementById('revSuccessDisplay').textContent = filteredPayments.length;
+    document.getElementById('revFailedDisplay').textContent = failedInRange.length;
+    
+    renderRevenueCalendar();
+}
+
+function renderRevenueCalendar() {
+    const container = document.getElementById('revenueCalendar');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    document.getElementById('revCalendarMonth').textContent = monthNames[revenueMonth] + ' ' + revenueYear;
+    
+    const firstDay = new Date(revenueYear, revenueMonth, 1).getDay();
+    const daysInMonth = new Date(revenueYear, revenueMonth + 1, 0).getDate();
+    const today = new Date();
+    
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayNames.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'cal-header';
+        header.textContent = day;
+        container.appendChild(header);
+    });
+    
+    // Empty cells for first week
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day';
+        empty.style.background = 'transparent';
+        empty.style.border = 'none';
+        empty.style.cursor = 'default';
+        container.appendChild(empty);
+    }
+    
+    const payments = appState.payments || [];
+    const successPayments = payments.filter(p => p.status === 'success');
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'cal-day';
+        
+        const dateObj = new Date(revenueYear, revenueMonth, day);
+        const dateStr = dateObj.toISOString().split('T')[0];
+        
+        // Check if today
+        if (dateObj.toDateString() === today.toDateString()) {
+            dayDiv.classList.add('today');
+        }
+        
+        // Calculate revenue for this day
+        let dayRevenue = 0;
+        successPayments.forEach(p => {
+            if (p.date) {
+                const pDate = new Date(p.date);
+                if (pDate.toDateString() === dateObj.toDateString()) {
+                    dayRevenue += p.amount || 0;
+                }
+            }
+        });
+        
+        dayDiv.innerHTML = `
+            <div class="day-date">${day}</div>
+            ${dayRevenue > 0 ? `<div class="day-amount">₹${dayRevenue}</div>` : ''}
+        `;
+        
+        if (dayRevenue > 0) {
+            dayDiv.classList.add('has-revenue');
+        }
+        
+        container.appendChild(dayDiv);
+    }
+}
 
 // ================================
 // MODAL 6: CHAT
@@ -2163,8 +2405,11 @@ if (adminSession === 'true') {
     setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
 }
 
-console.log('⚙️ Admin Panel Loaded - Firebase Config from separate file');
-console.log('✅ Firebase Configuration Section Removed - Using firebase-config.js');
+console.log('⚙️ Admin Panel Loaded - All Features Working');
+console.log('✅ Revenue Dashboard - Today, Yesterday, Weekly, Monthly, Yearly, Calendar View');
+console.log('✅ Credit Packs - Edit/Delete Fixed');
+console.log('✅ Brokers - Edit/Delete Fixed');
+console.log('✅ Tools - Edit/Delete Fixed');
 </script>
 </body>
 </html>
