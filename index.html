@@ -206,7 +206,7 @@
         // ================================
         // IMPORT FIREBASE CONFIG FROM SEPARATE FILE
         // ================================
-        import { firebaseConfig, defaultAppState } from './firebase-config.js';
+        import { firebaseConfig, defaultAppState, debounce, throttle, deepEqual, getChangedKeys } from './firebase-config.js';
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, onValue, set } from "firebase/database";
         import { getAnalytics } from "firebase/analytics";
@@ -220,7 +220,10 @@
         // ─── APP STATE ───
         let appState = { ...defaultAppState };
         let isFirebaseConnected = false;
+        let isSyncing = false;
+        let updateTimeout = null;
 
+        // ─── APPLY LOGO ───
         function applyLogo(logoBase64) {
             const logoIcon = document.getElementById('logoIcon');
             const logoImg = document.getElementById('logoImage');
@@ -269,7 +272,6 @@
             const userLogoutBtn = document.getElementById('userLogoutBtn');
             const adminNavBar = document.getElementById('adminNavBar');
             
-            // Admin already logged in check
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
             
             if (adminLoggedIn) {
@@ -424,6 +426,16 @@
             }
         }
 
+        // ─── DEBOUNCED UI UPDATE ───
+        const updateUIThrottled = throttle(function() {
+            updateUI();
+            renderSocialMedia();
+            renderFeatures();
+            updateOfferBanner();
+            checkAdminSession();
+            checkUserSession();
+        }, 300);
+
         // ─── INFO POPUP ───
         function showInfoPopup(icon, title, message, btnText, btnAction) {
             const popup = document.getElementById('infoPopup');
@@ -465,69 +477,94 @@
             return /^[^\s@]+@gmail\.com$/.test(email);
         }
 
-        // ─── FIREBASE ───
+        // ─── FIREBASE - REAL-TIME LISTENER WITH SELECTIVE UPDATE ───
         onValue(dbRef, (snapshot) => {
             isFirebaseConnected = true;
             document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
+            
             const val = snapshot.val();
-            if (val) {
-                const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
-                appState = { ...appState, ...val };
-                if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
-                if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
-                if (val.offerName !== undefined) appState.offerName = val.offerName;
-                if (val.offerDescription !== undefined) appState.offerDescription = val.offerDescription;
-                if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-                    appState.logoBase64 = val.logoBase64;
-                    applyLogo(val.logoBase64);
-                    localStorage.setItem('brt_logo', val.logoBase64);
-                }
-                if (val.socialMedia !== undefined) {
-                    appState.socialMedia = val.socialMedia;
-                    localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
-                    renderSocialMedia();
-                }
-                if (val.tools !== undefined) {
-                    appState.tools = val.tools;
-                    localStorage.setItem('brt_tools', JSON.stringify(val.tools));
-                }
-                if (val.features !== undefined) {
-                    appState.features = val.features;
-                    localStorage.setItem('brt_features', JSON.stringify(val.features));
-                    renderFeatures();
-                }
-                if (val.brokers !== undefined) {
-                    appState.brokers = val.brokers;
-                    localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
-                    updateUI(); // Refresh broker list
-                }
-                if (val.creditPacks !== undefined) {
-                    appState.creditPacks = val.creditPacks;
-                    localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
-                }
-                if (currentUserEmail) {
-                    const found = appState.users.find(u => u.email === currentUserEmail);
-                    if (found) appState.currentUser = found;
-                    else appState.currentUser = null;
-                }
-                updateUI();
-                updateOfferBanner();
-                renderSocialMedia();
-                renderFeatures();
-                checkAdminSession();
-                checkUserSession();
+            if (!val) return;
+            
+            // Get only changed fields
+            const changedKeys = getChangedKeys(appState, val);
+            
+            if (changedKeys.length === 0) {
+                console.log('📡 No changes detected');
+                return;
             }
+            
+            console.log('📡 Changes detected:', changedKeys);
+            
+            // Update only changed fields
+            changedKeys.forEach(key => {
+                appState[key] = val[key];
+                
+                switch(key) {
+                    case 'socialMedia':
+                        localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
+                        renderSocialMedia();
+                        break;
+                    case 'features':
+                        localStorage.setItem('brt_features', JSON.stringify(val.features));
+                        renderFeatures();
+                        break;
+                    case 'offerCredits':
+                    case 'offerName':
+                    case 'offerDescription':
+                        updateOfferBanner();
+                        break;
+                    case 'logoBase64':
+                        if (val.logoBase64) {
+                            appState.logoBase64 = val.logoBase64;
+                            applyLogo(val.logoBase64);
+                            localStorage.setItem('brt_logo', val.logoBase64);
+                        }
+                        break;
+                    case 'brokers':
+                        localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+                        updateUI();
+                        break;
+                    case 'creditPacks':
+                        localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
+                        break;
+                    case 'users':
+                        const currentUserEmail = appState.currentUser?.email;
+                        if (currentUserEmail) {
+                            const found = appState.users.find(u => u.email === currentUserEmail);
+                            if (found) appState.currentUser = found;
+                            else appState.currentUser = null;
+                        }
+                        break;
+                    default:
+                        // Any other field - just update appState
+                        break;
+                }
+            });
+            
+            // Update UI with throttling
+            updateUIThrottled();
+            
         }, (error) => {
             isFirebaseConnected = false;
             document.getElementById('firebaseStatusDot').className = 'fb-status-dot red';
             console.error('Firebase Error:', error);
         });
 
-        // ─── SAVE LOCAL STATE ───
-        function saveLocalState() {
+        // ─── SAVE LOCAL STATE WITH DEBOUNCE ───
+        const saveLocalState = debounce(function() {
             localStorage.setItem('brt_data', JSON.stringify(appState));
-            if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
-        }
+            if (isFirebaseConnected && !isSyncing) {
+                isSyncing = true;
+                set(dbRef, appState)
+                    .then(() => {
+                        isSyncing = false;
+                    })
+                    .catch((error) => {
+                        isSyncing = false;
+                        console.error('Firebase save error:', error);
+                    });
+            }
+        }, 500);
 
         // ─── LOAD LOCAL STATE ───
         function loadLocalState() {
@@ -570,7 +607,7 @@
                     const parsed = JSON.parse(brokersData);
                     if (parsed.length > 0) {
                         appState.brokers = parsed;
-                        updateUI(); // Refresh broker list
+                        updateUI();
                     }
                 } catch (e) {}
             }
@@ -593,20 +630,24 @@
         function updateUI() {
             const brokerSelect = document.getElementById('signupBroker');
             brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
-            appState.brokers.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.name;
-                opt.textContent = b.name;
-                brokerSelect.appendChild(opt);
-            });
+            if (appState.brokers) {
+                appState.brokers.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.name;
+                    opt.textContent = b.name;
+                    brokerSelect.appendChild(opt);
+                });
+            }
             const verifyBroker = document.getElementById('verifyBroker');
             verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
-            appState.brokers.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.name;
-                opt.textContent = b.name;
-                verifyBroker.appendChild(opt);
-            });
+            if (appState.brokers) {
+                appState.brokers.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.name;
+                    opt.textContent = b.name;
+                    verifyBroker.appendChild(opt);
+                });
+            }
         }
 
         // ─── MODAL HELPERS ───
@@ -939,7 +980,9 @@
 
         // ─── INIT ───
         loadLocalState();
-        console.log('🏠 Home Page Loaded - Firebase Config from separate file');
+        console.log('🏠 Home Page Loaded - All updates applied!');
+        console.log('📡 Real-time sync active');
+        console.log('⚡ Performance optimized with debounce/throttle');
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
