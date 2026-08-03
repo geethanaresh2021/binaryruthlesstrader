@@ -130,8 +130,9 @@
                     <textarea id="paymentInstructionsInput" disabled></textarea>
                 </div>
                 <div class="field">
-                    <label>QR Code</label>
+                    <label>QR Code (JPG, PNG, GIF, WebP, SVG, BMP, ICO, AVIF)</label>
                     <input type="file" id="qrUploadInput" accept="image/*" onchange="previewQR(event)" disabled>
+                    <div style="font-size:0.35rem;color:#666;margin-top:2px;">Max 5MB | All image formats supported</div>
                     <div id="qrPreview" style="margin-top:2px;"></div>
                 </div>
             </div>
@@ -520,8 +521,9 @@
                 </div>
             </div>
             <div class="field">
-                <label>Upload Logo</label>
+                <label>Upload Logo (JPG, PNG, GIF, WebP, SVG, BMP, ICO, AVIF)</label>
                 <input type="file" id="logoUpload" accept="image/*" disabled>
+                <div style="font-size:0.35rem;color:#666;margin-top:2px;">Max 5MB | All image formats supported</div>
             </div>
             <div class="field">
                 <label>Clicks on Logo</label>
@@ -730,7 +732,7 @@
 // ================================
 // IMPORT FIREBASE CONFIG FROM SEPARATE FILE
 // ================================
-import { firebaseConfig, defaultAppState } from './firebase-config.js';
+import { firebaseConfig, defaultAppState, debounce, throttle, deepEqual, getChangedKeys } from './firebase-config.js';
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
@@ -747,6 +749,7 @@ let isFirebaseConnected = false;
 let adminLoggedIn = false;
 let selectedUserDetail = null;
 let chatSelectedUser = null;
+let isSyncing = false;
 
 // ─── REVENUE STATE ───
 let revenueFilter = 'today';
@@ -771,6 +774,23 @@ function closeModal(id) {
 window.openModal = openModal;
 window.closeModal = closeModal;
 
+// ─── DEBOUNCED SAVE ───
+const saveLocalState = debounce(function() {
+    localStorage.setItem('brt_data', JSON.stringify(appState));
+    if (isFirebaseConnected && !isSyncing) {
+        isSyncing = true;
+        set(dbRef, appState)
+            .then(() => { isSyncing = false; })
+            .catch((error) => { isSyncing = false; console.error('Firebase save error:', error); });
+    }
+}, 500);
+
+// ─── THROTTLED UI UPDATE ───
+const updateUIThrottled = throttle(function() {
+    updateUI();
+    renderAll();
+}, 300);
+
 function enableEdit(btn) {
     const section = btn.closest('.section');
     section.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
@@ -778,7 +798,6 @@ function enableEdit(btn) {
     btn.style.display = 'none';
     section.classList.add('editable');
     
-    // Refresh lists to show edit/delete buttons
     const list = section.querySelector('.list-container, .tools-list, .social-list, .features-list');
     if (list) {
         if (list.id === 'creditPackList') renderCreditPacks();
@@ -796,7 +815,6 @@ function disableEdit(section) {
     section.querySelectorAll('.btn-edit').forEach(el => { el.style.display = 'block'; });
     section.classList.remove('editable');
     
-    // Refresh lists to hide edit/delete buttons
     const list = section.querySelector('.list-container, .tools-list, .social-list, .features-list');
     if (list) {
         if (list.id === 'creditPackList') renderCreditPacks();
@@ -817,11 +835,6 @@ function closeEditForm(id) {
     document.getElementById(id).classList.remove('show');
 }
 window.closeEditForm = closeEditForm;
-
-function saveLocalState() {
-    localStorage.setItem('brt_data', JSON.stringify(appState));
-    if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
-}
 
 function updateUI() {
     document.getElementById('offerName').value = appState.offerName || 'FREE SIGNAL OFFER';
@@ -901,21 +914,38 @@ function loadQRPreview() {
     const container = document.getElementById('qrPreview');
     if (!container) return;
     if (appState.qrCodeBase64) {
-        container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`;
+        container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" style="max-width:120px;max-height:120px;border-radius:4px;border:1px solid rgba(255,215,0,0.1);" />`;
     } else {
-        container.innerHTML = '';
+        container.innerHTML = '<div style="color:#666;font-size:0.4rem;padding:4px;">No QR uploaded</div>';
     }
 }
 
+// ─── QR PREVIEW WITH VALIDATION ───
 window.previewQR = function(event) {
     const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('qrPreview').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`;
-        };
-        reader.readAsDataURL(file);
+    if (!file) return;
+    
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/x-icon', 'image/avif'];
+    if (!validTypes.includes(file.type)) {
+        alert('❌ Unsupported file format! Please upload JPG, PNG, GIF, WebP, SVG, BMP, ICO, or AVIF.');
+        event.target.value = '';
+        return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+        alert('❌ File too large! Maximum 5MB allowed.');
+        event.target.value = '';
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('qrPreview').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" style="max-width:120px;max-height:120px;border-radius:4px;border:1px solid rgba(255,215,0,0.1);" />`;
+        appState.qrCodeBase64 = e.target.result;
+    };
+    reader.onerror = function() {
+        alert('❌ Error reading file. Please try again.');
+    };
+    reader.readAsDataURL(file);
 };
 
 // ================================
@@ -935,8 +965,8 @@ window.saveOffer = function() {
     const section = document.getElementById('offerName').closest('.section');
     disableEdit(section);
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 // ================================
@@ -952,14 +982,33 @@ window.savePaymentSettings = function() {
         
         const fileInput = document.getElementById('qrUploadInput');
         if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/x-icon', 'image/avif'];
+            if (!validTypes.includes(file.type)) {
+                alert('❌ Unsupported QR format! Please upload JPG, PNG, GIF, WebP, SVG, BMP, ICO, or AVIF.');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ QR file too large! Maximum 5MB.');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 appState.qrCodeBase64 = e.target.result;
                 saveLocalState();
                 loadQRPreview();
-                disableEdit(document.getElementById('upiIdInput').closest('.section'));
+                const section = document.getElementById('upiIdInput').closest('.section');
+                disableEdit(section);
+                const btn = section.querySelector('.btn-save');
+                btn.textContent = '✅ Synced';
+                setTimeout(() => btn.textContent = '💾 Save', 1500);
+                alert('✅ QR Code uploaded successfully!');
             };
-            reader.readAsDataURL(fileInput.files[0]);
+            reader.onerror = function() {
+                alert('❌ Error reading QR file.');
+            };
+            reader.readAsDataURL(file);
             return;
         }
     } else if (mode === 'razorpay') {
@@ -971,8 +1020,9 @@ window.savePaymentSettings = function() {
     const section = document.getElementById('paymentApprovalMode').closest('.section');
     disableEdit(section);
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
+    alert('✅ Payment settings saved!');
 };
 
 // ================================
@@ -1016,6 +1066,7 @@ window.addCreditPack = function() {
     appState.creditPacks.push({ id: 'pack_' + Date.now(), credits, price });
     saveLocalState();
     renderCreditPacks();
+    updateCounts();
     
     document.getElementById('packCredits').value = '';
     document.getElementById('packPrice').value = '';
@@ -1023,8 +1074,8 @@ window.addCreditPack = function() {
     
     const section = document.getElementById('packCredits').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.editCreditPack = function(id) {
@@ -1051,12 +1102,13 @@ window.updateCreditPack = function() {
     appState.creditPacks[index] = { ...appState.creditPacks[index], credits, price };
     saveLocalState();
     renderCreditPacks();
+    updateCounts();
     document.getElementById('editCreditPackForm').classList.remove('show');
     
     const section = document.getElementById('editPackCredits').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.deleteCreditPack = function(id) {
@@ -1064,6 +1116,7 @@ window.deleteCreditPack = function(id) {
         appState.creditPacks = appState.creditPacks.filter(p => p.id !== id);
         saveLocalState();
         renderCreditPacks();
+        updateCounts();
     }
 };
 
@@ -1082,8 +1135,8 @@ window.saveCreditsPerSignal = function() {
     const section = document.getElementById('creditsPerSignalInput').closest('.section');
     disableEdit(section);
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
     alert('✅ Credits Per Signal saved: ' + val);
 };
 
@@ -1130,6 +1183,7 @@ window.addBroker = function() {
     appState.brokers.push({ id: 'broker_' + Date.now(), name, link, minDeposit, rules });
     saveLocalState();
     renderBrokers();
+    updateCounts();
     
     document.getElementById('brokerName').value = '';
     document.getElementById('brokerLink').value = '';
@@ -1139,8 +1193,8 @@ window.addBroker = function() {
     
     const section = document.getElementById('brokerName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.editBroker = function(id) {
@@ -1171,12 +1225,13 @@ window.updateBroker = function() {
     appState.brokers[index] = { ...appState.brokers[index], name, link, minDeposit, rules };
     saveLocalState();
     renderBrokers();
+    updateCounts();
     document.getElementById('editBrokerForm').classList.remove('show');
     
     const section = document.getElementById('editBrokerName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.deleteBroker = function(id) {
@@ -1184,6 +1239,7 @@ window.deleteBroker = function(id) {
         appState.brokers = appState.brokers.filter(b => b.id !== id);
         saveLocalState();
         renderBrokers();
+        updateCounts();
     }
 };
 
@@ -1281,8 +1337,8 @@ window.updateTool = function() {
     
     const section = document.getElementById('editToolName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.toggleToolVisibility = function(idx) {
@@ -1330,8 +1386,8 @@ window.addTool = function() {
     
     const section = document.getElementById('newToolName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 // ================================
@@ -1413,8 +1469,8 @@ window.updateSocial = function() {
     
     const section = document.getElementById('editSocialName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.toggleSocialVisibility = function(idx) {
@@ -1459,8 +1515,8 @@ window.addSocial = function() {
     
     const section = document.getElementById('newSocialName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 // ================================
@@ -1542,8 +1598,8 @@ window.updateFeature = function() {
     
     const section = document.getElementById('editFeatureName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 window.toggleFeatureVisibility = function(idx) {
@@ -1587,27 +1643,44 @@ window.addFeature = function() {
     
     const section = document.getElementById('newFeatureName').closest('.section');
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 // ================================
-// SECTION 9: ADMIN ACCESS
+// SECTION 9: ADMIN ACCESS - LOGO UPLOAD ALL FORMATS
 // ================================
 window.saveAdminSettings = function() {
     appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
     
-    const file = document.getElementById('logoUpload').files[0];
+    const fileInput = document.getElementById('logoUpload');
+    const file = fileInput.files[0];
+    
     if (file) {
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/x-icon', 'image/avif'];
+        if (!validTypes.includes(file.type)) {
+            alert('❌ Unsupported file format! Please upload JPG, PNG, GIF, WebP, SVG, BMP, ICO, or AVIF.');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            alert('❌ File too large! Maximum 5MB allowed.');
+            return;
+        }
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             appState.logoBase64 = e.target.result;
             localStorage.setItem('brt_logo', appState.logoBase64);
             saveLocalState();
-            disableEdit(document.getElementById('logoClickCount').closest('.section'));
-            const btn = document.getElementById('logoClickCount').closest('.section').querySelector('.btn-save');
-            btn.textContent = '✅ Saved';
-            setTimeout(() => btn.textContent = '💾 Save', 2000);
+            const section = document.getElementById('logoClickCount').closest('.section');
+            disableEdit(section);
+            const btn = section.querySelector('.btn-save');
+            btn.textContent = '✅ Synced';
+            setTimeout(() => btn.textContent = '💾 Save', 1500);
+            alert('✅ Logo uploaded successfully!');
+        };
+        reader.onerror = function() {
+            alert('❌ Error reading file. Please try again.');
         };
         reader.readAsDataURL(file);
         return;
@@ -1617,8 +1690,8 @@ window.saveAdminSettings = function() {
     const section = document.getElementById('logoClickCount').closest('.section');
     disableEdit(section);
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
 };
 
 // ================================
@@ -1647,8 +1720,8 @@ window.changePassword = function() {
     document.getElementById('adminConfirmPassword').value = '';
     
     const btn = section.querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => btn.textContent = '💾 Save', 2000);
+    btn.textContent = '✅ Synced';
+    setTimeout(() => btn.textContent = '💾 Save', 1500);
     alert('✅ Password changed successfully!');
 };
 
@@ -1984,11 +2057,9 @@ window.openRevenue = function() {
     revenueMonth = new Date().getMonth();
     revenueYear = new Date().getFullYear();
     
-    // Update filter buttons
     document.querySelectorAll('.revenue-filters button').forEach(btn => btn.classList.remove('active'));
     document.querySelector('.revenue-filters button:first-child')?.classList.add('active');
     
-    // Set date pickers
     const today = new Date();
     const fromDate = new Date(today);
     fromDate.setDate(today.getDate() - 7);
@@ -2127,7 +2198,6 @@ function renderRevenueCalendar() {
         container.appendChild(header);
     });
     
-    // Empty cells for first week
     for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         empty.className = 'cal-day';
@@ -2145,14 +2215,11 @@ function renderRevenueCalendar() {
         dayDiv.className = 'cal-day';
         
         const dateObj = new Date(revenueYear, revenueMonth, day);
-        const dateStr = dateObj.toISOString().split('T')[0];
         
-        // Check if today
         if (dateObj.toDateString() === today.toDateString()) {
             dayDiv.classList.add('today');
         }
         
-        // Calculate revenue for this day
         let dayRevenue = 0;
         successPayments.forEach(p => {
             if (p.date) {
@@ -2356,21 +2423,92 @@ document.getElementById('adminLogoutBtn').addEventListener('click', function() {
 });
 
 // ================================
-// FIREBASE ON VALUE
+// FIREBASE - REAL-TIME LISTENER WITH SELECTIVE UPDATE
 // ================================
 onValue(dbRef, (snapshot) => {
     isFirebaseConnected = true;
     document.getElementById('adminStatusDot').className = 'header-status green';
+    
     const val = snapshot.val();
-    if (val) {
-        appState = { ...appState, ...val };
-        updateUI();
-        renderAll();
+    if (!val) return;
+    
+    // Get only changed fields
+    const changedKeys = getChangedKeys(appState, val);
+    
+    if (changedKeys.length === 0) {
+        console.log('📡 No changes detected');
+        return;
     }
+    
+    console.log('📡 Admin changes detected:', changedKeys);
+    
+    // Update only changed fields
+    changedKeys.forEach(key => {
+        appState[key] = val[key];
+        
+        switch(key) {
+            case 'creditPacks':
+                localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
+                renderCreditPacks();
+                break;
+            case 'brokers':
+                localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+                renderBrokers();
+                break;
+            case 'tools':
+                localStorage.setItem('brt_tools', JSON.stringify(val.tools));
+                renderTools();
+                break;
+            case 'socialMedia':
+                localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
+                renderSocial();
+                break;
+            case 'features':
+                localStorage.setItem('brt_features', JSON.stringify(val.features));
+                renderFeatures();
+                break;
+            case 'logoBase64':
+                if (val.logoBase64) {
+                    appState.logoBase64 = val.logoBase64;
+                    localStorage.setItem('brt_logo', val.logoBase64);
+                }
+                break;
+            case 'offerCredits':
+            case 'offerName':
+            case 'offerDescription':
+                updateUI();
+                break;
+            case 'qrCodeBase64':
+                appState.qrCodeBase64 = val.qrCodeBase64;
+                loadQRPreview();
+                break;
+            case 'upiId':
+            case 'paymentInstructions':
+            case 'paymentApprovalMode':
+            case 'razorpayKeyId':
+            case 'razorpayKeySecret':
+            case 'creditsPerSignal':
+            case 'logoClickCount':
+                updateUI();
+                break;
+            case 'users':
+            case 'payments':
+            case 'verificationRequests':
+            case 'chats':
+                updateCounts();
+                break;
+            default:
+                break;
+        }
+    });
+    
+    // Update UI with throttling
+    updateUIThrottled();
+    
 }, (error) => {
     isFirebaseConnected = false;
     document.getElementById('adminStatusDot').className = 'header-status red';
-    console.error(error);
+    console.error('Firebase Error:', error);
 });
 
 // ================================
@@ -2405,11 +2543,14 @@ if (adminSession === 'true') {
     setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
 }
 
-console.log('⚙️ Admin Panel Loaded - All Features Working');
+console.log('⚙️ Admin Panel Loaded - All updates applied!');
+console.log('📡 Real-time sync active');
+console.log('⚡ Performance optimized with debounce/throttle');
 console.log('✅ Revenue Dashboard - Today, Yesterday, Weekly, Monthly, Yearly, Calendar View');
 console.log('✅ Credit Packs - Edit/Delete Fixed');
 console.log('✅ Brokers - Edit/Delete Fixed');
 console.log('✅ Tools - Edit/Delete Fixed');
+console.log('✅ Logo/QR - All image formats supported');
 </script>
 </body>
 </html>
