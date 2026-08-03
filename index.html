@@ -732,6 +732,10 @@
                 return;
             }
             
+            // FIX: clear any stale admin session flag before starting a normal user
+            // session, so the admin navbar can't leak through on a shared browser/tab.
+            sessionStorage.removeItem('admin_logged_in');
+            
             appState.currentUser = user;
             sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
@@ -907,8 +911,7 @@
 
         // ─── LOGO CLICK - ADMIN ACCESS ───
         let logoClickCounter = 0;
-        document.getElementById('logoIcon').addEventListener('click', function(e) {
-            e.preventDefault();
+        function handleLogoClickForAdmin() {
             const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
             
@@ -923,40 +926,18 @@
                 logoClickCounter = 0;
                 window.location.href = 'admin.html';
             }
+        }
+        document.getElementById('logoIcon').addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLogoClickForAdmin();
         });
         document.getElementById('logoImage').addEventListener('click', function(e) {
             e.preventDefault();
-            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            
-            if (userLoggedIn && !adminLoggedIn) {
-                alert('🚫 Access Denied! Only Admin can access this page.');
-                return;
-            }
-            
-            logoClickCounter++;
-            const requiredClicks = appState.logoClickCount || 2;
-            if (logoClickCounter >= requiredClicks) {
-                logoClickCounter = 0;
-                window.location.href = 'admin.html';
-            }
+            handleLogoClickForAdmin();
         });
         document.getElementById('brandSection').addEventListener('click', function(e) {
             if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-                const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-                const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-                
-                if (userLoggedIn && !adminLoggedIn) {
-                    alert('🚫 Access Denied! Only Admin can access this page.');
-                    return;
-                }
-                
-                logoClickCounter++;
-                const requiredClicks = appState.logoClickCount || 2;
-                if (logoClickCounter >= requiredClicks) {
-                    logoClickCounter = 0;
-                    window.location.href = 'admin.html';
-                }
+                handleLogoClickForAdmin();
             }
         });
 
@@ -999,9 +980,6 @@
 
         window.showInfoPopup = showInfoPopup;
         window.closeInfoPopup = closeInfoPopup;
-        window.handleLogin = handleLogin;
-        window.handleSignup = handleSignup;
-        window.handleVerify = handleVerify;
         window.isValidEmail = isValidEmail;
     </script>
 </body>
