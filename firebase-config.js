@@ -16,19 +16,136 @@ export const firebaseConfig = {
 };
 
 // ─── FIREBASE INITIALIZATION ───
-// ఈ ఫంక్షన్ను పిలిస్తే Firebase initialized అవుతుంది
 export function initFirebase() {
     // Firebase SDKలు ఇప్పటికే import చేయబడి ఉండాలి
     // ఇక్కడ Firebase init చేయడానికి ఉపయోగిస్తారు
 }
 
 // ─── DATABASE REFERENCE ───
-// డేటాబేస్ రెఫరెన్స్ పొందడానికి
 export function getDbRef(database) {
     return database.ref('brt_data');
 }
 
-// ─── DEFAULT APP STATE ───
+// ================================
+// PERFORMANCE UTILITIES
+// ================================
+
+// ─── DEBOUNCE ───
+// Multiple calls ని ఒకే call లో merge చేస్తుంది
+// Example: search input, save operations
+export function debounce(func, wait = 300) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// ─── THROTTLE ───
+// Function ని fixed interval లో మాత్రమే call అయ్యేలా చేస్తుంది
+// Example: scroll events, resize events
+export function throttle(func, limit = 300) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// ─── DEEP COMPARE ───
+// Two objects ని compare చేసి equal కాదో చెప్తుంది
+export function deepEqual(obj1, obj2) {
+    // If both are same reference
+    if (obj1 === obj2) return true;
+    
+    // If either is null or undefined
+    if (obj1 == null || obj2 == null) return obj1 === obj2;
+    
+    // If types are different
+    if (typeof obj1 !== typeof obj2) return false;
+    
+    // If not objects, compare directly
+    if (typeof obj1 !== 'object') return obj1 === obj2;
+    
+    // If arrays
+    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+        if (obj1.length !== obj2.length) return false;
+        for (let i = 0; i < obj1.length; i++) {
+            if (!deepEqual(obj1[i], obj2[i])) return false;
+        }
+        return true;
+    }
+    
+    // If objects
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) return false;
+    
+    for (const key of keys1) {
+        if (!keys2.includes(key)) return false;
+        if (!deepEqual(obj1[key], obj2[key])) return false;
+    }
+    return true;
+}
+
+// ─── GET CHANGED KEYS ───
+// Two objects మధ్య ఏ keys changed అయ్యాయో చెప్తుంది
+export function getChangedKeys(oldObj, newObj) {
+    const changes = [];
+    const allKeys = new Set([...Object.keys(oldObj || {}), ...Object.keys(newObj || {})]);
+    
+    allKeys.forEach(key => {
+        const oldVal = oldObj?.[key];
+        const newVal = newObj?.[key];
+        
+        // Skip if both are undefined or null
+        if (oldVal === undefined && newVal === undefined) return;
+        if (oldVal === null && newVal === null) return;
+        
+        // Check if values are different
+        if (!deepEqual(oldVal, newVal)) {
+            changes.push(key);
+        }
+    });
+    
+    return changes;
+}
+
+// ─── DEEP CLONE ───
+// Object ని deep copy చేస్తుంది
+export function deepClone(obj) {
+    if (obj === null || typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map(item => deepClone(item));
+    const cloned = {};
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            cloned[key] = deepClone(obj[key]);
+        }
+    }
+    return cloned;
+}
+
+// ─── MERGE WITH SELECTIVE UPDATE ───
+// Only changed fields merge చేస్తుంది
+export function mergeWithSelectiveUpdate(oldState, newState) {
+    const changedKeys = getChangedKeys(oldState, newState);
+    const result = { ...oldState };
+    changedKeys.forEach(key => {
+        result[key] = deepClone(newState[key]);
+    });
+    return result;
+}
+
+// ================================
+// DEFAULT APP STATE
+// ================================
 export const defaultAppState = {
     password: 'admin123',
     offerCredits: 10,
