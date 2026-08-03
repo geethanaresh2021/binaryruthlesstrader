@@ -1597,127 +1597,166 @@ input, select, button, textarea { font-size: 16px !important; }
 @media (hover: none) { .cursor-glow { display: none !important; } }
 
 /* ================================
-   SECTION 33: RESPONSIVE
+   SECTION 33: ADMIN NAV BAR - FIXED
    ================================ */
-@media (max-width: 768px) {
-    .scroll-content { padding: 0 12px; }
-    .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
-    .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 240px; }
-    .feature-card { flex: 0 0 72px; padding: 4px 3px; }
-    .feature-card .icon { font-size: 0.9rem; }
-    .stats-row { gap: 10px; }
-    .credit-pack { min-width: 70px; max-width: 100px; }
-    .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
-    .user-info-container .user-actions { justify-content: center; }
-    .credits-container { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 4px; }
-    .credits-container .credit-item { flex: 1; min-width: 80px; }
-    .admin-nav-bar { top: 2px; right: 6px; padding: 1px 5px; gap: 2px; }
-    .admin-nav-bar .nav-label { font-size: 0.35rem; }
-    .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
-    .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
-    .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
-    .tool-btn { padding: 14px 16px; min-height: 65px; }
-    .tool-btn .tool-name { font-size: 1rem; }
-    .tool-btn .tool-subname { font-size: 0.6rem; }
-    .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
-    .chat-message { font-size: 0.75rem; padding: 6px 10px; }
-    .chat-container { max-height: 250px; min-height: 100px; }
-    .tool-fullscreen-header { padding: 4px 10px; min-height: 42px; }
-    .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
-    .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
-    .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
-    .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; max-width: 80px; }
-    .tool-fullscreen-close { font-size: 1.5rem; }
-    .recent-tools-mini { padding: 8px 14px; }
-    .recent-tools-mini .mini-title { font-size: 0.55rem; }
-    .account-detail-row { font-size: 0.7rem; padding: 6px 0; }
-    .history-item { font-size: 0.6rem; padding: 4px 6px; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .row2 { grid-template-columns: 1fr; }
-    .firebase-grid { grid-template-columns: 1fr; }
-    .chat-layout { flex-direction: column; }
-    .chat-users { flex: 1; width: 100%; min-width: auto; max-height: 120px; }
-    .chat-messages { min-height: 200px; }
-    .header { flex-direction: column; align-items: stretch; gap: 6px; }
-    .header-nav { justify-content: center; }
+.admin-nav-bar {
+    display: none !important;
+    position: absolute;
+    top: 6px;
+    right: 14px;
+    z-index: 20;
+    padding: 3px 12px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 0, 51, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    align-items: center;
+    gap: 6px;
 }
-
-@media (max-width: 480px) {
-    .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
-    .logo-icon { font-size: clamp(2rem, 10vw, 3rem); }
-    .logo-img { max-height: clamp(2rem, 10vw, 3rem); }
-    .social-icons a { width: 20px; height: 20px; font-size: 0.55rem; }
-    .credit-pack { min-width: 60px; max-width: 90px; padding: 4px; }
-    .credit-pack .credits { font-size: 0.75rem; }
-    .credit-pack .price { font-size: 0.55rem; }
-    .user-info-container .user-name { font-size: 0.6rem; }
-    .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
-    .credits-container .credit-item .number { font-size: 0.95rem; }
-    .credits-container .credit-item .label { font-size: 0.4rem; }
-    .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
-    .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
-    .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
-    .brand-section { padding: 1px 0 1px 0; }
-    .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
-    .tool-btn { padding: 12px 14px; min-height: 60px; }
-    .tool-btn .tool-name { font-size: 0.85rem; }
-    .tool-btn .tool-subname { font-size: 0.55rem; }
-    .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
-    .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 200px; }
-    .modal h2 { font-size: 0.85rem; }
-    .modal label { font-size: 0.48rem; }
-    .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
-    .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
-    .chat-message { font-size: 0.7rem; padding: 5px 8px; }
-    .chat-container { max-height: 200px; min-height: 80px; }
-    .tool-fullscreen-header { padding: 3px 8px; min-height: 36px; }
-    .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.55rem; }
-    .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
-    .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
-    .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.35rem; padding: 2px 6px; max-width: 60px; }
-    .tool-fullscreen-close { font-size: 1.3rem; }
-    .recent-tools-mini { padding: 6px 12px; }
-    .recent-tools-mini .mini-title { font-size: 0.5rem; }
-    .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
-    .history-item { font-size: 0.5rem; padding: 3px 4px; }
-    .history-empty { font-size: 0.5rem; }
-    .tool-switch-container { gap: 4px; }
-    .stats-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
-    .stat-card { padding: 8px; }
-    .stat-card .count { font-size: 0.9rem; }
-    .section { padding: 8px 10px; }
-    .modal { padding: 14px; max-width: 100%; }
-    .chat-users { max-height: 100px; }
-    .chat-messages { min-height: 160px; }
+.admin-nav-bar.visible {
+    display: flex !important;
+}
+.admin-nav-bar .nav-label {
+    color: #FFD700;
+    font-size: 0.4rem;
+    font-family: 'Orbitron', sans-serif;
+}
+.admin-nav-bar .nav-buttons {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.admin-nav-bar .nav-buttons button {
+    padding: 2px 8px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+}
+.admin-nav-bar .nav-buttons button:hover {
+    background: rgba(255, 0, 51, 0.12);
+    color: var(--text-primary);
+}
+.admin-nav-bar .nav-buttons button.active {
+    background: rgba(255, 0, 51, 0.12);
+    color: #FF0033;
+}
+.admin-nav-bar .nav-buttons .logout-btn {
+    background: rgba(255, 0, 51, 0.08);
+    color: #FF0033;
+}
+.admin-nav-bar .nav-buttons .logout-btn:hover {
+    background: rgba(255, 0, 51, 0.2);
 }
 
 /* ================================
-   SECTION 34: NO ZOOM/SCALE - ONLY BORDER AND SHADOW CHANGES
+   SECTION 34: USER LOGOUT BUTTON - FIXED
    ================================ */
-.header, .stat-card, .section, .list-item, .tool-item, .social-item, .feature-item,
-.red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
-.stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
-.modal .btn-submit, .modal-close, .user-info-container, .credits-container,
-.tool-btn, .user-logout-btn, .recent-tools-mini,
-.tool-fullscreen-header .header-right .tool-switch-btn,
-.info-popup .popup-btn, .info-popup .popup-close {
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+.user-logout-btn {
+    display: none !important;
+    position: absolute;
+    top: 6px;
+    right: 14px;
+    z-index: 20;
+    padding: 3px 12px;
+    background: rgba(255, 0, 51, 0.08);
+    border: 1px solid rgba(255, 0, 51, 0.15);
+    border-radius: 20px;
+    color: #FF0033;
+    font-size: 0.4rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
-.stat-card:active, .section:active, .admin-section:active,
-.red-container:active, .offer-banner:active, .user-card:active,
-.user-card .btn:active, .feature-card:active, .stat-item:active,
-.social-icons a:active, .admin-nav-bar .nav-buttons button:active,
-.modal .btn-submit:active, .modal-close:active, .user-info-container:active,
-.credits-container:active, .tool-btn:active, .user-logout-btn:active,
-.recent-tools-mini:active, .info-popup .popup-btn:active,
-.info-popup .popup-close:active {
-    border-color: #FF0033 !important;
-    box-shadow: 0 0 20px rgba(255,0,51,0.08);
-    transform: none !important;
+.user-logout-btn.visible {
+    display: block !important;
+}
+.user-logout-btn:hover {
+    background: rgba(255, 0, 51, 0.15);
+    border-color: #FF0033;
 }
 
 /* ================================
-   SECTION 35: REVENUE MODAL - CALENDAR VIEW
+   SECTION 35: IMAGE UPLOAD - ALL FORMATS SUPPORT
+   ================================ */
+.qr-preview {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    padding: 2px;
+    background: #fff;
+    object-fit: contain;
+}
+
+.logo-preview {
+    max-height: 60px;
+    max-width: 200px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.05);
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+input[type="file"] {
+    padding: 6px;
+    background: var(--input-bg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+}
+input[type="file"]:hover {
+    border-color: rgba(255, 215, 0, 0.2);
+}
+input[type="file"]::-webkit-file-upload-button {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    font-size: 0.45rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+input[type="file"]::-webkit-file-upload-button:hover {
+    background: rgba(255, 215, 0, 0.2);
+}
+
+/* ================================
+   SECTION 36: PERFORMANCE - REDUCE ANIMATION FLICKER
+   ================================ */
+/* Only animate on user interaction */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Lazy load images - smooth loading */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* ================================
+   SECTION 37: REVENUE MODAL - CALENDAR VIEW
    ================================ */
 .revenue-filters {
     display: flex;
@@ -1832,11 +1871,128 @@ input, select, button, textarea { font-size: 16px !important; }
 .revenue-summary .summary-item .s-value.green { color: var(--green); }
 .revenue-summary .summary-item .s-value.red { color: var(--red); }
 
+/* ================================
+   SECTION 38: RESPONSIVE - ADDED ADMIN NAV FIXES
+   ================================ */
+@media (max-width: 768px) {
+    .scroll-content { padding: 0 12px; }
+    .red-container { padding: 3px 8px 2px 8px; border-radius: 14px; }
+    .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 240px; }
+    .feature-card { flex: 0 0 72px; padding: 4px 3px; }
+    .feature-card .icon { font-size: 0.9rem; }
+    .stats-row { gap: 10px; }
+    .credit-pack { min-width: 70px; max-width: 100px; }
+    .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
+    .user-info-container .user-actions { justify-content: center; }
+    .credits-container { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 4px; }
+    .credits-container .credit-item { flex: 1; min-width: 80px; }
+    .admin-nav-bar { top: 2px; right: 6px; padding: 2px 8px; gap: 2px; }
+    .admin-nav-bar .nav-label { font-size: 0.35rem; }
+    .admin-nav-bar .nav-buttons button { font-size: 0.35rem; padding: 1px 6px; }
+    .user-logout-btn { top: 2px; right: 6px; padding: 1px 6px; font-size: 0.35rem; }
+    .fb-status-dot { top: 3px; left: 6px; width: 6px; height: 6px; }
+    .tool-btn { padding: 14px 16px; min-height: 65px; }
+    .tool-btn .tool-name { font-size: 1rem; }
+    .tool-btn .tool-subname { font-size: 0.6rem; }
+    .logo-glow-dash { width: clamp(100px, 30vw, 160px); height: clamp(100px, 30vw, 160px); }
+    .chat-message { font-size: 0.75rem; padding: 6px 10px; }
+    .chat-container { max-height: 250px; min-height: 100px; }
+    .tool-fullscreen-header { padding: 4px 10px; min-height: 42px; }
+    .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.7rem; }
+    .tool-fullscreen-header .header-left .credits-tool { font-size: 0.65rem; }
+    .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.6rem; }
+    .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.4rem; padding: 2px 6px; max-width: 80px; }
+    .tool-fullscreen-close { font-size: 1.5rem; }
+    .recent-tools-mini { padding: 8px 14px; }
+    .recent-tools-mini .mini-title { font-size: 0.55rem; }
+    .account-detail-row { font-size: 0.7rem; padding: 6px 0; }
+    .history-item { font-size: 0.6rem; padding: 4px 6px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .row2 { grid-template-columns: 1fr; }
+    .firebase-grid { grid-template-columns: 1fr; }
+    .chat-layout { flex-direction: column; }
+    .chat-users { flex: 1; width: 100%; min-width: auto; max-height: 120px; }
+    .chat-messages { min-height: 200px; }
+    .header { flex-direction: column; align-items: stretch; gap: 6px; }
+    .header-nav { justify-content: center; }
+}
+
 @media (max-width: 480px) {
+    .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
+    .logo-icon { font-size: clamp(2rem, 10vw, 3rem); }
+    .logo-img { max-height: clamp(2rem, 10vw, 3rem); }
+    .social-icons a { width: 20px; height: 20px; font-size: 0.55rem; }
+    .credit-pack { min-width: 60px; max-width: 90px; padding: 4px; }
+    .credit-pack .credits { font-size: 0.75rem; }
+    .credit-pack .price { font-size: 0.55rem; }
+    .user-info-container .user-name { font-size: 0.6rem; }
+    .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
+    .credits-container .credit-item .number { font-size: 0.95rem; }
+    .credits-container .credit-item .label { font-size: 0.4rem; }
+    .admin-nav-bar .nav-buttons button { font-size: 0.3rem; padding: 1px 4px; }
+    .user-logout-btn { font-size: 0.3rem; padding: 1px 4px; }
+    .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
+    .brand-section { padding: 1px 0 1px 0; }
+    .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
+    .tool-btn { padding: 12px 14px; min-height: 60px; }
+    .tool-btn .tool-name { font-size: 0.85rem; }
+    .tool-btn .tool-subname { font-size: 0.55rem; }
+    .logo-glow-dash { width: clamp(80px, 35vw, 140px); height: clamp(80px, 35vw, 140px); }
+    .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 200px; }
+    .modal h2 { font-size: 0.85rem; }
+    .modal label { font-size: 0.48rem; }
+    .modal input, .modal select, .modal textarea { font-size: 0.65rem; padding: 5px 8px; }
+    .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
+    .chat-message { font-size: 0.7rem; padding: 5px 8px; }
+    .chat-container { max-height: 200px; min-height: 80px; }
+    .tool-fullscreen-header { padding: 3px 8px; min-height: 36px; }
+    .tool-fullscreen-header .header-left .user-name-tool { font-size: 0.55rem; }
+    .tool-fullscreen-header .header-left .credits-tool { font-size: 0.5rem; }
+    .tool-fullscreen-header .header-left .today-used-tool { font-size: 0.45rem; }
+    .tool-fullscreen-header .header-right .tool-switch-btn { font-size: 0.35rem; padding: 2px 6px; max-width: 60px; }
+    .tool-fullscreen-close { font-size: 1.3rem; }
+    .recent-tools-mini { padding: 6px 12px; }
+    .recent-tools-mini .mini-title { font-size: 0.5rem; }
+    .account-detail-row { font-size: 0.6rem; padding: 4px 0; }
+    .history-item { font-size: 0.5rem; padding: 3px 4px; }
+    .history-empty { font-size: 0.5rem; }
+    .tool-switch-container { gap: 4px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
+    .stat-card { padding: 8px; }
+    .stat-card .count { font-size: 0.9rem; }
+    .section { padding: 8px 10px; }
+    .modal { padding: 14px; max-width: 100%; }
+    .chat-users { max-height: 100px; }
+    .chat-messages { min-height: 160px; }
     .revenue-calendar { gap: 1px; }
     .revenue-calendar .cal-day { min-height: 32px; padding: 2px; }
     .revenue-calendar .cal-day .day-date { font-size: 0.45rem; }
     .revenue-calendar .cal-day .day-amount { font-size: 0.35rem; }
     .revenue-summary { grid-template-columns: repeat(2, 1fr); }
     .revenue-filters button { font-size: 0.4rem; padding: 3px 8px; }
+}
+
+/* ================================
+   SECTION 39: NO ZOOM/SCALE - ONLY BORDER AND SHADOW CHANGES
+   ================================ */
+.header, .stat-card, .section, .list-item, .tool-item, .social-item, .feature-item,
+.red-container, .offer-banner, .user-card, .user-card .btn, .feature-card,
+.stat-item, .social-icons a, .admin-nav-bar .nav-buttons button,
+.modal .btn-submit, .modal-close, .user-info-container, .credits-container,
+.tool-btn, .user-logout-btn, .recent-tools-mini,
+.tool-fullscreen-header .header-right .tool-switch-btn,
+.info-popup .popup-btn, .info-popup .popup-close {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.stat-card:active, .section:active, .admin-section:active,
+.red-container:active, .offer-banner:active, .user-card:active,
+.user-card .btn:active, .feature-card:active, .stat-item:active,
+.social-icons a:active, .admin-nav-bar .nav-buttons button:active,
+.modal .btn-submit:active, .modal-close:active, .user-info-container:active,
+.credits-container:active, .tool-btn:active, .user-logout-btn:active,
+.recent-tools-mini:active, .info-popup .popup-btn:active,
+.info-popup .popup-close:active {
+    border-color: #FF0033 !important;
+    box-shadow: 0 0 20px rgba(255,0,51,0.08);
+    transform: none !important;
 }
