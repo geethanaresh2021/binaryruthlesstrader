@@ -1,4 +1,12 @@
-// ─── FIREBASE CONFIG ───
+// ============================================
+// FIREBASE CONFIGURATION
+// Binary Ruthless Trader
+// ============================================
+
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getAnalytics } from "firebase/analytics";
+
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
     authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -10,5 +18,9 @@ const firebaseConfig = {
     measurementId: "G-WQCXCMV5PR"
 };
 
-// ─── FIREBASE EXPORTS ───
-export { firebaseConfig };
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+const dbRef = ref(database, 'brt_data');
+
+export { app, analytics, database, dbRef, firebaseConfig, set, onValue, ref, getDatabase };
