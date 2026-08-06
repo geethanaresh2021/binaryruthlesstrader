@@ -1,0 +1,98 @@
+<!-- ─── LOGIN MODAL ─── -->
+<div class="overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+        <h2>🔐 LOGIN</h2>
+        <label>Gmail / Email</label>
+        <input type="email" id="loginEmail" placeholder="your@gmail.com" />
+        <label>Account ID</label>
+        <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
+        <div class="error-msg" id="loginError"></div>
+        <button class="btn-submit" style="background:#FF0033;color:#fff;" id="loginSubmitBtn">Login</button>
+    </div>
+</div>
+
+<script type="module">
+    import { appState, saveLocalState, closeModal, openModal, showInfoPopup, isValidEmail } from "./security.js";
+
+    // ─── HANDLE LOGIN ───
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const accountId = document.getElementById('loginAccountId').value.trim();
+        const errorEl = document.getElementById('loginError');
+        
+        if (!email || !accountId) {
+            errorEl.textContent = '❌ Enter email and account ID';
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+            return;
+        }
+        
+        const user = appState.users.find(u => u.email === email && u.accountId === accountId);
+        
+        if (!user) {
+            showInfoPopup(
+                '📝',
+                'Account Not Found!',
+                'No account found with these details. Please sign up first to get started.',
+                'Sign Up Now',
+                function() {
+                    closeModal('loginModal');
+                    openModal('signupModal');
+                }
+            );
+            errorEl.textContent = '';
+            return;
+        }
+        
+        if (user.blocked) {
+            errorEl.textContent = '🚫 Account blocked. Contact admin.';
+            return;
+        }
+        
+        if (!user.verified) {
+            const pendingRequest = appState.verificationRequests?.find(
+                req => req.userEmail === email && req.status === 'pending'
+            );
+            
+            if (pendingRequest) {
+                showInfoPopup(
+                    '⏳',
+                    'Verification Pending!',
+                    'Admin is currently reviewing your verification request. Please wait for approval. You will get access once verified.',
+                    null,
+                    null
+                );
+            } else {
+                showInfoPopup(
+                    '✅',
+                    'Not Verified Yet!',
+                    'Please submit your verification request first. Admin will review and approve your account.',
+                    'Go to Verify',
+                    function() {
+                        closeModal('loginModal');
+                        openModal('verifyModal');
+                    }
+                );
+            }
+            errorEl.textContent = '';
+            return;
+        }
+        
+        appState.currentUser = user;
+        sessionStorage.setItem('user_logged_in', 'true');
+        saveLocalState();
+        closeModal('loginModal');
+        errorEl.textContent = '';
+        window.location.href = 'dashboard.html';
+    }
+
+    // ─── EVENT LISTENER ───
+    document.getElementById('loginSubmitBtn').addEventListener('click', handleLogin);
+
+    // ─── EXPOSE GLOBALLY ───
+    window.handleLogin = handleLogin;
+</script>
