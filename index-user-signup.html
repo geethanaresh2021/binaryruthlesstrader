@@ -1,0 +1,89 @@
+<!-- ─── SIGNUP MODAL ─── -->
+<div class="overlay" id="signupModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
+        <h2>📝 SIGN UP</h2>
+        <label>Select Broker</label>
+        <select id="signupBroker"><option value="">-- Select Broker --</option></select>
+        <div id="brokerInfo" style="margin-top:4px;padding:4px 6px;background:rgba(255,215,0,0.04);border-radius:6px;display:none;">
+            <p style="font-size:0.55rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
+            <p style="font-size:0.5rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
+            <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
+        </div>
+        <label>Gmail / Email</label>
+        <input type="email" id="signupEmail" placeholder="your@gmail.com" />
+        <div class="error-msg" id="signupError"></div>
+        <div class="success-msg" id="signupSuccess"></div>
+        <button class="btn-submit" style="background:#fff;color:#000;" id="signupSubmitBtn">Create Account & Go to Broker</button>
+    </div>
+</div>
+
+<script type="module">
+    import { appState, saveLocalState, closeModal, isValidEmail, updateUI } from "./security.js";
+
+    // ─── HANDLE SIGNUP ───
+    function handleSignup() {
+        const broker = document.getElementById('signupBroker').value;
+        const email = document.getElementById('signupEmail').value.trim();
+        const errorEl = document.getElementById('signupError');
+        const successEl = document.getElementById('signupSuccess');
+        errorEl.textContent = '';
+        successEl.textContent = '';
+        
+        if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
+        if (!email) { errorEl.textContent = '❌ Enter email'; return; }
+
+        if (!isValidEmail(email)) {
+            errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+            return;
+        }
+
+        const brokerData = appState.brokers.find(b => b.name === broker);
+        if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
+        if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
+        
+        const newUser = {
+            email,
+            accountId: '',
+            name: email.split('@')[0],
+            broker,
+            verified: false,
+            deposit: 0,
+            requiredDeposit: brokerData.minDeposit,
+            credits: 0,
+            freeCredits: 0,
+            signalsUsed: 0,
+            todayUsed: 0,
+            totalUsed: 0,
+            blocked: false,
+            registeredAt: new Date().toISOString()
+        };
+        appState.users.push(newUser);
+        saveLocalState();
+        updateUI();
+        successEl.textContent = '✅ Account created! Please verify your ID. Opening broker...';
+        setTimeout(() => { window.open(brokerData.link, '_blank'); }, 500);
+        setTimeout(() => { closeModal('signupModal'); }, 1500);
+    }
+
+    // ─── BROKER CHANGE LISTENER ───
+    document.getElementById('signupBroker').addEventListener('change', function() {
+        const brokerName = this.value;
+        const infoDiv = document.getElementById('brokerInfo');
+        const broker = appState.brokers.find(b => b.name === brokerName);
+        if (broker) {
+            infoDiv.style.display = 'block';
+            document.getElementById('brokerAffiliateLink').textContent = broker.link;
+            document.getElementById('brokerMinDeposit').textContent = broker.minDeposit;
+            document.getElementById('brokerRules').textContent = '📋 ' + broker.rules;
+        } else {
+            infoDiv.style.display = 'none';
+        }
+    });
+
+    // ─── EVENT LISTENER ───
+    document.getElementById('signupSubmitBtn').addEventListener('click', handleSignup);
+
+    // ─── EXPOSE GLOBALLY ───
+    window.handleSignup = handleSignup;
+</script>
