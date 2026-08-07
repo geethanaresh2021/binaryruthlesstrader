@@ -1,0 +1,432 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN SOCIAL MEDIA MANAGER           -->
+<!-- FILE: admin-social-media-manager.html         -->
+<!-- Contains: HTML + CSS + JS for Social Media    -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── SOCIAL MEDIA MANAGER CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(255, 0, 51, 0.3);
+        box-shadow: 0 0 24px rgba(255,0,51,0.08);
+    }
+    .admin-section h4 {
+        color: #FFD700;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-section .field-group {
+        margin-bottom: 8px;
+    }
+    .admin-section .field-group label {
+        font-size: 0.5rem;
+        color: #aaa;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .admin-section .field-group input,
+    .admin-section .field-group select {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .admin-section .field-group select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFD700' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+    .admin-section .field-group select option {
+        background: #111;
+        color: #fff;
+    }
+    .admin-section .field-group input:focus,
+    .admin-section .field-group select:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 16px rgba(255,0,51,0.03);
+    }
+
+    .social-list {
+        margin-bottom: 8px;
+    }
+    .social-list .social-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    .social-list .social-item:hover {
+        border-color: rgba(255,0,51,0.15);
+        transform: translateX(4px);
+    }
+    .social-list .social-item .social-info {
+        flex: 1;
+    }
+    .social-list .social-item .social-name {
+        color: #FFD700;
+        font-size: 0.55rem;
+    }
+    .social-list .social-item .social-url {
+        color: #aaa;
+        font-size: 0.45rem;
+    }
+    .social-list .social-item .social-status {
+        font-size: 0.4rem;
+        color: #aaa;
+    }
+    .social-list .social-item .social-actions {
+        display: flex;
+        gap: 4px;
+    }
+    .social-list .social-item .social-actions button {
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: none;
+        font-size: 0.4rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .social-list .social-item .social-actions button:hover {
+        transform: scale(1.04);
+    }
+    .social-list .social-item .social-actions .btn-edit-social {
+        background: #ffffff;
+        color: #000000;
+    }
+    .social-list .social-item .social-actions .btn-delete-social {
+        background: #FF0033;
+        color: #fff;
+    }
+    .social-list .social-item .social-actions .btn-toggle-social {
+        background: #FFD700;
+        color: #000;
+    }
+
+    .btn-add-social {
+        margin-top: 4px;
+        background: #ffffff;
+        color: #000000;
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.55rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+    }
+    .btn-add-social:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+
+    .social-form {
+        display: none;
+        margin-top: 8px;
+        border-top: 1px solid rgba(255,0,51,0.1);
+        padding-top: 8px;
+    }
+    .social-form.active {
+        display: block;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-save-red {
+        background: #FF0033;
+        color: #fff;
+    }
+    .btn-cancel {
+        background: #333;
+        color: #fff;
+    }
+
+    .no-social {
+        color: #666;
+        font-size: 0.45rem;
+        text-align: center;
+        padding: 8px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+    }
+</style>
+
+<!-- ─── SOCIAL MEDIA MANAGER HTML ─── -->
+<div class="admin-section" id="socialSection">
+    <h4>📱 Social Media</h4>
+    <div id="socialList" class="social-list"></div>
+    <button class="btn-add-social" id="btnAddSocial" onclick="showAddSocialForm()">➕ Add Social Media</button>
+
+    <!-- Add Social Form -->
+    <div id="addSocialForm" class="social-form">
+        <div class="field-group">
+            <label>Platform Name</label>
+            <input type="text" id="newSocialName" placeholder="e.g. Telegram">
+        </div>
+        <div class="field-group">
+            <label>URL</label>
+            <input type="text" id="newSocialUrl" placeholder="https://t.me/yourchannel">
+        </div>
+        <div class="field-group">
+            <label>Icon (Font Awesome)</label>
+            <input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane">
+        </div>
+        <div class="field-group">
+            <label>Status</label>
+            <select id="newSocialStatus">
+                <option value="visible">Visible</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <div class="btn-row">
+            <button class="btn-save btn-save-red" onclick="adminAddSocial()">💾 Save Social</button>
+            <button class="btn-save btn-cancel" onclick="hideAddSocialForm()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Edit Social Form -->
+    <div id="editSocialForm" class="social-form">
+        <input type="hidden" id="editSocialIndex">
+        <div class="field-group">
+            <label>Platform Name</label>
+            <input type="text" id="editSocialName">
+        </div>
+        <div class="field-group">
+            <label>URL</label>
+            <input type="text" id="editSocialUrl">
+        </div>
+        <div class="field-group">
+            <label>Icon</label>
+            <input type="text" id="editSocialIcon">
+        </div>
+        <div class="field-group">
+            <label>Status</label>
+            <select id="editSocialStatus">
+                <option value="visible">Visible</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <div class="btn-row">
+            <button class="btn-save btn-save-red" onclick="adminUpdateSocial()">💾 Update Social</button>
+            <button class="btn-save btn-cancel" onclick="hideEditSocialForm()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ─── SOCIAL MEDIA MANAGER FUNCTIONS ───
+
+    // Render Social List
+    function renderSocialList() {
+        const container = document.getElementById('socialList');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const socials = (typeof appState !== 'undefined' && appState.socialMedia) ? appState.socialMedia : [];
+
+        if (socials.length === 0) {
+            container.innerHTML = '<div class="no-social">No social media added yet</div>';
+            return;
+        }
+
+        socials.forEach((s, idx) => {
+            const statusText = s.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
+            container.innerHTML += `
+                <div class="social-item">
+                    <div class="social-info">
+                        <div class="social-name"><i class="${s.icon || 'fas fa-link'}"></i> ${s.name}</div>
+                        <div class="social-url">${s.url}</div>
+                        <div class="social-status">${statusText}</div>
+                    </div>
+                    <div class="social-actions">
+                        <button class="btn-edit-social" onclick="editSocial(${idx})">✏️ Edit</button>
+                        <button class="btn-toggle-social" onclick="toggleSocialVisibility(${idx})">${s.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
+                        <button class="btn-delete-social" onclick="deleteSocial(${idx})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Toggle Social Visibility
+    function toggleSocialVisibility(idx) {
+        if (typeof appState === 'undefined') return;
+        const social = appState.socialMedia[idx];
+        if (!social) return;
+        social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible';
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+        renderSocialList();
+        if (typeof renderAdminSocialMedia === 'function') renderAdminSocialMedia();
+    }
+
+    // Delete Social
+    function deleteSocial(idx) {
+        if (confirm('Delete this social media?')) {
+            if (typeof appState !== 'undefined') {
+                appState.socialMedia.splice(idx, 1);
+                if (typeof saveLocalState === 'function') saveLocalState();
+                localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+            }
+            renderSocialList();
+            if (typeof renderAdminSocialMedia === 'function') renderAdminSocialMedia();
+        }
+    }
+
+    // Show Add Social Form
+    function showAddSocialForm() {
+        document.getElementById('addSocialForm').classList.add('active');
+        document.getElementById('editSocialForm').classList.remove('active');
+        document.getElementById('newSocialName').value = '';
+        document.getElementById('newSocialUrl').value = '';
+        document.getElementById('newSocialIcon').value = '';
+        document.getElementById('newSocialStatus').value = 'visible';
+    }
+
+    // Hide Add Social Form
+    function hideAddSocialForm() {
+        document.getElementById('addSocialForm').classList.remove('active');
+    }
+
+    // Add Social
+    function adminAddSocial() {
+        const name = document.getElementById('newSocialName').value.trim();
+        const url = document.getElementById('newSocialUrl').value.trim();
+        const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link';
+        const visibility = document.getElementById('newSocialStatus').value;
+
+        if (!name || !url) {
+            alert('Please enter name and URL');
+            return;
+        }
+
+        if (!appState.socialMedia) appState.socialMedia = [];
+        appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility });
+
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+        renderSocialList();
+        if (typeof renderAdminSocialMedia === 'function') renderAdminSocialMedia();
+        hideAddSocialForm();
+    }
+
+    // Edit Social
+    function editSocial(idx) {
+        if (typeof appState === 'undefined') return;
+        const social = appState.socialMedia[idx];
+        if (!social) return;
+
+        document.getElementById('editSocialIndex').value = idx;
+        document.getElementById('editSocialName').value = social.name || '';
+        document.getElementById('editSocialUrl').value = social.url || '';
+        document.getElementById('editSocialIcon').value = social.icon || '';
+        document.getElementById('editSocialStatus').value = social.visibility || 'visible';
+
+        document.getElementById('editSocialForm').classList.add('active');
+        document.getElementById('addSocialForm').classList.remove('active');
+    }
+
+    // Hide Edit Social Form
+    function hideEditSocialForm() {
+        document.getElementById('editSocialForm').classList.remove('active');
+    }
+
+    // Update Social
+    function adminUpdateSocial() {
+        const idx = parseInt(document.getElementById('editSocialIndex').value);
+        const name = document.getElementById('editSocialName').value.trim();
+        const url = document.getElementById('editSocialUrl').value.trim();
+        const icon = document.getElementById('editSocialIcon').value.trim();
+        const visibility = document.getElementById('editSocialStatus').value;
+
+        if (!name || !url) {
+            alert('Please enter name and URL');
+            return;
+        }
+
+        if (typeof appState !== 'undefined') {
+            appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility };
+            if (typeof saveLocalState === 'function') saveLocalState();
+            localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+        }
+
+        renderSocialList();
+        if (typeof renderAdminSocialMedia === 'function') renderAdminSocialMedia();
+        hideEditSocialForm();
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderSocialList();
+    });
+
+    // Expose functions globally
+    window.renderSocialList = renderSocialList;
+    window.toggleSocialVisibility = toggleSocialVisibility;
+    window.deleteSocial = deleteSocial;
+    window.showAddSocialForm = showAddSocialForm;
+    window.hideAddSocialForm = hideAddSocialForm;
+    window.adminAddSocial = adminAddSocial;
+    window.editSocial = editSocial;
+    window.hideEditSocialForm = hideEditSocialForm;
+    window.adminUpdateSocial = adminUpdateSocial;
+</script>
