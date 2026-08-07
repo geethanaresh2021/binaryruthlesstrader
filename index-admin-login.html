@@ -1,27 +1,31 @@
-<!-- ============================================ -->
-<!-- FILE: index-admin-login.html                  -->
-<!-- JS: Logo click admin access                  -->
-<!-- ============================================ -->
-<script>
+// ============================================
+// FILE: index-admin-login.html
+// ============================================
 (function() {
-    let logoClickCounter = 0;
+    if (typeof window.appState === 'undefined') return;
+    var logoClickCounter = 0;
+    var logoClickTimer = null;
     
     function handleLogoClick(e) {
         e.preventDefault();
-        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        var userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+        var adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
         if (userLoggedIn && !adminLoggedIn) { alert('🚫 Access Denied! Only Admin can access this page.'); logoClickCounter = 0; return; }
         logoClickCounter++;
-        const requiredClicks = window.appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+        if (logoClickTimer) clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(function() { logoClickCounter = 0; }, 3000);
+        var requiredClicks = window.appState.logoClickCount || 2;
+        if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; if (logoClickTimer) clearTimeout(logoClickTimer); window.location.href = 'admin.html'; }
     }
-
-    document.getElementById('logoIcon').addEventListener('click', handleLogoClick);
-    document.getElementById('logoImage').addEventListener('click', handleLogoClick);
-    document.getElementById('brandSection').addEventListener('click', function(e) {
+    
+    var logoIcon = document.getElementById('logoIcon');
+    var logoImage = document.getElementById('logoImage');
+    var brandSection = document.getElementById('brandSection');
+    if (logoIcon) logoIcon.addEventListener('click', handleLogoClick);
+    if (logoImage) logoImage.addEventListener('click', handleLogoClick);
+    if (brandSection) brandSection.addEventListener('click', function(e) {
         if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
             handleLogoClick(e);
         }
     });
 })();
-</script>
