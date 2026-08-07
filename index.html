@@ -2020,8 +2020,11 @@
         import { getDatabase, ref, onValue, set } from "firebase/database";
         import { getAnalytics } from "firebase/analytics";
 
-        const database = firebaseDatabase;
-        const dbRef = firebaseDbRef;
+        // Initialize Firebase from external config
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const dbRef = ref(database, 'brt_data');
 
         // ─── APP STATE ───
         let appState = {
