@@ -1,0 +1,535 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN TOOLS MANAGER                  -->
+<!-- FILE: admin-tools-manager.html                -->
+<!-- Contains: HTML + CSS + JS for Tools Manager   -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── TOOLS MANAGER CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(255, 0, 51, 0.3);
+        box-shadow: 0 0 24px rgba(255,0,51,0.08);
+    }
+    .admin-section h4 {
+        color: #FFD700;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-section .field-group {
+        margin-bottom: 8px;
+    }
+    .admin-section .field-group label {
+        font-size: 0.5rem;
+        color: #aaa;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .admin-section .field-group input,
+    .admin-section .field-group select,
+    .admin-section .field-group textarea {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .admin-section .field-group select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFD700' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+    .admin-section .field-group select option {
+        background: #111;
+        color: #fff;
+    }
+    .admin-section .field-group textarea {
+        height: 100px;
+        resize: vertical;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.6rem;
+    }
+    .admin-section .field-group input:focus,
+    .admin-section .field-group select:focus,
+    .admin-section .field-group textarea:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 16px rgba(255,0,51,0.03);
+    }
+    .admin-section .field-group small {
+        color: #666;
+        font-size: 0.4rem;
+        display: block;
+        margin-top: 2px;
+    }
+
+    .tools-list {
+        margin-bottom: 8px;
+    }
+    .tools-list .tool-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .tools-list .tool-item:hover {
+        border-color: rgba(255,0,51,0.15);
+    }
+    .tools-list .tool-item .tool-info {
+        flex: 1;
+    }
+    .tools-list .tool-item .tool-name {
+        color: #FFD700;
+        font-size: 0.6rem;
+        font-family: 'Orbitron', sans-serif;
+    }
+    .tools-list .tool-item .tool-subname {
+        color: #aaa;
+        font-size: 0.45rem;
+        margin-top: 1px;
+    }
+    .tools-list .tool-item .tool-status {
+        font-size: 0.45rem;
+        color: #aaa;
+    }
+    .tools-list .tool-item .tool-actions {
+        display: none;
+        gap: 4px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .tools-list .tool-item .tool-actions button {
+        padding: 2px 8px;
+        border-radius: 4px;
+        border: none;
+        font-size: 0.45rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .tools-list .tool-item .tool-actions button:hover {
+        transform: scale(1.04);
+    }
+    .tools-list .tool-item .tool-actions .btn-edit-tool {
+        background: #ffffff;
+        color: #000000;
+    }
+    .tools-list .tool-item .tool-actions .btn-delete-tool {
+        background: #FF0033;
+        color: #fff;
+    }
+    .tools-list .tool-item .tool-actions .btn-toggle-tool {
+        background: #FFD700;
+        color: #000;
+    }
+    .tools-list .tool-item .tool-actions .btn-fire-toggle {
+        background: #FF4500;
+        color: #fff;
+        font-size: 0.4rem;
+        padding: 2px 6px;
+    }
+    .tools-list .tool-item .tool-actions .btn-fire-toggle.off {
+        background: #555;
+        color: #aaa;
+    }
+    .admin-section.editable .tools-list .tool-item .tool-actions {
+        display: flex;
+    }
+    .admin-section.editable .tools-list .tool-item {
+        cursor: default;
+    }
+
+    .btn-add-tool {
+        margin-top: 4px;
+        background: #ffffff;
+        color: #000000;
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.55rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+    }
+    .btn-add-tool:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+
+    .tool-form {
+        display: none;
+        margin-top: 8px;
+        border-top: 1px solid rgba(255,0,51,0.1);
+        padding-top: 8px;
+    }
+    .tool-form.active {
+        display: block;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .admin-section .btn-row .btn-save.show {
+        display: block;
+    }
+    .btn-save-red {
+        background: #FF0033;
+        color: #fff;
+    }
+    .btn-cancel {
+        background: #333;
+        color: #fff;
+    }
+
+    .no-tools {
+        color: #666;
+        font-size: 0.45rem;
+        text-align: center;
+        padding: 8px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+    }
+</style>
+
+<!-- ─── TOOLS MANAGER HTML ─── -->
+<div class="admin-section" id="toolsSection">
+    <h4>🛠️ Tools Manager</h4>
+    <div id="toolsList" class="tools-list"></div>
+    <button class="btn-add-tool" id="btnAddTool" onclick="showAddToolForm()">➕ Add New Tool</button>
+    
+    <!-- Add Tool Form -->
+    <div id="addToolForm" class="tool-form">
+        <div class="field-group">
+            <label>Tool Name</label>
+            <input type="text" id="newToolName" placeholder="Enter tool name">
+        </div>
+        <div class="field-group">
+            <label>Sub Name</label>
+            <input type="text" id="newToolSubName" placeholder="Enter sub name">
+        </div>
+        <div class="field-group">
+            <label>HTML Code</label>
+            <textarea id="newToolHtml" placeholder="Paste HTML code..."></textarea>
+        </div>
+        <div class="field-group">
+            <label>Status</label>
+            <select id="newToolStatus">
+                <option value="visible">Visible</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Show Fire 🔥</label>
+            <select id="newToolFire">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>🎯 Trigger Button Names</label>
+            <input type="text" id="newToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL, Trade" />
+            <small>Comma separated. Leave empty for default triggers (Signal, Get, Generate, BUY, SELL)</small>
+        </div>
+        <div class="btn-row">
+            <button class="btn-save btn-save-red show" onclick="adminAddTool()">💾 Save Tool</button>
+            <button class="btn-save btn-cancel show" onclick="hideAddToolForm()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Edit Tool Form -->
+    <div id="editToolForm" class="tool-form">
+        <input type="hidden" id="editToolIndex">
+        <div class="field-group">
+            <label>Tool Name</label>
+            <input type="text" id="editToolName">
+        </div>
+        <div class="field-group">
+            <label>Sub Name</label>
+            <input type="text" id="editToolSubName">
+        </div>
+        <div class="field-group">
+            <label>HTML Code</label>
+            <textarea id="editToolHtml"></textarea>
+        </div>
+        <div class="field-group">
+            <label>Status</label>
+            <select id="editToolStatus">
+                <option value="visible">Visible</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Show Fire 🔥</label>
+            <select id="editToolFire">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>🎯 Trigger Button Names</label>
+            <input type="text" id="editToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL" />
+            <small>Comma separated. Leave empty for default triggers.</small>
+        </div>
+        <div class="btn-row">
+            <button class="btn-save btn-save-red show" onclick="adminUpdateTool()">💾 Update Tool</button>
+            <button class="btn-save btn-cancel show" onclick="hideEditToolForm()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ─── TOOLS MANAGER FUNCTIONS ───
+
+    // Render Tools List
+    function renderToolsList() {
+        const container = document.getElementById('toolsList');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const tools = (typeof appState !== 'undefined' && appState.tools) ? appState.tools : [];
+        const section = container.closest('.admin-section');
+        const isEditable = section && section.classList.contains('editable');
+
+        if (tools.length === 0) {
+            container.innerHTML = '<div class="no-tools">No tools added yet</div>';
+            return;
+        }
+
+        tools.forEach((tool, idx) => {
+            const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
+            const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
+            const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
+            const fireBtnClass = fireStatus ? '' : 'off';
+            const triggerText = tool.triggers && tool.triggers.length > 0 ? '🎯 ' + tool.triggers.join(', ') : '🎯 Default';
+
+            let actions = '';
+            if (isEditable) {
+                actions = `
+                    <div class="tool-actions">
+                        <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
+                        <button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button>
+                        <button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
+                        <button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML += `
+                <div class="tool-item">
+                    <div class="tool-info">
+                        <div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>
+                        ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
+                        <div class="tool-status">${statusText} | Fire: ${fireStatus ? '✅' : '❌'}</div>
+                        <div style="font-size:0.4rem;color:#aaa;">${triggerText}</div>
+                    </div>
+                    ${actions}
+                </div>
+            `;
+        });
+    }
+
+    // Toggle Tool Fire
+    function toggleToolFire(idx) {
+        if (typeof appState === 'undefined') return;
+        const tool = appState.tools[idx];
+        if (!tool) return;
+        tool.showFire = tool.showFire !== undefined ? !tool.showFire : false;
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+        renderToolsList();
+    }
+
+    // Toggle Tool Visibility
+    function toggleToolVisibility(idx) {
+        if (typeof appState === 'undefined') return;
+        const tool = appState.tools[idx];
+        if (!tool) return;
+        tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible';
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+        renderToolsList();
+    }
+
+    // Delete Tool
+    function deleteTool(idx) {
+        if (confirm('Delete this tool?')) {
+            if (typeof appState !== 'undefined') {
+                appState.tools.splice(idx, 1);
+                if (typeof saveLocalState === 'function') saveLocalState();
+                localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+            }
+            renderToolsList();
+        }
+    }
+
+    // Show Add Tool Form
+    function showAddToolForm() {
+        document.getElementById('addToolForm').classList.add('active');
+        document.getElementById('editToolForm').classList.remove('active');
+        document.getElementById('newToolName').value = '';
+        document.getElementById('newToolSubName').value = '';
+        document.getElementById('newToolHtml').value = '';
+        document.getElementById('newToolStatus').value = 'visible';
+        document.getElementById('newToolFire').value = 'true';
+        document.getElementById('newToolTriggers').value = '';
+    }
+
+    // Hide Add Tool Form
+    function hideAddToolForm() {
+        document.getElementById('addToolForm').classList.remove('active');
+    }
+
+    // Add Tool
+    function adminAddTool() {
+        const name = document.getElementById('newToolName').value.trim();
+        const subName = document.getElementById('newToolSubName').value.trim();
+        const htmlCode = document.getElementById('newToolHtml').value.trim();
+        const visibility = document.getElementById('newToolStatus').value;
+        const showFire = document.getElementById('newToolFire').value === 'true';
+        const triggersInput = document.getElementById('newToolTriggers').value.trim();
+        let triggers = [];
+        if (triggersInput) {
+            triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        }
+
+        if (!name) { alert('Please enter tool name'); return; }
+        if (!htmlCode) { alert('Please enter HTML code'); return; }
+
+        const stickerMatch = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🧠💡⚡📱💻🖥️⌨️🖱️🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📈📉💹💵💴💶💷💳💲🪙🧾🧮]/);
+        const sticker = stickerMatch ? name.charAt(0) : '🎯';
+
+        if (!appState.tools) appState.tools = [];
+        appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
+
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+        renderToolsList();
+        hideAddToolForm();
+    }
+
+    // Edit Tool
+    function editTool(idx) {
+        if (typeof appState === 'undefined') return;
+        const tool = appState.tools[idx];
+        if (!tool) return;
+
+        document.getElementById('editToolIndex').value = idx;
+        document.getElementById('editToolName').value = tool.name || '';
+        document.getElementById('editToolSubName').value = tool.subName || '';
+        document.getElementById('editToolHtml').value = tool.htmlCode || '';
+        document.getElementById('editToolStatus').value = tool.visibility || 'visible';
+        document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true';
+        document.getElementById('editToolTriggers').value = (tool.triggers || []).join(', ');
+
+        document.getElementById('editToolForm').classList.add('active');
+        document.getElementById('addToolForm').classList.remove('active');
+    }
+
+    // Hide Edit Tool Form
+    function hideEditToolForm() {
+        document.getElementById('editToolForm').classList.remove('active');
+    }
+
+    // Update Tool
+    function adminUpdateTool() {
+        const idx = parseInt(document.getElementById('editToolIndex').value);
+        const name = document.getElementById('editToolName').value.trim();
+        const subName = document.getElementById('editToolSubName').value.trim();
+        const htmlCode = document.getElementById('editToolHtml').value.trim();
+        const visibility = document.getElementById('editToolStatus').value;
+        const showFire = document.getElementById('editToolFire').value === 'true';
+        const triggersInput = document.getElementById('editToolTriggers').value.trim();
+        let triggers = [];
+        if (triggersInput) {
+            triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        }
+
+        if (!name) { alert('Please enter tool name'); return; }
+        if (!htmlCode) { alert('Please enter HTML code'); return; }
+
+        const stickerMatch = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🧠💡⚡📱💻🖥️⌨️🖱️🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📈📉💹💵💴💶💷💳💲🪙🧾🧮]/);
+        const sticker = stickerMatch ? name.charAt(0) : '🎯';
+
+        if (typeof appState !== 'undefined') {
+            appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
+            if (typeof saveLocalState === 'function') saveLocalState();
+            localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+        }
+
+        renderToolsList();
+        hideEditToolForm();
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderToolsList();
+    });
+
+    // Expose functions globally
+    window.renderToolsList = renderToolsList;
+    window.toggleToolFire = toggleToolFire;
+    window.toggleToolVisibility = toggleToolVisibility;
+    window.deleteTool = deleteTool;
+    window.showAddToolForm = showAddToolForm;
+    window.hideAddToolForm = hideAddToolForm;
+    window.adminAddTool = adminAddTool;
+    window.editTool = editTool;
+    window.hideEditToolForm = hideEditToolForm;
+    window.adminUpdateTool = adminUpdateTool;
+</script>
