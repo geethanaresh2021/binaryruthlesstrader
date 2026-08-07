@@ -1,0 +1,238 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN CREDITS PER SIGNAL             -->
+<!-- FILE: admin-credit-per-signal.html            -->
+<!-- Contains: HTML + CSS + JS for Credits/Signal  -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── CREDITS PER SIGNAL CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(0,255,102,0.15);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(0, 255, 102, 0.3);
+        box-shadow: 0 0 24px rgba(0,255,102,0.08);
+    }
+    .admin-section h4 {
+        color: #00FF66;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .credits-per-signal-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .credits-per-signal-group span {
+        font-size: 0.6rem;
+        color: #aaa;
+    }
+    .credits-per-signal-group input {
+        width: 80px;
+        padding: 6px 10px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-size: 0.7rem;
+        text-align: center;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .credits-per-signal-group input:focus {
+        border-color: #FF0033;
+    }
+    .credits-per-signal-group input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    .credits-per-signal-group .save-btn-small {
+        padding: 6px 16px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #FF0033;
+        color: #fff;
+        transition: all 0.3s ease;
+        display: none;
+    }
+    .credits-per-signal-group .save-btn-small:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255,0,51,0.2);
+    }
+    .credits-per-signal-group .save-btn-small.show {
+        display: block;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-edit {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #ffffff;
+        color: #000000;
+    }
+    .admin-section .btn-row .btn-edit:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-edit:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #FF0033;
+        color: #ffffff;
+        display: none;
+    }
+    .admin-section .btn-row .btn-save:hover {
+        box-shadow: 0 0 24px rgba(255,0,51,0.2);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-save:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save.show {
+        display: block;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+        .credits-per-signal-group {
+            gap: 8px;
+        }
+        .credits-per-signal-group input {
+            width: 60px;
+        }
+    }
+</style>
+
+<!-- ─── CREDITS PER SIGNAL HTML ─── -->
+<div class="admin-section" id="creditsPerSignalSection">
+    <h4>💎 Credits Per Signal</h4>
+    <div class="credits-per-signal-group">
+        <span>How many credits to deduct per successful signal:</span>
+        <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled />
+        <button class="save-btn-small" id="saveCreditsPerSignalBtn" onclick="saveCreditsPerSignal()">💾 Save</button>
+    </div>
+    <div class="btn-row">
+        <button class="btn-edit" onclick="enableCreditsPerSignalEdit(this)">✏️ Edit</button>
+        <button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button>
+    </div>
+</div>
+
+<script>
+    // ─── CREDITS PER SIGNAL FUNCTIONS ───
+
+    // Enable Edit Mode
+    function enableCreditsPerSignalEdit(btn) {
+        const section = btn.closest('.admin-section');
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = false);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show'));
+        section.querySelectorAll('.save-btn-small').forEach(b => b.classList.add('show'));
+        btn.style.display = 'none';
+    }
+
+    // Disable Edit Mode
+    function disableCreditsPerSignalEdit(section) {
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = true);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
+        section.querySelectorAll('.save-btn-small').forEach(b => b.classList.remove('show'));
+        section.querySelectorAll('.btn-edit').forEach(b => {
+            b.style.display = 'block';
+            b.textContent = '✏️ Edit';
+        });
+    }
+
+    // Save Credits Per Signal
+    function saveCreditsPerSignal() {
+        const input = document.getElementById('creditsPerSignalInput');
+        const value = parseInt(input.value);
+
+        if (isNaN(value) || value < 1) {
+            alert('Please enter a valid number (minimum 1)');
+            return;
+        }
+
+        if (typeof appState !== 'undefined') {
+            appState.creditsPerSignal = value;
+            if (typeof saveLocalState === 'function') saveLocalState();
+        }
+
+        localStorage.setItem('brt_credits_per_signal', value);
+
+        const section = document.getElementById('creditsPerSignalSection');
+        disableCreditsPerSignalEdit(section);
+
+        const btn = section.querySelector('.btn-save');
+        if (btn) {
+            btn.textContent = '✅ Saved';
+            setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+        }
+    }
+
+    // Load Credits Per Signal
+    function loadCreditsPerSignal() {
+        if (typeof appState !== 'undefined' && appState.creditsPerSignal) {
+            document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCreditsPerSignal();
+    });
+
+    // Expose functions globally
+    window.saveCreditsPerSignal = saveCreditsPerSignal;
+    window.enableCreditsPerSignalEdit = enableCreditsPerSignalEdit;
+    window.loadCreditsPerSignal = loadCreditsPerSignal;
+</script>
