@@ -1,0 +1,388 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN CREDIT PACKS MANAGER           -->
+<!-- FILE: admin-credit-packs-manager.html         -->
+<!-- Contains: HTML + CSS + JS for Credit Packs    -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── CREDIT PACKS MANAGER CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(255, 0, 51, 0.3);
+        box-shadow: 0 0 24px rgba(255,0,51,0.08);
+    }
+    .admin-section h4 {
+        color: #FFD700;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-section .field-group {
+        margin-bottom: 8px;
+    }
+    .admin-section .field-group label {
+        font-size: 0.5rem;
+        color: #aaa;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .admin-section .field-group input {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .admin-section .field-group input:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 16px rgba(255,0,51,0.03);
+    }
+    .admin-section .field-group input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .admin-section .item-list {
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 6px;
+        border: 1px solid rgba(255,0,51,0.05);
+        border-radius: 6px;
+        padding: 4px;
+    }
+    .admin-section .item-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    .admin-section .item-list::-webkit-scrollbar-thumb {
+        background: #FF0033;
+        border-radius: 4px;
+    }
+    .admin-section .list-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        font-size: 0.55rem;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .admin-section .list-item:hover {
+        background: rgba(255,0,51,0.04);
+    }
+    .admin-section .list-item .name {
+        color: #FFD700;
+    }
+    .admin-section .list-item .detail {
+        color: #aaa;
+    }
+    .admin-section .list-item .list-actions {
+        display: none;
+        gap: 4px;
+    }
+    .admin-section .list-item .list-actions button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.6rem;
+        padding: 0 4px;
+    }
+    .admin-section .list-item .list-actions .edit-btn {
+        color: #FFD700;
+    }
+    .admin-section .list-item .list-actions .del-btn {
+        color: #FF0033;
+    }
+    .admin-section.editable .list-item .list-actions {
+        display: flex;
+    }
+    .admin-section.editable .list-item {
+        cursor: default;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-edit {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #ffffff;
+        color: #000000;
+    }
+    .admin-section .btn-row .btn-edit:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-edit:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #FF0033;
+        color: #ffffff;
+        display: none;
+    }
+    .admin-section .btn-row .btn-save:hover {
+        box-shadow: 0 0 24px rgba(255,0,51,0.2);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-save:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save.show {
+        display: block;
+    }
+    .admin-section .btn-row .btn-save.btn-success {
+        background: #00FF66;
+        color: #000;
+    }
+
+    .pack-add-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 4px;
+        margin-top: 6px;
+    }
+    .pack-add-grid .field-group {
+        margin-bottom: 0;
+    }
+    .pack-add-grid .field-group:last-child {
+        display: flex;
+        align-items: flex-end;
+    }
+    .pack-add-grid .btn-save {
+        margin-top: 0;
+    }
+
+    .no-packs {
+        color: #666;
+        font-size: 0.45rem;
+        text-align: center;
+        padding: 4px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+        .pack-add-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<!-- ─── CREDIT PACKS MANAGER HTML ─── -->
+<div class="admin-section" id="creditPacksSection">
+    <h4>📦 Credit Packs</h4>
+    <div id="creditPackList" class="item-list"></div>
+    <div class="pack-add-grid">
+        <div class="field-group">
+            <label>Credits</label>
+            <input type="number" id="packCredits" placeholder="100" disabled>
+        </div>
+        <div class="field-group">
+            <label>Price (₹)</label>
+            <input type="number" id="packPrice" placeholder="99" disabled>
+        </div>
+        <div class="field-group">
+            <button class="btn-save btn-success" id="addPackBtn" onclick="adminAddCreditPack()" style="display:none;">Add</button>
+        </div>
+    </div>
+    <div class="btn-row">
+        <button class="btn-edit" onclick="enableCreditPacksEdit(this)">✏️ Edit</button>
+        <button class="btn-save" id="mainSaveBtn" onclick="adminAddCreditPack()">💾 Add Pack</button>
+    </div>
+</div>
+
+<script>
+    // ─── CREDIT PACKS MANAGER FUNCTIONS ───
+    let editingPackId = null;
+
+    // Enable Edit Mode
+    function enableCreditPacksEdit(btn) {
+        const section = btn.closest('.admin-section');
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = false);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show'));
+        btn.style.display = 'none';
+        section.classList.add('editable');
+        document.getElementById('addPackBtn').style.display = 'block';
+        document.getElementById('mainSaveBtn').textContent = '💾 Add Pack';
+        document.getElementById('mainSaveBtn').onclick = adminAddCreditPack;
+        document.getElementById('packCredits').value = '';
+        document.getElementById('packPrice').value = '';
+        editingPackId = null;
+        renderCreditPackList();
+    }
+
+    // Disable Edit Mode
+    function disableCreditPacksEdit(section) {
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = true);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
+        section.querySelectorAll('.btn-edit').forEach(b => {
+            b.style.display = 'block';
+            b.textContent = '✏️ Edit';
+        });
+        section.classList.remove('editable');
+        document.getElementById('addPackBtn').style.display = 'none';
+        document.getElementById('packCredits').value = '';
+        document.getElementById('packPrice').value = '';
+        editingPackId = null;
+        renderCreditPackList();
+    }
+
+    // Render Credit Pack List
+    function renderCreditPackList() {
+        const list = document.getElementById('creditPackList');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const packs = (typeof appState !== 'undefined' && appState.creditPacks) ? appState.creditPacks : [];
+        const section = list.closest('.admin-section');
+        const isEditable = section && section.classList.contains('editable');
+
+        if (packs.length === 0) {
+            list.innerHTML = '<div class="no-packs">No packs</div>';
+            return;
+        }
+
+        packs.forEach((p) => {
+            let actions = '';
+            if (isEditable) {
+                actions = `
+                    <div class="list-actions" style="display:flex;gap:4px;">
+                        <button class="edit-btn" onclick="adminEditCreditPack('${p.id}')">✏️</button>
+                        <button class="del-btn" onclick="adminDeleteCreditPack('${p.id}')">✕</button>
+                    </div>
+                `;
+            }
+            list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span>${actions}</div>`;
+        });
+    }
+
+    // Add Credit Pack
+    function adminAddCreditPack() {
+        const credits = parseInt(document.getElementById('packCredits').value);
+        const price = parseInt(document.getElementById('packPrice').value);
+
+        if (!credits || credits <= 0 || !price || price <= 0) {
+            alert('Enter valid credits and price');
+            return;
+        }
+
+        if (!appState.creditPacks) appState.creditPacks = [];
+
+        if (editingPackId) {
+            // Update existing
+            const index = appState.creditPacks.findIndex(p => p.id === editingPackId);
+            if (index !== -1) {
+                appState.creditPacks[index] = { ...appState.creditPacks[index], credits, price };
+            }
+            editingPackId = null;
+            document.getElementById('mainSaveBtn').textContent = '💾 Add Pack';
+            document.getElementById('mainSaveBtn').onclick = adminAddCreditPack;
+        } else {
+            // Add new
+            const newPack = { id: 'pack_' + Date.now(), credits, price };
+            appState.creditPacks.push(newPack);
+        }
+
+        if (typeof saveLocalState === 'function') saveLocalState();
+        renderCreditPackList();
+        document.getElementById('packCredits').value = '';
+        document.getElementById('packPrice').value = '';
+
+        const section = document.getElementById('creditPacksSection');
+        const btn = section.querySelector('#mainSaveBtn');
+        if (btn) {
+            btn.textContent = '✅ Saved';
+            setTimeout(() => { 
+                btn.textContent = '💾 Add Pack'; 
+                btn.onclick = adminAddCreditPack;
+            }, 2000);
+        }
+    }
+
+    // Edit Credit Pack
+    function adminEditCreditPack(id) {
+        if (typeof appState === 'undefined') return;
+        const pack = appState.creditPacks.find(p => p.id === id);
+        if (!pack) return;
+
+        document.getElementById('packCredits').value = pack.credits;
+        document.getElementById('packPrice').value = pack.price;
+        editingPackId = id;
+        document.getElementById('mainSaveBtn').textContent = '🔄 Update Pack';
+        document.getElementById('mainSaveBtn').onclick = adminAddCreditPack;
+    }
+
+    // Delete Credit Pack
+    function adminDeleteCreditPack(id) {
+        if (confirm('Delete this pack?')) {
+            if (typeof appState !== 'undefined') {
+                appState.creditPacks = appState.creditPacks.filter(p => p.id !== id);
+                if (typeof saveLocalState === 'function') saveLocalState();
+            }
+            renderCreditPackList();
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderCreditPackList();
+    });
+
+    // Expose functions globally
+    window.renderCreditPackList = renderCreditPackList;
+    window.adminAddCreditPack = adminAddCreditPack;
+    window.adminEditCreditPack = adminEditCreditPack;
+    window.adminDeleteCreditPack = adminDeleteCreditPack;
+    window.enableCreditPacksEdit = enableCreditPacksEdit;
+</script>
