@@ -1012,9 +1012,7 @@
             <span class="today-used-tool" id="toolHeaderTodayUsed">📊 Today: 0</span>
         </div>
         <div class="header-right">
-            <div class="tool-switch-container" id="toolSwitchContainer">
-                <!-- Tool buttons will be added here dynamically -->
-            </div>
+            <div class="tool-switch-container" id="toolSwitchContainer"></div>
             <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
         </div>
     </div>
@@ -1088,6 +1086,7 @@
 
 <div class="cursor-glow" id="cursorGlow"></div>
 
+<!-- ─── SCRIPTS ─── -->
 <script src="security.js"></script>
 <script src="firebase-config.js"></script>
 <script type="module">
@@ -1095,8 +1094,11 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
-const database = firebaseDatabase;
-const dbRef = firebaseDbRef;
+// Initialize Firebase from external config
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+const dbRef = ref(database, 'brt_data');
 
 let appState = {
     offerCredits: 10, 
@@ -1154,19 +1156,12 @@ function renderFeatures() {
     if (!container) return;
     const features = appState.features || [];
     const visible = features.filter(f => f.visibility !== 'hidden');
-    if (visible.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
+    if (visible.length === 0) { container.innerHTML = ''; return; }
     container.innerHTML = '';
     visible.forEach(f => {
         const card = document.createElement('div');
         card.className = 'feature-card';
-        card.innerHTML = `
-            <span class="icon">${f.icon || '🧠'}</span>
-            <h4>${f.name || 'Feature'}</h4>
-            <p>${f.desc || ''}</p>
-        `;
+        card.innerHTML = `<span class="icon">${f.icon || '🧠'}</span><h4>${f.name || 'Feature'}</h4><p>${f.desc || ''}</p>`;
         container.appendChild(card);
     });
 }
@@ -1177,9 +1172,7 @@ function renderSocialMedia() {
     let socials = appState.socialMedia || [];
     if (socials.length === 0) {
         const localSocial = localStorage.getItem('brt_social');
-        if (localSocial) {
-            try { socials = JSON.parse(localSocial); } catch (e) {}
-        }
+        if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} }
     }
     const visibleSocials = socials.filter(s => s.visibility === 'visible');
     if (visibleSocials.length === 0) {
@@ -1187,13 +1180,9 @@ function renderSocialMedia() {
             <a href="#"><i class="fab fa-telegram-plane"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-        `;
+            <a href="#"><i class="fab fa-twitter"></i></a>`;
         container.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('📱 Configure in Admin');
-            });
+            link.addEventListener('click', function(e) { e.preventDefault(); alert('📱 Configure in Admin'); });
         });
         return;
     }
@@ -1205,10 +1194,7 @@ function renderSocialMedia() {
         a.title = social.name || 'Link';
         a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`;
         a.addEventListener('click', function(e) {
-            if (social.url === '#') {
-                e.preventDefault();
-                alert('📱 ' + social.name + ' - Configure URL in Admin');
-            }
+            if (social.url === '#') { e.preventDefault(); alert('📱 ' + social.name + ' - Configure URL in Admin'); }
         });
         container.appendChild(a);
     });
@@ -1228,19 +1214,10 @@ function getCurrentUser() {
         const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
         if (adminUser) return adminUser;
         const defaultAdmin = {
-            email: 'admin@binaryruthless.com',
-            accountId: 'ADMIN001',
-            name: 'Admin',
-            verified: true,
-            adminAdded: true,
-            deposit: 0,
-            requiredDeposit: 0,
-            credits: 999,
-            signalsUsed: 0,
-            todayUsed: 0,
-            totalUsed: 0,
-            blocked: false,
-            registeredAt: new Date().toISOString()
+            email: 'admin@binaryruthless.com', accountId: 'ADMIN001', name: 'Admin',
+            verified: true, adminAdded: true, deposit: 0, requiredDeposit: 0,
+            credits: 999, signalsUsed: 0, todayUsed: 0, totalUsed: 0,
+            blocked: false, registeredAt: new Date().toISOString()
         };
         const existing = appState.users.find(u => u.email === defaultAdmin.email);
         if (!existing) { appState.users.push(defaultAdmin); saveLocalState(); }
@@ -1281,11 +1258,7 @@ document.getElementById('userLogoutBtn').addEventListener('click', function() {
 document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
     sessionStorage.removeItem('admin_logged_in');
     const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-    if (userLoggedIn) {
-        window.location.reload();
-    } else {
-        window.location.href = 'index.html';
-    }
+    if (userLoggedIn) { window.location.reload(); } else { window.location.href = 'index.html'; }
 });
 
 function resetTodayUsed() {
@@ -1293,9 +1266,7 @@ function resetTodayUsed() {
     const lastReset = localStorage.getItem('lastResetDate');
     const today = now.toDateString();
     if (lastReset !== today) {
-        appState.users.forEach(u => {
-            u.todayUsed = 0;
-        });
+        appState.users.forEach(u => { u.todayUsed = 0; });
         localStorage.setItem('lastResetDate', today);
         saveLocalState();
         updateUI();
@@ -1308,23 +1279,11 @@ onValue(dbRef, (snapshot) => {
     if (val) {
         const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
         appState = { ...appState, ...val };
-        if (val.tools !== undefined) { 
-            appState.tools = val.tools; 
-            renderTools(); 
-            localStorage.setItem('brt_tools', JSON.stringify(val.tools)); 
-        }
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') { 
-            appState.logoBase64 = val.logoBase64; 
-            applyLogo(val.logoBase64);
-            localStorage.setItem('brt_logo', val.logoBase64);
-        }
+        if (val.tools !== undefined) { appState.tools = val.tools; renderTools(); localStorage.setItem('brt_tools', JSON.stringify(val.tools)); }
+        if (val.logoBase64 !== undefined && val.logoBase64 !== '') { appState.logoBase64 = val.logoBase64; applyLogo(val.logoBase64); localStorage.setItem('brt_logo', val.logoBase64); }
         if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
         if (val.socialMedia !== undefined) { appState.socialMedia = val.socialMedia; localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); renderSocialMedia(); }
-        if (val.features !== undefined) { 
-            appState.features = val.features; 
-            localStorage.setItem('brt_features', JSON.stringify(val.features));
-            renderFeatures();
-        }
+        if (val.features !== undefined) { appState.features = val.features; localStorage.setItem('brt_features', JSON.stringify(val.features)); renderFeatures(); }
         if (val.creditPacks !== undefined) { appState.creditPacks = val.creditPacks; renderCreditPacks(); }
         if (val.creditsPerSignal !== undefined) { appState.creditsPerSignal = val.creditsPerSignal; }
         if (val.qrCodeBase64 !== undefined) { appState.qrCodeBase64 = val.qrCodeBase64; loadQRPreview(); }
@@ -1344,11 +1303,7 @@ onValue(dbRef, (snapshot) => {
         
         resetTodayUsed();
         updateUI(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
-        
-        if (document.getElementById('toolFullscreen').classList.contains('active')) {
-            updateToolHeader();
-            updateSwitchButtons();
-        }
+        if (document.getElementById('toolFullscreen').classList.contains('active')) { updateToolHeader(); updateSwitchButtons(); }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
@@ -1360,41 +1315,28 @@ function loadLocalState() {
     const toolsData = localStorage.getItem('brt_tools');
     if (toolsData) { try { const parsedTools = JSON.parse(toolsData); if (parsedTools.length > 0) appState.tools = parsedTools; } catch(e) {} }
     const logoData = localStorage.getItem('brt_logo'); 
-    if (logoData) { 
-        appState.logoBase64 = logoData; 
-        applyLogo(logoData); 
-    }
+    if (logoData) { appState.logoBase64 = logoData; applyLogo(logoData); }
     const socialData = localStorage.getItem('brt_social');
     if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
     const featuresData = localStorage.getItem('brt_features');
     if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
-    const qrData = localStorage.getItem('brt_qr');
-    if (qrData) { appState.qrCodeBase64 = qrData; }
-    const upiData = localStorage.getItem('brt_upi');
-    if (upiData) { appState.upiId = upiData; }
+    const qrData = localStorage.getItem('brt_qr'); if (qrData) { appState.qrCodeBase64 = qrData; }
+    const upiData = localStorage.getItem('brt_upi'); if (upiData) { appState.upiId = upiData; }
     const paymentInstructionsData = localStorage.getItem('brt_payment_instructions');
     if (paymentInstructionsData) { appState.paymentInstructions = paymentInstructionsData; }
     const paymentApprovalModeData = localStorage.getItem('brt_payment_approval_mode');
     if (paymentApprovalModeData) { appState.paymentApprovalMode = paymentApprovalModeData; }
     
     const savedCache = localStorage.getItem('brt_tool_cache');
-    if (savedCache) {
-        try { toolDataCache = JSON.parse(savedCache); } catch(e) {}
-    }
+    if (savedCache) { try { toolDataCache = JSON.parse(savedCache); } catch(e) {} }
     const savedRecent = localStorage.getItem('brt_recent_tools');
-    if (savedRecent) {
-        try { recentTools = JSON.parse(savedRecent); } catch(e) {}
-    }
+    if (savedRecent) { try { recentTools = JSON.parse(savedRecent); } catch(e) {} }
     const savedOpenTools = localStorage.getItem('brt_open_tools');
-    if (savedOpenTools) {
-        try { openTools = JSON.parse(savedOpenTools); } catch(e) {}
-    }
+    if (savedOpenTools) { try { openTools = JSON.parse(savedOpenTools); } catch(e) {} }
     const savedCurrent = localStorage.getItem('brt_current_tool');
-    if (savedCurrent !== null) {
-        currentToolIndex = parseInt(savedCurrent);
-    }
+    if (savedCurrent !== null) { currentToolIndex = parseInt(savedCurrent); }
     
     const session = getActiveSession();
     if (session.type === 'admin') {
@@ -1402,37 +1344,20 @@ function loadLocalState() {
         if (adminUser) appState.currentUser = adminUser;
         else {
             const defaultAdmin = {
-                email: 'admin@binaryruthless.com',
-                accountId: 'ADMIN001',
-                name: 'Admin',
-                verified: true,
-                adminAdded: true,
-                deposit: 0,
-                requiredDeposit: 0,
-                credits: 999,
-                signalsUsed: 0,
-                todayUsed: 0,
-                totalUsed: 0,
-                blocked: false,
-                registeredAt: new Date().toISOString()
+                email: 'admin@binaryruthless.com', accountId: 'ADMIN001', name: 'Admin',
+                verified: true, adminAdded: true, deposit: 0, requiredDeposit: 0,
+                credits: 999, signalsUsed: 0, todayUsed: 0, totalUsed: 0,
+                blocked: false, registeredAt: new Date().toISOString()
             };
-            appState.users.push(defaultAdmin);
-            appState.currentUser = defaultAdmin;
-            saveLocalState();
+            appState.users.push(defaultAdmin); appState.currentUser = defaultAdmin; saveLocalState();
         }
     } else if (session.type === 'user') {
-        if (!appState.currentUser) {
-            window.location.href = 'index.html';
-            return;
-        }
+        if (!appState.currentUser) { window.location.href = 'index.html'; return; }
         const key = getChatKey(appState.currentUser.email);
         const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
         const unread = msgs.filter(m => m.sender === 'admin' && !m.read).length;
         chatUnreadCount = unread;
-    } else {
-        window.location.href = 'index.html';
-        return;
-    }
+    } else { window.location.href = 'index.html'; return; }
     resetTodayUsed();
     updateUI(); renderTools(); renderFeatures(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     renderSocialMedia();
@@ -1451,182 +1376,116 @@ function loadLocalState() {
             const overlay = document.getElementById('toolFullscreen');
             const iframe = document.getElementById('toolFullscreenIframe');
             overlay.classList.add('active');
-            
             const cacheKey = 'tool_' + currentToolIndex;
             let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-            if (toolDataCache[cacheKey]) {
-                htmlContent = toolDataCache[cacheKey];
-            }
+            if (toolDataCache[cacheKey]) { htmlContent = toolDataCache[cacheKey]; }
             htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
             iframe.srcdoc = htmlContent;
-            
             updateToolHeader();
             updateSwitchButtons();
             document.getElementById('recentToolsMini').style.display = 'none';
             isToolMinimized = false;
         }
-    } else {
-        sessionStorage.removeItem('brt_tool_open');
-    }
+    } else { sessionStorage.removeItem('brt_tool_open'); }
 }
 
 function prepareToolHTML(index, htmlContent) {
     const user = appState.currentUser;
     if (!user) return htmlContent;
-    
     htmlContent = htmlContent.replace(/{{USER_EMAIL}}/g, user.email);
     htmlContent = htmlContent.replace(/{{USER_NAME}}/g, user.name || user.email.split('@')[0]);
     htmlContent = htmlContent.replace(/{{USER_CREDITS}}/g, user.credits || 0);
     
     const injectScript = `
     <script>
-        let signalGenerated = false;
-        let signalSuccess = false;
-        let signalSent = false;
-        
+        let signalGenerated = false, signalSuccess = false, signalSent = false;
         const USER_EMAIL = '${user.email}';
         const USER_NAME = '${user.name || user.email.split('@')[0]}';
         const USER_CREDITS = ${user.credits || 0};
-        
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('button');
             if (!btn) return;
-            
             const text = btn.textContent || '';
             const btnId = btn.id || '';
-            
             if (text.includes('Signal') || text.includes('Get') || text.includes('Generate') || 
                 text.includes('BUY') || text.includes('SELL') || text.includes('TRADE') ||
                 text.toLowerCase().includes('signal') || text.toLowerCase().includes('get') || 
-                btnId === 'generateSignalBtn' || btnId === 'btnSignal' ||
-                btnId === 'getSignalBtn') {
-                
-                signalGenerated = false;
-                signalSuccess = false;
-                signalSent = false;
-                
-                setTimeout(() => {
-                    watchForSignalResult();
-                }, 500);
+                btnId === 'generateSignalBtn' || btnId === 'btnSignal' || btnId === 'getSignalBtn') {
+                signalGenerated = false; signalSuccess = false; signalSent = false;
+                setTimeout(() => { watchForSignalResult(); }, 500);
             }
         });
-        
         function watchForSignalResult() {
             const signalView = document.getElementById('signalView');
             const errorView = document.getElementById('errorView');
             const waitingView = document.getElementById('waitingView');
             const statusView = document.getElementById('statusView');
-            
             let attempts = 0;
             const maxAttempts = 40;
-            
             const checkInterval = setInterval(() => {
                 attempts++;
-                
                 const isSuccess = (
                     (signalView && signalView.classList && signalView.classList.contains('active')) ||
-                    (statusView && statusView.classList && statusView.classList.contains('active') && 
-                     statusView.textContent && statusView.textContent.includes('✅')) ||
+                    (statusView && statusView.classList && statusView.classList.contains('active') && statusView.textContent && statusView.textContent.includes('✅')) ||
                     (document.querySelector('#signalView.active')) ||
-                    (document.querySelector('[class*="signal"]') && 
-                     document.querySelector('[class*="signal"]').textContent && 
-                     document.querySelector('[class*="signal"]').textContent.includes('✅'))
+                    (document.querySelector('[class*="signal"]') && document.querySelector('[class*="signal"]').textContent && document.querySelector('[class*="signal"]').textContent.includes('✅'))
                 );
-                
                 if (isSuccess && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
-                    signalSuccess = true;
-                    signalGenerated = true;
-                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                    return;
+                    clearInterval(checkInterval); signalSent = true; signalSuccess = true; signalGenerated = true;
+                    window.parent.postMessage({ type: 'signalResult', success: true }, '*'); return;
                 }
-                
                 const isFailure = (
                     (errorView && errorView.classList && errorView.classList.contains('active')) ||
                     (document.querySelector('#errorView.active')) ||
-                    (document.querySelector('[class*="error"]') && 
-                     document.querySelector('[class*="error"]').textContent && 
-                     (document.querySelector('[class*="error"]').textContent.includes('❌') ||
-                      document.querySelector('[class*="error"]').textContent.includes('Error')))
+                    (document.querySelector('[class*="error"]') && document.querySelector('[class*="error"]').textContent && (document.querySelector('[class*="error"]').textContent.includes('❌') || document.querySelector('[class*="error"]').textContent.includes('Error')))
                 );
-                
                 if (isFailure && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
-                    signalSuccess = false;
-                    signalGenerated = true;
-                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                    return;
+                    clearInterval(checkInterval); signalSent = true; signalSuccess = false; signalGenerated = true;
+                    window.parent.postMessage({ type: 'signalResult', success: false }, '*'); return;
                 }
-                
-                if (waitingView && waitingView.classList && waitingView.classList.contains('active')) {
-                    return;
-                }
-                
+                if (waitingView && waitingView.classList && waitingView.classList.contains('active')) { return; }
                 if (attempts >= maxAttempts && !signalSent) {
-                    clearInterval(checkInterval);
-                    signalSent = true;
+                    clearInterval(checkInterval); signalSent = true;
                     window.parent.postMessage({ type: 'signalResult', success: false }, '*');
                 }
             }, 500);
         }
-        
         if (typeof renderSignalResult === 'function') {
             const originalRender = renderSignalResult;
             window.renderSignalResult = function(data) {
                 originalRender(data);
-                if (!signalSent) {
-                    signalSent = true;
-                    window.parent.postMessage({ type: 'signalResult', success: true }, '*');
-                }
+                if (!signalSent) { signalSent = true; window.parent.postMessage({ type: 'signalResult', success: true }, '*'); }
             };
         }
-        
         if (typeof showError === 'function') {
             const originalShowError = showError;
             window.showError = function(msg) {
                 originalShowError(msg);
-                if (!signalSent) {
-                    signalSent = true;
-                    window.parent.postMessage({ type: 'signalResult', success: false }, '*');
-                }
+                if (!signalSent) { signalSent = true; window.parent.postMessage({ type: 'signalResult', success: false }, '*'); }
             };
         }
-        
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' || mutation.type === 'childList') {
                     const signalView = document.getElementById('signalView');
                     const errorView = document.getElementById('errorView');
-                    
                     if (signalView && signalView.classList && signalView.classList.contains('active') && !signalSent) {
-                        signalSent = true;
-                        signalGenerated = true;
-                        signalSuccess = true;
+                        signalSent = true; signalGenerated = true; signalSuccess = true;
                         window.parent.postMessage({ type: 'signalResult', success: true }, '*');
                     }
-                    
                     if (errorView && errorView.classList && errorView.classList.contains('active') && !signalSent) {
-                        signalSent = true;
-                        signalGenerated = true;
-                        signalSuccess = false;
+                        signalSent = true; signalGenerated = true; signalSuccess = false;
                         window.parent.postMessage({ type: 'signalResult', success: false }, '*');
                     }
                 }
             });
         });
-        
         setTimeout(() => {
             const targetNode = document.body;
-            if (targetNode) {
-                observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-            }
+            if (targetNode) { observer.observe(targetNode, { attributes: true, childList: true, subtree: true }); }
         }, 1000);
-        
         console.log('✅ Signal detection injected');
-    <\/script>
-    `;
+    <\/script>`;
     
     return htmlContent + injectScript;
 }
@@ -1637,33 +1496,24 @@ function renderTools() {
     container.innerHTML = '';
     const tools = appState.tools || [];
     const visibleTools = tools.filter(tool => tool.visibility === 'visible');
-    if (visibleTools.length === 0) { 
-        container.innerHTML = ''; 
-        return; 
-    }
+    if (visibleTools.length === 0) { container.innerHTML = ''; return; }
     visibleTools.forEach((tool, idx) => {
         const btn = document.createElement('button');
         btn.className = 'tool-btn';
-        
         let toolNameHtml = tool.name || 'Untitled Tool';
         if (toolNameHtml.includes('RUTHLESS')) {
             toolNameHtml = toolNameHtml.replace(/RUTHLESS/g, '<span class="ruthless-in-tool">RUTHLESS</span>');
         }
-        
         const showFire = tool.showFire !== undefined ? tool.showFire : true;
-        
         btn.innerHTML = `
             <div class="tool-name">
                 ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
                 ${toolNameHtml}
                 ${showFire ? '<span class="tool-fire">🔥</span>' : ''}
             </div>
-            ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
-        `;
+            ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}`;
         const globalIdx = appState.tools.indexOf(tool);
-        btn.addEventListener('click', function() { 
-            openToolFullscreen(globalIdx); 
-        });
+        btn.addEventListener('click', function() { openToolFullscreen(globalIdx); });
         container.appendChild(btn);
     });
 }
@@ -1681,26 +1531,15 @@ function updateSwitchButtons() {
     if (!container) return;
     container.innerHTML = '';
     const tools = appState.tools || [];
-    
     const displayTools = openTools.slice(0, 2);
-    
-    if (displayTools.length === 0) {
-        return;
-    }
-    
+    if (displayTools.length === 0) { return; }
     displayTools.forEach((toolIdx, slot) => {
         if (tools[toolIdx]) {
             const btn = document.createElement('button');
             btn.className = 'tool-switch-btn';
             btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
-            if (currentToolIndex === toolIdx) {
-                btn.classList.add('active-tool');
-            }
-            btn.addEventListener('click', function() {
-                if (currentToolIndex !== toolIdx) {
-                    switchTool(toolIdx);
-                }
-            });
+            if (currentToolIndex === toolIdx) { btn.classList.add('active-tool'); }
+            btn.addEventListener('click', function() { if (currentToolIndex !== toolIdx) { switchTool(toolIdx); } });
             container.appendChild(btn);
         }
     });
@@ -1709,23 +1548,16 @@ function updateSwitchButtons() {
 function switchTool(index) {
     if (!appState.tools[index]) return;
     if (index === currentToolIndex) return;
-    
     saveCurrentToolData();
-    
     currentToolIndex = index;
     localStorage.setItem('brt_current_tool', currentToolIndex);
-    
     const tool = appState.tools[currentToolIndex];
     const iframe = document.getElementById('toolFullscreenIframe');
-    
     const cacheKey = 'tool_' + currentToolIndex;
     let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
+    if (toolDataCache[cacheKey]) { htmlContent = toolDataCache[cacheKey]; }
     htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
     iframe.srcdoc = htmlContent;
-    
     updateSwitchButtons();
     updateToolHeader();
 }
@@ -1734,47 +1566,30 @@ function openToolFullscreen(index) {
     const user = appState.currentUser;
     if (!user) { alert('Please login first!'); return; }
     if (user.blocked) { alert('🚫 Account blocked'); return; }
-    if (user.credits < 1) {
-        openModal('noCreditsPopup');
-        return;
-    }
-    
+    if (user.credits < 1) { openModal('noCreditsPopup'); return; }
     const tools = appState.tools || [];
     const tool = tools[index];
     if (!tool) return;
-    
     sessionStorage.setItem('brt_tool_open', 'true');
-    
     isToolMinimized = false;
     sessionStorage.setItem('brt_tool_minimized', 'false');
     document.getElementById('recentToolsMini').style.display = 'none';
-    
     if (!openTools.includes(index)) {
-        if (openTools.length >= 2) {
-            openTools.shift();
-        }
+        if (openTools.length >= 2) { openTools.shift(); }
         openTools.push(index);
         localStorage.setItem('brt_open_tools', JSON.stringify(openTools));
     }
-    
     currentToolIndex = index;
     localStorage.setItem('brt_current_tool', currentToolIndex);
-    
     updateToolHeader();
-    
     const overlay = document.getElementById('toolFullscreen');
     const iframe = document.getElementById('toolFullscreenIframe');
     overlay.classList.add('active');
-    
     const cacheKey = 'tool_' + index;
     let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) {
-        htmlContent = toolDataCache[cacheKey];
-    }
-    
+    if (toolDataCache[cacheKey]) { htmlContent = toolDataCache[cacheKey]; }
     htmlContent = prepareToolHTML(index, htmlContent);
     iframe.srcdoc = htmlContent;
-    
     if (!recentTools.includes(index)) {
         recentTools.unshift(index);
         if (recentTools.length > 5) recentTools.pop();
@@ -1782,17 +1597,6 @@ function openToolFullscreen(index) {
     }
     updateRecentToolsMini();
     updateSwitchButtons();
-}
-
-function minimizeTool() {
-    saveCurrentToolData();
-    isToolMinimized = true;
-    sessionStorage.setItem('brt_tool_minimized', 'true');
-    sessionStorage.removeItem('brt_tool_open');
-    document.getElementById('toolFullscreen').classList.remove('active');
-    document.getElementById('recentToolsMini').style.display = 'block';
-    updateRecentToolsMini();
-    window._currentTool = null;
 }
 
 function saveCurrentToolData() {
@@ -1805,29 +1609,17 @@ function saveCurrentToolData() {
 
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'signalResult') {
-        if (isDeducting) {
-            console.log('⚠️ Deduction already in progress, skipping duplicate signal.');
-            return;
-        }
+        if (isDeducting) { console.log('⚠️ Deduction already in progress'); return; }
         if (event.data.success === true) {
             const success = deductCredit();
             if (success) {
-                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                    type: 'signalResult', 
-                    success: true, 
-                    credits: appState.currentUser.credits 
-                }, '*');
+                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
             }
         } else {
-            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ 
-                type: 'signalResult', 
-                success: false, 
-                error: event.data.error || 'Signal generation failed' 
-            }, '*');
+            document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, error: event.data.error || 'Signal generation failed' }, '*');
         }
         return;
     }
-    
     if (event.data && event.data.type === 'saveToolData') {
         const cacheKey = 'tool_' + event.data.toolIndex;
         toolDataCache[cacheKey] = event.data.htmlContent;
@@ -1838,10 +1630,7 @@ window.addEventListener('message', function(event) {
 function updateRecentToolsMini() {
     const mini = document.getElementById('recentToolsMini');
     const sub = document.getElementById('recentToolsMiniSub');
-    if (recentTools.length === 0) {
-        mini.style.display = 'none';
-        return;
-    }
+    if (recentTools.length === 0) { mini.style.display = 'none'; return; }
     const tools = appState.tools || [];
     const names = recentTools.filter(i => tools[i]).map(i => tools[i].name).join(' • ');
     sub.textContent = names || 'Click to open';
@@ -1854,10 +1643,7 @@ document.getElementById('recentToolsMini').addEventListener('click', function() 
         const user = appState.currentUser;
         if (!user) { alert('Please login first!'); return; }
         if (user.blocked) { alert('🚫 Account blocked'); return; }
-        if (user.credits < 1) {
-            openModal('noCreditsPopup');
-            return;
-        }
+        if (user.credits < 1) { openModal('noCreditsPopup'); return; }
         openToolFullscreen(lastTool);
     }
 });
@@ -1888,8 +1674,7 @@ function openAccountModal() {
         <div class="account-detail-row"><span class="label">Available Credits</span><span class="value green">${user.credits || 0}</span></div>
         <div class="account-detail-row"><span class="label">Free Credits</span><span class="value">${user.freeCredits || 0}</span></div>
         <div class="account-detail-row"><span class="label">Today Used</span><span class="value">${user.todayUsed || 0}</span></div>
-        <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.6rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
-    `;
+        <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.6rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>`;
     openModal('accountModal');
 }
 window.openAccountModal = openAccountModal;
@@ -1897,18 +1682,11 @@ window.openAccountModal = openAccountModal;
 function deductCredit() {
     if (isDeducting) return false;
     isDeducting = true;
-    
     try {
         const user = appState.currentUser;
         if (!user) return false;
-        
         const creditsToDeduct = appState.creditsPerSignal || 1;
-        
-        if (user.credits < creditsToDeduct) {
-            isDeducting = false;
-            return false;
-        }
-        
+        if (user.credits < creditsToDeduct) { isDeducting = false; return false; }
         user.credits -= creditsToDeduct;
         user.signalsUsed = (user.signalsUsed || 0) + 1;
         user.todayUsed = (user.todayUsed || 0) + 1;
@@ -1918,10 +1696,7 @@ function deductCredit() {
         updateToolHeader();
         isDeducting = false;
         return true;
-    } catch(e) {
-        isDeducting = false;
-        return false;
-    }
+    } catch(e) { isDeducting = false; return false; }
 }
 
 function updateUI() {
@@ -1940,22 +1715,12 @@ function updateChatBadge() {
     const badge = document.getElementById('chatBadge');
     if (!badge) return;
     if (chatUnreadCount > 0) {
-        badge.classList.add('active');
-        badge.classList.add('has-count');
+        badge.classList.add('active', 'has-count');
         badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
-        badge.style.display = 'flex';
-        badge.style.width = 'auto';
-        badge.style.padding = '0 5px';
-        badge.style.minWidth = '18px';
-        badge.style.height = '18px';
-        badge.style.fontSize = '0.45rem';
-        badge.style.lineHeight = '18px';
-        badge.style.borderRadius = '10px';
-    } else {
-        badge.classList.remove('active');
-        badge.classList.remove('has-count');
-        badge.style.display = 'none';
-    }
+        badge.style.display = 'flex'; badge.style.width = 'auto'; badge.style.padding = '0 5px';
+        badge.style.minWidth = '18px'; badge.style.height = '18px'; badge.style.fontSize = '0.45rem';
+        badge.style.lineHeight = '18px'; badge.style.borderRadius = '10px';
+    } else { badge.classList.remove('active', 'has-count'); badge.style.display = 'none'; }
 }
 
 function renderChatMessages() {
@@ -1963,13 +1728,9 @@ function renderChatMessages() {
     if (!container || !appState.currentUser) return; 
     container.innerHTML = '';
     container.style.background = '#000000 !important';
-    
     const key = getChatKey(appState.currentUser.email); 
     const msgs = appState.chats && appState.chats[key] ? appState.chats[key] : [];
-    if (msgs.length === 0) { 
-        container.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">No messages yet</div>'; 
-        return; 
-    }
+    if (msgs.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">No messages yet</div>'; return; }
     msgs.forEach(c => { 
         const cls = c.sender === 'admin' ? 'admin' : 'user'; 
         const time = c.timestamp ? new Date(c.timestamp).toLocaleTimeString() : ''; 
@@ -2028,46 +1789,22 @@ window.showPaymentOptions = function() {
 function loadQRPreview() { const container = document.getElementById('qrDisplayContent'); if (!container) return; if (appState.qrCodeBase64) { container.innerHTML = `<img src="${appState.qrCodeBase64}" alt="QR Code" style="max-width:160px;max-height:160px;border-radius:6px;" />`; } else { container.innerHTML = `<div class="qr-placeholder">No QR Code uploaded.</div>`; } }
 window.submitManualPayment = function() {
     if (!selectedCreditPack) { document.getElementById('addCreditsError').textContent = '❌ Please select a credit pack first!'; return; }
-    
     const utr = document.getElementById('utrInput').value.trim();
     const txId = document.getElementById('transactionIdInput').value.trim();
-    
-    if (!utr && !txId) {
-        document.getElementById('addCreditsError').textContent = '❌ Please enter UTR Number or Transaction ID';
-        return;
-    }
-    if ((utr && utr.length < 6) || (txId && txId.length < 6)) {
-        document.getElementById('addCreditsError').textContent = '❌ Enter at least 6 characters';
-        return;
-    }
-    
+    if (!utr && !txId) { document.getElementById('addCreditsError').textContent = '❌ Please enter UTR Number or Transaction ID'; return; }
+    if ((utr && utr.length < 6) || (txId && txId.length < 6)) { document.getElementById('addCreditsError').textContent = '❌ Enter at least 6 characters'; return; }
     const transactionId = utr || txId;
-    
     const paymentRecord = { 
-        userEmail: appState.currentUser.email, 
-        credits: selectedCreditPack.credits, 
-        amount: selectedCreditPack.price, 
-        transactionId: transactionId,
-        utr: utr,
-        transactionIdField: txId,
-        status: 'pending', 
-        paymentMode: 'manual', 
-        date: new Date().toISOString(), 
-        screenshot: 'none' 
+        userEmail: appState.currentUser.email, credits: selectedCreditPack.credits, amount: selectedCreditPack.price, 
+        transactionId: transactionId, utr: utr, transactionIdField: txId,
+        status: 'pending', paymentMode: 'manual', date: new Date().toISOString(), screenshot: 'none' 
     };
     if (!appState.payments) appState.payments = []; 
-    appState.payments.push(paymentRecord); 
-    saveLocalState(); 
-    updateUI();
+    appState.payments.push(paymentRecord); saveLocalState(); updateUI();
     document.getElementById('addCreditsSuccess').textContent = '✅ Payment submitted! Waiting for admin approval.'; 
     document.getElementById('addCreditsError').textContent = ''; 
-    document.getElementById('utrInput').value = '';
-    document.getElementById('transactionIdInput').value = '';
-    setTimeout(() => { 
-        closeModal('addCreditsModal'); 
-        alert('✅ Payment submitted successfully!'); 
-        document.getElementById('creditPacksContainer').style.display = 'block'; 
-    }, 1500);
+    document.getElementById('utrInput').value = ''; document.getElementById('transactionIdInput').value = '';
+    setTimeout(() => { closeModal('addCreditsModal'); alert('✅ Payment submitted successfully!'); document.getElementById('creditPacksContainer').style.display = 'block'; }, 1500);
 };
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -2114,16 +1851,13 @@ document.addEventListener('click', function(e) {
     if (e.target.closest('.btn-sm')) return;
     if (e.target.closest('.social-icons a')) return;
     if (e.target.closest('.tool-fullscreen-overlay')) return;
-
     logoGlowDash.classList.remove('active');
     void logoGlowDash.offsetWidth;
     logoGlowDash.classList.add('active');
     setTimeout(() => { logoGlowDash.classList.remove('active'); }, 800);
-
     const logoIcon = document.getElementById('logoIcon');
     const logoImg = document.getElementById('logoImage');
     const brandName = document.querySelector('.brand-name');
-
     if (logoIcon.style.display !== 'none') {
         logoIcon.style.animation = 'none';
         void logoIcon.offsetWidth;
@@ -2137,7 +1871,6 @@ document.addEventListener('click', function(e) {
     brandName.style.animation = 'none';
     void brandName.offsetWidth;
     brandName.style.animation = 'zoomOutSlow 0.7s ease forwards';
-
     setTimeout(() => {
         if (logoIcon.style.display !== 'none') { logoIcon.style.animation = ''; }
         if (logoImg.style.display !== 'none') { logoImg.style.animation = ''; }
@@ -2155,14 +1888,8 @@ document.addEventListener('keydown', (e) => {
 // Cursor glow
 const glow = document.getElementById('cursorGlow');
 if (window.matchMedia('(hover: hover)').matches) {
-    document.addEventListener('mousemove', (e) => {
-        glow.style.left = e.clientX + 'px';
-        glow.style.top = e.clientY + 'px';
-        glow.classList.add('active');
-    });
-    document.addEventListener('mouseleave', () => {
-        glow.classList.remove('active');
-    });
+    document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
+    document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
 }
 
 loadLocalState();
