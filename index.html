@@ -32,6 +32,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js"
+            }
+        }
+    </script>
+
     <style>
         :root {
             --bg-primary: #0a0a0a;
@@ -329,7 +338,6 @@
                 </div>
             </div>
 
-            <!-- OFFER BANNER -->
             <div class="offer-banner" id="offerBanner">
                 <div class="offer-title-wrapper">
                     <span class="offer-gift-icon">🎁</span>
@@ -340,27 +348,23 @@
                 <div class="click-hint">👆 Click here to sign up now</div>
             </div>
 
-            <!-- USER CARDS -->
             <div class="user-section" id="userSection">
                 <div class="user-card login-card" id="loginCard"><span class="icon">🔑</span><h3>LOGIN</h3><p>Sign in to your account</p><button class="btn btn-white" id="loginBtn">Login Now</button></div>
                 <div class="user-card signup-card" id="signupCard"><span class="icon">📝</span><h3>SIGN UP</h3><p>Create your free account</p><button class="btn btn-red" id="signupBtn">Create Account</button></div>
                 <div class="user-card verify-card" id="verifyCard"><span class="icon">✅</span><h3>ID VERIFY</h3><p>Verify for premium features</p><button class="btn btn-white" id="verifyBtn">Verify Now</button></div>
             </div>
 
-            <!-- FEATURES -->
             <div class="features-section">
                 <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
                 <div class="features-scroll" id="featuresScroll"></div>
             </div>
 
-            <!-- STATS -->
             <div class="stats-row">
                 <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
                 <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
                 <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
             </div>
 
-            <!-- FOOTER -->
             <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — Free AI Signals for Quotex, Binomo, Pocket Option</p></div>
 
         </div>
@@ -430,10 +434,10 @@
         </div>
     </div>
 
-    <!-- FIREBASE + MAIN SCRIPT -->
+    <!-- FIREBASE + MAIN SCRIPT (importmap) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+        import { initializeApp } from "firebase/app";
+        import { getDatabase, ref, onValue, set } from "firebase/database";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
@@ -624,7 +628,6 @@
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active')); closeInfoPopup(); } });
 
-        // PREVENT COPY
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', function(e) { if (e.ctrlKey && (e.key==='c'||e.key==='C'||e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault(); if (e.key==='F12') e.preventDefault(); });
 
