@@ -1,0 +1,115 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN LOGIN (LOGO CLICK)             -->
+<!-- FILE: index-admin-login.html                  -->
+<!-- Contains: HTML + CSS + JS for Admin Access    -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── ADMIN LOGIN (LOGO CLICK) CSS ─── */
+    /* No additional CSS needed - uses existing brand-section styles */
+    /* The logo click detection is handled via JavaScript only */
+</style>
+
+<!-- ─── ADMIN LOGIN HTML ─── -->
+<!-- No additional HTML needed - uses existing logo elements in red-container -->
+<!-- Logo click detection is attached to: #logoIcon, #logoImage, #brandSection -->
+
+<script>
+    // ─── ADMIN LOGIN FUNCTIONS ───
+
+    let logoClickCounter = 0;
+    let logoClickTimer = null;
+
+    // Reset click counter after timeout
+    function resetLogoClickCounter() {
+        logoClickCounter = 0;
+        if (logoClickTimer) {
+            clearTimeout(logoClickTimer);
+            logoClickTimer = null;
+        }
+    }
+
+    // Handle logo click for admin access
+    function handleLogoClick(event) {
+        // Prevent default if it's a link/button
+        if (event) event.preventDefault();
+
+        // Check if regular user is logged in (not admin)
+        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+
+        if (userLoggedIn && !adminLoggedIn) {
+            alert('🚫 Access Denied! Only Admin can access this page.');
+            resetLogoClickCounter();
+            return;
+        }
+
+        // Increment click counter
+        logoClickCounter++;
+
+        // Get required clicks from appState or default to 2
+        const requiredClicks = (typeof appState !== 'undefined' && appState.logoClickCount) 
+            ? appState.logoClickCount 
+            : 2;
+
+        // Reset timer on each click
+        if (logoClickTimer) {
+            clearTimeout(logoClickTimer);
+        }
+
+        // Set timer to reset clicks after 3 seconds
+        logoClickTimer = setTimeout(() => {
+            resetLogoClickCounter();
+        }, 3000);
+
+        // Check if required clicks reached
+        if (logoClickCounter >= requiredClicks) {
+            resetLogoClickCounter();
+            window.location.href = 'admin.html';
+        }
+    }
+
+    // Attach click listeners to logo elements
+    function attachAdminLoginListeners() {
+        const logoIcon = document.getElementById('logoIcon');
+        const logoImage = document.getElementById('logoImage');
+        const brandSection = document.getElementById('brandSection');
+
+        if (logoIcon) {
+            logoIcon.addEventListener('click', function(e) {
+                handleLogoClick(e);
+            });
+        }
+
+        if (logoImage) {
+            logoImage.addEventListener('click', function(e) {
+                handleLogoClick(e);
+            });
+        }
+
+        if (brandSection) {
+            brandSection.addEventListener('click', function(e) {
+                // Only trigger if clicking on logo or brand name
+                if (e.target.closest('.logo-icon') || 
+                    e.target.closest('.logo-img') || 
+                    e.target.closest('.brand-name')) {
+                    handleLogoClick(e);
+                }
+            });
+        }
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        attachAdminLoginListeners();
+    });
+
+    // Also try to attach immediately (in case DOM already loaded)
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        attachAdminLoginListeners();
+    }
+
+    // Expose functions globally
+    window.handleLogoClick = handleLogoClick;
+    window.resetLogoClickCounter = resetLogoClickCounter;
+</script>
