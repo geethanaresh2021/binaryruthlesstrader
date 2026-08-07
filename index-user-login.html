@@ -1,0 +1,458 @@
+<!-- ============================================ -->
+<!-- SECTION: USER LOGIN                           -->
+<!-- FILE: index-user-login.html                   -->
+<!-- Contains: HTML + CSS + JS for Login Modal     -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── LOGIN MODAL CSS ─── */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        animation: fadeInOverlay 0.3s ease;
+    }
+    .overlay.active { display: flex; }
+    @keyframes fadeInOverlay {
+        0% { opacity: 0; transform: scale(0.96); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    .modal {
+        background: rgba(20,20,20,0.97);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255,0,51,0.2);
+        border-radius: 16px;
+        padding: 28px 24px;
+        width: 100%;
+        max-width: 600px;
+        min-height: 280px;
+        max-height: 85vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 0 80px rgba(255,0,51,0.08);
+        animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes modalSlideIn {
+        0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-size: 1.5rem;
+        color: #FF0033;
+        cursor: pointer;
+        background: none;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+    }
+    .modal-close:hover {
+        transform: scale(1.3) rotate(90deg);
+        color: #ffffff;
+        background: rgba(255,0,51,0.06);
+    }
+    .modal-close:active { transform: scale(0.8); }
+
+    .modal h2 {
+        color: #FFD700;
+        text-align: center;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1rem;
+        margin-bottom: 14px;
+        letter-spacing: 2px;
+    }
+    .modal label {
+        display: block;
+        font-size: 0.55rem;
+        color: #FFD700;
+        margin: 6px 0 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .modal input {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        outline: none;
+        transition: all 0.4s ease;
+    }
+    .modal input:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 20px rgba(255,0,51,0.04), inset 0 0 20px rgba(255,0,51,0.02);
+        transform: scale(1.01);
+    }
+
+    .modal .btn-submit {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 30px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+        background: #FF0033;
+        color: #ffffff;
+    }
+    .modal .btn-submit::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .modal .btn-submit:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 28px rgba(0,0,0,0.3);
+    }
+    .modal .btn-submit:hover::after { opacity: 1; }
+    .modal .btn-submit:active { transform: scale(0.97); }
+
+    .modal .error-msg {
+        color: #FF0033;
+        font-size: 0.65rem;
+        margin-top: 3px;
+        font-family: 'Roboto Mono', monospace;
+        min-height: 18px;
+    }
+    .modal .success-msg {
+        color: #00FF66;
+        font-size: 0.65rem;
+        margin-top: 3px;
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    /* ─── INFO POPUP CSS ─── */
+    .info-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        animation: fadeInOverlay 0.3s ease;
+    }
+    .info-popup-overlay.active { display: flex; }
+    .info-popup {
+        background: rgba(20,20,20,0.97);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255,0,51,0.2);
+        border-radius: 16px;
+        padding: 30px 28px;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 0 80px rgba(255,0,51,0.08);
+        animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .info-popup .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-size: 1.5rem;
+        color: #FF0033;
+        cursor: pointer;
+        background: none;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+    }
+    .info-popup .popup-close:hover {
+        transform: scale(1.3) rotate(90deg);
+        color: #ffffff;
+        background: rgba(255,0,51,0.06);
+    }
+    .info-popup .popup-close:active { transform: scale(0.8); }
+    .info-popup .popup-icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 8px;
+    }
+    .info-popup h3 {
+        color: #FFD700;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+    }
+    .info-popup p {
+        color: #aaa;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 12px;
+    }
+    .info-popup .popup-btn {
+        display: block;
+        margin: 0 auto;
+        padding: 10px 30px;
+        border-radius: 30px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        background: #fff;
+        color: #000;
+    }
+    .info-popup .popup-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 28px rgba(255,255,255,0.2);
+    }
+    .info-popup .popup-btn.btn-gold {
+        background: #FFD700;
+        color: #000;
+    }
+    .info-popup .popup-btn.btn-gold:hover {
+        box-shadow: 0 6px 28px rgba(255,215,0,0.3);
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+        .modal { padding: 18px 16px; max-width: 100%; max-height: 90vh; min-height: 240px; }
+        .info-popup { padding: 24px 20px; max-width: 95%; }
+        .info-popup h3 { font-size: 0.95rem; }
+        .info-popup p { font-size: 0.8rem; }
+    }
+    @media (max-width: 480px) {
+        .modal { padding: 16px 14px; max-width: 100%; max-height: 92vh; min-height: 200px; }
+        .modal h2 { font-size: 0.85rem; }
+        .modal label { font-size: 0.48rem; }
+        .modal input { font-size: 0.65rem; padding: 5px 8px; }
+        .modal .btn-submit { font-size: 0.65rem; padding: 8px; }
+        .info-popup { padding: 20px 16px; max-width: 98%; }
+        .info-popup h3 { font-size: 0.85rem; }
+        .info-popup p { font-size: 0.75rem; }
+        .info-popup .popup-close { font-size: 1.3rem; }
+    }
+</style>
+
+<!-- ─── LOGIN MODAL HTML ─── -->
+<div class="overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeLoginModal()">✕</button>
+        <h2>🔐 LOGIN</h2>
+        <label>Gmail / Email</label>
+        <input type="email" id="loginEmail" placeholder="your@gmail.com" />
+        <label>Account ID</label>
+        <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
+        <div class="error-msg" id="loginError"></div>
+        <button class="btn-submit" onclick="handleLogin()">Login</button>
+    </div>
+</div>
+
+<!-- ─── INFO POPUP HTML ─── -->
+<div class="info-popup-overlay" id="infoPopup">
+    <div class="info-popup">
+        <button class="popup-close" id="infoPopupClose">✕</button>
+        <span class="popup-icon" id="infoPopupIcon">ℹ️</span>
+        <h3 id="infoPopupTitle">Info</h3>
+        <p id="infoPopupMessage">Message here</p>
+        <button class="popup-btn center-btn" id="infoPopupBtn" style="display:none;">Continue</button>
+    </div>
+</div>
+
+<script>
+    // ─── LOGIN FUNCTIONS ───
+
+    // Open Login Modal
+    function openLoginModal() {
+        document.getElementById('loginModal').classList.add('active');
+    }
+
+    // Close Login Modal
+    function closeLoginModal() {
+        document.getElementById('loginModal').classList.remove('active');
+    }
+
+    // Email Validation (Gmail only)
+    function isValidEmail(email) {
+        return /^[^\s@]+@gmail\.com$/.test(email);
+    }
+
+    // Show Info Popup
+    function showInfoPopup(icon, title, message, btnText, btnAction) {
+        const popup = document.getElementById('infoPopup');
+        document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
+        document.getElementById('infoPopupTitle').textContent = title || 'Info';
+        document.getElementById('infoPopupMessage').textContent = message || 'Message here';
+        const btn = document.getElementById('infoPopupBtn');
+        if (btnText) {
+            btn.style.display = 'block';
+            btn.textContent = btnText;
+            btn.className = 'popup-btn center-btn';
+            if (btnText.toLowerCase().includes('signup') || btnText.toLowerCase().includes('continue')) {
+                btn.classList.add('btn-gold');
+            }
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', function(e) {
+                if (typeof btnAction === 'function') {
+                    btnAction();
+                }
+                closeInfoPopup();
+            });
+        } else {
+            btn.style.display = 'none';
+        }
+        popup.classList.add('active');
+    }
+
+    // Close Info Popup
+    function closeInfoPopup() {
+        document.getElementById('infoPopup').classList.remove('active');
+    }
+
+    // Handle Login
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const accountId = document.getElementById('loginAccountId').value.trim();
+        const errorEl = document.getElementById('loginError');
+
+        if (!email || !accountId) {
+            errorEl.textContent = '❌ Enter email and account ID';
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
+            return;
+        }
+
+        // Check if appState is available (from main index.html)
+        if (typeof appState === 'undefined') {
+            errorEl.textContent = '❌ System not ready. Please try again.';
+            return;
+        }
+
+        const user = appState.users.find(u => u.email === email && u.accountId === accountId);
+
+        if (!user) {
+            showInfoPopup(
+                '📝',
+                'Account Not Found!',
+                'No account found with these details. Please sign up first to get started.',
+                'Sign Up Now',
+                function() {
+                    closeLoginModal();
+                    if (typeof openSignupModal === 'function') {
+                        openSignupModal();
+                    }
+                }
+            );
+            errorEl.textContent = '';
+            return;
+        }
+
+        if (user.blocked) {
+            errorEl.textContent = '🚫 Account blocked. Contact admin.';
+            return;
+        }
+
+        if (!user.verified) {
+            const pendingRequest = appState.verificationRequests
+                ? appState.verificationRequests.find(req => req.userEmail === email && req.status === 'pending')
+                : null;
+
+            if (pendingRequest) {
+                showInfoPopup(
+                    '⏳',
+                    'Verification Pending!',
+                    'Admin is currently reviewing your verification request. Please wait for approval. You will get access once verified.',
+                    null,
+                    null
+                );
+            } else {
+                showInfoPopup(
+                    '✅',
+                    'Not Verified Yet!',
+                    'Please submit your verification request first. Admin will review and approve your account.',
+                    'Go to Verify',
+                    function() {
+                        closeLoginModal();
+                        if (typeof openVerifyModal === 'function') {
+                            openVerifyModal();
+                        }
+                    }
+                );
+            }
+            errorEl.textContent = '';
+            return;
+        }
+
+        // Login Success
+        appState.currentUser = user;
+        sessionStorage.setItem('user_logged_in', 'true');
+        if (typeof saveLocalState === 'function') {
+            saveLocalState();
+        }
+        closeLoginModal();
+        errorEl.textContent = '';
+        window.location.href = 'dashboard.html';
+    }
+
+    // Info Popup Close Button
+    document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
+
+    // Close Info Popup on overlay click
+    document.getElementById('infoPopup').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeInfoPopup();
+        }
+    });
+
+    // Close Login Modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLoginModal();
+            closeInfoPopup();
+        }
+    });
+
+    // Expose functions globally
+    window.openLoginModal = openLoginModal;
+    window.closeLoginModal = closeLoginModal;
+    window.handleLogin = handleLogin;
+    window.showInfoPopup = showInfoPopup;
+    window.closeInfoPopup = closeInfoPopup;
+    window.isValidEmail = isValidEmail;
+</script>
