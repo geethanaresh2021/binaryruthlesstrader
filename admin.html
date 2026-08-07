@@ -210,10 +210,10 @@
         .social-icons-header a:hover {
             color: #FF0033;
             border-color: #FF0033;
-            transform: translateY(-2px);
+            /* transform: translateY(-2px); removed */
             box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
         }
-        .social-icons-header a:active { transform: scale(0.95); }
+        .social-icons-header a:active { /* transform: scale(0.95); removed */ }
         
         .nav-links {
             display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
@@ -225,7 +225,7 @@
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
         .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); }
-        .nav-links button:active { transform: scale(0.95); }
+        .nav-links button:active { /* transform: scale(0.95); removed */ }
         .nav-links button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
@@ -247,10 +247,10 @@
             position: relative;
             overflow: hidden;
         }
-        .admin-dash-card:hover { border-color: #FF0033; transform: translateY(-3px); box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
-        .admin-dash-card:active { transform: scale(0.97); }
+        .admin-dash-card:hover { border-color: #FF0033; /* transform: translateY(-3px); removed */ box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
+        .admin-dash-card:active { /* transform: scale(0.97); removed */ }
         .admin-dash-card .icon { font-size: 1.4rem; color: #FFD700; display: block; margin-bottom: 2px; transition: all 0.3s ease; }
-        .admin-dash-card:hover .icon { transform: scale(1.1); }
+        .admin-dash-card:hover .icon { /* transform: scale(1.1); removed */ }
         .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.5rem; font-weight: 700; display: block; margin: 2px 0; }
         .admin-dash-card .count.green { color: #00FF66; }
         .admin-dash-card .count.red { color: #FF0033; }
@@ -261,8 +261,8 @@
         .password-overlay.active { display: flex; }
         .password-modal { background: var(--password-modal-bg); backdrop-filter: blur(20px); border: 2px solid var(--password-modal-border); border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
         .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
-        .password-modal .close-btn:hover { transform: scale(1.2) rotate(90deg); }
-        .password-modal .close-btn:active { transform: scale(0.9); }
+        .password-modal .close-btn:hover { /* transform: scale(1.2) rotate(90deg); removed */ }
+        .password-modal .close-btn:active { /* transform: scale(0.9); removed */ }
         .password-modal .lock-icon { font-size: 2.4rem; color: #FF0033; margin-bottom: 8px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
         .password-modal input { width: 100%; padding: 10px; background: var(--password-input-bg); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: var(--password-input-color); font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-align: center; outline: none; transition: all 0.3s ease; }
@@ -272,8 +272,8 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .password-modal .btn-enter { width: 100%; padding: 10px; margin-top: 12px; border-radius: 30px; font-weight: 700; border: none; cursor: not-allowed; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; background: rgba(255,0,51,0.05); border: 1px solid rgba(255,0,51,0.1); color: #666; }
         .password-modal .btn-enter.enabled { background: #FF0033; color: #fff; cursor: pointer; box-shadow: 0 0 24px rgba(255,0,51,0.2); border-color: #FF0033; }
-        .password-modal .btn-enter.enabled:hover { box-shadow: 0 0 40px rgba(255,0,51,0.3); transform: scale(1.02); }
-        .password-modal .btn-enter.enabled:active { transform: scale(0.97); }
+        .password-modal .btn-enter.enabled:hover { box-shadow: 0 0 40px rgba(255,0,51,0.3); /* transform: scale(1.02); removed */ }
+        .password-modal .btn-enter.enabled:active { /* transform: scale(0.97); removed */ }
         .password-modal .error-text { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         
         .admin-section {
@@ -345,9 +345,9 @@
         }
         .admin-section .btn-row .btn-edit:hover { 
             box-shadow: 0 0 24px rgba(255,255,255,0.15); 
-            transform: scale(1.02); 
+            /* transform: scale(1.02); removed */
         }
-        .admin-section .btn-row .btn-edit:active { transform: scale(0.95); }
+        .admin-section .btn-row .btn-edit:active { /* transform: scale(0.95); removed */ }
         
         .admin-section .btn-row .btn-save {
             flex: 1;
@@ -367,9 +367,9 @@
         }
         .admin-section .btn-row .btn-save:hover { 
             box-shadow: 0 0 24px rgba(255,0,51,0.2); 
-            transform: scale(1.02); 
+            /* transform: scale(1.02); removed */
         }
-        .admin-section .btn-row .btn-save:active { transform: scale(0.95); }
+        .admin-section .btn-row .btn-save:active { /* transform: scale(0.95); removed */ }
         .admin-section .btn-row .btn-save.show { display: block; }
         .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
         
@@ -448,7 +448,7 @@
             cursor: pointer; 
             transition: all 0.3s ease; 
         }
-        .tools-list .tool-item .tool-actions button:hover { transform: scale(1.04); }
+        .tools-list .tool-item .tool-actions button:hover { /* transform: scale(1.04); removed */ }
         .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
@@ -476,7 +476,7 @@
             align-items: center; 
             transition: all 0.3s ease; 
         }
-        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); transform: translateX(4px); }
+        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); /* transform: translateX(4px); removed */ }
         .social-list .social-item .social-info { flex: 1; }
         .social-list .social-item .social-name { color: #FFD700; font-size: 0.55rem; }
         .social-list .social-item .social-url { color: var(--text-secondary); font-size: 0.45rem; }
@@ -490,51 +490,14 @@
             cursor: pointer; 
             transition: all 0.3s ease; 
         }
-        .social-list .social-item .social-actions button:hover { transform: scale(1.04); }
+        .social-list .social-item .social-actions button:hover { /* transform: scale(1.04); removed */ }
         .social-list .social-item .social-actions .btn-edit-social { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
         .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
         
-        .features-list .feature-item {
-            background: var(--tool-item-bg);
-            border: 1px solid var(--tool-item-border);
-            border-radius: 8px;
-            padding: 6px 10px;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        .features-list .feature-item:hover {
-            border-color: rgba(255,0,51,0.15);
-            transform: translateX(4px);
-        }
-        .features-list .feature-item .feature-info { flex: 1; }
-        .features-list .feature-item .feature-name { color: #FFD700; font-size: 0.5rem; font-family: 'Orbitron', sans-serif; }
-        .features-list .feature-item .feature-desc { color: var(--text-secondary); font-size: 0.4rem; }
-        .features-list .feature-item .feature-actions { display: flex; gap: 3px; }
-        .features-list .feature-item .feature-actions button {
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: none;
-            font-size: 0.4rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .features-list .feature-item .feature-actions button:hover { transform: scale(1.04); }
-        .features-list .feature-item .feature-actions .btn-edit-feature { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
-        .features-list .feature-item .feature-actions .btn-delete-feature { background: #FF0033; color: #fff; }
-        .features-list .feature-item .feature-actions .btn-toggle-feature { background: #FFD700; color: #000; }
+        /* Features section (CSS removed) */
         
-        .firebase-config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .firebase-config-grid .field-group { margin-bottom: 0; }
-        .firebase-config-grid .field-group.full-width { grid-column: 1 / -1; }
+        /* Firebase Config grid removed */
         
         /* ===== OVERLAYS & MODALS ===== */
         .overlay { 
@@ -581,8 +544,8 @@
             transition: all 0.3s ease; 
             font-weight: 700;
         }
-        .modal-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255,0,51,0.06); }
-        .modal-close:active { transform: scale(0.8); }
+        .modal-close:hover { /* transform: scale(1.3) rotate(90deg); removed */ color: var(--text-primary); background: rgba(255,0,51,0.06); }
+        .modal-close:active { /* transform: scale(0.8); removed */ }
         .modal h2 { 
             color: var(--popup-label); 
             text-align: center; 
@@ -626,8 +589,8 @@
             font-family: 'Inter', sans-serif; 
             font-size: 0.75rem; 
         }
-        .modal .btn-submit:hover { transform: scale(1.02); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
-        .modal .btn-submit:active { transform: scale(0.97); }
+        .modal .btn-submit:hover { /* transform: scale(1.02); removed */ box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+        .modal .btn-submit:active { /* transform: scale(0.97); removed */ }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
@@ -767,7 +730,7 @@
             font-size: 0.6rem; 
             transition: all 0.3s ease; 
         }
-        .modal .chat-input-area button:hover { transform: scale(1.04); }
+        .modal .chat-input-area button:hover { /* transform: scale(1.04); removed */ }
         
         .modal .btn-group { 
             display: flex; 
@@ -788,8 +751,8 @@
             letter-spacing: 0.5px; 
             transition: all 0.3s ease; 
         }
-        .modal .btn-group .btn-sm:hover { transform: scale(1.02); }
-        .modal .btn-group .btn-sm:active { transform: scale(0.97); }
+        .modal .btn-group .btn-sm:hover { /* transform: scale(1.02); removed */ }
+        .modal .btn-group .btn-sm:active { /* transform: scale(0.97); removed */ }
         .modal .btn-group .btn-give { background: #00FF66; color: #000; }
         .modal .btn-group .btn-block { background: #FF0033; color: #fff; }
         .modal .btn-group .btn-remove { background: #FFD700; color: #000; }
@@ -917,7 +880,7 @@
             transition: all 0.3s ease;
         }
         .credits-per-signal-group .save-btn-small:hover {
-            transform: scale(1.05);
+            /* transform: scale(1.05); removed */
             box-shadow: 0 0 20px rgba(255,0,51,0.2);
         }
         
@@ -927,38 +890,33 @@
         
         /* Smooth transitions only - no scale/zoom for sections */
         .red-container, .admin-dash-card, .admin-section, .tools-list .tool-item,
-        .social-list .social-item, .features-list .feature-item,
+        .social-list .social-item,
         .modal .btn-submit, .modal-close, .nav-links button,
         .admin-section .btn-edit, .admin-section .btn-save,
         .tools-list .tool-item .tool-actions button,
         .social-list .social-item .social-actions button,
-        .features-list .feature-item .feature-actions button,
         .social-icons-header a, #chatUserList .chat-user-item {
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
         .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
         .tools-list .tool-item:hover, .social-list .social-item:hover,
-        .features-list .feature-item:hover,
         .modal .btn-submit:hover, .modal-close:hover,
         .nav-links button:hover, .admin-section .btn-edit:hover,
         .admin-section .btn-save:hover,
         .tools-list .tool-item .tool-actions button:hover,
         .social-list .social-item .social-actions button:hover,
-        .features-list .feature-item .feature-actions button:hover,
         .social-icons-header a:hover, #chatUserList .chat-user-item:hover {
-            transform: translateY(-2px);
+            /* transform: translateY(-2px); removed */
         }
         .red-container:active, .admin-dash-card:active, .admin-section:active,
         .tools-list .tool-item:active, .social-list .social-item:active,
-        .features-list .feature-item:active,
         .modal .btn-submit:active, .modal-close:active,
         .nav-links button:active, .admin-section .btn-edit:active,
         .admin-section .btn-save:active,
         .tools-list .tool-item .tool-actions button:active,
         .social-list .social-item .social-actions button:active,
-        .features-list .feature-item .feature-actions button:active,
         .social-icons-header a:active, #chatUserList .chat-user-item:active {
-            transform: scale(0.97);
+            /* transform: scale(0.97); removed */
         }
         /* No zoom effect on section containers, only border color change */
         .admin-section:active {
@@ -1174,52 +1132,9 @@
                 </div>
             </div>
             
-            <!-- 8. Features Manager -->
-            <div class="admin-section">
-                <h4>⚡ Features Manager</h4>
-                <div id="featuresList" class="features-list"></div>
-                <button class="btn-edit" onclick="showAddFeatureForm()" style="margin-top:4px;background:var(--btn-edit-bg);color:var(--btn-edit-color);padding:6px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.55rem;transition:all 0.3s ease;width:100%;">➕ Add New Feature</button>
-                <div id="addFeatureForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <div class="field-group"><label>Icon (Emoji)</label><input type="text" id="newFeatureIcon" placeholder="🧠" value="🧠"></div>
-                    <div class="field-group"><label>Feature Name</label><input type="text" id="newFeatureName" placeholder="Feature name"></div>
-                    <div class="field-group"><label>Description</label><input type="text" id="newFeatureDesc" placeholder="Short description"></div>
-                    <div class="field-group"><label>Status</label><select id="newFeatureStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminAddFeature()" style="background:#FF0033;color:#fff;">💾 Save Feature</button>
-                        <button class="btn-edit" onclick="document.getElementById('addFeatureForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
-                <div id="editFeatureForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <input type="hidden" id="editFeatureIndex">
-                    <div class="field-group"><label>Icon</label><input type="text" id="editFeatureIcon"></div>
-                    <div class="field-group"><label>Feature Name</label><input type="text" id="editFeatureName"></div>
-                    <div class="field-group"><label>Description</label><input type="text" id="editFeatureDesc"></div>
-                    <div class="field-group"><label>Status</label><select id="editFeatureStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminUpdateFeature()" style="background:#FF0033;color:#fff;">💾 Update Feature</button>
-                        <button class="btn-edit" onclick="document.getElementById('editFeatureForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
-            </div>
+            <!-- 8. Features Manager section removed -->
             
-            <!-- 9. Firebase Configuration -->
-            <div class="admin-section">
-                <h4>🔥 Firebase Configuration</h4>
-                <div class="firebase-config-grid">
-                    <div class="field-group"><label>API Key</label><input type="text" id="fbApiKey" disabled></div>
-                    <div class="field-group"><label>Auth Domain</label><input type="text" id="fbAuthDomain" disabled></div>
-                    <div class="field-group"><label>Database URL</label><input type="text" id="fbDbUrl" disabled></div>
-                    <div class="field-group"><label>Project ID</label><input type="text" id="fbProjectId" disabled></div>
-                    <div class="field-group"><label>Storage Bucket</label><input type="text" id="fbStorageBucket" disabled></div>
-                    <div class="field-group"><label>Messaging Sender ID</label><input type="text" id="fbMessagingSenderId" disabled></div>
-                    <div class="field-group full-width"><label>App ID</label><input type="text" id="fbAppId" disabled></div>
-                    <div class="field-group full-width"><label>Measurement ID</label><input type="text" id="fbMeasurementId" disabled></div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminSaveFirebase()">💾 Save</button>
-                </div>
-            </div>
+            <!-- 9. Firebase Configuration section removed -->
             
             <!-- 10. Admin Access -->
             <div class="admin-section">
@@ -1374,25 +1289,7 @@ let appState = {
     paymentApprovalMode: 'manual', 
     razorpayKeyId: '',
     razorpayKeySecret: '',
-    creditsPerSignal: 1,
-    features: [
-        { id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' },
-        { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' },
-        { id: 'feat_3', icon: '📓', name: 'Trading Journal', desc: 'Track every trade', visibility: 'visible' },
-        { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' },
-        { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
-        { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
-    ],
-    firebaseConfig: {
-        apiKey: 'AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g',
-        authDomain: 'binary-ruthless-trader-26654.firebaseapp.com',
-        databaseURL: 'https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com',
-        projectId: 'binary-ruthless-trader-26654',
-        storageBucket: 'binary-ruthless-trader-26654.firebasestorage.app',
-        messagingSenderId: '533209261799',
-        appId: '1:533209261799:web:a398ab21b0f913683ea442',
-        measurementId: 'G-WQCXCMV5PR'
-    }
+    creditsPerSignal: 1
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
@@ -1461,126 +1358,9 @@ function renderAdminSocialMedia() {
     });
 }
 
-function renderFeaturesList() {
-    const container = document.getElementById('featuresList');
-    if (!container) return;
-    container.innerHTML = '';
-    const features = appState.features || [];
-    if (features.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No features added yet</div>';
-        return;
-    }
-    features.forEach((f, idx) => {
-        const statusText = f.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
-        container.innerHTML += `
-            <div class="feature-item">
-                <div class="feature-info">
-                    <div class="feature-name"><span style="margin-right:4px;">${f.icon || '🧠'}</span> ${f.name || 'Feature'}</div>
-                    <div class="feature-desc">${f.desc || ''}</div>
-                    <div style="font-size:0.35rem;color:var(--text-secondary);">${statusText}</div>
-                </div>
-                <div class="feature-actions">
-                    <button class="btn-edit-feature" onclick="editFeature(${idx})">✏️ Edit</button>
-                    <button class="btn-toggle-feature" onclick="toggleFeatureVisibility(${idx})">${f.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
-                    <button class="btn-delete-feature" onclick="deleteFeature(${idx})">🗑️ Delete</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-window.editFeature = function(idx) {
-    const f = appState.features[idx];
-    if (!f) return;
-    window.editingFeatureIndex = idx;
-    document.getElementById('editFeatureIndex').value = idx;
-    document.getElementById('editFeatureIcon').value = f.icon || '🧠';
-    document.getElementById('editFeatureName').value = f.name || '';
-    document.getElementById('editFeatureDesc').value = f.desc || '';
-    document.getElementById('editFeatureStatus').value = f.visibility || 'visible';
-    document.getElementById('editFeatureForm').style.display = 'block';
-    document.getElementById('addFeatureForm').style.display = 'none';
-};
-
-window.adminUpdateFeature = function() {
-    const idx = parseInt(document.getElementById('editFeatureIndex').value);
-    const icon = document.getElementById('editFeatureIcon').value.trim() || '🧠';
-    const name = document.getElementById('editFeatureName').value.trim();
-    const desc = document.getElementById('editFeatureDesc').value.trim();
-    const visibility = document.getElementById('editFeatureStatus').value;
-    if (!name) { alert('Please enter feature name'); return; }
-    appState.features[idx] = { ...appState.features[idx], icon, name, desc, visibility };
-    saveLocalState();
-    localStorage.setItem('brt_features', JSON.stringify(appState.features));
-    renderFeaturesList();
-    document.getElementById('editFeatureForm').style.display = 'none';
-    const btn = document.getElementById('editFeatureName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Update Feature'; }, 2000);
-};
-
-window.toggleFeatureVisibility = function(idx) {
-    const f = appState.features[idx];
-    if (!f) return;
-    f.visibility = f.visibility === 'visible' ? 'hidden' : 'visible';
-    saveLocalState();
-    localStorage.setItem('brt_features', JSON.stringify(appState.features));
-    renderFeaturesList();
-};
-
-window.deleteFeature = function(idx) {
-    if (confirm('Delete this feature?')) {
-        appState.features.splice(idx, 1);
-        saveLocalState();
-        localStorage.setItem('brt_features', JSON.stringify(appState.features));
-        renderFeaturesList();
-    }
-};
-
-window.showAddFeatureForm = function() {
-    document.getElementById('addFeatureForm').style.display = 'block';
-    document.getElementById('editFeatureForm').style.display = 'none';
-    document.getElementById('newFeatureIcon').value = '🧠';
-    document.getElementById('newFeatureName').value = '';
-    document.getElementById('newFeatureDesc').value = '';
-    document.getElementById('newFeatureStatus').value = 'visible';
-};
-
-window.adminAddFeature = function() {
-    const icon = document.getElementById('newFeatureIcon').value.trim() || '🧠';
-    const name = document.getElementById('newFeatureName').value.trim();
-    const desc = document.getElementById('newFeatureDesc').value.trim();
-    const visibility = document.getElementById('newFeatureStatus').value;
-    if (!name) { alert('Please enter feature name'); return; }
-    if (!appState.features) appState.features = [];
-    appState.features.push({ id: 'feat_' + Date.now(), icon, name, desc, visibility });
-    saveLocalState();
-    localStorage.setItem('brt_features', JSON.stringify(appState.features));
-    renderFeaturesList();
-    document.getElementById('addFeatureForm').style.display = 'none';
-    const btn = document.getElementById('newFeatureName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save Feature'; }, 2000);
-};
-
-window.adminSaveFirebase = function() {
-    appState.firebaseConfig = {
-        apiKey: document.getElementById('fbApiKey').value.trim(),
-        authDomain: document.getElementById('fbAuthDomain').value.trim(),
-        databaseURL: document.getElementById('fbDbUrl').value.trim(),
-        projectId: document.getElementById('fbProjectId').value.trim(),
-        storageBucket: document.getElementById('fbStorageBucket').value.trim(),
-        messagingSenderId: document.getElementById('fbMessagingSenderId').value.trim(),
-        appId: document.getElementById('fbAppId').value.trim(),
-        measurementId: document.getElementById('fbMeasurementId').value.trim()
-    };
-    saveLocalState();
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('fbApiKey').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
-    alert('✅ Firebase configuration saved successfully!');
-};
+/* renderFeaturesList function removed */
+/* editFeature, adminUpdateFeature, toggleFeatureVisibility, deleteFeature, showAddFeatureForm, adminAddFeature functions removed */
+/* adminSaveFirebase function removed */
 
 function updatePendingCounts() {
     const payments = appState.payments || [];
@@ -2121,7 +1901,7 @@ onValue(dbRef, (snapshot) => {
         loadQRPreview();
         renderToolsList();
         renderSocialList();
-        renderFeaturesList();
+        /* renderFeaturesList(); removed */
         renderAdminSocialMedia();
         updateChatNotification();
         updatePendingCounts();
@@ -2134,23 +1914,14 @@ onValue(dbRef, (snapshot) => {
         if (val.socialMedia !== undefined) localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
         if (val.brokers !== undefined) localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
         if (val.creditPacks !== undefined) localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
-        if (val.features !== undefined) localStorage.setItem('brt_features', JSON.stringify(val.features));
+        /* features localStorage removed */
         if (val.offerName !== undefined) document.getElementById('offerName').value = val.offerName;
         if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
         if (val.creditsPerSignal !== undefined) {
             appState.creditsPerSignal = val.creditsPerSignal;
             document.getElementById('creditsPerSignalInput').value = val.creditsPerSignal;
         }
-        if (val.firebaseConfig) {
-            document.getElementById('fbApiKey').value = val.firebaseConfig.apiKey || '';
-            document.getElementById('fbAuthDomain').value = val.firebaseConfig.authDomain || '';
-            document.getElementById('fbDbUrl').value = val.firebaseConfig.databaseURL || '';
-            document.getElementById('fbProjectId').value = val.firebaseConfig.projectId || '';
-            document.getElementById('fbStorageBucket').value = val.firebaseConfig.storageBucket || '';
-            document.getElementById('fbMessagingSenderId').value = val.firebaseConfig.messagingSenderId || '';
-            document.getElementById('fbAppId').value = val.firebaseConfig.appId || '';
-            document.getElementById('fbMeasurementId').value = val.firebaseConfig.measurementId || '';
-        }
+        /* firebaseConfig UI loading removed */
         if (val.razorpayKeyId !== undefined) document.getElementById('razorpayKeyIdInput').value = val.razorpayKeyId || '';
         if (val.razorpayKeySecret !== undefined) document.getElementById('razorpayKeySecretInput').value = val.razorpayKeySecret || '';
     }
@@ -2174,8 +1945,7 @@ function loadLocalState() {
     if (brokersData) { try { const parsed = JSON.parse(brokersData); if (parsed.length > 0) appState.brokers = parsed; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
     if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
-    const featuresData = localStorage.getItem('brt_features');
-    if (featuresData) { try { const parsed = JSON.parse(featuresData); if (parsed.length > 0) appState.features = parsed; } catch(e) {} }
+    /* features loading removed */
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
     if (creditsPerSignalData) {
         const val = parseInt(creditsPerSignalData);
@@ -2199,16 +1969,7 @@ function loadLocalState() {
     if (appState.creditsPerSignal) {
         document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
     }
-    if (appState.firebaseConfig) {
-        document.getElementById('fbApiKey').value = appState.firebaseConfig.apiKey || '';
-        document.getElementById('fbAuthDomain').value = appState.firebaseConfig.authDomain || '';
-        document.getElementById('fbDbUrl').value = appState.firebaseConfig.databaseURL || '';
-        document.getElementById('fbProjectId').value = appState.firebaseConfig.projectId || '';
-        document.getElementById('fbStorageBucket').value = appState.firebaseConfig.storageBucket || '';
-        document.getElementById('fbMessagingSenderId').value = appState.firebaseConfig.messagingSenderId || '';
-        document.getElementById('fbAppId').value = appState.firebaseConfig.appId || '';
-        document.getElementById('fbMeasurementId').value = appState.firebaseConfig.measurementId || '';
-    }
+    /* firebaseConfig UI loading removed */
     updateUI(); 
     renderUsersList(); 
     renderBrokerList(); 
@@ -2219,7 +1980,7 @@ function loadLocalState() {
     loadQRPreview(); 
     renderToolsList(); 
     renderSocialList(); 
-    renderFeaturesList();
+    /* renderFeaturesList(); removed */
     renderAdminSocialMedia();
     updateChatNotification();
     updatePendingCounts();
@@ -2774,7 +2535,7 @@ window.changeAdminPassword = function() {
     document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
-// Expose globals
+// Expose globals (features and firebase config globals removed)
 window.adminApprovePayment = adminApprovePayment; window.adminRejectPayment = adminRejectPayment;
 window.adminApproveVerification = adminApproveVerification; window.adminRejectVerification = adminRejectVerification;
 window.openUserDetailPopup = openUserDetailPopup; window.giveFreeCredits = giveFreeCredits; window.blockUser = blockUser; window.removeUser = removeUser; window.chatWithUser = chatWithUser;
@@ -2790,8 +2551,8 @@ window.toggleToolFire = toggleToolFire;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers; window.clearSelectedChatUser = clearSelectedChatUser;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
-window.editFeature = editFeature; window.adminUpdateFeature = adminUpdateFeature; window.toggleFeatureVisibility = toggleFeatureVisibility; window.deleteFeature = deleteFeature; window.showAddFeatureForm = showAddFeatureForm; window.adminAddFeature = adminAddFeature;
-window.adminSaveFirebase = adminSaveFirebase;
+/* window.editFeature, adminUpdateFeature, toggleFeatureVisibility, deleteFeature, showAddFeatureForm, adminAddFeature removed */
+/* window.adminSaveFirebase removed */
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
 
