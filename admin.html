@@ -468,7 +468,7 @@
             color: #00FF66;
             margin-top: 6px;
         }
-        .section-add-btn {
+        .section-add-btn, .section-clear-btn {
             width: 100%;
             padding: 10px;
             background: rgba(255,215,0,0.04);
@@ -483,9 +483,14 @@
             transition: all 0.3s;
             margin-top: 10px;
         }
-        .section-add-btn:hover {
+        .section-add-btn:hover, .section-clear-btn:hover {
             background: rgba(255,215,0,0.1);
             border-color: #FFD700;
+        }
+        .section-clear-btn {
+            color: #FF0033;
+            border-color: rgba(255,0,51,0.3);
+            margin-top: 5px;
         }
         
         /* Revenue Table */
@@ -1037,7 +1042,10 @@
             <div class="admin-section">
                 <h4>📦 Credit Packs</h4>
                 <div id="creditPackCardGrid" class="card-grid"></div>
-                <button class="section-add-btn" onclick="openCreditPackModal()">➕ Add Pack</button>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="section-add-btn" onclick="openCreditPackModal()" style="flex:1;">➕ Add Pack</button>
+                    <button class="section-clear-btn" onclick="clearAllCreditPacks()" style="flex:1;">🗑️ Clear All</button>
+                </div>
             </div>
             
             <!-- 4. Credits Per Signal -->
@@ -1055,7 +1063,10 @@
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4>🏢 Broker Manager</h4>
                 <div id="brokerCardGrid" class="card-grid"></div>
-                <button class="section-add-btn" onclick="openBrokerModal()">➕ Add Broker</button>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="section-add-btn" onclick="openBrokerModal()" style="flex:1;">➕ Add Broker</button>
+                    <button class="section-clear-btn" onclick="clearAllBrokers()" style="flex:1;">🗑️ Clear All</button>
+                </div>
             </div>
             
             <!-- 6. Tools Manager (Card UI) -->
@@ -1532,6 +1543,14 @@ window.submitBroker = function() {
     renderBrokerCards();
 };
 
+window.clearAllBrokers = function() {
+    if (confirm('Delete ALL brokers? This cannot be undone.')) {
+        appState.brokers = [];
+        saveLocalState();
+        renderBrokerCards();
+    }
+};
+
 // ─── CREDIT PACK CARD FUNCTIONS (with visibility toggle) ───
 let editingPackId = null;
 
@@ -1612,6 +1631,14 @@ window.submitCreditPack = function() {
     saveLocalState();
     closeModal('creditPackModal');
     renderCreditPackCards();
+};
+
+window.clearAllCreditPacks = function() {
+    if (confirm('Delete ALL credit packs? This cannot be undone.')) {
+        appState.creditPacks = [];
+        saveLocalState();
+        renderCreditPackCards();
+    }
 };
 
 // ─── TOOL CARD FUNCTIONS ───
@@ -1863,7 +1890,10 @@ onValue(dbRef, (snapshot) => {
     }
 }, (err) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; });
 
-function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error); }
+function saveLocalState() { 
+    localStorage.setItem('brt_data', JSON.stringify(appState)); 
+    if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); 
+}
 
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
@@ -1872,8 +1902,8 @@ function loadLocalState() {
     if (toolsData) { try { appState.tools = JSON.parse(toolsData) || []; } catch(e){} }
     const logoData = localStorage.getItem('brt_logo');
     if (logoData) { appState.logoBase64 = logoData; applyAdminLogo(logoData); }
-    const creditPacksData = localStorage.getItem('brt_creditPacks');
-    if (creditPacksData) { try { appState.creditPacks = JSON.parse(creditPacksData) || []; } catch(e){} }
+    // Reset credit packs and brokers to fresh empty if needed (admin can clear manually)
+    // No need to force empty here, we want to keep saved data.
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
     if (creditsPerSignalData) appState.creditsPerSignal = parseInt(creditsPerSignalData) || 1;
     const razorpayKeyIdData = localStorage.getItem('brt_razorpay_key_id');
@@ -2531,6 +2561,8 @@ window.showRevenue = showRevenue;
 window.openRevenueModal = openRevenueModal;
 window.toggleBrokerVisibility = toggleBrokerVisibility;
 window.toggleCreditPackVisibility = toggleCreditPackVisibility;
+window.clearAllCreditPacks = clearAllCreditPacks;
+window.clearAllBrokers = clearAllBrokers;
 
 console.log('⚙️ Admin Panel Loaded - All Features Active');
 </script>
