@@ -1,10 +1,11 @@
 // ============================================
-// SECTION: FIREBASE CONFIGURATION
-// FILE: firebase-config.js
-// Contains: Firebase initialization + state
+// FILE: firebase-config.js (ES Module)
+// LOAD AS: <script type="module" src="firebase-config.js">
 // ============================================
 
-// ─── FIREBASE CONFIG ───
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
     authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
@@ -16,33 +17,12 @@ const firebaseConfig = {
     measurementId: "G-WQCXCMV5PR"
 };
 
-// ─── INITIALIZE FIREBASE ───
-let firebaseApp = null;
-let firebaseDatabase = null;
-let firebaseDbRef = null;
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const dbRef = ref(database, 'brt_data');
 let isFirebaseConnected = false;
 
-try {
-    firebaseApp = initializeApp(firebaseConfig);
-    firebaseDatabase = getDatabase(firebaseApp);
-    firebaseDbRef = ref(firebaseDatabase, 'brt_data');
-    
-    // Initialize Analytics if available
-    if (typeof getAnalytics === 'function') {
-        try {
-            const analytics = getAnalytics(firebaseApp);
-        } catch (e) {
-            console.warn('Analytics not available');
-        }
-    }
-    
-    console.log('🔥 Firebase Initialized');
-} catch (e) {
-    console.error('Firebase Init Error:', e);
-}
-
-// ─── APP STATE ───
-let appState = {
+const appState = {
     password: 'admin123',
     offerCredits: 10,
     offerName: 'FREE SIGNAL OFFER',
@@ -85,165 +65,87 @@ let appState = {
         { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' },
         { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }
     ],
-    currentUser: null
+    currentUser: null,
+    firebaseConfig: firebaseConfig
 };
 
-// ─── FIREBASE SYNC ───
-if (firebaseDbRef) {
-    onValue(firebaseDbRef, (snapshot) => {
-        isFirebaseConnected = true;
-        
-        // Update status dot if it exists
-        const statusDot = document.getElementById('firebaseStatusDot');
-        if (statusDot) {
-            statusDot.className = 'fb-status-dot green';
-        }
-        
-        const val = snapshot.val();
-        if (val) {
-            const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
-            
-            // Merge Firebase data into appState
-            appState = { ...appState, ...val };
-            
-            // Restore current user reference
-            if (currentUserEmail) {
-                const found = appState.users.find(u => u.email === currentUserEmail);
-                if (found) {
-                    appState.currentUser = found;
-                } else {
-                    appState.currentUser = null;
-                    sessionStorage.removeItem('user_logged_in');
-                }
-            }
-            
-            // Save specific items to localStorage for offline access
-            if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-                localStorage.setItem('brt_logo', val.logoBase64);
-            }
-            if (val.socialMedia !== undefined) {
-                localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
-            }
-            if (val.tools !== undefined) {
-                localStorage.setItem('brt_tools', JSON.stringify(val.tools));
-            }
-            if (val.features !== undefined) {
-                localStorage.setItem('brt_features', JSON.stringify(val.features));
-            }
-            if (val.brokers !== undefined) {
-                localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
-            }
-            if (val.creditPacks !== undefined) {
-                localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
-            }
-            
-            // Trigger UI update if function exists
-            if (typeof updateAllUI === 'function') {
-                updateAllUI();
-            }
-            if (typeof updateOfferBanner === 'function') {
-                updateOfferBanner();
-            }
-            if (typeof renderSocialMedia === 'function') {
-                renderSocialMedia();
-            }
-            if (typeof renderFeatures === 'function') {
-                renderFeatures();
-            }
-        }
-    }, (error) => {
-        isFirebaseConnected = false;
-        
-        const statusDot = document.getElementById('firebaseStatusDot');
-        if (statusDot) {
-            statusDot.className = 'fb-status-dot red';
-        }
-        
-        console.error('Firebase Error:', error);
-    });
-}
-
-// ─── SAVE LOCAL STATE ───
 function saveLocalState() {
-    // Save to localStorage
     localStorage.setItem('brt_data', JSON.stringify(appState));
-    
-    // Save to Firebase if connected
-    if (isFirebaseConnected && firebaseDbRef) {
-        set(firebaseDbRef, appState).catch(e => console.error('Firebase Save Error:', e));
+    if (isFirebaseConnected) {
+        set(dbRef, appState).catch(e => console.error('Firebase Save Error:', e));
     }
 }
 
-// ─── LOAD LOCAL STATE ───
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
     if (local) {
-        try {
-            const parsed = JSON.parse(local);
-            appState = { ...appState, ...parsed };
-        } catch (e) {
-            console.error('Local State Parse Error:', e);
-        }
+        try { const parsed = JSON.parse(local); Object.assign(appState, parsed); } catch (e) {}
     }
-    
-    // Load individual items from localStorage
-    const logoData = localStorage.getItem('brt_logo');
-    if (logoData) {
-        appState.logoBase64 = logoData;
-        if (typeof applyLogo === 'function') {
-            applyLogo(logoData);
-        }
-    }
-    
     const socialData = localStorage.getItem('brt_social');
-    if (socialData) {
-        try {
-            const parsed = JSON.parse(socialData);
-            if (parsed.length > 0) appState.socialMedia = parsed;
-        } catch (e) {}
-    }
-    
+    if (socialData) { try { const p = JSON.parse(socialData); if (p.length > 0) appState.socialMedia = p; } catch(e) {} }
     const toolsData = localStorage.getItem('brt_tools');
-    if (toolsData) {
-        try {
-            const parsed = JSON.parse(toolsData);
-            if (parsed.length > 0) appState.tools = parsed;
-        } catch (e) {}
-    }
-    
-    const featuresData = localStorage.getItem('brt_features');
-    if (featuresData) {
-        try {
-            const parsed = JSON.parse(featuresData);
-            if (parsed.length > 0) appState.features = parsed;
-        } catch (e) {}
-    }
-    
+    if (toolsData) { try { const p = JSON.parse(toolsData); if (p.length > 0) appState.tools = p; } catch(e) {} }
+    const logoData = localStorage.getItem('brt_logo');
+    if (logoData) { appState.logoBase64 = logoData; }
     const brokersData = localStorage.getItem('brt_brokers');
-    if (brokersData) {
-        try {
-            const parsed = JSON.parse(brokersData);
-            if (parsed.length > 0) appState.brokers = parsed;
-        } catch (e) {}
-    }
-    
+    if (brokersData) { try { const p = JSON.parse(brokersData); if (p.length > 0) appState.brokers = p; } catch(e) {} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
-    if (creditPacksData) {
-        try {
-            const parsed = JSON.parse(creditPacksData);
-            if (parsed.length > 0) appState.creditPacks = parsed;
-        } catch (e) {}
-    }
-    
+    if (creditPacksData) { try { const p = JSON.parse(creditPacksData); if (p.length > 0) appState.creditPacks = p; } catch(e) {} }
+    const featuresData = localStorage.getItem('brt_features');
+    if (featuresData) { try { const p = JSON.parse(featuresData); if (p.length > 0) appState.features = p; } catch(e) {} }
+    const cps = localStorage.getItem('brt_credits_per_signal');
+    if (cps) { const v = parseInt(cps); if (!isNaN(v) && v > 0) appState.creditsPerSignal = v; }
     return appState;
 }
 
-// ─── EXPOSE GLOBALLY ───
+onValue(dbRef, (snapshot) => {
+    isFirebaseConnected = true;
+    const statusDot = document.getElementById('firebaseStatusDot');
+    if (statusDot) statusDot.className = 'fb-status-dot green';
+    const adminStatusDot = document.getElementById('adminStatusDot');
+    if (adminStatusDot) adminStatusDot.className = 'fb-status-dot-sm green';
+    const val = snapshot.val();
+    if (val) {
+        const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
+        Object.assign(appState, val);
+        if (currentUserEmail) {
+            const found = appState.users.find(u => u.email === currentUserEmail);
+            if (found) appState.currentUser = found;
+            else { appState.currentUser = null; sessionStorage.removeItem('user_logged_in'); }
+        }
+        if (val.logoBase64) { localStorage.setItem('brt_logo', val.logoBase64); if (typeof applyLogo === 'function') applyLogo(val.logoBase64); if (typeof applyAdminLogo === 'function') applyAdminLogo(val.logoBase64); }
+        if (val.socialMedia) localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
+        if (val.tools) localStorage.setItem('brt_tools', JSON.stringify(val.tools));
+        if (val.brokers) localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+        if (val.creditPacks) localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
+        if (val.features) localStorage.setItem('brt_features', JSON.stringify(val.features));
+        if (typeof renderSocialMedia === 'function') renderSocialMedia();
+        if (typeof renderAdminSocialMedia === 'function') renderAdminSocialMedia();
+        if (typeof renderFeatures === 'function') renderFeatures();
+        if (typeof renderFeaturesList === 'function') renderFeaturesList();
+        if (typeof updateOfferBanner === 'function') updateOfferBanner();
+        if (typeof updatePendingCounts === 'function') updatePendingCounts();
+        if (typeof renderRevenueStats === 'function') renderRevenueStats();
+        if (typeof renderCreditPacks === 'function') renderCreditPacks();
+        if (typeof renderCreditPackList === 'function') renderCreditPackList();
+        if (typeof renderTools === 'function') renderTools();
+        if (typeof renderToolsList === 'function') renderToolsList();
+        if (typeof renderBrokerList === 'function') renderBrokerList();
+        if (typeof renderSocialList === 'function') renderSocialList();
+        if (typeof renderPendingPayments === 'function') renderPendingPayments();
+        if (typeof renderPendingVerifications === 'function') renderPendingVerifications();
+    }
+}, (error) => {
+    isFirebaseConnected = false;
+    const statusDot = document.getElementById('firebaseStatusDot');
+    if (statusDot) statusDot.className = 'fb-status-dot red';
+    const adminStatusDot = document.getElementById('adminStatusDot');
+    if (adminStatusDot) adminStatusDot.className = 'fb-status-dot-sm red';
+});
+
 window.appState = appState;
 window.saveLocalState = saveLocalState;
 window.loadLocalState = loadLocalState;
 window.isFirebaseConnected = isFirebaseConnected;
-window.firebaseDbRef = firebaseDbRef;
-window.firebaseConfig = firebaseConfig;
 
-console.log('📦 Firebase Config + AppState Loaded');
+console.log('🔥 Firebase Config + AppState Loaded');
