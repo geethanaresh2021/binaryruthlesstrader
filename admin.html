@@ -210,10 +210,9 @@
         .social-icons-header a:hover {
             color: #FF0033;
             border-color: #FF0033;
-            /* transform: translateY(-2px); removed */
             box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
         }
-        .social-icons-header a:active { /* transform: scale(0.95); removed */ }
+        .social-icons-header a:active { }
         
         .nav-links {
             display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
@@ -225,7 +224,7 @@
             font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap;
         }
         .nav-links button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); }
-        .nav-links button:active { /* transform: scale(0.95); removed */ }
+        .nav-links button:active { }
         .nav-links button.active { border-color: #FF0033; color: #FF0033; background: rgba(255,0,51,0.06); }
         .nav-links .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
         .nav-links .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
@@ -247,10 +246,10 @@
             position: relative;
             overflow: hidden;
         }
-        .admin-dash-card:hover { border-color: #FF0033; /* transform: translateY(-3px); removed */ box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
-        .admin-dash-card:active { /* transform: scale(0.97); removed */ }
+        .admin-dash-card:hover { border-color: #FF0033; box-shadow: 0 10px 32px rgba(255,0,51,0.08); }
+        .admin-dash-card:active { }
         .admin-dash-card .icon { font-size: 1.4rem; color: #FFD700; display: block; margin-bottom: 2px; transition: all 0.3s ease; }
-        .admin-dash-card:hover .icon { /* transform: scale(1.1); removed */ }
+        .admin-dash-card:hover .icon { }
         .admin-dash-card .count { font-family: 'Roboto Mono', monospace; font-size: 1.5rem; font-weight: 700; display: block; margin: 2px 0; }
         .admin-dash-card .count.green { color: #00FF66; }
         .admin-dash-card .count.red { color: #FF0033; }
@@ -261,8 +260,8 @@
         .password-overlay.active { display: flex; }
         .password-modal { background: var(--password-modal-bg); backdrop-filter: blur(20px); border: 2px solid var(--password-modal-border); border-radius: 16px; padding: 28px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 60px rgba(255,0,51,0.08); position: relative; }
         .password-modal .close-btn { position: absolute; top: 10px; right: 14px; font-size: 1.2rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.3s ease; }
-        .password-modal .close-btn:hover { /* transform: scale(1.2) rotate(90deg); removed */ }
-        .password-modal .close-btn:active { /* transform: scale(0.9); removed */ }
+        .password-modal .close-btn:hover { }
+        .password-modal .close-btn:active { }
         .password-modal .lock-icon { font-size: 2.4rem; color: #FF0033; margin-bottom: 8px; }
         .password-modal h2 { color: #FFD700; font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
         .password-modal input { width: 100%; padding: 10px; background: var(--password-input-bg); border: 1px solid rgba(255,0,51,0.15); border-radius: 6px; color: var(--password-input-color); font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-align: center; outline: none; transition: all 0.3s ease; }
@@ -272,8 +271,8 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .password-modal .btn-enter { width: 100%; padding: 10px; margin-top: 12px; border-radius: 30px; font-weight: 700; border: none; cursor: not-allowed; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; background: rgba(255,0,51,0.05); border: 1px solid rgba(255,0,51,0.1); color: #666; }
         .password-modal .btn-enter.enabled { background: #FF0033; color: #fff; cursor: pointer; box-shadow: 0 0 24px rgba(255,0,51,0.2); border-color: #FF0033; }
-        .password-modal .btn-enter.enabled:hover { box-shadow: 0 0 40px rgba(255,0,51,0.3); /* transform: scale(1.02); removed */ }
-        .password-modal .btn-enter.enabled:active { /* transform: scale(0.97); removed */ }
+        .password-modal .btn-enter.enabled:hover { box-shadow: 0 0 40px rgba(255,0,51,0.3); }
+        .password-modal .btn-enter.enabled:active { }
         .password-modal .error-text { color: var(--modal-error-color); font-size: 0.6rem; margin-top: 8px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         
         .admin-section {
@@ -345,9 +344,8 @@
         }
         .admin-section .btn-row .btn-edit:hover { 
             box-shadow: 0 0 24px rgba(255,255,255,0.15); 
-            /* transform: scale(1.02); removed */
         }
-        .admin-section .btn-row .btn-edit:active { /* transform: scale(0.95); removed */ }
+        .admin-section .btn-row .btn-edit:active { }
         
         .admin-section .btn-row .btn-save {
             flex: 1;
@@ -367,9 +365,8 @@
         }
         .admin-section .btn-row .btn-save:hover { 
             box-shadow: 0 0 24px rgba(255,0,51,0.2); 
-            /* transform: scale(1.02); removed */
         }
-        .admin-section .btn-row .btn-save:active { /* transform: scale(0.95); removed */ }
+        .admin-section .btn-row .btn-save:active { }
         .admin-section .btn-row .btn-save.show { display: block; }
         .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
         
@@ -424,39 +421,39 @@
         .tools-list .tool-item { 
             background: var(--tool-item-bg); 
             border: 1px solid var(--tool-item-border); 
-            border-radius: 8px; 
-            padding: 8px 12px; 
-            margin-bottom: 6px; 
+            border-radius: 12px; 
+            padding: 12px 14px; 
+            margin-bottom: 8px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             transition: all 0.3s ease; 
             cursor: pointer;
         }
-        .tools-list .tool-item:hover { border-color: rgba(255,0,51,0.15); }
+        .tools-list .tool-item:hover { border-color: rgba(255,0,51,0.25); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,0,51,0.08); }
         .tools-list .tool-item .tool-info { flex: 1; }
-        .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.6rem; font-family: 'Orbitron', sans-serif; }
-        .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.45rem; margin-top: 1px; }
-        .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); }
-        .tools-list .tool-item .tool-actions { display: none; gap: 4px; flex-wrap: wrap; align-items: center; }
+        .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; }
+        .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.5rem; margin-top: 2px; }
+        .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); margin-top: 2px; }
+        .tools-list .tool-item .tool-actions { display: none; gap: 6px; flex-wrap: wrap; align-items: center; }
         .tools-list .tool-item .tool-actions button { 
-            padding: 2px 8px; 
-            border-radius: 4px; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
             border: none; 
-            font-size: 0.45rem; 
+            font-size: 0.5rem; 
             font-weight: 700; 
             cursor: pointer; 
             transition: all 0.3s ease; 
         }
-        .tools-list .tool-item .tool-actions button:hover { /* transform: scale(1.04); removed */ }
+        .tools-list .tool-item .tool-actions button:hover { }
         .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
         .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
         .tools-list .tool-item .tool-actions .btn-fire-toggle { 
             background: #FF4500; 
             color: #fff; 
-            font-size: 0.4rem; 
-            padding: 2px 6px;
+            font-size: 0.45rem; 
+            padding: 4px 8px;
         }
         .tools-list .tool-item .tool-actions .btn-fire-toggle.off { 
             background: #555; 
@@ -476,7 +473,7 @@
             align-items: center; 
             transition: all 0.3s ease; 
         }
-        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); /* transform: translateX(4px); removed */ }
+        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); }
         .social-list .social-item .social-info { flex: 1; }
         .social-list .social-item .social-name { color: #FFD700; font-size: 0.55rem; }
         .social-list .social-item .social-url { color: var(--text-secondary); font-size: 0.45rem; }
@@ -490,14 +487,151 @@
             cursor: pointer; 
             transition: all 0.3s ease; 
         }
-        .social-list .social-item .social-actions button:hover { /* transform: scale(1.04); removed */ }
+        .social-list .social-item .social-actions button:hover { }
         .social-list .social-item .social-actions .btn-edit-social { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
         .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
         .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
         
-        /* Features section (CSS removed) */
+        /* ===== CARD GRID for Broker & Credit Packs ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .admin-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,0,51,0.08);
+            border-radius: 14px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+        .admin-card:hover {
+            border-color: rgba(255,0,51,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,0,51,0.08);
+        }
+        .admin-card .card-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .admin-card:hover .card-actions {
+            opacity: 1;
+        }
+        .card-actions button {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .card-actions button.edit-card {
+            background: #ffffff;
+            color: #000;
+        }
+        .card-actions button.edit-card:hover {
+            background: #FFD700;
+        }
+        .card-actions button.delete-card {
+            background: #FF0033;
+        }
+        .card-actions button.delete-card:hover {
+            background: #ff1a44;
+        }
+        .admin-card .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #FFD700;
+        }
+        .admin-card .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .admin-card .card-detail {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .admin-card .card-detail strong {
+            color: #FFD700;
+        }
+        .admin-card .card-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #00FF66;
+            margin-top: 6px;
+        }
+        .admin-card .card-footer {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-add-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,215,0,0.04);
+            border: 1px dashed rgba(255,215,0,0.15);
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .section-add-btn:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: #FFD700;
+        }
         
-        /* Firebase Config grid removed */
+        /* Revenue Table */
+        .revenue-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.65rem;
+        }
+        .revenue-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,0,51,0.15);
+            color: #FFD700;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+        }
+        .revenue-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+        }
+        .revenue-table tr:hover {
+            background: rgba(255,0,51,0.05);
+        }
+        .revenue-amount {
+            color: #00FF66;
+            font-weight: 700;
+        }
+        .revenue-date {
+            color: var(--text-muted);
+            font-size: 0.55rem;
+        }
         
         /* ===== OVERLAYS & MODALS ===== */
         .overlay { 
@@ -544,8 +678,8 @@
             transition: all 0.3s ease; 
             font-weight: 700;
         }
-        .modal-close:hover { /* transform: scale(1.3) rotate(90deg); removed */ color: var(--text-primary); background: rgba(255,0,51,0.06); }
-        .modal-close:active { /* transform: scale(0.8); removed */ }
+        .modal-close:hover { color: var(--text-primary); background: rgba(255,0,51,0.06); }
+        .modal-close:active { }
         .modal h2 { 
             color: var(--popup-label); 
             text-align: center; 
@@ -589,8 +723,8 @@
             font-family: 'Inter', sans-serif; 
             font-size: 0.75rem; 
         }
-        .modal .btn-submit:hover { /* transform: scale(1.02); removed */ box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
-        .modal .btn-submit:active { /* transform: scale(0.97); removed */ }
+        .modal .btn-submit:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+        .modal .btn-submit:active { }
         .modal .btn-submit.btn-primary { background: #FF0033; color: #fff; }
         .modal .btn-submit.btn-success { background: #00FF66; color: #000; }
         .modal .btn-submit.btn-gold { background: #FFD700; color: #000; }
@@ -730,7 +864,7 @@
             font-size: 0.6rem; 
             transition: all 0.3s ease; 
         }
-        .modal .chat-input-area button:hover { /* transform: scale(1.04); removed */ }
+        .modal .chat-input-area button:hover { }
         
         .modal .btn-group { 
             display: flex; 
@@ -751,8 +885,8 @@
             letter-spacing: 0.5px; 
             transition: all 0.3s ease; 
         }
-        .modal .btn-group .btn-sm:hover { /* transform: scale(1.02); removed */ }
-        .modal .btn-group .btn-sm:active { /* transform: scale(0.97); removed */ }
+        .modal .btn-group .btn-sm:hover { }
+        .modal .btn-group .btn-sm:active { }
         .modal .btn-group .btn-give { background: #00FF66; color: #000; }
         .modal .btn-group .btn-block { background: #FF0033; color: #fff; }
         .modal .btn-group .btn-remove { background: #FFD700; color: #000; }
@@ -880,7 +1014,6 @@
             transition: all 0.3s ease;
         }
         .credits-per-signal-group .save-btn-small:hover {
-            /* transform: scale(1.05); removed */
             box-shadow: 0 0 20px rgba(255,0,51,0.2);
         }
         
@@ -895,7 +1028,8 @@
         .admin-section .btn-edit, .admin-section .btn-save,
         .tools-list .tool-item .tool-actions button,
         .social-list .social-item .social-actions button,
-        .social-icons-header a, #chatUserList .chat-user-item {
+        .social-icons-header a, #chatUserList .chat-user-item,
+        .admin-card {
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
         .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
@@ -905,8 +1039,8 @@
         .admin-section .btn-save:hover,
         .tools-list .tool-item .tool-actions button:hover,
         .social-list .social-item .social-actions button:hover,
-        .social-icons-header a:hover, #chatUserList .chat-user-item:hover {
-            /* transform: translateY(-2px); removed */
+        .social-icons-header a:hover, #chatUserList .chat-user-item:hover,
+        .admin-card:hover {
         }
         .red-container:active, .admin-dash-card:active, .admin-section:active,
         .tools-list .tool-item:active, .social-list .social-item:active,
@@ -915,10 +1049,9 @@
         .admin-section .btn-save:active,
         .tools-list .tool-item .tool-actions button:active,
         .social-list .social-item .social-actions button:active,
-        .social-icons-header a:active, #chatUserList .chat-user-item:active {
-            /* transform: scale(0.97); removed */
+        .social-icons-header a:active, #chatUserList .chat-user-item:active,
+        .admin-card:active {
         }
-        /* No zoom effect on section containers, only border color change */
         .admin-section:active {
             border-color: #FF0033 !important;
             box-shadow: 0 0 30px rgba(255, 0, 51, 0.15);
@@ -978,6 +1111,12 @@
                     <span class="count green" id="chatNotificationCount">0</span>
                     <span class="label">Chat Messages</span>
                 </div>
+                <!-- New Revenue Card -->
+                <div class="admin-dash-card" onclick="openRevenueModal()">
+                    <span class="icon">📈</span>
+                    <span class="count gold" id="totalRevenueCount">₹0</span>
+                    <span class="label">Total Revenue</span>
+                </div>
             </div>
         </div>
         
@@ -1025,21 +1164,11 @@
                 </div>
             </div>
             
-            <!-- 3. Credit Packs -->
+            <!-- 3. Credit Packs (New Card UI) -->
             <div class="admin-section">
                 <h4>📦 Credit Packs</h4>
-                <div id="creditPackList" class="item-list"></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:6px;">
-                    <div class="field-group"><label>Credits</label><input type="number" id="packCredits" placeholder="100" disabled></div>
-                    <div class="field-group"><label>Price (₹)</label><input type="number" id="packPrice" placeholder="99" disabled></div>
-                    <div class="field-group" style="display:flex;align-items:flex-end;">
-                        <button class="btn-save btn-success" onclick="adminAddCreditPack()" style="margin-top:0;display:none;">Add</button>
-                    </div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminAddCreditPack()">💾 Add Pack</button>
-                </div>
+                <div id="creditPackCardGrid" class="card-grid"></div>
+                <button class="section-add-btn" onclick="openCreditPackModal()">➕ Add Pack</button>
             </div>
             
             <!-- 4. Credits Per Signal -->
@@ -1056,20 +1185,11 @@
                 </div>
             </div>
             
-            <!-- 5. Broker Manager -->
-            <div class="admin-section">
+            <!-- 5. Broker Manager (New Card UI) -->
+            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4>🏢 Broker Manager</h4>
-                <div id="brokerList" class="item-list"></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;">
-                    <div class="field-group"><label>Name</label><input type="text" id="adminBrokerName" disabled></div>
-                    <div class="field-group"><label>Affiliate Link</label><input type="text" id="adminBrokerLink" disabled></div>
-                    <div class="field-group"><label>Min Deposit</label><input type="number" id="adminBrokerMinDeposit" disabled></div>
-                    <div class="field-group"><label>Rules</label><input type="text" id="adminBrokerRules" disabled></div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminAddBroker()">💾 Add</button>
-                </div>
+                <div id="brokerCardGrid" class="card-grid"></div>
+                <button class="section-add-btn" onclick="openBrokerModal()">➕ Add Broker</button>
             </div>
             
             <!-- 6. Tools Manager -->
@@ -1132,11 +1252,7 @@
                 </div>
             </div>
             
-            <!-- 8. Features Manager section removed -->
-            
-            <!-- 9. Firebase Configuration section removed -->
-            
-            <!-- 10. Admin Access -->
+            <!-- 8. Admin Access -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
                 <div class="field-group"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
@@ -1147,7 +1263,7 @@
                 </div>
             </div>
             
-            <!-- 11. Change Password -->
+            <!-- 9. Change Password -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🔐 Change Password</h4>
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
@@ -1251,6 +1367,82 @@
     </div>
 </div>
 
+<!-- ===== BROKER MODAL ===== -->
+<div class="overlay" id="brokerModal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeModal('brokerModal')">✕</button>
+    <h2 id="brokerModalTitle">🏢 Add Broker</h2>
+    <div class="field-group">
+      <label>Broker Name</label>
+      <input type="text" id="modalBrokerName" placeholder="e.g. Quotex">
+    </div>
+    <div class="field-group">
+      <label>Affiliate Link</label>
+      <input type="text" id="modalBrokerLink" placeholder="https://...">
+    </div>
+    <div class="field-group">
+      <label>Min Deposit (₹)</label>
+      <input type="number" id="modalBrokerMinDeposit" value="1000">
+    </div>
+    <div class="field-group">
+      <label>Rules</label>
+      <input type="text" id="modalBrokerRules" placeholder="e.g. Verify email">
+    </div>
+    <button class="btn-submit btn-primary" id="brokerSubmitBtn" onclick="submitBroker()">💾 Add Broker</button>
+    <div class="error-msg" id="brokerModalError"></div>
+  </div>
+</div>
+
+<!-- ===== CREDIT PACK MODAL ===== -->
+<div class="overlay" id="creditPackModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('creditPackModal')">✕</button>
+    <h2 id="creditPackModalTitle">📦 Add Credit Pack</h2>
+    <div class="field-group">
+      <label>Credits</label>
+      <input type="number" id="modalPackCredits" placeholder="100">
+    </div>
+    <div class="field-group">
+      <label>Price (₹)</label>
+      <input type="number" id="modalPackPrice" placeholder="199">
+    </div>
+    <button class="btn-submit btn-primary" id="creditPackSubmitBtn" onclick="submitCreditPack()">💾 Add Pack</button>
+    <div class="error-msg" id="creditPackModalError"></div>
+  </div>
+</div>
+
+<!-- ===== REVENUE MODAL ===== -->
+<div class="overlay" id="revenueModal">
+  <div class="modal" style="max-width:750px;">
+    <button class="modal-close" onclick="closeModal('revenueModal')">✕</button>
+    <h2>📈 Revenue Dashboard</h2>
+    
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+      <button class="btn-submit btn-primary" style="flex:1;min-width:80px;" onclick="showRevenue('today')">Today</button>
+      <button class="btn-submit btn-gold" style="flex:1;min-width:80px;" onclick="showRevenue('yesterday')">Yesterday</button>
+      <button class="btn-submit btn-primary" style="flex:1;min-width:80px;" onclick="showRevenue('week')">This Week</button>
+      <button class="btn-submit btn-gold" style="flex:1;min-width:80px;" onclick="showRevenue('month')">This Month</button>
+      <button class="btn-submit btn-primary" style="flex:1;min-width:80px;" onclick="showRevenue('year')">This Year</button>
+    </div>
+    
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+      <label style="font-size:0.7rem;color:var(--text-secondary);">📅 Select Date:</label>
+      <input type="date" id="revenueDatePicker" style="background:var(--input-bg);border:1px solid rgba(255,0,51,0.2);border-radius:6px;color:#fff;padding:6px 10px;font-size:0.7rem;" onchange="showRevenue('custom')">
+      <button class="btn-submit btn-gold" style="padding:6px 16px;font-size:0.65rem;" onclick="showRevenue('custom')">Show</button>
+    </div>
+    
+    <div id="revenueSummary" style="background:rgba(0,255,102,0.04);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;flex-wrap:wrap;">
+      <div><span style="color:var(--text-secondary);font-size:0.65rem;">Total Earnings:</span> <span id="revTotalAmount" style="color:#00FF66;font-weight:700;font-size:1rem;">₹0</span></div>
+      <div><span style="color:var(--text-secondary);font-size:0.65rem;">Transactions:</span> <span id="revTotalCount" style="color:#FFD700;font-weight:700;font-size:1rem;">0</span></div>
+      <div><span style="color:var(--text-secondary);font-size:0.65rem;">Period:</span> <span id="revPeriodLabel" style="color:#fff;font-weight:600;font-size:0.8rem;">-</span></div>
+    </div>
+    
+    <div id="revenuePaymentList" style="max-height:350px;overflow-y:auto;">
+      <div style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:20px;">Select a period or date</div>
+    </div>
+  </div>
+</div>
+
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- External Scripts -->
@@ -1262,7 +1454,6 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
-// Firebase config is now loaded from external firebase-config.js
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
@@ -1293,6 +1484,8 @@ let appState = {
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
+let currentRevenuePeriod = 'today';
+let initialSyncDone = false;
 
 function applyAdminLogo(logoBase64) {
     const icon = document.getElementById('adminLogoIcon');
@@ -1318,9 +1511,7 @@ function renderAdminSocialMedia() {
     let socials = appState.socialMedia || [];
     if (socials.length === 0) {
         const localSocial = localStorage.getItem('brt_social');
-        if (localSocial) {
-            try { socials = JSON.parse(localSocial); } catch (e) {}
-        }
+        if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} }
     }
     const visibleSocials = socials.filter(s => s.visibility === 'visible');
     if (visibleSocials.length === 0) {
@@ -1330,37 +1521,20 @@ function renderAdminSocialMedia() {
             <a href="#"><i class="fab fa-youtube"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
         `;
-        container.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('📱 Configure in Admin');
-            });
-        });
+        container.querySelectorAll('a').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); alert('📱 Configure in Admin'); }); });
         return;
     }
     container.innerHTML = '';
     visibleSocials.forEach(social => {
-        const iconClass = social.icon || 'fas fa-link';
-        const url = social.url || '#';
-        const name = social.name || 'Link';
         const a = document.createElement('a');
-        a.href = url;
+        a.href = social.url || '#';
         a.target = '_blank';
-        a.title = name;
-        a.innerHTML = `<i class="${iconClass}"></i>`;
-        a.addEventListener('click', function(e) {
-            if (url === '#') {
-                e.preventDefault();
-                alert('📱 ' + name + ' - Configure URL in Admin');
-            }
-        });
+        a.title = social.name || 'Link';
+        a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`;
+        a.addEventListener('click', (e) => { if (social.url === '#') { e.preventDefault(); alert('📱 ' + social.name + ' - Configure URL in Admin'); } });
         container.appendChild(a);
     });
 }
-
-/* renderFeaturesList function removed */
-/* editFeature, adminUpdateFeature, toggleFeatureVisibility, deleteFeature, showAddFeatureForm, adminAddFeature functions removed */
-/* adminSaveFirebase function removed */
 
 function updatePendingCounts() {
     const payments = appState.payments || [];
@@ -1378,27 +1552,16 @@ function updatePendingCounts() {
     document.getElementById('verifiedUsersCount').className = 'count gold';
 }
 
-function getChatKey(userEmail) { 
-    return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; 
-}
+function getChatKey(userEmail) { return userEmail ? userEmail.replace(/[.#$\/\[\]]/g, '_') : ''; }
 
-// ─── PAYMENT TOGGLE ───
 window.togglePaymentFields = function(mode) {
-    const manualDiv = document.getElementById('manualPaymentFields');
-    const razorpayDiv = document.getElementById('razorpayPaymentFields');
-    if (mode === 'manual') {
-        manualDiv.style.display = 'block';
-        razorpayDiv.style.display = 'none';
-    } else if (mode === 'razorpay') {
-        manualDiv.style.display = 'none';
-        razorpayDiv.style.display = 'block';
-    }
+    document.getElementById('manualPaymentFields').style.display = mode === 'manual' ? 'block' : 'none';
+    document.getElementById('razorpayPaymentFields').style.display = mode === 'razorpay' ? 'block' : 'none';
 };
 
 function loadPaymentSettings() { 
-    const mode = appState.paymentApprovalMode || 'manual';
-    document.getElementById('paymentApprovalMode').value = mode;
-    togglePaymentFields(mode);
+    document.getElementById('paymentApprovalMode').value = appState.paymentApprovalMode || 'manual';
+    togglePaymentFields(appState.paymentApprovalMode);
     document.getElementById('upiIdInput').value = appState.upiId || 'binary@ruthless';
     document.getElementById('paymentInstructionsInput').value = appState.paymentInstructions || '';
     document.getElementById('razorpayKeyIdInput').value = appState.razorpayKeyId || '';
@@ -1409,230 +1572,207 @@ function loadPaymentSettings() {
 window.adminSavePaymentSettings = function() {
     const mode = document.getElementById('paymentApprovalMode').value;
     appState.paymentApprovalMode = mode;
+    const section = document.getElementById('paymentApprovalMode').closest('.admin-section');
+    const done = () => {
+        saveLocalState();
+        loadQRPreview();
+        disableEditFields(section);
+        const btn = section.querySelector('.btn-save');
+        btn.textContent = '✅ Saved';
+        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    };
     if (mode === 'manual') {
         appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless';
         appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
-        
-        const fileInput = document.getElementById('qrUploadInput'); 
-        if (fileInput.files && fileInput.files[0]) { 
-            const reader = new FileReader(); 
-            reader.onload = function(e) { 
-                appState.qrCodeBase64 = e.target.result; 
-                saveLocalState(); 
-                loadQRPreview(); 
-                disableEditFields(document.querySelector('.admin-section')); 
-            }; 
-            reader.readAsDataURL(fileInput.files[0]); 
-        } else { 
-            saveLocalState(); 
-            loadQRPreview(); 
-            disableEditFields(document.querySelector('.admin-section')); 
+        const fileInput = document.getElementById('qrUploadInput');
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                appState.qrCodeBase64 = e.target.result;
+                localStorage.setItem('brt_qr', e.target.result);
+                done();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            done();
         }
-    } else if (mode === 'razorpay') {
+    } else {
         appState.razorpayKeyId = document.getElementById('razorpayKeyIdInput').value.trim();
         appState.razorpayKeySecret = document.getElementById('razorpayKeySecretInput').value.trim();
-        saveLocalState();
-        disableEditFields(document.querySelector('.admin-section'));
+        done();
     }
-    const btn = document.getElementById('paymentApprovalMode').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
 function loadQRPreview() { 
     const container = document.getElementById('qrPreviewContainer'); 
     if (!container) return; 
-    if (appState.qrCodeBase64) { 
-        container.innerHTML = `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />`; 
-    } else { 
-        container.innerHTML = ''; 
-    } 
+    container.innerHTML = appState.qrCodeBase64 ? `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />` : ''; 
 }
 
 function previewQRImage(event) { 
     const file = event.target.files[0]; 
     if (file) { 
         const reader = new FileReader(); 
-        reader.onload = function(e) { 
-            document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; 
-        }; 
+        reader.onload = (e) => { document.getElementById('qrPreviewContainer').innerHTML = `<img src="${e.target.result}" class="qr-preview" alt="QR Preview" />`; }; 
         reader.readAsDataURL(file); 
     } 
 }
 
-// ─── CREDIT PACKS ───
-function renderCreditPackList() {
-    const list = document.getElementById('creditPackList'); 
-    if (!list) return; 
-    list.innerHTML = '';
-    const packs = appState.creditPacks || []; 
-    if (packs.length === 0) { 
-        list.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:4px;">No packs</div>'; 
-        return; 
-    }
-    const section = list.closest('.admin-section');
-    const isEditable = section && section.classList.contains('editable');
-    
-    packs.forEach((p) => { 
-        let actions = '';
-        if (isEditable) {
-            actions = `
-                <div class="list-actions" style="display:flex;gap:4px;">
-                    <button class="edit-btn" onclick="window.adminEditCreditPack('${p.id}')">✏️</button>
-                    <button class="del-btn" onclick="window.adminDeleteCreditPack('${p.id}')">✕</button>
+// ─── BROKER CARD FUNCTIONS ───
+let editingBrokerId = null;
+
+function renderBrokerCards() {
+    const grid = document.getElementById('brokerCardGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    appState.brokers.forEach(b => {
+        grid.innerHTML += `
+            <div class="admin-card">
+                <div class="card-actions">
+                    <button class="edit-card" onclick="editBroker('${b.id}')">✏️</button>
+                    <button class="delete-card" onclick="deleteBroker('${b.id}')">✕</button>
                 </div>
-            `;
-        }
-        list.innerHTML += `<div class="list-item"><span class="name">${p.credits} credits</span><span class="detail">₹${p.price}</span>${actions}</div>`; 
+                <div class="card-icon">🏦</div>
+                <div class="card-title">${b.name}</div>
+                <div class="card-detail">
+                    <strong>Min Deposit:</strong> ₹${b.minDeposit || 0}<br>
+                    <strong>Rules:</strong> ${b.rules || 'N/A'}<br>
+                    <strong>Link:</strong> <span style="color:#FF0033;word-break:break-all;">${b.link}</span>
+                </div>
+            </div>
+        `;
     });
 }
 
-window.adminAddCreditPack = function() {
-    const credits = parseInt(document.getElementById('packCredits').value); 
-    const price = parseInt(document.getElementById('packPrice').value);
-    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
-    if (!appState.creditPacks) appState.creditPacks = []; 
-    const newPack = { id: 'pack_' + Date.now(), credits, price };
-    appState.creditPacks.push(newPack); 
-    saveLocalState(); 
-    renderCreditPackList(); 
-    document.getElementById('packCredits').value = ''; 
-    document.getElementById('packPrice').value = ''; 
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Add Pack'; }, 2000);
+window.openBrokerModal = function() {
+    editingBrokerId = null;
+    document.getElementById('brokerModalTitle').textContent = '🏢 Add Broker';
+    document.getElementById('modalBrokerName').value = '';
+    document.getElementById('modalBrokerLink').value = '';
+    document.getElementById('modalBrokerMinDeposit').value = '1000';
+    document.getElementById('modalBrokerRules').value = '';
+    document.getElementById('brokerModalError').textContent = '';
+    document.getElementById('brokerSubmitBtn').textContent = '💾 Add Broker';
+    openModal('brokerModal');
 };
 
-window.adminDeleteCreditPack = function(id) { 
-    if (confirm('Delete this pack?')) { 
-        appState.creditPacks = appState.creditPacks.filter(p => p.id !== id); 
-        saveLocalState(); 
-        renderCreditPackList(); 
-    } 
-};
-
-window.adminEditCreditPack = function(id) {
-    const pack = appState.creditPacks.find(p => p.id === id);
-    if (!pack) return;
-    document.getElementById('packCredits').value = pack.credits;
-    document.getElementById('packPrice').value = pack.price;
-    const saveBtn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
-    saveBtn.textContent = '🔄 Update Pack';
-    saveBtn.onclick = function() { adminUpdateCreditPack(id); };
-};
-
-window.adminUpdateCreditPack = function(id) {
-    const credits = parseInt(document.getElementById('packCredits').value); 
-    const price = parseInt(document.getElementById('packPrice').value);
-    if (!credits || credits <= 0 || !price || price <= 0) { alert('Enter valid credits and price'); return; }
-    const index = appState.creditPacks.findIndex(p => p.id === id);
-    if (index === -1) return;
-    appState.creditPacks[index] = { ...appState.creditPacks[index], credits, price };
-    saveLocalState();
-    renderCreditPackList();
-    document.getElementById('packCredits').value = '';
-    document.getElementById('packPrice').value = '';
-    disableEditFields(document.querySelector('.admin-section'));
-    const saveBtn = document.getElementById('packCredits').closest('.admin-section').querySelector('.btn-save');
-    saveBtn.textContent = '✅ Saved';
-    setTimeout(() => { saveBtn.textContent = '💾 Add Pack'; saveBtn.onclick = adminAddCreditPack; }, 2000);
-};
-
-// ─── BROKER MANAGER ───
-function renderBrokerList() {
-    const list = document.getElementById('brokerList'); 
-    if (!list) return; 
-    list.innerHTML = '';
-    const section = list.closest('.admin-section');
-    const isEditable = section && section.classList.contains('editable');
-    
-    appState.brokers.forEach((b) => { 
-        let actions = '';
-        if (isEditable) {
-            actions = `
-                <div class="list-actions" style="display:flex;gap:4px;">
-                    <button class="edit-btn" onclick="window.adminEditBroker('${b.id}')">✏️</button>
-                    <button class="del-btn" onclick="window.adminDeleteBroker('${b.id}')">✕</button>
-                </div>
-            `;
-        }
-        list.innerHTML += `<div class="list-item"><span class="name">${b.name}</span><span class="detail">₹${b.minDeposit || 0}</span>${actions}</div>`; 
-    });
-}
-
-window.adminAddBroker = function() {
-    const name = document.getElementById('adminBrokerName').value.trim(); 
-    const link = document.getElementById('adminBrokerLink').value.trim(); 
-    const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; 
-    const rules = document.getElementById('adminBrokerRules').value.trim();
-    if (!name || !link) { alert('Enter name and link'); return; }
-    const newBroker = { id: 'broker_' + Date.now(), name, link, minDeposit, rules };
-    appState.brokers.push(newBroker); 
-    saveLocalState(); 
-    renderBrokerList(); 
-    document.getElementById('adminBrokerName').value = '';
-    document.getElementById('adminBrokerLink').value = '';
-    document.getElementById('adminBrokerMinDeposit').value = '';
-    document.getElementById('adminBrokerRules').value = '';
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Add'; }, 2000);
-};
-
-window.adminDeleteBroker = function(id) { 
-    if (confirm('Delete this broker?')) { 
-        appState.brokers = appState.brokers.filter(b => b.id !== id); 
-        saveLocalState(); 
-        renderBrokerList(); 
-    } 
-};
-
-window.adminEditBroker = function(id) {
+window.editBroker = function(id) {
     const broker = appState.brokers.find(b => b.id === id);
     if (!broker) return;
-    document.getElementById('adminBrokerName').value = broker.name;
-    document.getElementById('adminBrokerLink').value = broker.link;
-    document.getElementById('adminBrokerMinDeposit').value = broker.minDeposit || '';
-    document.getElementById('adminBrokerRules').value = broker.rules || '';
-    const saveBtn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
-    saveBtn.textContent = '🔄 Update Broker';
-    saveBtn.onclick = function() { adminUpdateBroker(id); };
+    editingBrokerId = id;
+    document.getElementById('brokerModalTitle').textContent = '✏️ Edit Broker';
+    document.getElementById('modalBrokerName').value = broker.name;
+    document.getElementById('modalBrokerLink').value = broker.link;
+    document.getElementById('modalBrokerMinDeposit').value = broker.minDeposit || '';
+    document.getElementById('modalBrokerRules').value = broker.rules || '';
+    document.getElementById('brokerModalError').textContent = '';
+    document.getElementById('brokerSubmitBtn').textContent = '💾 Update Broker';
+    openModal('brokerModal');
 };
 
-window.adminUpdateBroker = function(id) {
-    const name = document.getElementById('adminBrokerName').value.trim(); 
-    const link = document.getElementById('adminBrokerLink').value.trim(); 
-    const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0; 
-    const rules = document.getElementById('adminBrokerRules').value.trim();
-    if (!name || !link) { alert('Enter name and link'); return; }
-    const index = appState.brokers.findIndex(b => b.id === id);
-    if (index === -1) return;
-    appState.brokers[index] = { ...appState.brokers[index], name, link, minDeposit, rules };
+window.deleteBroker = function(id) {
+    if (confirm('Delete this broker?')) {
+        appState.brokers = appState.brokers.filter(b => b.id !== id);
+        saveLocalState();
+        renderBrokerCards();
+    }
+};
+
+window.submitBroker = function() {
+    const name = document.getElementById('modalBrokerName').value.trim();
+    const link = document.getElementById('modalBrokerLink').value.trim();
+    const minDeposit = parseInt(document.getElementById('modalBrokerMinDeposit').value) || 0;
+    const rules = document.getElementById('modalBrokerRules').value.trim();
+    const errorEl = document.getElementById('brokerModalError');
+    if (!name || !link) { errorEl.textContent = '❌ Name and link required'; return; }
+    if (editingBrokerId) {
+        const idx = appState.brokers.findIndex(b => b.id === editingBrokerId);
+        if (idx !== -1) appState.brokers[idx] = { ...appState.brokers[idx], name, link, minDeposit, rules };
+    } else {
+        appState.brokers.push({ id: 'broker_' + Date.now(), name, link, minDeposit, rules });
+    }
     saveLocalState();
-    renderBrokerList();
-    document.getElementById('adminBrokerName').value = '';
-    document.getElementById('adminBrokerLink').value = '';
-    document.getElementById('adminBrokerMinDeposit').value = '';
-    document.getElementById('adminBrokerRules').value = '';
-    disableEditFields(document.querySelector('.admin-section'));
-    const saveBtn = document.getElementById('adminBrokerName').closest('.admin-section').querySelector('.btn-save');
-    saveBtn.textContent = '✅ Saved';
-    setTimeout(() => { saveBtn.textContent = '💾 Add'; saveBtn.onclick = adminAddBroker; }, 2000);
+    closeModal('brokerModal');
+    renderBrokerCards();
 };
 
-// ─── TOOLS MANAGER ───
+// ─── CREDIT PACK CARD FUNCTIONS ───
+let editingPackId = null;
+
+function renderCreditPackCards() {
+    const grid = document.getElementById('creditPackCardGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    appState.creditPacks.forEach(p => {
+        const perCredit = (p.price / p.credits).toFixed(2);
+        grid.innerHTML += `
+            <div class="admin-card">
+                <div class="card-actions">
+                    <button class="edit-card" onclick="editCreditPack('${p.id}')">✏️</button>
+                    <button class="delete-card" onclick="deleteCreditPack('${p.id}')">✕</button>
+                </div>
+                <div class="card-icon">💳</div>
+                <div class="card-title">${p.credits} Credits</div>
+                <div class="card-price">₹${p.price}</div>
+                <div class="card-detail">per credit ₹${perCredit}</div>
+            </div>
+        `;
+    });
+}
+
+window.openCreditPackModal = function() {
+    editingPackId = null;
+    document.getElementById('creditPackModalTitle').textContent = '📦 Add Credit Pack';
+    document.getElementById('modalPackCredits').value = '';
+    document.getElementById('modalPackPrice').value = '';
+    document.getElementById('creditPackModalError').textContent = '';
+    document.getElementById('creditPackSubmitBtn').textContent = '💾 Add Pack';
+    openModal('creditPackModal');
+};
+
+window.editCreditPack = function(id) {
+    const pack = appState.creditPacks.find(p => p.id === id);
+    if (!pack) return;
+    editingPackId = id;
+    document.getElementById('creditPackModalTitle').textContent = '✏️ Edit Pack';
+    document.getElementById('modalPackCredits').value = pack.credits;
+    document.getElementById('modalPackPrice').value = pack.price;
+    document.getElementById('creditPackModalError').textContent = '';
+    document.getElementById('creditPackSubmitBtn').textContent = '💾 Update Pack';
+    openModal('creditPackModal');
+};
+
+window.deleteCreditPack = function(id) {
+    if (confirm('Delete this pack?')) {
+        appState.creditPacks = appState.creditPacks.filter(p => p.id !== id);
+        saveLocalState();
+        renderCreditPackCards();
+    }
+};
+
+window.submitCreditPack = function() {
+    const credits = parseInt(document.getElementById('modalPackCredits').value);
+    const price = parseInt(document.getElementById('modalPackPrice').value);
+    const errorEl = document.getElementById('creditPackModalError');
+    if (isNaN(credits) || credits <= 0 || isNaN(price) || price <= 0) { errorEl.textContent = '❌ Enter valid numbers'; return; }
+    if (editingPackId) {
+        const idx = appState.creditPacks.findIndex(p => p.id === editingPackId);
+        if (idx !== -1) appState.creditPacks[idx] = { ...appState.creditPacks[idx], credits, price };
+    } else {
+        appState.creditPacks.push({ id: 'pack_' + Date.now(), credits, price });
+    }
+    saveLocalState();
+    closeModal('creditPackModal');
+    renderCreditPackCards();
+};
+
+// ─── TOOLS LIST ───
 function renderToolsList() {
     const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
     const tools = appState.tools || [];
-    if (tools.length === 0) { 
-        container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; 
-        return; 
-    }
+    if (tools.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; return; }
     const section = container.closest('.admin-section');
     const isEditable = section && section.classList.contains('editable');
-    
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
@@ -1664,28 +1804,8 @@ function renderToolsList() {
     });
 }
 
-window.toggleToolFire = function(idx) {
-    const tool = appState.tools[idx];
-    if (!tool) return;
-    tool.showFire = tool.showFire !== undefined ? !tool.showFire : false;
-    saveLocalState();
-    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
-    renderToolsList();
-};
-
-window.editTool = function(idx) {
-    const tool = appState.tools[idx]; if (!tool) return; window.editingToolIndex = idx;
-    document.getElementById('editToolIndex').value = idx;
-    document.getElementById('editToolName').value = tool.name || '';
-    document.getElementById('editToolSubName').value = tool.subName || '';
-    document.getElementById('editToolHtml').value = tool.htmlCode || '';
-    document.getElementById('editToolStatus').value = tool.visibility || 'visible';
-    document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true';
-    document.getElementById('editToolTriggers').value = (tool.triggers || []).join(', ');
-    document.getElementById('editToolForm').style.display = 'block';
-    document.getElementById('addToolForm').style.display = 'none';
-};
-
+window.toggleToolFire = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.showFire = tool.showFire !== undefined ? !tool.showFire : false; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
+window.editTool = function(idx) { const tool = appState.tools[idx]; if (!tool) return; window.editingToolIndex = idx; document.getElementById('editToolIndex').value = idx; document.getElementById('editToolName').value = tool.name || ''; document.getElementById('editToolSubName').value = tool.subName || ''; document.getElementById('editToolHtml').value = tool.htmlCode || ''; document.getElementById('editToolStatus').value = tool.visibility || 'visible'; document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true'; document.getElementById('editToolTriggers').value = (tool.triggers || []).join(', '); document.getElementById('editToolForm').style.display = 'block'; document.getElementById('addToolForm').style.display = 'none'; };
 window.adminUpdateTool = function() {
     const idx = parseInt(document.getElementById('editToolIndex').value);
     const name = document.getElementById('editToolName').value.trim();
@@ -1695,9 +1815,7 @@ window.adminUpdateTool = function() {
     const showFire = document.getElementById('editToolFire').value === 'true';
     const triggersInput = document.getElementById('editToolTriggers').value.trim();
     let triggers = [];
-    if (triggersInput) {
-        triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
-    }
+    if (triggersInput) triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
@@ -1706,22 +1824,10 @@ window.adminUpdateTool = function() {
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('editToolForm').style.display = 'none';
-    const btn = document.getElementById('editToolName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Update Tool'; }, 2000);
 };
-
 window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
-window.deleteTool = function(idx) { 
-    if (confirm('Delete this tool?')) { 
-        appState.tools.splice(idx, 1); 
-        saveLocalState(); 
-        localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); 
-        renderToolsList(); 
-    } 
-};
+window.deleteTool = function(idx) { if (confirm('Delete this tool?')) { appState.tools.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); } };
 window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; document.getElementById('newToolTriggers').value = ''; };
-
 window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim();
     const subName = document.getElementById('newToolSubName').value.trim();
@@ -1730,9 +1836,7 @@ window.adminAddTool = function() {
     const showFire = document.getElementById('newToolFire').value === 'true';
     const triggersInput = document.getElementById('newToolTriggers').value.trim();
     let triggers = [];
-    if (triggersInput) {
-        triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
-    }
+    if (triggersInput) triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
     if (!name) { alert('Please enter tool name'); return; }
     if (!htmlCode) { alert('Please enter HTML code'); return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
@@ -1742,12 +1846,9 @@ window.adminAddTool = function() {
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
     renderToolsList();
     document.getElementById('addToolForm').style.display = 'none';
-    const btn = document.getElementById('newToolName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save Tool'; }, 2000);
 };
 
-// ─── SOCIAL LIST ───
+// ─── SOCIAL LIST (unchanged) ───
 function renderSocialList() {
     const container = document.getElementById('socialList'); if (!container) return; container.innerHTML = '';
     const socials = appState.socialMedia || [];
@@ -1766,9 +1867,6 @@ window.adminUpdateSocial = function() {
     const idx = parseInt(document.getElementById('editSocialIndex').value); const name = document.getElementById('editSocialName').value.trim(); const url = document.getElementById('editSocialUrl').value.trim(); const icon = document.getElementById('editSocialIcon').value.trim(); const visibility = document.getElementById('editSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
     appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility }; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('editSocialForm').style.display = 'none';
-    const btn = document.getElementById('editSocialName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Update Social'; }, 2000);
 };
 window.toggleSocialVisibility = function(idx) { const social = appState.socialMedia[idx]; if (!social) return; social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); };
 window.deleteSocial = function(idx) { if (confirm('Delete this social media?')) { appState.socialMedia.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); } };
@@ -1777,9 +1875,6 @@ window.adminAddSocial = function() {
     const name = document.getElementById('newSocialName').value.trim(); const url = document.getElementById('newSocialUrl').value.trim(); const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link'; const visibility = document.getElementById('newSocialStatus').value;
     if (!name || !url) { alert('Please enter name and URL'); return; }
     if (!appState.socialMedia) appState.socialMedia = []; appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility }); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('addSocialForm').style.display = 'none';
-    const btn = document.getElementById('newSocialName').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save Social'; }, 2000);
 };
 
 // ─── OFFER SAVE ───
@@ -1858,11 +1953,6 @@ function enableEdit(btn) {
     section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
     btn.style.display = 'none';
     section.classList.add('editable');
-    const lists = section.querySelectorAll('.item-list');
-    lists.forEach(list => {
-        if (list.id === 'creditPackList') renderCreditPackList();
-        else if (list.id === 'brokerList') renderBrokerList();
-    });
     const toolsList = section.querySelector('.tools-list');
     if (toolsList) renderToolsList();
 }
@@ -1876,83 +1966,54 @@ function disableEditFields(section) {
         b.textContent = '✏️ Edit'; 
     }); 
     section.classList.remove('editable');
-    const lists = section.querySelectorAll('.item-list');
-    lists.forEach(list => {
-        if (list.id === 'creditPackList') renderCreditPackList();
-        else if (list.id === 'brokerList') renderBrokerList();
-    });
     const toolsList = section.querySelector('.tools-list');
     if (toolsList) renderToolsList();
 }
 
 // ─── FIREBASE SYNC ───
 onValue(dbRef, (snapshot) => {
-    isFirebaseConnected = true; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
+    isFirebaseConnected = true;
+    document.getElementById('adminStatusDot').className = 'fb-status-dot-sm green';
+    if (!initialSyncDone) {
+        set(dbRef, appState).then(() => { initialSyncDone = true; }).catch(e => console.error);
+        return;
+    }
     const val = snapshot.val();
     if (val) {
         appState = { ...appState, ...val };
         updateUI();
-        renderUsersList();
-        renderBrokerList();
-        renderPendingPayments();
-        renderPendingVerifications();
-        renderCreditPackList();
-        loadPaymentSettings();
-        loadQRPreview();
+        renderBrokerCards();
+        renderCreditPackCards();
         renderToolsList();
         renderSocialList();
-        /* renderFeaturesList(); removed */
         renderAdminSocialMedia();
+        renderPendingPayments();
+        renderPendingVerifications();
+        loadPaymentSettings();
         updateChatNotification();
         updatePendingCounts();
-        if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
-            applyAdminLogo(val.logoBase64);
-            localStorage.setItem('brt_logo', val.logoBase64);
-        }
-        if (val.offerCredits !== undefined) localStorage.setItem('brt_offer_credits', val.offerCredits);
-        if (val.tools !== undefined) localStorage.setItem('brt_tools', JSON.stringify(val.tools));
-        if (val.socialMedia !== undefined) localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
-        if (val.brokers !== undefined) localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
-        if (val.creditPacks !== undefined) localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
-        /* features localStorage removed */
-        if (val.offerName !== undefined) document.getElementById('offerName').value = val.offerName;
-        if (val.offerDescription !== undefined) document.getElementById('offerDescription').value = val.offerDescription;
-        if (val.creditsPerSignal !== undefined) {
-            appState.creditsPerSignal = val.creditsPerSignal;
-            document.getElementById('creditsPerSignalInput').value = val.creditsPerSignal;
-        }
-        /* firebaseConfig UI loading removed */
-        if (val.razorpayKeyId !== undefined) document.getElementById('razorpayKeyIdInput').value = val.razorpayKeyId || '';
-        if (val.razorpayKeySecret !== undefined) document.getElementById('razorpayKeySecretInput').value = val.razorpayKeySecret || '';
+        updateRevenueCount();
+        if (val.logoBase64) applyAdminLogo(val.logoBase64);
     }
-}, (error) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; console.error(error); });
+}, (err) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; });
 
-function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
+function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error); }
 
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
-    if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) { console.error(e); } }
+    if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e){} }
     const socialData = localStorage.getItem('brt_social');
-    if (socialData) { try { const parsed = JSON.parse(socialData); if (parsed.length > 0) appState.socialMedia = parsed; } catch(e) {} }
+    if (socialData) { try { appState.socialMedia = JSON.parse(socialData) || appState.socialMedia; } catch(e){} }
     const toolsData = localStorage.getItem('brt_tools');
-    if (toolsData) { try { const parsed = JSON.parse(toolsData); if (parsed.length > 0) appState.tools = parsed; } catch(e) {} }
-    const logoData = localStorage.getItem('brt_logo'); 
-    if (logoData) {
-        appState.logoBase64 = logoData;
-        applyAdminLogo(logoData);
-    }
+    if (toolsData) { try { appState.tools = JSON.parse(toolsData) || appState.tools; } catch(e){} }
+    const logoData = localStorage.getItem('brt_logo');
+    if (logoData) { appState.logoBase64 = logoData; applyAdminLogo(logoData); }
     const brokersData = localStorage.getItem('brt_brokers');
-    if (brokersData) { try { const parsed = JSON.parse(brokersData); if (parsed.length > 0) appState.brokers = parsed; } catch(e) {} }
+    if (brokersData) { try { appState.brokers = JSON.parse(brokersData) || appState.brokers; } catch(e){} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
-    if (creditPacksData) { try { const parsed = JSON.parse(creditPacksData); if (parsed.length > 0) appState.creditPacks = parsed; } catch(e) {} }
-    /* features loading removed */
+    if (creditPacksData) { try { appState.creditPacks = JSON.parse(creditPacksData) || appState.creditPacks; } catch(e){} }
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
-    if (creditsPerSignalData) {
-        const val = parseInt(creditsPerSignalData);
-        if (!isNaN(val) && val > 0) {
-            appState.creditsPerSignal = val;
-        }
-    }
+    if (creditsPerSignalData) appState.creditsPerSignal = parseInt(creditsPerSignalData) || 1;
     const razorpayKeyIdData = localStorage.getItem('brt_razorpay_key_id');
     if (razorpayKeyIdData) appState.razorpayKeyId = razorpayKeyIdData;
     const razorpayKeySecretData = localStorage.getItem('brt_razorpay_key_secret');
@@ -1966,33 +2027,26 @@ function loadLocalState() {
     
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
-    if (appState.creditsPerSignal) {
-        document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
-    }
-    /* firebaseConfig UI loading removed */
-    updateUI(); 
-    renderUsersList(); 
-    renderBrokerList(); 
-    renderPendingPayments(); 
-    renderPendingVerifications(); 
-    renderCreditPackList(); 
-    loadPaymentSettings(); 
-    loadQRPreview(); 
-    renderToolsList(); 
-    renderSocialList(); 
-    /* renderFeaturesList(); removed */
+    document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
+    updateUI();
+    renderBrokerCards();
+    renderCreditPackCards();
+    renderToolsList();
+    renderSocialList();
     renderAdminSocialMedia();
+    loadPaymentSettings();
+    renderPendingPayments();
+    renderPendingVerifications();
     updateChatNotification();
     updatePendingCounts();
+    updateRevenueCount();
 }
 
 function updateUI() {
     document.getElementById('logoClickCount').value = appState.logoClickCount || 2;
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
-    if (appState.creditsPerSignal) {
-        document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
-    }
+    document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
 }
 
 // ─── PENDING PAYMENTS ───
@@ -2067,6 +2121,7 @@ window.adminApprovePayment = function(idx) {
         renderPendingPayments(); 
         renderUsersList(); 
         updatePendingCounts();
+        updateRevenueCount();
     } 
 };
 
@@ -2079,6 +2134,7 @@ window.adminRejectPayment = function(idx) {
         renderPendingPayments(); 
         renderUsersList();
         updatePendingCounts();
+        updateRevenueCount();
     } 
 };
 
@@ -2169,9 +2225,7 @@ window.adminRejectVerification = function(idx) {
 };
 
 // ─── USERS LIST ───
-function renderUsersList() {
-    // This is called internally
-}
+function renderUsersList() { /* placeholder */ }
 
 function showVerifiedUsers() { 
     const container = document.getElementById('usersContent'); 
@@ -2535,15 +2589,72 @@ window.changeAdminPassword = function() {
     document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
 };
 
-// Expose globals (features and firebase config globals removed)
+// ─── REVENUE FUNCTIONS ───
+function getPaymentsInRange(startDate, endDate) {
+    return (appState.payments || []).filter(p => p.status === 'success' && new Date(p.date) >= startDate && new Date(p.date) <= endDate);
+}
+
+function calculateRevenueForPeriod(period) {
+    const now = new Date(); let start, end = new Date(now); end.setHours(23,59,59,999);
+    switch(period) {
+        case 'today': start = new Date(now); start.setHours(0,0,0,0); break;
+        case 'yesterday': start = new Date(now); start.setDate(start.getDate()-1); start.setHours(0,0,0,0); end = new Date(start); end.setHours(23,59,59,999); break;
+        case 'week': start = new Date(now); start.setDate(start.getDate()-start.getDay()); start.setHours(0,0,0,0); break;
+        case 'month': start = new Date(now.getFullYear(), now.getMonth(), 1); break;
+        case 'year': start = new Date(now.getFullYear(), 0, 1); break;
+        case 'custom': const dp = document.getElementById('revenueDatePicker'); if (!dp.value) return { payments: [], total: 0 }; const sel = new Date(dp.value); start = new Date(sel); start.setHours(0,0,0,0); end = new Date(sel); end.setHours(23,59,59,999); break;
+        default: return { payments: [], total: 0 };
+    }
+    const payments = getPaymentsInRange(start, end);
+    const total = payments.reduce((sum, p) => sum + p.amount, 0);
+    return { payments, total };
+}
+
+function renderRevenueList(payments) {
+    const container = document.getElementById('revenuePaymentList');
+    if (!container) return;
+    if (payments.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:30px;">No successful payments in this period</div>'; return; }
+    let html = '<table class="revenue-table"><thead><tr><th>Date</th><th>User</th><th>Credits</th><th>Amount</th><th>Txn ID</th></tr></thead><tbody>';
+    payments.forEach(p => {
+        const user = appState.users.find(u => u.email === p.userEmail);
+        const userName = user ? user.name || user.email : p.userEmail;
+        html += `<tr><td class="revenue-date">${new Date(p.date).toLocaleString()}</td><td>${userName}</td><td>${p.credits}</td><td class="revenue-amount">₹${p.amount}</td><td style="font-size:0.5rem;">${p.transactionId || 'N/A'}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function showRevenue(period) {
+    currentRevenuePeriod = period;
+    const result = calculateRevenueForPeriod(period);
+    document.getElementById('revTotalAmount').textContent = '₹' + result.total;
+    document.getElementById('revTotalCount').textContent = result.payments.length;
+    const labels = { today: 'Today', yesterday: 'Yesterday', week: 'This Week', month: 'This Month', year: 'This Year', custom: 'Selected Date' };
+    document.getElementById('revPeriodLabel').textContent = labels[period] || '-';
+    renderRevenueList(result.payments);
+}
+
+function openRevenueModal() { openModal('revenueModal'); showRevenue('today'); }
+
+function updateRevenueCount() {
+    const allSuccess = (appState.payments || []).filter(p => p.status === 'success');
+    const total = allSuccess.reduce((sum, p) => sum + p.amount, 0);
+    const el = document.getElementById('totalRevenueCount');
+    if (el) { el.textContent = '₹' + total; el.className = 'count ' + (total > 0 ? 'gold' : 'green'); }
+}
+
+setInterval(() => {
+    updateRevenueCount();
+    if (document.getElementById('revenueModal').classList.contains('active')) showRevenue(currentRevenuePeriod);
+}, 1000);
+
+// Expose globals
 window.adminApprovePayment = adminApprovePayment; window.adminRejectPayment = adminRejectPayment;
 window.adminApproveVerification = adminApproveVerification; window.adminRejectVerification = adminRejectVerification;
 window.openUserDetailPopup = openUserDetailPopup; window.giveFreeCredits = giveFreeCredits; window.blockUser = blockUser; window.removeUser = removeUser; window.chatWithUser = chatWithUser;
 window.openPendingPaymentsPopup = openPendingPaymentsPopup; window.openPendingVerificationsPopup = openPendingVerificationsPopup; window.openUsersPopup = openUsersPopup; window.openChatPopup = openChatPopup;
 window.showVerifiedUsers = showVerifiedUsers; window.showAddUserForm = showAddUserForm; window.adminAddUserFromPopup = adminAddUserFromPopup; window.searchUsersInPopup = searchUsersInPopup;
-window.adminAddCreditPack = adminAddCreditPack; window.adminDeleteCreditPack = adminDeleteCreditPack; window.adminEditCreditPack = adminEditCreditPack; window.adminUpdateCreditPack = adminUpdateCreditPack;
 window.adminSavePaymentSettings = adminSavePaymentSettings; window.adminSaveLogo = adminSaveLogo;
-window.adminAddBroker = adminAddBroker; window.adminDeleteBroker = adminDeleteBroker; window.adminEditBroker = adminEditBroker; window.adminUpdateBroker = adminUpdateBroker;
 window.adminSaveOffer = adminSaveOffer; window.saveAdminSettings = saveAdminSettings;
 window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
 window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.toggleToolVisibility = toggleToolVisibility; window.deleteTool = deleteTool; window.showAddToolForm = showAddToolForm; window.adminAddTool = adminAddTool;
@@ -2551,12 +2662,20 @@ window.toggleToolFire = toggleToolFire;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers; window.clearSelectedChatUser = clearSelectedChatUser;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
-/* window.editFeature, adminUpdateFeature, toggleFeatureVisibility, deleteFeature, showAddFeatureForm, adminAddFeature removed */
-/* window.adminSaveFirebase removed */
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
+window.openBrokerModal = openBrokerModal;
+window.editBroker = editBroker;
+window.deleteBroker = deleteBroker;
+window.submitBroker = submitBroker;
+window.openCreditPackModal = openCreditPackModal;
+window.editCreditPack = editCreditPack;
+window.deleteCreditPack = deleteCreditPack;
+window.submitCreditPack = submitCreditPack;
+window.showRevenue = showRevenue;
+window.openRevenueModal = openRevenueModal;
 
-console.log('⚙️ Admin Panel Loaded');
+console.log('⚙️ Admin Panel Loaded - All Features Active');
 </script>
 </body>
 </html>
