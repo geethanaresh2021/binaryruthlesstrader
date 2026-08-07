@@ -1,0 +1,210 @@
+<!-- ============================================ -->
+<!-- SECTION: DASHBOARD ACCOUNT                    -->
+<!-- FILE: dashboard-account.html                  -->
+<!-- Contains: HTML + CSS + JS for Account Modal   -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── ACCOUNT DETAILS MODAL CSS ─── */
+    .account-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        font-size: 0.85rem;
+    }
+    .account-detail-row .label {
+        color: #666;
+        font-weight: 500;
+    }
+    .account-detail-row .value {
+        color: #FFD700;
+        font-weight: 600;
+    }
+    .account-detail-row .value.green {
+        color: #00FF66;
+    }
+    .account-detail-row .value.red {
+        color: #FF0033;
+    }
+
+    /* ─── PAYMENT HISTORY CSS ─── */
+    .history-list {
+        max-height: 280px;
+        overflow-y: auto;
+    }
+    .history-list::-webkit-scrollbar {
+        width: 3px;
+    }
+    .history-list::-webkit-scrollbar-thumb {
+        background: #FF0033;
+        border-radius: 3px;
+    }
+    .history-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        font-size: 0.7rem;
+        align-items: center;
+    }
+    .history-item .status-success {
+        color: #00FF66;
+    }
+    .history-item .status-failed {
+        color: #FF0033;
+    }
+    .history-item .status-pending {
+        color: #FFD700;
+    }
+    .history-item .amount {
+        color: #FFD700;
+    }
+    .history-item .date {
+        color: #666;
+        font-size: 0.5rem;
+    }
+    .history-empty {
+        text-align: center;
+        color: #666;
+        font-size: 0.6rem;
+        padding: 16px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+        .account-detail-row {
+            font-size: 0.7rem;
+            padding: 6px 0;
+        }
+        .history-item {
+            font-size: 0.6rem;
+            padding: 4px 6px;
+        }
+    }
+    @media (max-width: 480px) {
+        .account-detail-row {
+            font-size: 0.6rem;
+            padding: 4px 0;
+        }
+        .history-item {
+            font-size: 0.5rem;
+            padding: 3px 4px;
+        }
+        .history-empty {
+            font-size: 0.5rem;
+        }
+    }
+</style>
+
+<!-- ─── ACCOUNT MODAL HTML ─── -->
+<div class="overlay" id="accountModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeAccountModal()">✕</button>
+        <h2>👤 ACCOUNT DETAILS</h2>
+        <div id="accountDetailsContent"></div>
+        <div style="margin-top:10px;">
+            <button class="btn-submit btn-gold" onclick="openPaymentHistoryModal()" style="margin-top:0;">📜 Payment History</button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── PAYMENT HISTORY MODAL HTML ─── -->
+<div class="overlay" id="paymentHistoryModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closePaymentHistoryModal()">✕</button>
+        <h2>📜 PAYMENT HISTORY</h2>
+        <div class="history-list" id="paymentHistoryList"></div>
+    </div>
+</div>
+
+<script>
+    // ─── ACCOUNT FUNCTIONS ───
+
+    // Open Account Modal
+    function openAccountModal() {
+        const user = (typeof appState !== 'undefined') ? appState.currentUser : null;
+        if (!user) return;
+        
+        const container = document.getElementById('accountDetailsContent');
+        if (!container) return;
+        
+        container.innerHTML = `
+            <div class="account-detail-row"><span class="label">Name</span><span class="value">${user.name || 'N/A'}</span></div>
+            <div class="account-detail-row"><span class="label">Email</span><span class="value">${user.email}</span></div>
+            <div class="account-detail-row"><span class="label">Account ID</span><span class="value">${user.accountId || 'N/A'}</span></div>
+            <div class="account-detail-row"><span class="label">Broker</span><span class="value">${user.broker || 'N/A'}</span></div>
+            <div class="account-detail-row"><span class="label">Status</span><span class="value ${user.blocked ? 'red' : 'green'}">${user.blocked ? '🚫 Blocked' : '✅ Verified'}</span></div>
+            <div class="account-detail-row"><span class="label">Available Credits</span><span class="value green">${user.credits || 0}</span></div>
+            <div class="account-detail-row"><span class="label">Free Credits</span><span class="value">${user.freeCredits || 0}</span></div>
+            <div class="account-detail-row"><span class="label">Today Used</span><span class="value">${user.todayUsed || 0}</span></div>
+            <div class="account-detail-row"><span class="label">Registered</span><span class="value" style="font-size:0.6rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
+        `;
+        
+        document.getElementById('accountModal').classList.add('active');
+    }
+
+    // Close Account Modal
+    function closeAccountModal() {
+        document.getElementById('accountModal').classList.remove('active');
+    }
+
+    // Open Payment History Modal
+    function openPaymentHistoryModal() {
+        const user = (typeof appState !== 'undefined') ? appState.currentUser : null;
+        if (!user) return;
+        
+        renderPaymentHistory();
+        document.getElementById('paymentHistoryModal').classList.add('active');
+    }
+
+    // Close Payment History Modal
+    function closePaymentHistoryModal() {
+        document.getElementById('paymentHistoryModal').classList.remove('active');
+    }
+
+    // Render Payment History
+    function renderPaymentHistory() {
+        const container = document.getElementById('paymentHistoryList');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        const payments = (typeof appState !== 'undefined' && appState.payments) ? appState.payments : [];
+        const currentUserEmail = (typeof appState !== 'undefined' && appState.currentUser) ? appState.currentUser.email : null;
+        const userPayments = payments.filter(p => p.userEmail === currentUserEmail);
+        
+        if (userPayments.length === 0) {
+            container.innerHTML = '<div class="history-empty">No payment history</div>';
+            return;
+        }
+        
+        userPayments.reverse().forEach(p => {
+            const statusClass = p.status === 'success' ? 'status-success' : (p.status === 'failed' ? 'status-failed' : 'status-pending');
+            const statusText = p.status === 'success' ? '✅ Success' : (p.status === 'failed' ? '❌ Failed' : '⏳ Pending');
+            container.innerHTML += `
+                <div class="history-item">
+                    <span class="${statusClass}">${statusText}</span>
+                    <span class="amount">₹${p.amount}</span>
+                    <span style="color:#888;">${p.credits}cr</span>
+                    <span style="color:#666;font-size:0.4rem;">${p.transactionId || 'N/A'}</span>
+                    <span class="date">${p.date ? new Date(p.date).toLocaleString() : ''}</span>
+                </div>
+            `;
+        });
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAccountModal();
+            closePaymentHistoryModal();
+        }
+    });
+
+    // Expose functions globally
+    window.openAccountModal = openAccountModal;
+    window.closeAccountModal = closeAccountModal;
+    window.openPaymentHistoryModal = openPaymentHistoryModal;
+    window.closePaymentHistoryModal = closePaymentHistoryModal;
+    window.renderPaymentHistory = renderPaymentHistory;
+</script>
