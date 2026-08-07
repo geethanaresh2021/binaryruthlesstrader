@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Binary Ruthless Trader - AI Signals | Free Binary Signals</title>
     
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Binary Ruthless Trader - Get free AI signals for Quotex, Binomo, Pocket Option. Free binary signals, risk management tools, and AI trading bot." />
     <meta name="keywords" content="binary ruthless trader, binary ruthless signals, binary signals, free signals, free ai signals, binary bot, binomo bot, pocket option bot, quotex ai signals, binomo ai signals, pocket option ai signals, free binary ai signals, free risk management, binary options signals, binary trading signals" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://binaryruthlesstrader.com/" />
     
+    <!-- Open Graph -->
     <meta property="og:title" content="Binary Ruthless Trader - Free AI Signals for Quotex, Binomo, Pocket Option" />
     <meta property="og:description" content="Get free AI signals, risk management tools, and binary trading bot. Free signals for Quotex, Binomo, Pocket Option." />
     <meta property="og:url" content="https://binaryruthlesstrader.com/" />
     <meta property="og:type" content="website" />
     
+    <!-- Schema Markup -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -43,6 +46,7 @@
     </script>
 
     <style>
+        /* ─── CSS VARIABLES (Dark Theme Only) ─── */
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111;
@@ -91,16 +95,19 @@
             --popup-close-color: #FF0033;
         }
 
+        /* ─── RESET & BASE ─── */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; min-height: 100vh; background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; transition: background 0.4s ease, color 0.4s ease; }
         body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; }
         input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
 
+        /* ─── SCROLLBAR ─── */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: rgba(255, 0, 51, 0.03); }
         ::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
 
+        /* ─── APP ─── */
         .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg-primary); position: relative; overflow: hidden; transition: background 0.4s ease; }
         .app::before { content: ''; position: fixed; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 18s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
@@ -108,6 +115,7 @@
 
         .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; position: relative; z-index: 1; }
 
+        /* ─── RED CONTAINER ─── */
         .red-container { background: var(--container-bg); border: 2px solid var(--container-border); border-radius: 18px; padding: 4px 12px 3px 12px; margin: 6px 0 4px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; will-change: transform; }
         .red-container:hover { border-color: rgba(255, 0, 51, 0.5); box-shadow: 0 0 60px var(--shadow-color); transform: scale(1.012) translateY(-1px); }
         .red-container::after { content: ''; position: absolute; inset: -2px; border-radius: 18px; padding: 2px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
@@ -127,6 +135,7 @@
         .admin-nav-bar .nav-buttons button { padding: 1px 8px; border-radius: 12px; border: 1px solid rgba(255, 0, 51, 0.08); background: rgba(255, 255, 255, 0.02); color: var(--text-secondary); font-size: 0.4rem; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap; }
         .admin-nav-bar .nav-buttons button:hover { border-color: #FF0033; color: #fff; background: rgba(255, 0, 51, 0.08); transform: scale(1.1); box-shadow: 0 2px 14px rgba(255, 0, 51, 0.06); }
         .admin-nav-bar .nav-buttons button:active { transform: scale(0.93); }
+        .admin-nav-bar .nav-buttons button.active { border-color: #FF0033; color: #FF0033; background: rgba(255, 0, 51, 0.06); }
         .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255, 0, 51, 0.2); color: #FF0033; }
         .admin-nav-bar .nav-buttons .logout-btn:hover { background: rgba(255, 0, 51, 0.12); box-shadow: 0 0 20px rgba(255, 0, 51, 0.08); }
 
@@ -199,7 +208,9 @@
 
         .user-section { display: flex; gap: 12px; padding: 4px 0; flex-shrink: 0; flex-wrap: wrap; justify-content: center; }
         .user-card { flex: 1; min-width: 150px; max-width: 250px; backdrop-filter: blur(8px); border-radius: 14px; padding: 12px 10px 14px; text-align: center; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; will-change: transform; cursor: default; overflow: hidden; background: var(--user-card-bg); border: 2px solid var(--border-color); }
+        .user-card::before { content: ''; position: absolute; inset: 0; border-radius: 14px; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
         .user-card:hover { transform: scale(1.035) translateY(-3px); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        .user-card:hover::before { opacity: 1; }
         .user-card:active { transform: scale(0.97); }
         .user-card .icon { font-size: 1.3rem; display: block; margin-bottom: 2px; transition: all 0.4s ease; }
         .user-card:hover .icon { transform: scale(1.12) rotate(-3deg); }
@@ -207,20 +218,22 @@
         .user-card:hover h3 { letter-spacing: 2px; }
         .user-card p { color: var(--text-secondary); font-size: 0.55rem; margin: 2px 0 5px; transition: all 0.3s ease; }
         .user-card:hover p { color: var(--text-primary); }
-        .user-card .btn { width: 100%; padding: 5px; border-radius: 30px; font-weight: 700; font-size: 0.6rem; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; }
+        .user-card .btn { width: 100%; padding: 5px; border-radius: 30px; font-weight: 700; font-size: 0.6rem; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; position: relative; overflow: hidden; will-change: transform; }
+        .user-card .btn::after { content: ''; position: absolute; inset: 0; border-radius: 30px; background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 70%); opacity: 0; transition: opacity 0.4s ease; }
         .user-card .btn:hover { transform: scale(1.06) translateY(-2px); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3); }
+        .user-card .btn:hover::after { opacity: 1; }
         .user-card .btn:active { transform: scale(0.95); }
-        .user-card.login-card { border: 2px solid rgba(255, 0, 51, 0.2); }
+        .user-card.login-card { background: var(--user-card-bg); border: 2px solid rgba(255, 0, 51, 0.2); }
         .user-card.login-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02); }
         .user-card.login-card h3 { color: #FF0033; }
         .user-card.login-card .btn-white { background: #fff; color: #000; }
         .user-card.login-card .btn-white:hover { background: #FF0033; color: #fff; box-shadow: 0 0 28px rgba(255, 0, 51, 0.2); }
-        .user-card.signup-card { border: 2px solid rgba(255, 255, 255, 0.3); }
+        .user-card.signup-card { background: var(--user-card-bg); border: 2px solid rgba(255, 255, 255, 0.3); }
         .user-card.signup-card:hover { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 40px rgba(255, 255, 255, 0.06), inset 0 0 40px rgba(255, 255, 255, 0.02); }
         .user-card.signup-card h3 { color: var(--text-primary); }
         .user-card.signup-card .btn-red { background: #FF0033; color: #fff; box-shadow: 0 0 14px rgba(255, 0, 51, 0.15); }
         .user-card.signup-card .btn-red:hover { background: #ff1a44; box-shadow: 0 0 36px rgba(255, 0, 51, 0.3); transform: scale(1.06) translateY(-2px); }
-        .user-card.verify-card { border: 2px solid rgba(255, 0, 51, 0.2); }
+        .user-card.verify-card { background: var(--user-card-bg); border: 2px solid rgba(255, 0, 51, 0.2); }
         .user-card.verify-card:hover { border-color: #FF0033; box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02); }
         .user-card.verify-card h3 { color: #FF0033; }
         .user-card.verify-card .btn-white { background: #fff; color: #000; }
@@ -238,7 +251,9 @@
         .features-scroll::-webkit-scrollbar { height: 3px; }
         .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
         .feature-card { flex: 0 0 82px; background: var(--feature-card-bg); border-radius: 10px; padding: 5px 4px; border: 2px solid var(--border-color); text-align: center; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; cursor: default; will-change: transform; }
+        .feature-card::before { content: ''; position: absolute; inset: 0; border-radius: 10px; background: radial-gradient(circle at center, rgba(255, 0, 51, 0.06), transparent 70%); opacity: 0; transition: opacity 0.5s ease; }
         .feature-card:hover { border-color: #FF0033; transform: scale(1.06) translateY(-3px); box-shadow: 0 10px 28px rgba(255, 0, 51, 0.06); background: rgba(255, 255, 255, 0.04); }
+        .feature-card:hover::before { opacity: 1; }
         .feature-card:active { transform: scale(0.95); }
         .feature-card .icon { font-size: 1rem; display: block; transition: all 0.4s ease; }
         .feature-card:hover .icon { transform: scale(1.15) rotate(-3deg); }
@@ -268,6 +283,7 @@
         .info-popup { background: var(--popup-bg); backdrop-filter: blur(20px); border: 2px solid var(--popup-border); border-radius: 16px; padding: 30px 28px; width: 100%; max-width: 450px; text-align: center; position: relative; box-shadow: 0 0 80px rgba(255, 0, 51, 0.08); animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .info-popup .popup-close { position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 4px 8px; border-radius: 6px; font-weight: 700; }
         .info-popup .popup-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255, 0, 51, 0.06); }
+        .info-popup .popup-close:active { transform: scale(0.8); }
         .info-popup .popup-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
         .info-popup h3 { color: var(--popup-label); font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 8px; letter-spacing: 1px; }
         .info-popup p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
@@ -291,8 +307,10 @@
         .modal label { display: block; font-size: 0.55rem; color: var(--popup-label); margin: 6px 0 3px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .modal input, .modal select, .modal textarea { width: 100%; padding: 7px 12px; background: var(--input-bg); border: 1px solid rgba(255, 0, 51, 0.1); border-radius: 6px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 0.75rem; outline: none; transition: all 0.4s ease; }
         .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #FF0033; box-shadow: 0 0 20px rgba(255, 0, 51, 0.04), inset 0 0 20px rgba(255, 0, 51, 0.02); transform: scale(1.01); }
-        .modal .btn-submit { width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.75rem; }
+        .modal .btn-submit { width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; font-size: 0.75rem; position: relative; overflow: hidden; will-change: transform; }
+        .modal .btn-submit::after { content: ''; position: absolute; inset: 0; border-radius: 30px; background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 70%); opacity: 0; transition: opacity 0.4s ease; }
         .modal .btn-submit:hover { transform: scale(1.03); box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3); }
+        .modal .btn-submit:hover::after { opacity: 1; }
         .modal .btn-submit:active { transform: scale(0.97); }
         .modal .error-msg { color: #FF0033; font-size: 0.65rem; margin-top: 3px; font-family: 'Roboto Mono', monospace; min-height: 18px; }
         .modal .success-msg { color: #00FF66; font-size: 0.65rem; margin-top: 3px; font-family: 'Roboto Mono', monospace; }
@@ -435,10 +453,15 @@
         </div>
     </div>
 
-    <!-- Firebase Config -->
+    <!-- LOAD MODULES -->
     <script type="module" src="firebase-config.js"></script>
-    
-    <!-- Main Script -->
+    <script src="index-offers-container.html"></script>
+    <script src="index-user-login.html"></script>
+    <script src="index-user-signup.html"></script>
+    <script src="index-user-verify-id.html"></script>
+    <script src="index-admin-login.html"></script>
+
+    <!-- MAIN SCRIPT -->
     <script>
         // ─── PREVENT COPY & RIGHT CLICK ───
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
@@ -454,6 +477,84 @@
             document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
         }
 
+        // ─── APPLY LOGO ───
+        window.applyLogo = function(logoBase64) {
+            const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
+            if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
+            else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
+        };
+
+        // ─── RENDER FUNCTIONS ───
+        window.renderSocialMedia = function() {
+            const container = document.getElementById('socialIconsContainer'); if (!container) return;
+            let socials = window.appState.socialMedia || [];
+            if (socials.length === 0) { const localSocial = localStorage.getItem('brt_social'); if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} } }
+            const visibleSocials = socials.filter(s => s.visibility === 'visible');
+            if (visibleSocials.length === 0) { container.innerHTML = `<a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a><a href="#" class="instagram"><i class="fab fa-instagram"></i></a><a href="#" class="youtube"><i class="fab fa-youtube"></i></a><a href="#" class="twitter"><i class="fab fa-twitter"></i></a>`; return; }
+            container.innerHTML = '';
+            visibleSocials.forEach(social => { const a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`; container.appendChild(a); });
+        };
+
+        window.renderFeatures = function() {
+            const container = document.getElementById('featuresScroll'); if (!container) return;
+            const features = window.appState.features || []; const visible = features.filter(f => f.visibility !== 'hidden');
+            if (visible.length === 0) { container.innerHTML = ''; return; }
+            container.innerHTML = '';
+            visible.forEach(f => { const card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = `<span class="icon">${f.icon || '🧠'}</span><h4>${f.name || 'Feature'}</h4><p>${f.desc || ''}</p>`; container.appendChild(card); });
+        };
+
+        window.updateUI = function() {
+            const brokerSelect = document.getElementById('signupBroker');
+            brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
+            window.appState.brokers.forEach(b => { const opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; brokerSelect.appendChild(opt); });
+            const verifyBroker = document.getElementById('verifyBroker');
+            verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
+            window.appState.brokers.forEach(b => { const opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; verifyBroker.appendChild(opt); });
+        };
+
+        // ─── SESSIONS ───
+        function checkUserSession() {
+            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+            if (userLoggedIn) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); }
+            else { document.getElementById('userLogoutBtn').classList.remove('visible'); }
+            return userLoggedIn;
+        }
+        function checkAdminSession() {
+            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+            if (adminLoggedIn) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); }
+            else { document.getElementById('adminNavBar').classList.remove('visible'); checkUserSession(); }
+            return adminLoggedIn;
+        }
+
+        // ─── LOGOUT ───
+        document.getElementById('userLogoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; window.saveLocalState(); window.location.href = 'index.html';
+        });
+        document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; window.saveLocalState(); window.location.href = 'index.html';
+        });
+
+        // ─── BUTTON LISTENERS ───
+        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+        document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
+
+        document.getElementById('offerBanner').addEventListener('click', function() {
+            const signupCard = document.getElementById('signupCard');
+            signupCard.classList.remove('highlight'); void signupCard.offsetWidth; signupCard.classList.add('highlight');
+            setTimeout(() => { openModal('signupModal'); }, 500);
+        });
+
+        document.getElementById('signupBroker').addEventListener('change', function() {
+            const brokerName = this.value; const infoDiv = document.getElementById('brokerInfo');
+            const broker = window.appState.brokers.find(b => b.name === brokerName);
+            if (broker) { infoDiv.style.display = 'block'; document.getElementById('brokerAffiliateLink').textContent = broker.link; document.getElementById('brokerMinDeposit').textContent = broker.minDeposit; document.getElementById('brokerRules').textContent = '📋 ' + broker.rules; }
+            else { infoDiv.style.display = 'none'; }
+        });
+
+        document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
+        document.getElementById('infoPopup').addEventListener('click', function(e) { if (e.target === this) closeInfoPopup(); });
+
         // ─── LOGO GLOW ───
         const logoGlow = document.getElementById('logoGlow');
         document.addEventListener('click', function(e) {
@@ -467,167 +568,21 @@
             setTimeout(() => { if (logoIcon.style.display !== 'none') logoIcon.style.animation = ''; if (logoImg.style.display !== 'none') logoImg.style.animation = ''; brandName.style.animation = ''; }, 800);
         });
 
-        // ─── MODAL HELPERS ───
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        // ─── INFO POPUP ───
-        function showInfoPopup(icon, title, message, btnText, btnAction) {
-            const popup = document.getElementById('infoPopup');
-            document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
-            document.getElementById('infoPopupTitle').textContent = title || 'Info';
-            document.getElementById('infoPopupMessage').textContent = message || '';
-            const btn = document.getElementById('infoPopupBtn');
-            if (btnText) { btn.style.display = 'block'; btn.textContent = btnText; btn.className = 'popup-btn center-btn ' + (btnText.toLowerCase().includes('signup')||btnText.toLowerCase().includes('continue')?'btn-gold':'btn-white'); const nb = btn.cloneNode(true); btn.parentNode.replaceChild(nb, btn); nb.addEventListener('click', () => { if (btnAction) btnAction(); closeInfoPopup(); }); }
-            else { btn.style.display = 'none'; }
-            popup.classList.add('active');
-        }
-        function closeInfoPopup() { document.getElementById('infoPopup').classList.remove('active'); }
-        document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
-        document.getElementById('infoPopup').addEventListener('click', function(e) { if (e.target === this) closeInfoPopup(); });
-
-        // ─── VALIDATION ───
-        function isValidEmail(email) { return /^[^\s@]+@gmail\.com$/.test(email); }
-
-        // ─── LOGIN ───
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim(), accountId = document.getElementById('loginAccountId').value.trim(), err = document.getElementById('loginError');
-            if (!email || !accountId) { err.textContent = '❌ Enter email and account ID'; return; }
-            if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            const user = window.appState.users.find(u => u.email === email && u.accountId === accountId);
-            if (!user) { showInfoPopup('📝', 'Not Found', 'Sign up first.', 'Sign Up', () => { closeModal('loginModal'); openModal('signupModal'); }); return; }
-            if (user.blocked) { err.textContent = '🚫 Blocked'; return; }
-            if (!user.verified) { const pr = window.appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending'); showInfoPopup(pr?'⏳':'✅', pr?'Pending':'Not Verified', pr?'Wait for approval.':'Verify first.', pr?null:'Verify', pr?null:() => { closeModal('loginModal'); openModal('verifyModal'); }); return; }
-            window.appState.currentUser = user; sessionStorage.setItem('user_logged_in', 'true'); saveLocalState(); closeModal('loginModal'); window.location.href = 'dashboard.html';
-        }
-
-        // ─── SIGNUP ───
-        function handleSignup() {
-            const broker = document.getElementById('signupBroker').value, email = document.getElementById('signupEmail').value.trim(), err = document.getElementById('signupError'), suc = document.getElementById('signupSuccess');
-            err.textContent = ''; suc.textContent = '';
-            if (!broker) { err.textContent = '❌ Select broker'; return; }
-            if (!email) { err.textContent = '❌ Enter email'; return; }
-            if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            const bd = window.appState.brokers.find(b => b.name === broker); if (!bd) { err.textContent = '❌ Broker not found'; return; }
-            if (window.appState.users.find(u => u.email === email)) { err.textContent = '❌ User exists'; return; }
-            window.appState.users.push({ email, accountId: '', name: email.split('@')[0], broker, verified: false, deposit: 0, requiredDeposit: bd.minDeposit, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() });
-            saveLocalState(); updateUI(); suc.textContent = '✅ Created! Opening broker...';
-            setTimeout(() => { window.open(bd.link, '_blank'); }, 500);
-            setTimeout(() => { closeModal('signupModal'); }, 1500);
-        }
-
-        // ─── VERIFY ───
-        function handleVerify() {
-            const name = document.getElementById('verifyName').value.trim(), email = document.getElementById('verifyEmail').value.trim(), broker = document.getElementById('verifyBroker').value, accountId = document.getElementById('verifyAccountId').value.trim(), err = document.getElementById('verifyError'), suc = document.getElementById('verifySuccess');
-            err.textContent = ''; suc.textContent = '';
-            if (!name||!email||!broker||!accountId) { err.textContent = '❌ All fields required'; return; }
-            if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            let user = window.appState.users.find(u => u.email === email);
-            if (!user) { const bd = window.appState.brokers.find(b => b.name === broker); user = { email, accountId, name, broker, verified: false, deposit: 0, requiredDeposit: bd?bd.minDeposit:0, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() }; window.appState.users.push(user); }
-            if (user.blocked) { err.textContent = '🚫 Blocked'; return; }
-            if (user.verified) { err.textContent = '✅ Already verified'; return; }
-            if (window.appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending')) { err.textContent = '⏳ Already pending'; return; }
-            if (!window.appState.verificationRequests) window.appState.verificationRequests = [];
-            window.appState.verificationRequests.push({ userName: name, userEmail: email, accountId, broker, status: 'pending', date: new Date().toISOString(), freeCredits: window.appState.offerCredits || 10 });
-            user.name = name; user.accountId = accountId; saveLocalState();
-            showInfoPopup('✅', 'Submitted!', 'Verification submitted. Wait for admin.', null, null);
-            document.getElementById('verifyName').value = ''; document.getElementById('verifyEmail').value = ''; document.getElementById('verifyAccountId').value = ''; document.getElementById('verifyBroker').value = '';
-        }
-
-        // ─── BUTTON LISTENERS ───
-        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
-        document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
-
-        // ─── OFFER BANNER ───
-        document.getElementById('offerBanner').addEventListener('click', function() {
-            const signupCard = document.getElementById('signupCard');
-            signupCard.classList.remove('highlight'); void signupCard.offsetWidth; signupCard.classList.add('highlight');
-            setTimeout(() => { openModal('signupModal'); }, 500);
-        });
-
-        // ─── BROKER SELECT ───
-        document.getElementById('signupBroker').addEventListener('change', function() {
-            const b = window.appState.brokers.find(x => x.name === this.value);
-            const info = document.getElementById('brokerInfo');
-            if (b) { info.style.display = 'block'; document.getElementById('brokerAffiliateLink').textContent = b.link; document.getElementById('brokerMinDeposit').textContent = b.minDeposit; document.getElementById('brokerRules').textContent = '📋 ' + b.rules; }
-            else { info.style.display = 'none'; }
-        });
-
-        // ─── LOGOUT ───
-        document.getElementById('userLogoutBtn').addEventListener('click', () => { sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
-        document.getElementById('homeAdminLogoutBtn').addEventListener('click', () => { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('user_logged_in'); window.location.href = 'index.html'; });
-
-        // ─── ADMIN LOGO CLICKS ───
-        let logoClickCounter = 0;
-        function handleLogoClick(e) {
-            e.preventDefault();
-            const ul = sessionStorage.getItem('user_logged_in') === 'true', al = sessionStorage.getItem('admin_logged_in') === 'true';
-            if (ul && !al) { alert('🚫 Access Denied!'); logoClickCounter = 0; return; }
-            logoClickCounter++; if (logoClickCounter >= (window.appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; }
-        }
-        document.getElementById('logoIcon').addEventListener('click', handleLogoClick);
-        document.getElementById('logoImage').addEventListener('click', handleLogoClick);
-        document.getElementById('brandSection').addEventListener('click', function(e) { if (e.target.closest('.logo-icon')||e.target.closest('.logo-img')||e.target.closest('.brand-name')) handleLogoClick(e); });
-
-        // ─── SESSION CHECK ───
-        function checkUserSession() { const ul = sessionStorage.getItem('user_logged_in') === 'true'; if (ul) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); } else { document.getElementById('userLogoutBtn').classList.remove('visible'); } }
-        function checkAdminSession() { const al = sessionStorage.getItem('admin_logged_in') === 'true'; if (al) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); } else { document.getElementById('adminNavBar').classList.remove('visible'); checkUserSession(); } }
-
-        // ─── UPDATE UI ───
-        function updateUI() {
-            document.getElementById('signupBroker').innerHTML = '<option value="">-- Select Broker --</option>' + window.appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-            document.getElementById('verifyBroker').innerHTML = '<option value="">-- Select Broker --</option>' + window.appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-        }
-        function renderSocialMedia() {
-            const c = document.getElementById('socialIconsContainer'); if (!c) return;
-            let s = window.appState.socialMedia || []; if (s.length === 0) { const l = localStorage.getItem('brt_social'); if (l) try { s = JSON.parse(l); } catch (e) {} }
-            const v = s.filter(x => x.visibility === 'visible');
-            if (v.length === 0) { c.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
-            c.innerHTML = ''; v.forEach(social => { const a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`; c.appendChild(a); });
-        }
-        function renderFeatures() {
-            const c = document.getElementById('featuresScroll'); if (!c) return;
-            const f = window.appState.features || []; const v = f.filter(x => x.visibility !== 'hidden');
-            c.innerHTML = ''; v.forEach(f => { const card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = `<span class="icon">${f.icon||'🧠'}</span><h4>${f.name||'Feature'}</h4><p>${f.desc||''}</p>`; c.appendChild(card); });
-        }
-        function updateOfferBanner() {
-            document.getElementById('offerTitle').textContent = window.appState.offerName || 'FREE SIGNAL OFFER';
-            const d = window.appState.offerDescription || ''; const c = window.appState.offerCredits || 10;
-            document.getElementById('offerDescriptionText').innerHTML = d.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${c}</span>`);
-        }
-
         // ─── ESCAPE KEY ───
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active')); closeInfoPopup(); } });
 
         // ─── INIT ───
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait for firebase-config.js to load (it's type="module" so loads async)
             setTimeout(() => {
                 if (typeof loadLocalState === 'function') loadLocalState();
                 checkAdminSession();
                 renderSocialMedia();
                 renderFeatures();
-                updateOfferBanner();
+                updateUI();
+                if (typeof updateOfferBanner === 'function') updateOfferBanner();
                 console.log('🏠 Index Loaded');
             }, 500);
         });
-
-        // Expose globals
-        window.handleLogin = handleLogin;
-        window.handleSignup = handleSignup;
-        window.handleVerify = handleVerify;
-        window.closeModal = closeModal;
-        window.openModal = openModal;
-        window.showInfoPopup = showInfoPopup;
-        window.closeInfoPopup = closeInfoPopup;
-        window.isValidEmail = isValidEmail;
-        window.updateUI = updateUI;
-        window.renderSocialMedia = renderSocialMedia;
-        window.renderFeatures = renderFeatures;
-        window.updateOfferBanner = updateOfferBanner;
-        window.checkUserSession = checkUserSession;
-        window.checkAdminSession = checkAdminSession;
     </script>
 </body>
 </html>
