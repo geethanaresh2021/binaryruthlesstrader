@@ -36,7 +36,8 @@
         {
             "imports": {
                 "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
-                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js"
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
             }
         }
     </script>
@@ -434,105 +435,43 @@
         </div>
     </div>
 
-    <!-- FIREBASE + MAIN SCRIPT (importmap) -->
-    <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getDatabase, ref, onValue, set } from "firebase/database";
+    <!-- Firebase Config -->
+    <script type="module" src="firebase-config.js"></script>
+    
+    <!-- Main Script -->
+    <script>
+        // ─── PREVENT COPY & RIGHT CLICK ───
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) { e.preventDefault(); return false; }
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+        });
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-            authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-            databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
-            projectId: "binary-ruthless-trader-26654",
-            storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-            messagingSenderId: "533209261799",
-            appId: "1:533209261799:web:a398ab21b0f913683ea442",
-            measurementId: "G-WQCXCMV5PR"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const dbRef = ref(database, 'brt_data');
-        let isFirebaseConnected = false;
-
-        let appState = {
-            password: 'admin123', offerCredits: 10, offerName: 'FREE SIGNAL OFFER',
-            offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
-            brokers: [{ id: 'broker_1', name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email, deposit ₹1000' }, { id: 'broker_2', name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone, deposit ₹500' }],
-            users: [], verificationRequests: [], currentUser: null, logoClickCount: 2,
-            socialMedia: [], tools: [],
-            features: [{ id: 'feat_1', icon: '🧠', name: 'AI Signal', desc: 'Real-time predictions', visibility: 'visible' }, { id: 'feat_2', icon: '📈', name: 'Chart Analysis', desc: 'Pattern recognition', visibility: 'visible' }, { id: 'feat_3', icon: '📓', name: 'Trading Journal', desc: 'Track every trade', visibility: 'visible' }, { id: 'feat_4', icon: '💰', name: 'Money Mgmt', desc: 'Risk & position size', visibility: 'visible' }, { id: 'feat_5', icon: '📊', name: 'Risk Manager', desc: 'Stop-loss tools', visibility: 'visible' }, { id: 'feat_6', icon: '☁️', name: 'Cloud Sync', desc: 'All devices sync', visibility: 'visible' }],
-            payments: [], upiId: 'binary@ruthless', paymentInstructions: 'Please transfer the amount to the UPI ID.', qrCodeBase64: '',
-            creditPacks: [{ id: 'pack_1', credits: 50, price: 99 }, { id: 'pack_2', credits: 100, price: 199 }, { id: 'pack_3', credits: 250, price: 349 }, { id: 'pack_4', credits: 500, price: 599 }],
-            chats: {}, paymentApprovalMode: 'manual', razorpayKeyId: '', razorpayKeySecret: '', creditsPerSignal: 1, logoBase64: ''
-        };
-
-        function applyLogo(logoBase64) {
-            const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
-            if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
-            else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
+        // ─── CURSOR GLOW ───
+        const glow = document.getElementById('cursorGlow');
+        if (window.matchMedia('(hover: hover)').matches) {
+            document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
+            document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
         }
 
-        function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
+        // ─── LOGO GLOW ───
+        const logoGlow = document.getElementById('logoGlow');
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.info-popup-overlay')) return;
+            logoGlow.classList.remove('active'); void logoGlow.offsetWidth; logoGlow.classList.add('active');
+            setTimeout(() => { logoGlow.classList.remove('active'); }, 800);
+            const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage'), brandName = document.querySelector('.brand-name');
+            if (logoIcon.style.display !== 'none') { logoIcon.style.animation = 'none'; void logoIcon.offsetWidth; logoIcon.style.animation = 'zoomInSlow 0.7s ease forwards'; }
+            if (logoImg.style.display !== 'none') { logoImg.style.animation = 'none'; void logoImg.offsetWidth; logoImg.style.animation = 'zoomInSlow 0.7s ease forwards'; }
+            brandName.style.animation = 'none'; void brandName.offsetWidth; brandName.style.animation = 'zoomOutSlow 0.7s ease forwards';
+            setTimeout(() => { if (logoIcon.style.display !== 'none') logoIcon.style.animation = ''; if (logoImg.style.display !== 'none') logoImg.style.animation = ''; brandName.style.animation = ''; }, 800);
+        });
 
-        function loadLocalState() {
-            const local = localStorage.getItem('brt_data');
-            if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch (e) {} }
-            const logoData = localStorage.getItem('brt_logo'); if (logoData) { appState.logoBase64 = logoData; applyLogo(logoData); }
-            const socialData = localStorage.getItem('brt_social'); if (socialData) { try { const p = JSON.parse(socialData); if (p.length > 0) appState.socialMedia = p; } catch (e) {} }
-            const toolsData = localStorage.getItem('brt_tools'); if (toolsData) { try { const p = JSON.parse(toolsData); if (p.length > 0) appState.tools = p; } catch (e) {} }
-            const featuresData = localStorage.getItem('brt_features'); if (featuresData) { try { const p = JSON.parse(featuresData); if (p.length > 0) appState.features = p; } catch (e) {} }
-            const brokersData = localStorage.getItem('brt_brokers'); if (brokersData) { try { const p = JSON.parse(brokersData); if (p.length > 0) appState.brokers = p; } catch (e) {} }
-            const creditPacksData = localStorage.getItem('brt_creditPacks'); if (creditPacksData) { try { const p = JSON.parse(creditPacksData); if (p.length > 0) appState.creditPacks = p; } catch (e) {} }
-            updateUI(); renderSocialMedia(); renderFeatures(); updateOfferBanner(); checkAdminSession(); checkUserSession();
-        }
-
-        onValue(dbRef, (snapshot) => {
-            isFirebaseConnected = true;
-            document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
-            const val = snapshot.val();
-            if (val) {
-                const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
-                appState = { ...appState, ...val };
-                if (val.logoBase64) { applyLogo(val.logoBase64); localStorage.setItem('brt_logo', val.logoBase64); }
-                if (val.socialMedia) { localStorage.setItem('brt_social', JSON.stringify(val.socialMedia)); renderSocialMedia(); }
-                if (val.features) { localStorage.setItem('brt_features', JSON.stringify(val.features)); renderFeatures(); }
-                if (val.brokers) localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
-                if (val.tools) localStorage.setItem('brt_tools', JSON.stringify(val.tools));
-                if (currentUserEmail) { const found = appState.users.find(u => u.email === currentUserEmail); if (found) appState.currentUser = found; else appState.currentUser = null; }
-                updateUI(); updateOfferBanner(); renderSocialMedia(); renderFeatures();
-            }
-        }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; });
-
-        function updateUI() {
-            document.getElementById('signupBroker').innerHTML = '<option value="">-- Select Broker --</option>' + appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-            document.getElementById('verifyBroker').innerHTML = '<option value="">-- Select Broker --</option>' + appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
-        }
-
-        function renderSocialMedia() {
-            const c = document.getElementById('socialIconsContainer'); if (!c) return;
-            let s = appState.socialMedia || []; if (s.length === 0) { const l = localStorage.getItem('brt_social'); if (l) try { s = JSON.parse(l); } catch (e) {} }
-            const v = s.filter(x => x.visibility === 'visible');
-            if (v.length === 0) { c.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
-            c.innerHTML = ''; v.forEach(social => { const a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`; c.appendChild(a); });
-        }
-
-        function renderFeatures() {
-            const c = document.getElementById('featuresScroll'); if (!c) return;
-            const f = appState.features || []; const v = f.filter(x => x.visibility !== 'hidden');
-            c.innerHTML = ''; v.forEach(f => { const card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = `<span class="icon">${f.icon||'🧠'}</span><h4>${f.name||'Feature'}</h4><p>${f.desc||''}</p>`; c.appendChild(card); });
-        }
-
-        function updateOfferBanner() {
-            document.getElementById('offerTitle').textContent = appState.offerName || 'FREE SIGNAL OFFER';
-            const d = appState.offerDescription || ''; const c = appState.offerCredits || 10;
-            document.getElementById('offerDescriptionText').innerHTML = d.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${c}</span>`);
-        }
-
-        function isValidEmail(e) { return /^[^\s@]+@gmail\.com$/.test(e); }
+        // ─── MODAL HELPERS ───
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+        // ─── INFO POPUP ───
         function showInfoPopup(icon, title, message, btnText, btnAction) {
             const popup = document.getElementById('infoPopup');
             document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
@@ -547,92 +486,148 @@
         document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
         document.getElementById('infoPopup').addEventListener('click', function(e) { if (e.target === this) closeInfoPopup(); });
 
-        function checkUserSession() { const ul = sessionStorage.getItem('user_logged_in') === 'true'; if (ul) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); } else { document.getElementById('userLogoutBtn').classList.remove('visible'); } }
-        function checkAdminSession() { const al = sessionStorage.getItem('admin_logged_in') === 'true'; if (al) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); } else { document.getElementById('adminNavBar').classList.remove('visible'); checkUserSession(); } }
+        // ─── VALIDATION ───
+        function isValidEmail(email) { return /^[^\s@]+@gmail\.com$/.test(email); }
 
-        window.handleLogin = function() {
+        // ─── LOGIN ───
+        function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim(), accountId = document.getElementById('loginAccountId').value.trim(), err = document.getElementById('loginError');
             if (!email || !accountId) { err.textContent = '❌ Enter email and account ID'; return; }
             if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            const user = appState.users.find(u => u.email === email && u.accountId === accountId);
+            const user = window.appState.users.find(u => u.email === email && u.accountId === accountId);
             if (!user) { showInfoPopup('📝', 'Not Found', 'Sign up first.', 'Sign Up', () => { closeModal('loginModal'); openModal('signupModal'); }); return; }
             if (user.blocked) { err.textContent = '🚫 Blocked'; return; }
-            if (!user.verified) { const pr = appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending'); showInfoPopup(pr?'⏳':'✅', pr?'Pending':'Not Verified', pr?'Wait for approval.':'Verify first.', pr?null:'Verify', pr?null:() => { closeModal('loginModal'); openModal('verifyModal'); }); return; }
-            appState.currentUser = user; sessionStorage.setItem('user_logged_in', 'true'); saveLocalState(); closeModal('loginModal'); window.location.href = 'dashboard.html';
-        };
+            if (!user.verified) { const pr = window.appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending'); showInfoPopup(pr?'⏳':'✅', pr?'Pending':'Not Verified', pr?'Wait for approval.':'Verify first.', pr?null:'Verify', pr?null:() => { closeModal('loginModal'); openModal('verifyModal'); }); return; }
+            window.appState.currentUser = user; sessionStorage.setItem('user_logged_in', 'true'); saveLocalState(); closeModal('loginModal'); window.location.href = 'dashboard.html';
+        }
 
-        window.handleSignup = function() {
+        // ─── SIGNUP ───
+        function handleSignup() {
             const broker = document.getElementById('signupBroker').value, email = document.getElementById('signupEmail').value.trim(), err = document.getElementById('signupError'), suc = document.getElementById('signupSuccess');
             err.textContent = ''; suc.textContent = '';
             if (!broker) { err.textContent = '❌ Select broker'; return; }
             if (!email) { err.textContent = '❌ Enter email'; return; }
             if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            const bd = appState.brokers.find(b => b.name === broker); if (!bd) { err.textContent = '❌ Broker not found'; return; }
-            if (appState.users.find(u => u.email === email)) { err.textContent = '❌ User exists'; return; }
-            appState.users.push({ email, accountId: '', name: email.split('@')[0], broker, verified: false, deposit: 0, requiredDeposit: bd.minDeposit, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() });
+            const bd = window.appState.brokers.find(b => b.name === broker); if (!bd) { err.textContent = '❌ Broker not found'; return; }
+            if (window.appState.users.find(u => u.email === email)) { err.textContent = '❌ User exists'; return; }
+            window.appState.users.push({ email, accountId: '', name: email.split('@')[0], broker, verified: false, deposit: 0, requiredDeposit: bd.minDeposit, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() });
             saveLocalState(); updateUI(); suc.textContent = '✅ Created! Opening broker...';
             setTimeout(() => { window.open(bd.link, '_blank'); }, 500);
             setTimeout(() => { closeModal('signupModal'); }, 1500);
-        };
+        }
 
-        window.handleVerify = function() {
+        // ─── VERIFY ───
+        function handleVerify() {
             const name = document.getElementById('verifyName').value.trim(), email = document.getElementById('verifyEmail').value.trim(), broker = document.getElementById('verifyBroker').value, accountId = document.getElementById('verifyAccountId').value.trim(), err = document.getElementById('verifyError'), suc = document.getElementById('verifySuccess');
             err.textContent = ''; suc.textContent = '';
             if (!name||!email||!broker||!accountId) { err.textContent = '❌ All fields required'; return; }
             if (!isValidEmail(email)) { err.textContent = '❌ Valid Gmail only'; return; }
-            let user = appState.users.find(u => u.email === email);
-            if (!user) { const bd = appState.brokers.find(b => b.name === broker); user = { email, accountId, name, broker, verified: false, deposit: 0, requiredDeposit: bd?bd.minDeposit:0, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() }; appState.users.push(user); }
+            let user = window.appState.users.find(u => u.email === email);
+            if (!user) { const bd = window.appState.brokers.find(b => b.name === broker); user = { email, accountId, name, broker, verified: false, deposit: 0, requiredDeposit: bd?bd.minDeposit:0, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() }; window.appState.users.push(user); }
             if (user.blocked) { err.textContent = '🚫 Blocked'; return; }
             if (user.verified) { err.textContent = '✅ Already verified'; return; }
-            if (appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending')) { err.textContent = '⏳ Already pending'; return; }
-            if (!appState.verificationRequests) appState.verificationRequests = [];
-            appState.verificationRequests.push({ userName: name, userEmail: email, accountId, broker, status: 'pending', date: new Date().toISOString(), freeCredits: appState.offerCredits || 10 });
+            if (window.appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending')) { err.textContent = '⏳ Already pending'; return; }
+            if (!window.appState.verificationRequests) window.appState.verificationRequests = [];
+            window.appState.verificationRequests.push({ userName: name, userEmail: email, accountId, broker, status: 'pending', date: new Date().toISOString(), freeCredits: window.appState.offerCredits || 10 });
             user.name = name; user.accountId = accountId; saveLocalState();
             showInfoPopup('✅', 'Submitted!', 'Verification submitted. Wait for admin.', null, null);
             document.getElementById('verifyName').value = ''; document.getElementById('verifyEmail').value = ''; document.getElementById('verifyAccountId').value = ''; document.getElementById('verifyBroker').value = '';
-        };
+        }
 
+        // ─── BUTTON LISTENERS ───
         document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
         document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
         document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
 
+        // ─── OFFER BANNER ───
+        document.getElementById('offerBanner').addEventListener('click', function() {
+            const signupCard = document.getElementById('signupCard');
+            signupCard.classList.remove('highlight'); void signupCard.offsetWidth; signupCard.classList.add('highlight');
+            setTimeout(() => { openModal('signupModal'); }, 500);
+        });
+
+        // ─── BROKER SELECT ───
         document.getElementById('signupBroker').addEventListener('change', function() {
-            const b = appState.brokers.find(x => x.name === this.value);
+            const b = window.appState.brokers.find(x => x.name === this.value);
             const info = document.getElementById('brokerInfo');
             if (b) { info.style.display = 'block'; document.getElementById('brokerAffiliateLink').textContent = b.link; document.getElementById('brokerMinDeposit').textContent = b.minDeposit; document.getElementById('brokerRules').textContent = '📋 ' + b.rules; }
             else { info.style.display = 'none'; }
         });
 
-        document.getElementById('userLogoutBtn').addEventListener('click', () => { sessionStorage.removeItem('user_logged_in'); appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
+        // ─── LOGOUT ───
+        document.getElementById('userLogoutBtn').addEventListener('click', () => { sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
         document.getElementById('homeAdminLogoutBtn').addEventListener('click', () => { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('user_logged_in'); window.location.href = 'index.html'; });
 
+        // ─── ADMIN LOGO CLICKS ───
         let logoClickCounter = 0;
         function handleLogoClick(e) {
             e.preventDefault();
             const ul = sessionStorage.getItem('user_logged_in') === 'true', al = sessionStorage.getItem('admin_logged_in') === 'true';
             if (ul && !al) { alert('🚫 Access Denied!'); logoClickCounter = 0; return; }
-            logoClickCounter++; if (logoClickCounter >= (appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; }
+            logoClickCounter++; if (logoClickCounter >= (window.appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; }
         }
         document.getElementById('logoIcon').addEventListener('click', handleLogoClick);
         document.getElementById('logoImage').addEventListener('click', handleLogoClick);
         document.getElementById('brandSection').addEventListener('click', function(e) { if (e.target.closest('.logo-icon')||e.target.closest('.logo-img')||e.target.closest('.brand-name')) handleLogoClick(e); });
 
-        const logoGlow = document.getElementById('logoGlow');
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.overlay')||e.target.closest('.modal')||e.target.closest('.admin-nav-bar')||e.target.closest('.user-logout-btn')||e.target.closest('.info-popup-overlay')) return;
-            logoGlow.classList.remove('active'); void logoGlow.offsetWidth; logoGlow.classList.add('active'); setTimeout(() => logoGlow.classList.remove('active'), 800);
+        // ─── SESSION CHECK ───
+        function checkUserSession() { const ul = sessionStorage.getItem('user_logged_in') === 'true'; if (ul) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); } else { document.getElementById('userLogoutBtn').classList.remove('visible'); } }
+        function checkAdminSession() { const al = sessionStorage.getItem('admin_logged_in') === 'true'; if (al) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); } else { document.getElementById('adminNavBar').classList.remove('visible'); checkUserSession(); } }
+
+        // ─── UPDATE UI ───
+        function updateUI() {
+            document.getElementById('signupBroker').innerHTML = '<option value="">-- Select Broker --</option>' + window.appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+            document.getElementById('verifyBroker').innerHTML = '<option value="">-- Select Broker --</option>' + window.appState.brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        }
+        function renderSocialMedia() {
+            const c = document.getElementById('socialIconsContainer'); if (!c) return;
+            let s = window.appState.socialMedia || []; if (s.length === 0) { const l = localStorage.getItem('brt_social'); if (l) try { s = JSON.parse(l); } catch (e) {} }
+            const v = s.filter(x => x.visibility === 'visible');
+            if (v.length === 0) { c.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
+            c.innerHTML = ''; v.forEach(social => { const a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`; c.appendChild(a); });
+        }
+        function renderFeatures() {
+            const c = document.getElementById('featuresScroll'); if (!c) return;
+            const f = window.appState.features || []; const v = f.filter(x => x.visibility !== 'hidden');
+            c.innerHTML = ''; v.forEach(f => { const card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = `<span class="icon">${f.icon||'🧠'}</span><h4>${f.name||'Feature'}</h4><p>${f.desc||''}</p>`; c.appendChild(card); });
+        }
+        function updateOfferBanner() {
+            document.getElementById('offerTitle').textContent = window.appState.offerName || 'FREE SIGNAL OFFER';
+            const d = window.appState.offerDescription || ''; const c = window.appState.offerCredits || 10;
+            document.getElementById('offerDescriptionText').innerHTML = d.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${c}</span>`);
+        }
+
+        // ─── ESCAPE KEY ───
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active')); closeInfoPopup(); } });
+
+        // ─── INIT ───
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for firebase-config.js to load (it's type="module" so loads async)
+            setTimeout(() => {
+                if (typeof loadLocalState === 'function') loadLocalState();
+                checkAdminSession();
+                renderSocialMedia();
+                renderFeatures();
+                updateOfferBanner();
+                console.log('🏠 Index Loaded');
+            }, 500);
         });
 
-        const glow = document.getElementById('cursorGlow');
-        if (window.matchMedia('(hover: hover)').matches) { document.addEventListener('mousemove', e => { glow.style.left = e.clientX+'px'; glow.style.top = e.clientY+'px'; glow.classList.add('active'); }); document.addEventListener('mouseleave', () => glow.classList.remove('active')); }
-
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active')); closeInfoPopup(); } });
-
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', function(e) { if (e.ctrlKey && (e.key==='c'||e.key==='C'||e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')) e.preventDefault(); if (e.key==='F12') e.preventDefault(); });
-
-        loadLocalState();
-        console.log('🏠 Index Loaded | 🔑 Pass: ' + appState.password + ' | 🎁 Offer: ' + appState.offerCredits + ' credits');
+        // Expose globals
+        window.handleLogin = handleLogin;
+        window.handleSignup = handleSignup;
+        window.handleVerify = handleVerify;
+        window.closeModal = closeModal;
+        window.openModal = openModal;
+        window.showInfoPopup = showInfoPopup;
+        window.closeInfoPopup = closeInfoPopup;
+        window.isValidEmail = isValidEmail;
+        window.updateUI = updateUI;
+        window.renderSocialMedia = renderSocialMedia;
+        window.renderFeatures = renderFeatures;
+        window.updateOfferBanner = updateOfferBanner;
+        window.checkUserSession = checkUserSession;
+        window.checkAdminSession = checkAdminSession;
     </script>
 </body>
 </html>
