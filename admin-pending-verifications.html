@@ -1,0 +1,221 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN PENDING VERIFICATIONS          -->
+<!-- FILE: admin-pending-verifications.html        -->
+<!-- Contains: HTML + CSS + JS for Pending Verifs  -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── PENDING VERIFICATIONS CSS ─── */
+    .verification-card {
+        background: rgba(255,215,0,0.03);
+        border: 1px solid rgba(255,215,0,0.08);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+    }
+    .verification-card .verification-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        font-size: 0.7rem;
+        color: #aaa;
+        font-weight: 600;
+    }
+    .verification-card .verification-row .verification-label {
+        color: #666;
+    }
+    .verification-card .verification-row .verification-value {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.75rem;
+    }
+    .verification-card .verification-row .verification-broker {
+        color: #FFD700;
+        font-weight: 700;
+        font-size: 0.75rem;
+    }
+    .verification-card .verification-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+    .verification-card .verification-actions .free-credits-label {
+        font-size: 0.55rem;
+        color: #666;
+        font-weight: 600;
+    }
+    .verification-card .verification-actions input {
+        width: 100px;
+        padding: 5px 8px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 4px;
+        color: #ffffff;
+        font-size: 0.6rem;
+        text-align: center;
+        font-weight: 600;
+        outline: none;
+    }
+    .verification-card .verification-actions input:focus {
+        border-color: #FF0033;
+    }
+    .verification-card .verification-actions button {
+        flex: 1;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        min-width: 100px;
+        transition: all 0.3s ease;
+    }
+    .verification-card .verification-actions button:hover {
+        transform: scale(1.02);
+    }
+    .verification-card .verification-actions .btn-approve {
+        background: #00FF66;
+        color: #000;
+    }
+    .verification-card .verification-actions .btn-reject {
+        background: #FF0033;
+        color: #fff;
+    }
+    .no-verifications {
+        color: #666;
+        font-size: 0.6rem;
+        text-align: center;
+        padding: 16px;
+    }
+</style>
+
+<!-- ─── PENDING VERIFICATIONS POPUP HTML ─── -->
+<div class="overlay" id="pendingVerificationsPopup">
+    <div class="modal" style="max-width:820px;">
+        <button class="modal-close" onclick="closePendingVerificationsPopup()">✕</button>
+        <h2>⏳ Pending Verifications</h2>
+        <div id="pendingVerificationsList" style="max-height:400px;overflow-y:auto;"></div>
+        <div id="noPendingVerifications" class="no-verifications">No pending verifications</div>
+    </div>
+</div>
+
+<script>
+    // ─── PENDING VERIFICATIONS FUNCTIONS ───
+
+    // Open Pending Verifications Popup
+    function openPendingVerificationsPopup() {
+        renderPendingVerifications();
+        document.getElementById('pendingVerificationsPopup').classList.add('active');
+    }
+
+    // Close Pending Verifications Popup
+    function closePendingVerificationsPopup() {
+        document.getElementById('pendingVerificationsPopup').classList.remove('active');
+    }
+
+    // Render Pending Verifications
+    function renderPendingVerifications() {
+        const container = document.getElementById('pendingVerificationsList');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const requests = (typeof appState !== 'undefined' && appState.verificationRequests) ? appState.verificationRequests : [];
+        const pending = requests.filter(r => r.status === 'pending');
+
+        if (pending.length === 0) {
+            document.getElementById('noPendingVerifications').style.display = 'block';
+            return;
+        }
+
+        document.getElementById('noPendingVerifications').style.display = 'none';
+
+        pending.forEach((req, idx) => {
+            const actualIdx = requests.indexOf(req);
+            const offerCredits = (typeof appState !== 'undefined') ? appState.offerCredits || 10 : 10;
+
+            container.innerHTML += `
+                <div class="verification-card">
+                    <div class="verification-row">
+                        <span class="verification-label">Name:</span>
+                        <span class="verification-value">${req.userName || 'N/A'}</span>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Gmail:</span>
+                        <span class="verification-value">${req.userEmail}</span>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Account ID:</span>
+                        <span class="verification-value">${req.accountId || 'N/A'}</span>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Broker:</span>
+                        <span class="verification-broker">${req.broker || 'N/A'}</span>
+                    </div>
+                    <div class="verification-actions">
+                        <span class="free-credits-label">Free Credits:</span>
+                        <input type="number" id="verifyFreeCredits_${idx}" value="${req.freeCredits || offerCredits}" />
+                        <button class="btn-approve" onclick="adminApproveVerification(${actualIdx}, ${idx})">✅ Approve</button>
+                        <button class="btn-reject" onclick="adminRejectVerification(${actualIdx})">❌ Reject</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Approve Verification
+    function adminApproveVerification(reqIdx, displayIdx) {
+        if (typeof appState === 'undefined') return;
+        const request = appState.verificationRequests[reqIdx];
+        if (!request || request.status !== 'pending') return;
+
+        const inputField = document.getElementById('verifyFreeCredits_' + displayIdx);
+        const freeCredits = inputField ? parseInt(inputField.value) || (appState.offerCredits || 10) : (appState.offerCredits || 10);
+
+        if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
+            request.status = 'approved';
+            const user = appState.users.find(u => u.email === request.userEmail);
+            if (user) {
+                user.verified = true;
+                user.accountId = request.accountId;
+                user.name = request.userName || user.name;
+                user.freeCredits = freeCredits;
+                user.credits = (user.credits || 0) + freeCredits;
+            }
+            if (typeof saveLocalState === 'function') saveLocalState();
+            renderPendingVerifications();
+            if (typeof updatePendingCounts === 'function') updatePendingCounts();
+        }
+    }
+
+    // Reject Verification
+    function adminRejectVerification(idx) {
+        if (typeof appState === 'undefined') return;
+        const request = appState.verificationRequests[idx];
+        if (!request || request.status !== 'pending') return;
+
+        if (confirm('Reject verification for ' + request.userEmail + '?')) {
+            request.status = 'rejected';
+            if (typeof saveLocalState === 'function') saveLocalState();
+            renderPendingVerifications();
+            if (typeof updatePendingCounts === 'function') updatePendingCounts();
+        }
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePendingVerificationsPopup();
+        }
+    });
+
+    // Expose functions globally
+    window.openPendingVerificationsPopup = openPendingVerificationsPopup;
+    window.closePendingVerificationsPopup = closePendingVerificationsPopup;
+    window.renderPendingVerifications = renderPendingVerifications;
+    window.adminApproveVerification = adminApproveVerification;
+    window.adminRejectVerification = adminRejectVerification;
+</script>
