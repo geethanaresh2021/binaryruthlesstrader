@@ -1,0 +1,567 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN VERIFIED USERS                 -->
+<!-- FILE: admin-verified-users.html               -->
+<!-- Contains: HTML + CSS + JS for Users Management-->
+<!-- ============================================ -->
+
+<style>
+    /* ─── VERIFIED USERS CSS ─── */
+    .users-popup-content {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+    .users-popup-content button {
+        flex: 1;
+        padding: 10px;
+        border-radius: 30px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+    }
+    .users-popup-content button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 28px rgba(0,0,0,0.3);
+    }
+    .users-popup-content .btn-primary {
+        background: #FF0033;
+        color: #fff;
+    }
+    .users-popup-content .btn-gold {
+        background: #FFD700;
+        color: #000;
+    }
+
+    .user-list-scroll {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 6px;
+        border: 1px solid rgba(255,0,51,0.05);
+        border-radius: 6px;
+        padding: 6px;
+    }
+    .user-list-scroll::-webkit-scrollbar {
+        width: 5px;
+    }
+    .user-list-scroll::-webkit-scrollbar-thumb {
+        background: #FF0033;
+        border-radius: 4px;
+    }
+
+    .user-list-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.75rem;
+        align-items: center;
+        border-radius: 4px;
+    }
+    .user-list-item:hover {
+        background: rgba(255,0,51,0.06);
+    }
+    .user-list-item .user-name-display {
+        color: #ffffff;
+        font-weight: 600;
+    }
+    .user-list-item .user-credits-display {
+        color: #FFD700;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.7rem;
+    }
+    .user-list-item .status-verified {
+        color: #00FF66;
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+    .user-list-item .status-admin {
+        color: #FFD700;
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+
+    /* ─── ADD USER FORM ─── */
+    .add-user-form label {
+        display: block;
+        font-size: 0.6rem;
+        color: #FFD700;
+        margin: 6px 0 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .add-user-form input,
+    .add-user-form select {
+        width: 100%;
+        padding: 8px 14px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .add-user-form input:focus,
+    .add-user-form select:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 20px rgba(255,0,51,0.04);
+    }
+    .add-user-form select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFD700' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+    .add-user-form select option {
+        background: #111;
+        color: #fff;
+    }
+    .add-user-form .btn-submit {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 30px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+    }
+    .add-user-form .btn-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 28px rgba(0,0,0,0.3);
+    }
+    .add-user-form .btn-success {
+        background: #00FF66;
+        color: #000;
+    }
+    .add-user-form .error-msg {
+        color: #FF0033;
+        font-size: 0.65rem;
+        margin-top: 3px;
+        min-height: 16px;
+    }
+    .add-user-form .success-msg {
+        color: #00FF66;
+        font-size: 0.65rem;
+        margin-top: 3px;
+        min-height: 16px;
+    }
+
+    /* ─── SEARCH INPUT ─── */
+    .search-input {
+        width: 100%;
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #00FF66;
+        font-size: 0.65rem;
+        outline: none;
+        margin-bottom: 6px;
+    }
+    .search-input:focus {
+        border-color: #FF0033;
+    }
+
+    .no-users {
+        color: #666;
+        font-size: 0.6rem;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* ─── USER DETAIL POPUP ─── */
+    .user-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 0.7rem;
+        color: #aaa;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .user-detail-row .label {
+        color: #666;
+    }
+    .user-detail-row .value {
+        color: #FFD700;
+        font-weight: 600;
+    }
+    .user-detail-row .value.green {
+        color: #00FF66;
+    }
+    .user-detail-row .value.red {
+        color: #FF0033;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+    .btn-group .btn-sm {
+        flex: 1;
+        min-width: 60px;
+        padding: 6px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .btn-group .btn-sm:hover {
+        transform: scale(1.02);
+    }
+    .btn-group .btn-sm:active {
+        transform: scale(0.97);
+    }
+    .btn-group .btn-give {
+        background: #00FF66;
+        color: #000;
+    }
+    .btn-group .btn-block {
+        background: #FF0033;
+        color: #fff;
+    }
+    .btn-group .btn-remove {
+        background: #FFD700;
+        color: #000;
+    }
+    .btn-group .btn-chat {
+        background: #0088cc;
+        color: #fff;
+    }
+</style>
+
+<!-- ─── USERS POPUP HTML ─── -->
+<div class="overlay" id="usersPopup">
+    <div class="modal" style="max-width:860px;">
+        <button class="modal-close" onclick="closeUsersPopup()">✕</button>
+        <h2>👤 Users</h2>
+        <div class="users-popup-content">
+            <button class="btn-submit btn-primary" onclick="showVerifiedUsers()">✅ Verified Users</button>
+            <button class="btn-submit btn-gold" onclick="showAddUserForm()">➕ Add User</button>
+        </div>
+        <div id="usersContent"></div>
+    </div>
+</div>
+
+<!-- ─── USER DETAIL POPUP HTML ─── -->
+<div class="overlay" id="userDetailPopup">
+    <div class="modal" style="max-width:660px;">
+        <button class="modal-close" onclick="closeUserDetailPopup()">✕</button>
+        <h2 id="userDetailTitle">👤 User Details</h2>
+        <div id="userDetailContent"></div>
+        <div class="btn-group" id="userDetailActions">
+            <button class="btn-sm btn-give" onclick="giveFreeCreditsToUser()">🎁 Give</button>
+            <button class="btn-sm btn-block" onclick="blockUnblockUser()">🚫 Block</button>
+            <button class="btn-sm btn-remove" onclick="removeUserFromDetail()">🗑️ Remove</button>
+            <button class="btn-sm btn-chat" onclick="chatWithUserFromDetail()">💬 Chat</button>
+        </div>
+        <div style="margin-top:6px;">
+            <label style="font-size:0.5rem;color:#aaa;">Add Free Credits</label>
+            <input type="number" id="detailFreeCreditsInput" placeholder="Enter credits" style="width:100%;padding:6px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:#ffffff;font-size:0.65rem;outline:none;">
+            <button class="btn-submit btn-success" style="margin-top:3px;font-size:0.6rem;width:100%;" onclick="giveFreeCreditsToUser()">Add Credits</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ─── VERIFIED USERS FUNCTIONS ───
+    let selectedUserDetail = null;
+
+    // Open Users Popup
+    function openUsersPopup() {
+        showVerifiedUsers();
+        document.getElementById('usersPopup').classList.add('active');
+    }
+
+    // Close Users Popup
+    function closeUsersPopup() {
+        document.getElementById('usersPopup').classList.remove('active');
+    }
+
+    // Show Verified Users
+    function showVerifiedUsers() {
+        const container = document.getElementById('usersContent');
+        if (!container) return;
+        container.innerHTML = `
+            <input class="search-input" id="userSearchInput" placeholder="Search by name, email, broker..." oninput="searchUsersInPopup()">
+            <div class="user-list-scroll" id="verifiedUsersList"></div>
+        `;
+        renderVerifiedUsersList();
+    }
+
+    // Render Verified Users List
+    function renderVerifiedUsersList(filter = '') {
+        const container = document.getElementById('verifiedUsersList');
+        if (!container) return;
+
+        const users = (typeof appState !== 'undefined') ? appState.users.filter(u => u.verified === true) : [];
+        const filtered = users.filter(u =>
+            (u.name || '').toLowerCase().includes(filter) ||
+            (u.email || '').toLowerCase().includes(filter) ||
+            (u.broker || '').toLowerCase().includes(filter) ||
+            (u.accountId || '').toLowerCase().includes(filter)
+        );
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="no-users">No verified users found</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        filtered.forEach((u) => {
+            const actualIdx = (typeof appState !== 'undefined') ? appState.users.indexOf(u) : -1;
+            const statusText = u.adminAdded ? 'Admin' : 'Verified';
+            const statusClass = u.adminAdded ? 'status-admin' : 'status-verified';
+            container.innerHTML += `
+                <div class="user-list-item" onclick="openUserDetailPopup(${actualIdx})">
+                    <span class="user-name-display">${u.name || u.email}</span>
+                    <span class="user-credits-display">${u.credits || 0} cr</span>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>
+            `;
+        });
+    }
+
+    // Search Users
+    function searchUsersInPopup() {
+        const query = document.getElementById('userSearchInput')?.value?.toLowerCase().trim() || '';
+        renderVerifiedUsersList(query);
+    }
+
+    // Show Add User Form
+    function showAddUserForm() {
+        const container = document.getElementById('usersContent');
+        if (!container) return;
+
+        const brokers = (typeof appState !== 'undefined' && appState.brokers) ? appState.brokers : [];
+        const brokerOptions = brokers.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+
+        container.innerHTML = `
+            <div class="add-user-form">
+                <label>User Name</label>
+                <input type="text" id="addUserName" placeholder="Enter full name">
+                <label>Email</label>
+                <input type="email" id="addUserEmail" placeholder="user@gmail.com">
+                <label>Account ID</label>
+                <input type="text" id="addUserAccountId" placeholder="Enter Account ID">
+                <label>Broker</label>
+                <select id="addUserBroker">${brokerOptions}</select>
+                <label>Free Credits</label>
+                <input type="number" id="addUserFreeCredits" value="0" min="0">
+                <button class="btn-submit btn-success" onclick="adminAddUserFromPopup()">💾 Save User</button>
+                <div class="error-msg" id="addUserError"></div>
+                <div class="success-msg" id="addUserSuccess"></div>
+            </div>
+        `;
+    }
+
+    // Add User from Popup
+    function adminAddUserFromPopup() {
+        if (typeof appState === 'undefined') return;
+
+        const name = document.getElementById('addUserName').value.trim();
+        const email = document.getElementById('addUserEmail').value.trim();
+        const accountId = document.getElementById('addUserAccountId').value.trim();
+        const broker = document.getElementById('addUserBroker').value;
+        const credits = parseInt(document.getElementById('addUserFreeCredits').value) || 0;
+        const errorEl = document.getElementById('addUserError');
+        const successEl = document.getElementById('addUserSuccess');
+        errorEl.textContent = '';
+        successEl.textContent = '';
+
+        if (!name || !email || !accountId) {
+            errorEl.textContent = '❌ Please fill all required fields';
+            return;
+        }
+        if (appState.users.find(u => u.email === email)) {
+            errorEl.textContent = '❌ User already exists!';
+            return;
+        }
+
+        const brokerData = appState.brokers.find(b => b.name === broker);
+        const newUser = {
+            name,
+            email,
+            accountId,
+            broker: broker || 'Manual',
+            verified: true,
+            adminAdded: true,
+            deposit: 0,
+            requiredDeposit: brokerData ? brokerData.minDeposit : 0,
+            credits,
+            freeCredits: credits,
+            signalsUsed: 0,
+            todayUsed: 0,
+            totalUsed: 0,
+            blocked: false,
+            registeredAt: new Date().toISOString()
+        };
+
+        appState.users.push(newUser);
+        if (typeof saveLocalState === 'function') saveLocalState();
+        if (typeof updatePendingCounts === 'function') updatePendingCounts();
+        successEl.textContent = '✅ User added successfully!';
+        setTimeout(() => {
+            showVerifiedUsers();
+            successEl.textContent = '';
+        }, 1500);
+    }
+
+    // Open User Detail Popup
+    function openUserDetailPopup(idx) {
+        if (typeof appState === 'undefined') return;
+        const user = appState.users[idx];
+        if (!user) return;
+
+        selectedUserDetail = user;
+        document.getElementById('userDetailTitle').textContent = '👤 ' + (user.name || user.email);
+
+        const userPayments = (appState.payments || []).filter(p => p.userEmail === user.email);
+        let paymentDetails = '';
+        if (userPayments.length > 0) {
+            let totalPaid = 0;
+            let successCount = 0;
+            userPayments.forEach(p => {
+                if (p.status === 'success') {
+                    totalPaid += p.amount;
+                    successCount++;
+                }
+            });
+            paymentDetails = `
+                <div class="user-detail-row"><span class="label">Total Payments:</span><span class="value">${userPayments.length}</span></div>
+                <div class="user-detail-row"><span class="label">Successful Payments:</span><span class="value green">${successCount}</span></div>
+                <div class="user-detail-row"><span class="label">Total Amount Paid:</span><span class="value green">₹${totalPaid}</span></div>
+            `;
+        } else {
+            paymentDetails = `<div class="user-detail-row"><span class="label">Payments:</span><span class="value" style="color:#666;">No payment history</span></div>`;
+        }
+
+        const chatKey = user.email.replace(/[.#$\/\[\]]/g, '_');
+        const chatMsgs = (appState.chats && appState.chats[chatKey]) ? appState.chats[chatKey] : [];
+        const chatCount = chatMsgs.length;
+
+        document.getElementById('userDetailContent').innerHTML = `
+            <div class="user-detail-row"><span class="label">Name:</span><span class="value">${user.name || 'N/A'}</span></div>
+            <div class="user-detail-row"><span class="label">Email:</span><span class="value">${user.email}</span></div>
+            <div class="user-detail-row"><span class="label">Account ID:</span><span class="value">${user.accountId || 'N/A'}</span></div>
+            <div class="user-detail-row"><span class="label">Broker:</span><span class="value">${user.broker || 'N/A'}</span></div>
+            <div class="user-detail-row"><span class="label">Status:</span><span class="value ${user.blocked ? 'red' : 'green'}">${user.blocked ? '🚫 Blocked' : (user.adminAdded ? '✅ Admin' : '✅ Verified')}</span></div>
+            <div class="user-detail-row"><span class="label">Free Credits:</span><span class="value">${user.freeCredits || 0}</span></div>
+            <div class="user-detail-row"><span class="label">Available Credits:</span><span class="value green">${user.credits || 0}</span></div>
+            <div class="user-detail-row"><span class="label">Today Used:</span><span class="value">${user.todayUsed || 0}</span></div>
+            <div class="user-detail-row"><span class="label">Chat Messages:</span><span class="value">${chatCount}</span></div>
+            ${paymentDetails}
+            <div class="user-detail-row"><span class="label">Registered:</span><span class="value" style="font-size:0.55rem;">${user.registeredAt ? new Date(user.registeredAt).toLocaleString() : 'N/A'}</span></div>
+        `;
+
+        document.getElementById('detailFreeCreditsInput').value = '';
+        document.getElementById('userDetailPopup').classList.add('active');
+    }
+
+    // Close User Detail Popup
+    function closeUserDetailPopup() {
+        document.getElementById('userDetailPopup').classList.remove('active');
+        selectedUserDetail = null;
+    }
+
+    // Give Free Credits
+    function giveFreeCreditsToUser() {
+        if (!selectedUserDetail) return;
+        const credits = parseInt(document.getElementById('detailFreeCreditsInput').value);
+        if (isNaN(credits) || credits <= 0) {
+            alert('Enter valid amount');
+            return;
+        }
+        selectedUserDetail.freeCredits = (selectedUserDetail.freeCredits || 0) + credits;
+        selectedUserDetail.credits = (selectedUserDetail.credits || 0) + credits;
+        if (typeof saveLocalState === 'function') saveLocalState();
+        if (typeof updatePendingCounts === 'function') updatePendingCounts();
+        document.getElementById('detailFreeCreditsInput').value = '';
+        const idx = (typeof appState !== 'undefined') ? appState.users.indexOf(selectedUserDetail) : -1;
+        if (idx !== -1) openUserDetailPopup(idx);
+    }
+
+    // Block/Unblock User
+    function blockUnblockUser() {
+        if (!selectedUserDetail) return;
+        const action = selectedUserDetail.blocked ? 'Unblock' : 'Block';
+        if (confirm(action + ' user ' + selectedUserDetail.email + '?')) {
+            selectedUserDetail.blocked = !selectedUserDetail.blocked;
+            if (typeof saveLocalState === 'function') saveLocalState();
+            const idx = (typeof appState !== 'undefined') ? appState.users.indexOf(selectedUserDetail) : -1;
+            if (idx !== -1) openUserDetailPopup(idx);
+        }
+    }
+
+    // Remove User
+    function removeUserFromDetail() {
+        if (!selectedUserDetail) return;
+        if (confirm('Remove user ' + selectedUserDetail.email + ' permanently?')) {
+            if (typeof appState !== 'undefined') {
+                const idx = appState.users.indexOf(selectedUserDetail);
+                if (idx !== -1) {
+                    appState.users.splice(idx, 1);
+                    selectedUserDetail = null;
+                    closeUserDetailPopup();
+                    if (typeof saveLocalState === 'function') saveLocalState();
+                    if (typeof updatePendingCounts === 'function') updatePendingCounts();
+                }
+            }
+        }
+    }
+
+    // Chat with User
+    function chatWithUserFromDetail() {
+        if (!selectedUserDetail) return;
+        closeUserDetailPopup();
+        if (typeof openChatPopup === 'function') {
+            openChatPopup();
+            setTimeout(() => {
+                if (typeof selectChatUser === 'function') {
+                    selectChatUser(selectedUserDetail.email);
+                }
+            }, 300);
+        }
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeUsersPopup();
+            closeUserDetailPopup();
+        }
+    });
+
+    // Expose functions globally
+    window.openUsersPopup = openUsersPopup;
+    window.closeUsersPopup = closeUsersPopup;
+    window.showVerifiedUsers = showVerifiedUsers;
+    window.showAddUserForm = showAddUserForm;
+    window.adminAddUserFromPopup = adminAddUserFromPopup;
+    window.searchUsersInPopup = searchUsersInPopup;
+    window.openUserDetailPopup = openUserDetailPopup;
+    window.closeUserDetailPopup = closeUserDetailPopup;
+    window.giveFreeCreditsToUser = giveFreeCreditsToUser;
+    window.blockUnblockUser = blockUnblockUser;
+    window.removeUserFromDetail = removeUserFromDetail;
+    window.chatWithUserFromDetail = chatWithUserFromDetail;
+</script>
