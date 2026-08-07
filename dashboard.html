@@ -4,169 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader - Dashboard</title>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
-                "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
-                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
-            }
-        }
-    </script>
-    
     <style>
-        :root {
-            --bg-primary: #0a0a0a;
-            --text-primary: #ffffff;
-            --text-secondary: #aaa;
-            --text-muted: #666;
-            --border-color: rgba(255,0,51,0.2);
-            --shadow-color: rgba(255,0,51,0.08);
-            --container-bg: rgba(255,0,51,0.04);
-            --container-border: rgba(255,0,51,0.2);
-            --social-icon-bg: rgba(255,255,255,0.02);
-            --social-icon-border: rgba(255,0,51,0.08);
-            --brand-tagline-color: #888;
-            --feature-card-bg: rgba(255,255,255,0.02);
-            --stat-item-hover: rgba(255,255,255,0.02);
-            --footer-border: rgba(255,0,51,0.04);
-            --admin-nav-bg: rgba(0,0,0,0.7);
-            --admin-nav-border: rgba(255,0,51,0.12);
-            --user-logout-bg: rgba(0,0,0,0.7);
-            --user-logout-border: rgba(255,0,51,0.12);
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { width: 100%; min-height: 100vh; background: #0a0a0a; color: #ffffff; font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; touch-action: manipulation; }
-        input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; }
-        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
-        
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(255, 0, 51, 0.03); }
-        ::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        
-        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg-primary); position: relative; }
-        .app::before { content: ''; position: fixed; top: -30%; left: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 18s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
-        .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
-        @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
-        
-        .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; position: relative; z-index: 1; }
-        
-        .red-container { background: var(--container-bg); border: 2px solid var(--container-border); border-radius: 18px; padding: 4px 12px 3px 12px; margin: 6px 0 4px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; will-change: transform; }
-        .red-container:hover { border-color: rgba(255, 0, 51, 0.5); box-shadow: 0 0 60px var(--shadow-color); transform: scale(1.012) translateY(-1px); }
-        
-        .fb-status-dot { position: absolute; top: 4px; left: 8px; width: 7px; height: 7px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 5; }
-        .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 14px rgba(0,255,102,0.6); animation: dotPulse 2s ease-in-out infinite; }
-        .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 14px rgba(255,0,51,0.6); animation: pulseRed 1.5s ease-in-out infinite; }
-        @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } }
-        @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 14px rgba(0,255,102,0.6); } 50% { box-shadow: 0 0 28px rgba(0,255,102,0.9), 0 0 50px rgba(0,255,102,0.2); } }
-        
-        .admin-nav-bar { display: none; position: absolute; top: 2px; right: 8px; z-index: 10; background: var(--admin-nav-bg); backdrop-filter: blur(10px); border: 1px solid var(--admin-nav-border); border-radius: 8px; padding: 2px 6px; align-items: center; gap: 3px; transition: all 0.3s ease; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); }
-        .admin-nav-bar.visible { display: flex; }
-        .admin-nav-bar .nav-label { font-size: 0.4rem; color: var(--text-secondary); letter-spacing: 0.3px; text-transform: uppercase; font-weight: 600; margin-right: 1px; }
-        .admin-nav-bar .nav-buttons { display: flex; gap: 2px; flex-wrap: wrap; }
-        .admin-nav-bar .nav-buttons button { padding: 1px 8px; border-radius: 12px; border: 1px solid rgba(255,0,51,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); font-size: 0.4rem; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap; }
-        .admin-nav-bar .nav-buttons button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); transform: scale(1.1); }
-        .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
-        
-        .user-logout-btn { display: none; position: absolute; top: 2px; right: 8px; z-index: 10; background: var(--user-logout-bg); backdrop-filter: blur(10px); border: 1px solid var(--user-logout-border); border-radius: 8px; padding: 2px 8px; align-items: center; gap: 3px; transition: all 0.3s ease; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); font-size: 0.4rem; color: #FF0033; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
-        .user-logout-btn.visible { display: flex; }
-        .user-logout-btn:hover { border-color: #FF0033; background: rgba(255, 0, 51, 0.08); transform: scale(1.04); }
-        
-        .brand-section { text-align: center; padding: 2px 0 1px 0; flex-shrink: 0; cursor: pointer; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .logo-wrapper { position: relative; display: inline-block; z-index: 1; }
-        .logo-glow-dash { position: absolute; top: 50%; left: 50%; width: clamp(130px, 28vw, 280px); height: clamp(130px, 28vw, 280px); transform: translate(-50%, -50%) scale(0.4); background: radial-gradient(circle, rgba(255, 0, 51, 0.6) 0%, rgba(255, 0, 51, 0.2) 40%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(35px); opacity: 0; transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .logo-glow-dash.active { opacity: 1; transform: translate(-50%, -50%) scale(1); animation: glowFlashDash 0.7s ease forwards; }
-        @keyframes glowFlashDash { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 70% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); } }
-        @keyframes zoomInSlow { 0% { transform: scale(1); } 40% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        @keyframes zoomOutSlow { 0% { transform: scale(1); } 40% { transform: scale(0.8); } 100% { transform: scale(1); } }
-        
-        .logo-icon { font-size: clamp(2.6rem, 5vw, 4.6rem); color: #FF0033; text-shadow: 0 0 40px rgba(255, 0, 51, 0.3); animation: pulseLogo 3s ease-in-out infinite; display: block; line-height: 1.05; transition: all 0.4s ease; position: relative; z-index: 2; }
-        .brand-section:hover .logo-icon { text-shadow: 0 0 60px rgba(255,0,51,0.5), 0 0 80px rgba(255,0,51,0.2); transform: scale(1.03) rotate(-1deg); }
-        .logo-img { max-height: clamp(2.6rem, 5vw, 4.6rem); max-width: 200px; object-fit: contain; display: none; margin: 0 auto; transition: all 0.4s ease; position: relative; z-index: 2; }
-        .brand-section:hover .logo-img { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(255,0,51,0.2)); }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.85; } }
-        
-        .brand-name { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1.1rem, 3.2vw, 3rem); letter-spacing: 2px; line-height: 1.05; white-space: nowrap; transition: all 0.3s ease; position: relative; z-index: 2; color: var(--text-primary); }
-        .brand-name .binary { color: var(--text-primary); }
-        .brand-name .ruthless { color: #FF0033 !important; text-shadow: 0 0 20px rgba(255,0,51,0.3); }
-        .brand-name .trader { color: var(--text-primary); }
-        .brand-tagline { color: var(--brand-tagline-color); font-size: 0.45rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 2; }
-        
-        .social-icons { display: flex; gap: 10px; justify-content: center; margin-top: 2px; flex-wrap: wrap; position: relative; z-index: 2; }
-        .social-icons a { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--social-icon-bg); border: 1.5px solid var(--social-icon-border); color: var(--text-secondary); font-size: 0.65rem; text-decoration: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px) scale(1.15); box-shadow: 0 6px 30px rgba(255,0,51,0.25); }
-        
-        .user-info-container { background: rgba(255,255,255,0.03); border: 2px solid var(--border-color); border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .user-info-container:hover { border-color: rgba(255,0,51,0.3); transform: scale(1.01); }
-        .user-info-container .user-name { font-family: 'Orbitron', sans-serif; font-size: clamp(0.7rem, 1.1vw, 1rem); color: var(--text-primary); font-weight: 700; letter-spacing: 1px; }
-        .user-info-container .user-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .user-info-container .user-actions .btn-sm { padding: 3px 12px; border-radius: 16px; font-size: 0.55rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; }
-        .user-info-container .user-actions .btn-sm:hover { transform: scale(1.06); }
-        .user-info-container .user-actions .btn-gold { background: #FFD700; color: #000; }
-        .user-info-container .user-actions .btn-chat { background: #0088cc; color: #fff; }
-        .user-info-container .user-actions .btn-account { background: #ffffff; color: #000000; }
-        .btn-chat-wrapper { position: relative; display: inline-block; }
-        
-        .features-section { padding: 4px 0 4px; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); flex-shrink: 0; margin-top: 6px; }
-        .features-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: clamp(0.55rem, 0.8vw, 0.8rem); font-weight: 700; margin-bottom: 3px; color: var(--text-primary); }
-        .features-title .neon { color: #FF0033; }
-        .features-title .gold { color: #FFD700; }
-        .features-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 3px 2px 5px; scrollbar-width: thin; scrollbar-color: #FF0033 transparent; justify-content: center; flex-wrap: wrap; }
-        .features-scroll::-webkit-scrollbar { height: 3px; }
-        .features-scroll::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 3px; }
-        .feature-card { flex: 0 0 82px; background: var(--feature-card-bg); border-radius: 10px; padding: 5px 4px; border: 2px solid var(--border-color); text-align: center; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; cursor: default; }
-        .feature-card:hover { border-color: #FF0033; transform: scale(1.06) translateY(-3px); box-shadow: 0 10px 28px rgba(255,0,51,0.06); background: rgba(255,255,255,0.04); }
-        .feature-card .icon { font-size: 1rem; display: block; transition: all 0.4s ease; }
-        .feature-card h4 { color: #FFD700; font-size: 0.42rem; font-family: 'Orbitron', sans-serif; }
-        .feature-card p { color: var(--text-muted); font-size: 0.38rem; margin-top: 1px; }
-        
-        .stats-row { display: flex; justify-content: center; gap: 18px; padding: 3px 0; flex-shrink: 0; flex-wrap: wrap; }
-        .stat-item { text-align: center; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 2px 6px; border-radius: 6px; cursor: default; }
-        .stat-item:hover { transform: scale(1.06) translateY(-2px); background: var(--stat-item-hover); }
-        .stat-item .number { font-size: clamp(0.75rem, 1vw, 0.95rem); font-weight: 700; font-family: 'Roboto Mono', monospace; color: var(--text-primary); }
-        .stat-item .number.red { color: #FF0033; }
-        .stat-item .number.gold { color: #FFD700; }
-        .stat-item .label { color: var(--text-muted); font-size: 0.4rem; letter-spacing: 1px; text-transform: uppercase; }
-        
-        .footer { padding: 3px 0 5px; text-align: center; border-top: 2px solid var(--footer-border); flex-shrink: 0; margin-top: 4px; }
-        .footer p { color: var(--text-muted); font-size: 0.4rem; letter-spacing: 1px; }
-        .footer .brand { color: #FF0033; font-weight: 700; }
-        
-        .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
-        .cursor-glow.active { opacity: 1; }
-        @media (hover: none) { .cursor-glow { display: none !important; } }
-        
-        @media (max-width: 768px) {
-            .scroll-content { padding: 0 12px; }
-            .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
-            .user-info-container .user-actions { justify-content: center; }
-            .feature-card { flex: 0 0 72px; padding: 4px 3px; }
-            .stats-row { gap: 10px; }
-        }
-        @media (max-width: 480px) {
-            .brand-name { font-size: clamp(0.9rem, 5vw, 1.4rem); letter-spacing: 0.5px; white-space: nowrap; }
-            .logo-icon { font-size: clamp(2rem, 10vw, 3rem); }
-            .user-info-container .user-name { font-size: 0.6rem; }
-            .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
-            .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
-        }
+        :root{--bg-primary:#0a0a0a;--text-primary:#fff;--text-secondary:#aaa;--text-muted:#666;--border-color:rgba(255,0,51,0.2);--shadow-color:rgba(255,0,51,0.08);--container-bg:rgba(255,0,51,0.04);--container-border:rgba(255,0,51,0.2);--social-icon-bg:rgba(255,255,255,0.02);--social-icon-border:rgba(255,0,51,0.08);--brand-tagline-color:#888;--feature-card-bg:rgba(255,255,255,0.02);--stat-item-hover:rgba(255,255,255,0.02);--footer-border:rgba(255,0,51,0.04);--admin-nav-bg:rgba(0,0,0,0.7);--admin-nav-border:rgba(255,0,51,0.12);--user-logout-bg:rgba(0,0,0,0.7);--user-logout-border:rgba(255,0,51,0.12)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{width:100%;min-height:100vh;background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;overflow-y:auto;overflow-x:hidden}
+        input,select,button,textarea{font-size:16px!important}
+        *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-thumb{background:#FF0033;border-radius:4px}
+        .app{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--bg-primary);position:relative}
+        .app::before{content:'';position:fixed;top:-30%;left:-20%;width:80%;height:80%;background:radial-gradient(circle,rgba(255,0,51,0.04) 0%,transparent 70%);border-radius:50%;animation:orbFloat 18s infinite alternate;pointer-events:none;z-index:0}
+        .app::after{content:'';position:fixed;bottom:-30%;right:-20%;width:80%;height:80%;background:radial-gradient(circle,rgba(255,215,0,0.03) 0%,transparent 70%);border-radius:50%;animation:orbFloat 22s infinite alternate-reverse;pointer-events:none;z-index:0}
+        @keyframes orbFloat{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.2)}}
+        .scroll-content{flex:1;display:flex;flex-direction:column;padding:0 20px;position:relative;z-index:1}
+        .red-container{background:var(--container-bg);border:2px solid var(--container-border);border-radius:18px;padding:4px 12px 3px;margin:6px 0 4px;transition:all 0.4s;position:relative}
+        .red-container:hover{border-color:rgba(255,0,51,0.5);box-shadow:0 0 60px var(--shadow-color);transform:scale(1.012) translateY(-1px)}
+        .fb-status-dot{position:absolute;top:4px;left:8px;width:7px;height:7px;border-radius:50%;z-index:5}
+        .fb-status-dot.green{background:#00FF66;box-shadow:0 0 14px rgba(0,255,102,0.6);animation:dotPulse 2s infinite}
+        .fb-status-dot.red{background:#FF0033;box-shadow:0 0 14px rgba(255,0,51,0.6);animation:pulseRed 1.5s infinite}
+        @keyframes pulseRed{0%,100%{opacity:1}50%{opacity:0.3}}
+        @keyframes dotPulse{0%,100%{box-shadow:0 0 14px rgba(0,255,102,0.6)}50%{box-shadow:0 0 28px rgba(0,255,102,0.9)}}
+        .admin-nav-bar{display:none;position:absolute;top:2px;right:8px;z-index:10;background:var(--admin-nav-bg);backdrop-filter:blur(10px);border:1px solid var(--admin-nav-border);border-radius:8px;padding:2px 6px;gap:3px}
+        .admin-nav-bar.visible{display:flex}
+        .admin-nav-bar .nav-label{font-size:0.4rem;color:var(--text-secondary)}
+        .admin-nav-bar .nav-buttons{display:flex;gap:2px}
+        .admin-nav-bar .nav-buttons button{padding:1px 8px;border-radius:12px;border:1px solid rgba(255,0,51,0.08);background:rgba(255,255,255,0.02);color:var(--text-secondary);font-size:0.4rem;cursor:pointer;font-family:'Inter',sans-serif}
+        .admin-nav-bar .nav-buttons button:hover{border-color:#FF0033;color:#fff}
+        .admin-nav-bar .logout-btn{color:#FF0033!important}
+        .user-logout-btn{display:none;position:absolute;top:2px;right:8px;z-index:10;background:var(--user-logout-bg);backdrop-filter:blur(10px);border:1px solid var(--user-logout-border);border-radius:8px;padding:2px 8px;font-size:0.4rem;color:#FF0033;cursor:pointer}
+        .user-logout-btn.visible{display:flex}
+        .brand-section{text-align:center;padding:2px 0 1px;cursor:pointer;position:relative;z-index:1}
+        .logo-wrapper{position:relative;display:inline-block}
+        .logo-glow-dash{position:absolute;top:50%;left:50%;width:clamp(130px,28vw,280px);height:clamp(130px,28vw,280px);transform:translate(-50%,-50%) scale(0.4);background:radial-gradient(circle,rgba(255,0,51,0.6) 0%,rgba(255,0,51,0.2) 40%,transparent 70%);border-radius:50%;filter:blur(35px);opacity:0;transition:opacity 0.5s}
+        .logo-glow-dash.active{opacity:1;transform:translate(-50%,-50%) scale(1);animation:glowFlashDash 0.7s forwards}
+        @keyframes glowFlashDash{0%{opacity:0;transform:translate(-50%,-50%) scale(0.3)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0.7)}}
+        .logo-icon{font-size:clamp(2.6rem,5vw,4.6rem);color:#FF0033;text-shadow:0 0 40px rgba(255,0,51,0.3);animation:pulseLogo 3s infinite;display:block;line-height:1.05;position:relative;z-index:2}
+        .logo-img{max-height:clamp(2.6rem,5vw,4.6rem);max-width:200px;object-fit:contain;display:none;position:relative;z-index:2}
+        @keyframes pulseLogo{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+        .brand-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.1rem,3.2vw,3rem);letter-spacing:2px;color:var(--text-primary);position:relative;z-index:2}
+        .brand-name .ruthless{color:#FF0033!important}
+        .brand-tagline{color:var(--brand-tagline-color);font-size:0.45rem;letter-spacing:3px;text-transform:uppercase}
+        .social-icons{display:flex;gap:10px;justify-content:center;margin-top:2px}
+        .social-icons a{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--social-icon-bg);border:1.5px solid var(--social-icon-border);color:var(--text-secondary);font-size:0.65rem;text-decoration:none;transition:all 0.4s}
+        .social-icons a:hover{color:#FF0033;border-color:#FF0033;transform:translateY(-2px)}
+        .user-info-container{background:rgba(255,255,255,0.03);border:2px solid var(--border-color);border-radius:12px;padding:6px 14px;margin:2px 0 4px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+        .user-info-container .user-name{font-family:'Orbitron',sans-serif;font-size:clamp(0.7rem,1.1vw,1rem);font-weight:700}
+        .user-info-container .user-actions{display:flex;gap:6px;flex-wrap:wrap}
+        .user-info-container .btn-sm{padding:3px 12px;border-radius:16px;font-size:0.55rem;font-weight:700;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.4s}
+        .user-info-container .btn-sm:hover{transform:scale(1.06)}
+        .btn-gold{background:#FFD700;color:#000}
+        .btn-chat{background:#0088cc;color:#fff}
+        .btn-account{background:#fff;color:#000}
+        .btn-chat-wrapper{position:relative}
+        .features-section{padding:4px 0;border-top:2px solid var(--border-color);border-bottom:2px solid var(--border-color);margin-top:6px}
+        .features-title{text-align:center;font-family:'Orbitron',sans-serif;font-size:clamp(0.55rem,0.8vw,0.8rem);font-weight:700}
+        .features-title .neon{color:#FF0033}
+        .features-title .gold{color:#FFD700}
+        .features-scroll{display:flex;gap:8px;overflow-x:auto;padding:3px 2px;justify-content:center;flex-wrap:wrap}
+        .feature-card{flex:0 0 82px;background:var(--feature-card-bg);border-radius:10px;padding:5px 4px;border:2px solid var(--border-color);text-align:center;transition:all 0.4s}
+        .feature-card:hover{border-color:#FF0033;transform:scale(1.06) translateY(-3px)}
+        .feature-card .icon{font-size:1rem;display:block}
+        .feature-card h4{color:#FFD700;font-size:0.42rem;font-family:'Orbitron',sans-serif}
+        .feature-card p{color:var(--text-muted);font-size:0.38rem}
+        .stats-row{display:flex;justify-content:center;gap:18px;padding:3px 0;flex-wrap:wrap}
+        .stat-item{text-align:center;padding:2px 6px;border-radius:6px;transition:all 0.4s}
+        .stat-item:hover{transform:scale(1.06) translateY(-2px);background:var(--stat-item-hover)}
+        .stat-item .number{font-size:clamp(0.75rem,1vw,0.95rem);font-weight:700;font-family:'Roboto Mono',monospace}
+        .stat-item .number.red{color:#FF0033}
+        .stat-item .number.gold{color:#FFD700}
+        .stat-item .label{color:var(--text-muted);font-size:0.4rem;text-transform:uppercase}
+        .footer{padding:3px 0;text-align:center;border-top:2px solid var(--footer-border);margin-top:4px}
+        .footer p{color:var(--text-muted);font-size:0.4rem}
+        .footer .brand{color:#FF0033;font-weight:700}
+        .cursor-glow{position:fixed;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,0,51,0.04),transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);opacity:0}
+        .cursor-glow.active{opacity:1}
+        @media(hover:none){.cursor-glow{display:none!important}}
+        @media(max-width:768px){.scroll-content{padding:0 12px}.user-info-container{flex-direction:column}.feature-card{flex:0 0 72px}.stats-row{gap:10px}}
+        @media(max-width:480px){.brand-name{font-size:clamp(0.9rem,5vw,1.4rem)}.logo-icon{font-size:clamp(2rem,10vw,3rem)}.red-container{padding:2px 6px;border-radius:12px}}
     </style>
 </head>
 <body>
-
-<div class="app zoom-trigger" id="mainApp">
+<div class="app" id="mainApp">
     <div class="scroll-content">
-        
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-            
             <div class="admin-nav-bar" id="adminNavBar">
                 <span class="nav-label">🔐</span>
                 <div class="nav-buttons">
@@ -175,20 +100,14 @@
                     <button class="logout-btn" id="dashAdminLogoutBtn">🚪 Logout</button>
                 </div>
             </div>
-            
             <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
-            
             <div class="brand-section" id="brandSection">
                 <div class="logo-wrapper">
                     <div class="logo-glow-dash" id="logoGlowDash"></div>
                     <span class="logo-icon" id="logoIcon">◆</span>
                     <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
                 </div>
-                <div class="brand-name">
-                    <span class="binary">BINARY</span>
-                    <span class="ruthless">RUTHLESS</span>
-                    <span class="trader">TRADER</span>
-                </div>
+                <div class="brand-name"><span class="binary">BINARY</span> <span class="ruthless">RUTHLESS</span> <span class="trader">TRADER</span></div>
                 <div class="brand-tagline">AI POWERED TRADING</div>
                 <div class="social-icons" id="dashSocialIcons">
                     <a href="#"><i class="fab fa-telegram-plane"></i></a>
@@ -198,9 +117,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- USER INFO CONTAINER -->
-        <div class="user-info-container" id="userInfoContainer">
+
+        <div class="user-info-container">
             <span class="user-name" id="dashUserName">User</span>
             <div class="user-actions">
                 <button class="btn-sm btn-account" onclick="openAccountModal()">👤 Account</button>
@@ -211,134 +129,111 @@
                 </div>
             </div>
         </div>
-        
-        <!-- CREDITS CONTAINER -->
-        <div class="credits-container" id="creditsContainer" style="background: rgba(0,255,102,0.02); border: 2px solid rgba(0,255,102,0.06); border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 4px;">
-            <div class="credit-item" style="text-align: center;">
-                <span class="number green" id="dashCredits" style="font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #00FF66;">0</span>
-                <span class="label" style="font-size: 0.55rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block;">Available Credits</span>
-            </div>
-            <div class="credit-item" style="text-align: center;">
-                <span class="number" id="dashTodayUsed" style="font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700;">0</span>
-                <span class="label" style="font-size: 0.55rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block;">Today Used</span>
-            </div>
+
+        <div id="creditsContainer" style="background:rgba(0,255,102,0.02);border:2px solid rgba(0,255,102,0.06);border-radius:12px;padding:6px 14px;margin:2px 0 4px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:4px;">
+            <div style="text-align:center;"><span id="dashCredits" style="font-family:'Roboto Mono',monospace;font-size:clamp(1.2rem,1.8vw,1.8rem);font-weight:700;color:#00FF66;">0</span><span style="font-size:0.55rem;color:#aaa;display:block;">Available Credits</span></div>
+            <div style="text-align:center;"><span id="dashTodayUsed" style="font-family:'Roboto Mono',monospace;font-size:clamp(1.2rem,1.8vw,1.8rem);font-weight:700;color:#FFD700;">0</span><span style="font-size:0.55rem;color:#aaa;display:block;">Today Used</span></div>
         </div>
-        
-        <!-- RECENT TOOLS MINI BUTTON -->
+
         <div class="recent-tools-mini" id="recentToolsMini" style="display:none;"></div>
-        
-        <!-- TOOLS CONTAINER -->
         <div class="tools-container" id="toolsContainer"></div>
-        
-        <!-- TOOL FULLSCREEN OVERLAY -->
-        <div class="tool-fullscreen-overlay" id="toolFullscreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; flex-direction: column;">
-            <div class="tool-fullscreen-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: rgba(0,0,0,0.95); border-bottom: 2px solid rgba(255,0,51,0.15); min-height: 52px;">
-                <div class="header-left" style="display: flex; align-items: center; gap: 16px;">
-                    <span class="user-name-tool" id="toolHeaderUserName" style="color: #FFD700; font-size: clamp(0.85rem, 1.2vw, 1.2rem); font-family: 'Orbitron', sans-serif;">User</span>
-                    <span style="color: #666;">|</span>
-                    <span class="credits-tool" id="toolHeaderCredits" style="color: #00FF66; font-family: 'Roboto Mono', monospace;">💰 0</span>
-                    <span style="color: #666;">|</span>
-                    <span class="today-used-tool" id="toolHeaderTodayUsed" style="color: #FFD700;">📊 Today: 0</span>
+
+        <div id="toolFullscreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,0.95);border-bottom:2px solid rgba(255,0,51,0.15);">
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <span id="toolHeaderUserName" style="color:#FFD700;font-family:'Orbitron',sans-serif;">User</span>
+                    <span style="color:#666;">|</span>
+                    <span id="toolHeaderCredits" style="color:#00FF66;font-family:'Roboto Mono',monospace;">💰 0</span>
+                    <span style="color:#666;">|</span>
+                    <span id="toolHeaderTodayUsed" style="color:#FFD700;">📊 Today: 0</span>
                 </div>
-                <div class="header-right" style="display: flex; align-items: center; gap: 6px;">
-                    <div class="tool-switch-container" id="toolSwitchContainer" style="display: flex; gap: 4px; overflow-x: auto;"></div>
-                    <button class="tool-fullscreen-close" id="toolFullscreenClose" style="font-size: 1.8rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <div id="toolSwitchContainer" style="display:flex;gap:4px;overflow-x:auto;"></div>
+                    <button id="toolFullscreenClose" style="font-size:1.8rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
                 </div>
             </div>
-            <div class="tool-fullscreen-content" style="flex: 1; overflow: hidden;">
-                <iframe id="toolFullscreenIframe" src="about:blank" style="width: 100%; height: 100%; border: none; background: #0a0a0a;"></iframe>
-            </div>
+            <div style="flex:1;overflow:hidden;"><iframe id="toolFullscreenIframe" src="about:blank" style="width:100%;height:100%;border:none;background:#0a0a0a;"></iframe></div>
         </div>
-        
-        <!-- ACCOUNT MODAL -->
-        <div class="overlay" id="accountModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
-            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
-                <button class="modal-close" onclick="closeAccountModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
-                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">👤 ACCOUNT DETAILS</h2>
+
+        <div class="overlay" id="accountModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;">
+            <div style="background:rgba(20,20,20,0.97);border:2px solid rgba(255,0,51,0.2);border-radius:16px;padding:28px 24px;width:100%;max-width:600px;position:relative;">
+                <button onclick="document.getElementById('accountModal').style.display='none'" style="position:absolute;top:10px;right:14px;font-size:1.5rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
+                <h2 style="color:#FFD700;font-family:'Orbitron',sans-serif;text-align:center;">👤 ACCOUNT DETAILS</h2>
                 <div id="accountDetailsContent"></div>
-                <button class="btn-submit btn-gold" onclick="openPaymentHistoryModal()" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;">📜 Payment History</button>
+                <button onclick="openPaymentHistoryModal()" style="width:100%;padding:10px;margin-top:10px;border-radius:30px;border:none;cursor:pointer;background:#FFD700;color:#000;font-weight:700;">📜 Payment History</button>
             </div>
         </div>
-        
-        <!-- ADD CREDITS MODAL -->
-        <div class="overlay" id="addCreditsModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
-            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
-                <button class="modal-close" onclick="closeAddCreditsModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
-                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">💳 ADD CREDITS</h2>
-                <div id="creditPacksContainer"><div class="credit-packs" id="creditPacksList" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"></div></div>
-                <button class="btn-submit" id="proceedToPayBtn" style="width: 100%; padding: 10px; margin-top: 8px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700; display: none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
-                <div class="selected-pack-display" id="selectedPackDisplay" style="display: none; margin-top: 6px; padding: 8px; background: rgba(255,215,0,0.05); border-radius: 6px; border: 1px solid rgba(255,215,0,0.15); text-align: center;"></div>
+
+        <div class="overlay" id="addCreditsModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;">
+            <div style="background:rgba(20,20,20,0.97);border:2px solid rgba(255,0,51,0.2);border-radius:16px;padding:28px 24px;width:100%;max-width:600px;position:relative;">
+                <button onclick="document.getElementById('addCreditsModal').style.display='none'" style="position:absolute;top:10px;right:14px;font-size:1.5rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
+                <h2 style="color:#FFD700;font-family:'Orbitron',sans-serif;text-align:center;">💳 ADD CREDITS</h2>
+                <div id="creditPacksContainer"><div id="creditPacksList" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div></div>
+                <button id="proceedToPayBtn" style="width:100%;padding:10px;margin-top:8px;border-radius:30px;border:none;cursor:pointer;background:#FFD700;color:#000;font-weight:700;display:none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
+                <div id="selectedPackDisplay" style="display:none;margin-top:6px;padding:8px;background:rgba(255,215,0,0.05);border-radius:6px;border:1px solid rgba(255,215,0,0.15);text-align:center;"></div>
                 <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
-                    <div class="payment-instructions" style="background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 10px;">
-                        <h4 style="color: #FFD700; font-size: 0.6rem;">📋 Payment Instructions</h4>
-                        <p id="paymentInstructionsText" style="color: #aaa; font-size: 0.5rem;">Please transfer the amount to the UPI ID below.</p>
-                        <p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p>
+                    <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.1);border-radius:10px;padding:10px;">
+                        <h4 style="color:#FFD700;">📋 Payment Instructions</h4>
+                        <p id="paymentInstructionsText" style="color:#aaa;font-size:0.5rem;">Transfer to UPI ID below.</p>
+                        <p style="color:#FFD700;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p>
                     </div>
-                    <div class="qr-container" id="qrDisplayContainer" style="text-align: center; padding: 8px; background: #fff; border-radius: 10px; margin: 4px 0;"><div id="qrDisplayContent"></div></div>
-                    <label style="display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px;">UTR Number</label>
-                    <input type="text" id="utrInput" placeholder="Enter UTR number" style="width: 100%; padding: 7px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.75rem; outline: none;">
-                    <label style="display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px;">Transaction ID</label>
-                    <input type="text" id="transactionIdInput" placeholder="Enter Transaction ID" style="width: 100%; padding: 7px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.75rem; outline: none;">
-                    <button class="btn-submit btn-gold" style="width: 100%; padding: 10px; margin-top: 6px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;" onclick="submitManualPayment()">📤 Submit Payment</button>
+                    <div id="qrDisplayContainer" style="text-align:center;padding:8px;background:#fff;border-radius:10px;margin:4px 0;"><div id="qrDisplayContent"></div></div>
+                    <label style="display:block;font-size:0.55rem;color:#FFD700;">UTR Number</label>
+                    <input type="text" id="utrInput" placeholder="Enter UTR" style="width:100%;padding:7px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,0,51,0.1);border-radius:6px;color:#fff;font-size:0.75rem;outline:none;">
+                    <label style="display:block;font-size:0.55rem;color:#FFD700;">Transaction ID</label>
+                    <input type="text" id="transactionIdInput" placeholder="Enter Txn ID" style="width:100%;padding:7px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,0,51,0.1);border-radius:6px;color:#fff;font-size:0.75rem;outline:none;">
+                    <button onclick="submitManualPayment()" style="width:100%;padding:10px;margin-top:6px;border-radius:30px;border:none;cursor:pointer;background:#FFD700;color:#000;font-weight:700;">📤 Submit Payment</button>
                 </div>
-                <div class="error-msg" id="addCreditsError" style="color: #FF0033; font-size: 0.65rem; margin-top: 3px; min-height: 18px;"></div>
-                <div class="success-msg" id="addCreditsSuccess" style="color: #00FF66; font-size: 0.65rem; margin-top: 3px;"></div>
+                <div id="addCreditsError" style="color:#FF0033;font-size:0.65rem;min-height:18px;"></div>
+                <div id="addCreditsSuccess" style="color:#00FF66;font-size:0.65rem;"></div>
             </div>
         </div>
-        
-        <!-- PAYMENT HISTORY MODAL -->
-        <div class="overlay" id="paymentHistoryModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
-            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
-                <button class="modal-close" onclick="closePaymentHistoryModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
-                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">📜 PAYMENT HISTORY</h2>
-                <div class="history-list" id="paymentHistoryList" style="max-height: 280px; overflow-y: auto;"></div>
+
+        <div class="overlay" id="paymentHistoryModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;">
+            <div style="background:rgba(20,20,20,0.97);border:2px solid rgba(255,0,51,0.2);border-radius:16px;padding:28px 24px;width:100%;max-width:600px;position:relative;">
+                <button onclick="document.getElementById('paymentHistoryModal').style.display='none'" style="position:absolute;top:10px;right:14px;font-size:1.5rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
+                <h2 style="color:#FFD700;font-family:'Orbitron',sans-serif;text-align:center;">📜 PAYMENT HISTORY</h2>
+                <div id="paymentHistoryList" style="max-height:280px;overflow-y:auto;"></div>
             </div>
         </div>
-        
-        <!-- CHAT MODAL -->
-        <div class="overlay" id="chatModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
-            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
-                <button class="modal-close" onclick="closeChatModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
-                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">💬 Chat with Admin</h2>
-                <div class="chat-container" id="chatContainer" style="background: #000 !important; max-height: 350px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; min-height: 120px;"></div>
-                <div class="chat-input-area" style="display: flex; gap: 6px; margin-top: 8px;">
-                    <input type="text" id="chatInput" placeholder="Type your message..." style="flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.8rem; outline: none;">
-                    <button onclick="sendChatMessage()" style="padding: 8px 16px; border-radius: 6px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer;">Send</button>
+
+        <div class="overlay" id="chatModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;">
+            <div style="background:rgba(20,20,20,0.97);border:2px solid rgba(255,0,51,0.2);border-radius:16px;padding:28px 24px;width:100%;max-width:600px;position:relative;">
+                <button onclick="document.getElementById('chatModal').style.display='none'" style="position:absolute;top:10px;right:14px;font-size:1.5rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
+                <h2 style="color:#FFD700;font-family:'Orbitron',sans-serif;text-align:center;">💬 Chat with Admin</h2>
+                <div id="chatContainer" style="background:#000!important;max-height:350px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;min-height:120px;"></div>
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                    <input type="text" id="chatInput" placeholder="Type your message..." style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,0,51,0.1);border-radius:6px;color:#fff;outline:none;">
+                    <button onclick="sendChatMessage()" style="padding:8px 16px;border-radius:6px;border:none;background:#0088cc;color:#fff;cursor:pointer;">Send</button>
                 </div>
             </div>
         </div>
-        
-        <!-- NO CREDITS POPUP -->
-        <div class="overlay" id="noCreditsPopup" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
-            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 400px; text-align: center; position: relative;">
-                <button class="modal-close" onclick="closeNoCreditsPopup()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
-                <span style="font-size:2.5rem;display:block;margin-bottom:4px;">⚠️</span>
+
+        <div class="overlay" id="noCreditsPopup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;">
+            <div style="background:rgba(20,20,20,0.97);border:2px solid rgba(255,0,51,0.2);border-radius:16px;padding:28px 24px;max-width:400px;text-align:center;position:relative;">
+                <button onclick="document.getElementById('noCreditsPopup').style.display='none'" style="position:absolute;top:10px;right:14px;font-size:1.5rem;color:#FF0033;cursor:pointer;background:none;border:none;">✕</button>
+                <span style="font-size:2.5rem;">⚠️</span>
                 <h2 style="color:#FF0033;">Insufficient Credits!</h2>
-                <p style="color:#aaa;font-size:0.85rem;margin:8px 0 12px;">You don't have enough credits. Please add credits to continue using tools.</p>
-                <button class="btn-submit btn-gold" onclick="closeNoCreditsPopup();openAddCreditsModal();" style="width: 100%; padding: 10px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;">💳 Add Credits</button>
+                <p style="color:#aaa;margin:8px 0;">Add credits to continue.</p>
+                <button onclick="document.getElementById('noCreditsPopup').style.display='none';openAddCreditsModal();" style="width:100%;padding:10px;border-radius:30px;border:none;cursor:pointer;background:#FFD700;color:#000;font-weight:700;">💳 Add Credits</button>
             </div>
         </div>
-        
+
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
             <div class="features-scroll" id="featuresScroll"></div>
         </div>
-        
         <div class="stats-row">
             <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
             <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
             <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
         </div>
-        
-        <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p></div>
-        
+        <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span></p></div>
     </div>
 </div>
-
 <div class="cursor-glow" id="cursorGlow"></div>
 
-<!-- ─── LOAD MODULES ─── -->
-<script src="firebase-config.js"></script>
+<script type="module" src="firebase-config.js"></script>
 <script src="security.js"></script>
 <script src="dashboard-credits.html"></script>
 <script src="dashboard-tools-container.html"></script>
@@ -348,124 +243,95 @@
 <script src="dashboard-chat.html"></script>
 
 <script>
-    function applyLogo(logoBase64) {
-        const logoIcon = document.getElementById('logoIcon');
-        const logoImg = document.getElementById('logoImage');
-        if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
-        else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
-    }
+function applyLogo(logoBase64) {
+    const logoIcon = document.getElementById('logoIcon');
+    const logoImg = document.getElementById('logoImage');
+    if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
+    else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
+}
 
-    function renderFeatures() {
-        const container = document.getElementById('featuresScroll');
-        if (!container) return;
-        const features = appState.features || [];
-        const visible = features.filter(f => f.visibility !== 'hidden');
-        if (visible.length === 0) { container.innerHTML = ''; return; }
-        container.innerHTML = '';
-        visible.forEach(f => {
-            const card = document.createElement('div');
-            card.className = 'feature-card';
-            card.innerHTML = `<span class="icon">${f.icon || '🧠'}</span><h4>${f.name || 'Feature'}</h4><p>${f.desc || ''}</p>`;
-            container.appendChild(card);
-        });
-    }
-
-    function renderSocialMedia() {
-        const container = document.getElementById('dashSocialIcons');
-        if (!container) return;
-        let socials = appState.socialMedia || [];
-        const visibleSocials = socials.filter(s => s.visibility === 'visible');
-        if (visibleSocials.length === 0) { container.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
-        container.innerHTML = '';
-        visibleSocials.forEach(social => {
-            const a = document.createElement('a');
-            a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link';
-            a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`;
-            container.appendChild(a);
-        });
-    }
-
-    function updateUI() {
-        const user = appState.currentUser;
-        if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; }
-        if (typeof updateCreditsDisplay === 'function') updateCreditsDisplay();
-        if (typeof updateToolHeader === 'function') updateToolHeader();
-    }
-
-    function getActiveSession() {
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-        if (adminLoggedIn) return { type: 'admin', loggedIn: true };
-        if (userLoggedIn) return { type: 'user', loggedIn: true };
-        return { type: 'none', loggedIn: false };
-    }
-
-    function checkUserSession() {
-        const session = getActiveSession();
-        const userLogoutBtn = document.getElementById('userLogoutBtn');
-        const adminNavBar = document.getElementById('adminNavBar');
-        if (session.type === 'admin') { adminNavBar.classList.add('visible'); userLogoutBtn.classList.remove('visible'); return true; }
-        else if (session.type === 'user') { adminNavBar.classList.remove('visible'); userLogoutBtn.classList.add('visible'); return true; }
-        else { adminNavBar.classList.remove('visible'); userLogoutBtn.classList.remove('visible'); window.location.href = 'index.html'; return false; }
-    }
-
-    document.getElementById('userLogoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('user_logged_in'); appState.currentUser = null; saveLocalState(); window.location.href = 'index.html';
+function renderSocialMedia() {
+    const container = document.getElementById('dashSocialIcons');
+    if (!container) return;
+    let socials = window.appState.socialMedia || [];
+    const visible = socials.filter(s => s.visibility === 'visible');
+    if (visible.length === 0) { container.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
+    container.innerHTML = '';
+    visible.forEach(s => {
+        const a = document.createElement('a'); a.href = s.url || '#'; a.target = '_blank'; a.title = s.name || 'Link';
+        a.innerHTML = `<i class="${s.icon || 'fas fa-link'}"></i>`;
+        container.appendChild(a);
     });
+}
 
-    document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('admin_logged_in'); window.location.href = 'index.html';
+function renderFeatures() {
+    const container = document.getElementById('featuresScroll');
+    if (!container) return;
+    container.innerHTML = '';
+    (window.appState.features || []).filter(f => f.visibility !== 'hidden').forEach(f => {
+        const card = document.createElement('div'); card.className = 'feature-card';
+        card.innerHTML = `<span class="icon">${f.icon||'🧠'}</span><h4>${f.name||'Feature'}</h4><p>${f.desc||''}</p>`;
+        container.appendChild(card);
     });
+}
 
-    let logoClickCounter = 0;
-    document.getElementById('brandSection').addEventListener('click', function(e) {
-        if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            if (adminLoggedIn) { logoClickCounter++; if (logoClickCounter >= (appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; } }
+function updateUI() {
+    const user = window.appState.currentUser;
+    if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; }
+    if (typeof updateCreditsDisplay === 'function') updateCreditsDisplay();
+    if (typeof updateToolHeader === 'function') updateToolHeader();
+}
+
+function checkUserSession() {
+    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    if (adminLoggedIn) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); return true; }
+    if (userLoggedIn) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); return true; }
+    window.location.href = 'index.html'; return false;
+}
+
+document.getElementById('userLogoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; saveLocalState(); window.location.href = 'index.html';
+});
+document.getElementById('dashAdminLogoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('admin_logged_in'); window.location.href = 'index.html';
+});
+
+let logoClickCounter = 0;
+document.getElementById('brandSection').addEventListener('click', function(e) {
+    if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
+        if (sessionStorage.getItem('admin_logged_in') === 'true') {
+            logoClickCounter++;
+            if (logoClickCounter >= (window.appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; }
         }
-    });
-
-    const logoGlowDash = document.getElementById('logoGlowDash');
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.tool-btn') || e.target.closest('.btn-sm') || e.target.closest('.social-icons a') || e.target.closest('.tool-fullscreen-overlay')) return;
-        logoGlowDash.classList.remove('active'); void logoGlowDash.offsetWidth; logoGlowDash.classList.add('active');
-        setTimeout(() => { logoGlowDash.classList.remove('active'); }, 800);
-    });
-
-    const glow = document.getElementById('cursorGlow');
-    if (window.matchMedia('(hover: hover)').matches) {
-        document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
-        document.addEventListener('mouseleave', () => glow.classList.remove('active'));
     }
+});
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
-            document.getElementById('toolFullscreen').style.display = 'none';
-        }
-    });
+const logoGlowDash = document.getElementById('logoGlowDash');
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.tool-fullscreen-overlay')) return;
+    logoGlowDash.classList.remove('active'); void logoGlowDash.offsetWidth; logoGlowDash.classList.add('active');
+    setTimeout(() => logoGlowDash.classList.remove('active'), 800);
+});
 
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+const glow = document.getElementById('cursorGlow');
+if (window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('mousemove', e => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
+    document.addEventListener('mouseleave', () => glow.classList.remove('active'));
+}
 
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof loadLocalState === 'function') loadLocalState();
-        checkUserSession();
-        renderSocialMedia();
-        renderFeatures();
-        if (typeof renderTools === 'function') renderTools();
-        if (typeof updateCreditsDisplay === 'function') updateCreditsDisplay();
-        if (typeof updateChatBadge === 'function') updateChatBadge();
-        console.log('📊 Dashboard Loaded');
-    });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); });
 
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.applyLogo = applyLogo;
-    window.renderSocialMedia = renderSocialMedia;
-    window.renderFeatures = renderFeatures;
-    window.updateUI = updateUI;
-    window.checkUserSession = checkUserSession;
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof loadLocalState === 'function') loadLocalState();
+    checkUserSession();
+    renderSocialMedia();
+    renderFeatures();
+    if (typeof renderTools === 'function') renderTools();
+    if (typeof updateCreditsDisplay === 'function') updateCreditsDisplay();
+    if (typeof updateChatBadge === 'function') updateChatBadge();
+    console.log('📊 Dashboard Loaded');
+});
 </script>
 </body>
 </html>
