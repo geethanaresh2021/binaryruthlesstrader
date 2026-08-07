@@ -14,13 +14,3 @@ document.addEventListener('keydown', function(e) {
         return false;
     }
 });
-
-// Prevent text selection
-document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-});
-
-// Prevent drag
-document.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-});
