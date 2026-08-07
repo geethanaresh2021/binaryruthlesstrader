@@ -1,0 +1,292 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN LOGO & CLICKS MANAGER          -->
+<!-- FILE: admin-logo-and-admin-login-clicks.html  -->
+<!-- Contains: HTML + CSS + JS for Logo & Clicks   -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── LOGO & CLICKS MANAGER CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(255, 0, 51, 0.3);
+        box-shadow: 0 0 24px rgba(255,0,51,0.08);
+    }
+    .admin-section h4 {
+        color: #FFD700;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-section .field-group {
+        margin-bottom: 8px;
+    }
+    .admin-section .field-group label {
+        font-size: 0.5rem;
+        color: #aaa;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .admin-section .field-group input {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .admin-section .field-group input:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 16px rgba(255,0,51,0.03);
+    }
+    .admin-section .field-group input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    .admin-section .field-group input[type="file"] {
+        padding: 5px;
+        font-size: 0.6rem;
+        cursor: pointer;
+    }
+    .admin-section .field-group input[type="file"]:disabled {
+        cursor: not-allowed;
+    }
+    .admin-section .field-group .logo-preview {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 6px;
+        margin-top: 6px;
+        border: 1px solid rgba(255,0,51,0.1);
+        display: none;
+    }
+    .admin-section .field-group .logo-preview.show {
+        display: block;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-edit {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #ffffff;
+        color: #000000;
+    }
+    .admin-section .btn-row .btn-edit:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-edit:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #FF0033;
+        color: #ffffff;
+        display: none;
+    }
+    .admin-section .btn-row .btn-save:hover {
+        box-shadow: 0 0 24px rgba(255,0,51,0.2);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-save:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save.show {
+        display: block;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+    }
+</style>
+
+<!-- ─── LOGO & CLICKS MANAGER HTML ─── -->
+<div class="admin-section" id="logoClicksSection">
+    <h4>🖱️ Admin Access</h4>
+    <div class="field-group">
+        <label>Upload Logo (PNG/JPG)</label>
+        <input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled onchange="previewLogoImage(event)">
+        <img id="logoPreviewImg" class="logo-preview" alt="Logo Preview" />
+    </div>
+    <div class="field-group">
+        <label>Clicks on Logo (for Admin Access)</label>
+        <input type="number" id="logoClickCount" value="2" min="1" max="20" disabled>
+    </div>
+    <div class="btn-row">
+        <button class="btn-edit" onclick="enableLogoClicksEdit(this)">✏️ Edit</button>
+        <button class="btn-save" onclick="saveAdminLogoSettings()">💾 Save</button>
+    </div>
+</div>
+
+<script>
+    // ─── LOGO & CLICKS MANAGER FUNCTIONS ───
+
+    // Enable Edit Mode
+    function enableLogoClicksEdit(btn) {
+        const section = btn.closest('.admin-section');
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = false);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show'));
+        btn.style.display = 'none';
+    }
+
+    // Disable Edit Mode
+    function disableLogoClicksEdit(section) {
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = true);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
+        section.querySelectorAll('.btn-edit').forEach(b => {
+            b.style.display = 'block';
+            b.textContent = '✏️ Edit';
+        });
+    }
+
+    // Preview Logo Image
+    function previewLogoImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('logoPreviewImg');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.remove('show');
+        }
+    }
+
+    // Load Logo Preview
+    function loadLogoPreview() {
+        const preview = document.getElementById('logoPreviewImg');
+        if (typeof appState !== 'undefined' && appState.logoBase64) {
+            preview.src = appState.logoBase64;
+            preview.classList.add('show');
+        } else {
+            const savedLogo = localStorage.getItem('brt_logo');
+            if (savedLogo) {
+                preview.src = savedLogo;
+                preview.classList.add('show');
+            }
+        }
+    }
+
+    // Save Admin Settings (Logo + Click Count)
+    function saveAdminLogoSettings() {
+        const clickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
+        const fileInput = document.getElementById('logoUpload');
+        const file = fileInput.files[0];
+
+        if (typeof appState !== 'undefined') {
+            appState.logoClickCount = clickCount;
+        }
+        localStorage.setItem('brt_logo_click_count', clickCount);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logoData = e.target.result;
+                if (typeof appState !== 'undefined') {
+                    appState.logoBase64 = logoData;
+                }
+                localStorage.setItem('brt_logo', logoData);
+                
+                // Update logo in header
+                const logoIcon = document.getElementById('adminLogoIcon');
+                const logoImg = document.getElementById('adminLogoImage');
+                if (logoIcon && logoImg) {
+                    logoIcon.style.display = 'none';
+                    logoImg.src = logoData;
+                    logoImg.style.display = 'block';
+                }
+
+                if (typeof saveLocalState === 'function') saveLocalState();
+                disableLogoClicksEdit(document.getElementById('logoClicksSection'));
+                
+                const btn = document.getElementById('logoClicksSection').querySelector('.btn-save');
+                if (btn) {
+                    btn.textContent = '✅ Saved';
+                    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+                }
+            };
+            reader.readAsDataURL(file);
+        } else {
+            if (typeof saveLocalState === 'function') saveLocalState();
+            disableLogoClicksEdit(document.getElementById('logoClicksSection'));
+            
+            const btn = document.getElementById('logoClicksSection').querySelector('.btn-save');
+            if (btn) {
+                btn.textContent = '✅ Saved';
+                setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+            }
+        }
+    }
+
+    // Load Settings
+    function loadLogoClicksSettings() {
+        if (typeof appState !== 'undefined') {
+            document.getElementById('logoClickCount').value = appState.logoClickCount || 2;
+        }
+        loadLogoPreview();
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadLogoClicksSettings();
+    });
+
+    // Expose functions globally
+    window.saveAdminLogoSettings = saveAdminLogoSettings;
+    window.previewLogoImage = previewLogoImage;
+    window.loadLogoPreview = loadLogoPreview;
+    window.loadLogoClicksSettings = loadLogoClicksSettings;
+    window.enableLogoClicksEdit = enableLogoClicksEdit;
+</script>
