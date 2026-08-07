@@ -115,18 +115,20 @@
 
         .scroll-content { flex: 1; display: flex; flex-direction: column; padding: 0 20px; position: relative; z-index: 1; }
 
-        /* ─── RED CONTAINER ─── */
+        /* ─── RED CONTAINER ─── COMPACT ─── */
         .red-container { background: var(--container-bg); border: 2px solid var(--container-border); border-radius: 18px; padding: 4px 12px 3px 12px; margin: 6px 0 4px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; will-change: transform; }
         .red-container:hover { border-color: rgba(255, 0, 51, 0.5); box-shadow: 0 0 60px var(--shadow-color); transform: scale(1.012) translateY(-1px); }
         .red-container::after { content: ''; position: absolute; inset: -2px; border-radius: 18px; padding: 2px; background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
         .red-container:hover::after { opacity: 1; }
 
+        /* status dot */
         .fb-status-dot { position: absolute; top: 4px; left: 8px; width: 7px; height: 7px; border-radius: 50%; display: inline-block; transition: all 0.3s ease; z-index: 5; }
         .fb-status-dot.green { background: #00FF66; box-shadow: 0 0 14px rgba(0, 255, 102, 0.6); animation: dotPulse 2s ease-in-out infinite; }
         .fb-status-dot.red { background: #FF0033; box-shadow: 0 0 14px rgba(255, 0, 51, 0.6); animation: pulseRed 1.5s ease-in-out infinite; }
         @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } }
         @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 14px rgba(0, 255, 102, 0.6); } 50% { box-shadow: 0 0 28px rgba(0, 255, 102, 0.9), 0 0 50px rgba(0, 255, 102, 0.2); } }
 
+        /* ─── ADMIN NAV – inside red-container, top-right ─── */
         .admin-nav-bar { display: none; position: absolute; top: 2px; right: 8px; z-index: 10; background: var(--admin-nav-bg); backdrop-filter: blur(10px); border: 1px solid var(--admin-nav-border); border-radius: 8px; padding: 2px 6px; align-items: center; gap: 3px; transition: all 0.3s ease; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); }
         .admin-nav-bar.visible { display: flex; }
         .admin-nav-bar:hover { border-color: rgba(255, 0, 51, 0.3); box-shadow: 0 2px 24px rgba(255, 0, 51, 0.06); transform: scale(1.04); }
@@ -139,11 +141,13 @@
         .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255, 0, 51, 0.2); color: #FF0033; }
         .admin-nav-bar .nav-buttons .logout-btn:hover { background: rgba(255, 0, 51, 0.12); box-shadow: 0 0 20px rgba(255, 0, 51, 0.08); }
 
+        /* ─── USER LOGOUT BUTTON (for logged-in users) ─── */
         .user-logout-btn { display: none; position: absolute; top: 2px; right: 8px; z-index: 10; background: var(--user-logout-bg); backdrop-filter: blur(10px); border: 1px solid var(--user-logout-border); border-radius: 8px; padding: 2px 8px; align-items: center; gap: 3px; transition: all 0.3s ease; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); font-size: 0.4rem; color: #FF0033; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; border-color: rgba(255, 0, 51, 0.2); }
         .user-logout-btn.visible { display: flex; }
         .user-logout-btn:hover { border-color: #FF0033; background: rgba(255, 0, 51, 0.08); transform: scale(1.04); }
         .user-logout-btn:active { transform: scale(0.93); }
 
+        /* ─── BRAND SECTION ─── */
         .brand-section { text-align: center; padding: 2px 0 1px 0; flex-shrink: 0; cursor: pointer; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .logo-wrapper { position: relative; display: inline-block; z-index: 1; }
         .logo-glow { position: absolute; top: 50%; left: 50%; width: clamp(140px, 28vw, 300px); height: clamp(140px, 28vw, 300px); transform: translate(-50%, -50%) scale(0.5); background: radial-gradient(circle, rgba(255, 0, 51, 0.6) 0%, rgba(255, 0, 51, 0.2) 40%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(35px); opacity: 0; transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -171,6 +175,7 @@
         .brand-tagline { color: var(--brand-tagline-color); font-size: 0.5rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 2; }
         .brand-section:hover .brand-tagline { color: var(--text-secondary); letter-spacing: 4px; }
 
+        /* ─── SOCIAL ICONS ─── */
         .social-icons { display: flex; gap: 12px; justify-content: center; margin-top: 3px; flex-wrap: wrap; position: relative; z-index: 2; }
         .social-icons a { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--social-icon-bg); border: 1.5px solid var(--social-icon-border); color: var(--text-secondary); font-size: 0.75rem; text-decoration: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; animation: socialGlow 2s ease-in-out infinite; }
         .social-icons a:nth-child(1) { animation-delay: 0s; }
@@ -183,6 +188,7 @@
         .social-icons a:hover::before { opacity: 1; }
         .social-icons a:active { transform: scale(0.9); }
 
+        /* ─── OFFER BANNER - BIGGER ─── */
         .offer-banner { background: var(--offer-banner-bg); border: 3px solid var(--offer-banner-border); border-radius: 20px; padding: 28px 32px; text-align: center; margin: 6px 0 10px; flex-shrink: 0; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; isolation: isolate; will-change: transform; }
         .offer-banner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent 50%, rgba(255, 0, 51, 0.05)); opacity: 0; transition: opacity 0.6s ease; z-index: 0; }
         .offer-banner:hover { border-color: #FFD700; box-shadow: 0 0 80px rgba(255, 215, 0, 0.1), inset 0 0 80px rgba(255, 215, 0, 0.03); transform: scale(1.03) translateY(-3px); }
@@ -283,7 +289,6 @@
         .info-popup { background: var(--popup-bg); backdrop-filter: blur(20px); border: 2px solid var(--popup-border); border-radius: 16px; padding: 30px 28px; width: 100%; max-width: 450px; text-align: center; position: relative; box-shadow: 0 0 80px rgba(255, 0, 51, 0.08); animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .info-popup .popup-close { position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); padding: 4px 8px; border-radius: 6px; font-weight: 700; }
         .info-popup .popup-close:hover { transform: scale(1.3) rotate(90deg); color: var(--text-primary); background: rgba(255, 0, 51, 0.06); }
-        .info-popup .popup-close:active { transform: scale(0.8); }
         .info-popup .popup-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
         .info-popup h3 { color: var(--popup-label); font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 8px; letter-spacing: 1px; }
         .info-popup p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
@@ -405,12 +410,10 @@
         <div class="modal">
             <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
             <h2>🔐 LOGIN</h2>
-            <label>Gmail / Email</label>
-            <input type="email" id="loginEmail" placeholder="your@gmail.com" />
-            <label>Account ID</label>
-            <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
+            <label>Gmail / Email</label><input type="email" id="loginEmail" placeholder="your@gmail.com" />
+            <label>Account ID</label><input type="text" id="loginAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="loginError"></div>
-            <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleLogin()">Login</button>
+            <button class="btn-submit" style="background:#FF0033;color:#fff;" id="loginSubmitBtn">Login</button>
         </div>
     </div>
 
@@ -419,18 +422,15 @@
         <div class="modal">
             <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
             <h2>📝 SIGN UP</h2>
-            <label>Select Broker</label>
-            <select id="signupBroker"><option value="">-- Select Broker --</option></select>
+            <label>Select Broker</label><select id="signupBroker"><option value="">-- Select Broker --</option></select>
             <div id="brokerInfo" style="margin-top:4px;padding:4px 6px;background:rgba(255,215,0,0.04);border-radius:6px;display:none;">
                 <p style="font-size:0.55rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
                 <p style="font-size:0.5rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
                 <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
             </div>
-            <label>Gmail / Email</label>
-            <input type="email" id="signupEmail" placeholder="your@gmail.com" />
-            <div class="error-msg" id="signupError"></div>
-            <div class="success-msg" id="signupSuccess"></div>
-            <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
+            <label>Gmail / Email</label><input type="email" id="signupEmail" placeholder="your@gmail.com" />
+            <div class="error-msg" id="signupError"></div><div class="success-msg" id="signupSuccess"></div>
+            <button class="btn-submit" style="background:#fff;color:#000;" id="signupSubmitBtn">Create Account & Go to Broker</button>
         </div>
     </div>
 
@@ -439,17 +439,12 @@
         <div class="modal">
             <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
             <h2>✅ ID VERIFY</h2>
-            <label>Full Name</label>
-            <input type="text" id="verifyName" placeholder="Enter your full name" />
-            <label>Gmail / Email</label>
-            <input type="email" id="verifyEmail" placeholder="your@gmail.com" />
-            <label>Select Your Broker</label>
-            <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
-            <label>Account ID</label>
-            <input type="text" class="account-id-input" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <div class="error-msg" id="verifyError"></div>
-            <div class="success-msg" id="verifySuccess"></div>
-            <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn" onclick="handleVerify()">Submit Verification</button>
+            <label>Full Name</label><input type="text" id="verifyName" placeholder="Enter your full name" />
+            <label>Gmail / Email</label><input type="email" id="verifyEmail" placeholder="your@gmail.com" />
+            <label>Select Your Broker</label><select id="verifyBroker"><option value="">-- Select Broker --</option></select>
+            <label>Account ID</label><input type="text" class="account-id-input" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <div class="error-msg" id="verifyError"></div><div class="success-msg" id="verifySuccess"></div>
+            <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
         </div>
     </div>
 
@@ -463,126 +458,72 @@
 
     <!-- MAIN SCRIPT -->
     <script>
-        // ─── PREVENT COPY & RIGHT CLICK ───
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) { e.preventDefault(); return false; }
-            if (e.key === 'F12') { e.preventDefault(); return false; }
-        });
-
-        // ─── CURSOR GLOW ───
-        const glow = document.getElementById('cursorGlow');
-        if (window.matchMedia('(hover: hover)').matches) {
-            document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
-            document.addEventListener('mouseleave', () => { glow.classList.remove('active'); });
-        }
-
-        // ─── APPLY LOGO ───
-        window.applyLogo = function(logoBase64) {
-            const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
-            if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
-            else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
-        };
-
-        // ─── RENDER FUNCTIONS ───
-        window.renderSocialMedia = function() {
-            const container = document.getElementById('socialIconsContainer'); if (!container) return;
-            let socials = window.appState.socialMedia || [];
-            if (socials.length === 0) { const localSocial = localStorage.getItem('brt_social'); if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} } }
-            const visibleSocials = socials.filter(s => s.visibility === 'visible');
-            if (visibleSocials.length === 0) { container.innerHTML = `<a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a><a href="#" class="instagram"><i class="fab fa-instagram"></i></a><a href="#" class="youtube"><i class="fab fa-youtube"></i></a><a href="#" class="twitter"><i class="fab fa-twitter"></i></a>`; return; }
-            container.innerHTML = '';
-            visibleSocials.forEach(social => { const a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`; container.appendChild(a); });
-        };
-
-        window.renderFeatures = function() {
-            const container = document.getElementById('featuresScroll'); if (!container) return;
-            const features = window.appState.features || []; const visible = features.filter(f => f.visibility !== 'hidden');
-            if (visible.length === 0) { container.innerHTML = ''; return; }
-            container.innerHTML = '';
-            visible.forEach(f => { const card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = `<span class="icon">${f.icon || '🧠'}</span><h4>${f.name || 'Feature'}</h4><p>${f.desc || ''}</p>`; container.appendChild(card); });
-        };
-
-        window.updateUI = function() {
-            const brokerSelect = document.getElementById('signupBroker');
-            brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
-            window.appState.brokers.forEach(b => { const opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; brokerSelect.appendChild(opt); });
-            const verifyBroker = document.getElementById('verifyBroker');
-            verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
-            window.appState.brokers.forEach(b => { const opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; verifyBroker.appendChild(opt); });
-        };
-
-        // ─── SESSIONS ───
-        function checkUserSession() {
-            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-            if (userLoggedIn) { document.getElementById('userLogoutBtn').classList.add('visible'); document.getElementById('adminNavBar').classList.remove('visible'); }
-            else { document.getElementById('userLogoutBtn').classList.remove('visible'); }
-            return userLoggedIn;
-        }
-        function checkAdminSession() {
-            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            if (adminLoggedIn) { document.getElementById('adminNavBar').classList.add('visible'); document.getElementById('userLogoutBtn').classList.remove('visible'); }
-            else { document.getElementById('adminNavBar').classList.remove('visible'); checkUserSession(); }
-            return adminLoggedIn;
-        }
-
-        // ─── LOGOUT ───
-        document.getElementById('userLogoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; window.saveLocalState(); window.location.href = 'index.html';
-        });
-        document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; window.saveLocalState(); window.location.href = 'index.html';
-        });
-
-        // ─── BUTTON LISTENERS ───
-        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
-        document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
-
-        document.getElementById('offerBanner').addEventListener('click', function() {
-            const signupCard = document.getElementById('signupCard');
-            signupCard.classList.remove('highlight'); void signupCard.offsetWidth; signupCard.classList.add('highlight');
-            setTimeout(() => { openModal('signupModal'); }, 500);
-        });
-
-        document.getElementById('signupBroker').addEventListener('change', function() {
-            const brokerName = this.value; const infoDiv = document.getElementById('brokerInfo');
-            const broker = window.appState.brokers.find(b => b.name === brokerName);
-            if (broker) { infoDiv.style.display = 'block'; document.getElementById('brokerAffiliateLink').textContent = broker.link; document.getElementById('brokerMinDeposit').textContent = broker.minDeposit; document.getElementById('brokerRules').textContent = '📋 ' + broker.rules; }
-            else { infoDiv.style.display = 'none'; }
-        });
-
-        document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
-        document.getElementById('infoPopup').addEventListener('click', function(e) { if (e.target === this) closeInfoPopup(); });
-
-        // ─── LOGO GLOW ───
-        const logoGlow = document.getElementById('logoGlow');
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.info-popup-overlay')) return;
-            logoGlow.classList.remove('active'); void logoGlow.offsetWidth; logoGlow.classList.add('active');
-            setTimeout(() => { logoGlow.classList.remove('active'); }, 800);
-            const logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage'), brandName = document.querySelector('.brand-name');
-            if (logoIcon.style.display !== 'none') { logoIcon.style.animation = 'none'; void logoIcon.offsetWidth; logoIcon.style.animation = 'zoomInSlow 0.7s ease forwards'; }
-            if (logoImg.style.display !== 'none') { logoImg.style.animation = 'none'; void logoImg.offsetWidth; logoImg.style.animation = 'zoomInSlow 0.7s ease forwards'; }
-            brandName.style.animation = 'none'; void brandName.offsetWidth; brandName.style.animation = 'zoomOutSlow 0.7s ease forwards';
-            setTimeout(() => { if (logoIcon.style.display !== 'none') logoIcon.style.animation = ''; if (logoImg.style.display !== 'none') logoImg.style.animation = ''; brandName.style.animation = ''; }, 800);
-        });
-
-        // ─── ESCAPE KEY ───
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active')); closeInfoPopup(); } });
-
-        // ─── INIT ───
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
+            setTimeout(function() {
+                // Attach button listeners after modules loaded
+                document.getElementById('loginBtn').addEventListener('click', function() { if (typeof openModal === 'function') openModal('loginModal'); });
+                document.getElementById('signupBtn').addEventListener('click', function() { if (typeof openModal === 'function') openModal('signupModal'); });
+                document.getElementById('verifyBtn').addEventListener('click', function() { if (typeof openModal === 'function') openModal('verifyModal'); });
+                document.getElementById('loginSubmitBtn').addEventListener('click', function() { if (typeof handleLogin === 'function') handleLogin(); });
+                document.getElementById('signupSubmitBtn').addEventListener('click', function() { if (typeof handleSignup === 'function') handleSignup(); });
+                document.getElementById('verifySubmitBtn').addEventListener('click', function() { if (typeof handleVerify === 'function') handleVerify(); });
+                
+                // Init
                 if (typeof loadLocalState === 'function') loadLocalState();
-                checkAdminSession();
-                renderSocialMedia();
-                renderFeatures();
-                updateUI();
+                if (typeof renderSocialMedia === 'function') renderSocialMedia();
+                if (typeof renderFeatures === 'function') renderFeatures();
+                if (typeof updateUI === 'function') updateUI();
                 if (typeof updateOfferBanner === 'function') updateOfferBanner();
                 console.log('🏠 Index Loaded');
             }, 500);
         });
+
+        window.applyLogo = function(logoBase64) {
+            var logoIcon = document.getElementById('logoIcon'), logoImg = document.getElementById('logoImage');
+            if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
+            else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
+        };
+
+        window.renderSocialMedia = function() {
+            var container = document.getElementById('socialIconsContainer'); if (!container) return;
+            var socials = window.appState.socialMedia || [];
+            var visibleSocials = socials.filter(function(s) { return s.visibility === 'visible'; });
+            if (visibleSocials.length === 0) { container.innerHTML = '<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>'; return; }
+            container.innerHTML = '';
+            visibleSocials.forEach(function(social) { var a = document.createElement('a'); a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link'; a.innerHTML = '<i class="' + (social.icon || 'fas fa-link') + '"></i>'; container.appendChild(a); });
+        };
+
+        window.renderFeatures = function() {
+            var container = document.getElementById('featuresScroll'); if (!container) return;
+            var features = window.appState.features || []; var visible = features.filter(function(f) { return f.visibility !== 'hidden'; });
+            if (visible.length === 0) { container.innerHTML = ''; return; }
+            container.innerHTML = '';
+            visible.forEach(function(f) { var card = document.createElement('div'); card.className = 'feature-card'; card.innerHTML = '<span class="icon">' + (f.icon || '🧠') + '</span><h4>' + (f.name || 'Feature') + '</h4><p>' + (f.desc || '') + '</p>'; container.appendChild(card); });
+        };
+
+        window.updateUI = function() {
+            var brokerSelect = document.getElementById('signupBroker'); brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
+            window.appState.brokers.forEach(function(b) { var opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; brokerSelect.appendChild(opt); });
+            var verifyBroker = document.getElementById('verifyBroker'); verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
+            window.appState.brokers.forEach(function(b) { var opt = document.createElement('option'); opt.value = b.name; opt.textContent = b.name; verifyBroker.appendChild(opt); });
+        };
+
+        document.getElementById('userLogoutBtn').addEventListener('click', function() { sessionStorage.removeItem('user_logged_in'); window.appState.currentUser = null; saveLocalState(); window.location.href = 'index.html'; });
+        document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() { sessionStorage.removeItem('admin_logged_in'); sessionStorage.removeItem('user_logged_in'); window.location.href = 'index.html'; });
+        document.getElementById('infoPopupClose').addEventListener('click', function() { if (typeof closeInfoPopup === 'function') closeInfoPopup(); });
+        document.getElementById('infoPopup').addEventListener('click', function(e) { if (e.target === this && typeof closeInfoPopup === 'function') closeInfoPopup(); });
+        document.getElementById('offerBanner').addEventListener('click', function() { document.getElementById('signupCard').classList.add('highlight'); setTimeout(function() { if (typeof openModal === 'function') openModal('signupModal'); }, 500); });
+        document.getElementById('signupBroker').addEventListener('change', function() { var b = window.appState.brokers.find(function(x) { return x.name === this.value; }.bind(this)); var info = document.getElementById('brokerInfo'); if (b) { info.style.display = 'block'; document.getElementById('brokerAffiliateLink').textContent = b.link; document.getElementById('brokerMinDeposit').textContent = b.minDeposit; document.getElementById('brokerRules').textContent = '📋 ' + b.rules; } else { info.style.display = 'none'; } });
+
+        var logoGlow = document.getElementById('logoGlow');
+        document.addEventListener('click', function(e) { if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.info-popup-overlay')) return; logoGlow.classList.remove('active'); void logoGlow.offsetWidth; logoGlow.classList.add('active'); setTimeout(function() { logoGlow.classList.remove('active'); }, 800); });
+        
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { document.querySelectorAll('.overlay.active').forEach(function(el) { el.classList.remove('active'); }); if (typeof closeInfoPopup === 'function') closeInfoPopup(); } });
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) { if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) e.preventDefault(); if (e.key === 'F12') e.preventDefault(); });
+        
+        var glow = document.getElementById('cursorGlow');
+        if (window.matchMedia('(hover: hover)').matches) { document.addEventListener('mousemove', function(e) { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); }); document.addEventListener('mouseleave', function() { glow.classList.remove('active'); }); }
     </script>
 </body>
 </html>
