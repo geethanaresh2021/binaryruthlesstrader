@@ -1071,6 +1071,27 @@
                 <h4>📱 Social Media</h4>
                 <div id="socialList" class="social-list"></div>
                 <button class="section-add-btn" onclick="showAddSocialForm()">➕ Add Social Media</button>
+                <div id="addSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
+                    <div class="field-group"><label>Platform Name</label><input type="text" id="newSocialName" placeholder="e.g. Telegram"></div>
+                    <div class="field-group"><label>URL</label><input type="text" id="newSocialUrl" placeholder="https://t.me/yourchannel"></div>
+                    <div class="field-group"><label>Icon (Font Awesome)</label><input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane"></div>
+                    <div class="field-group"><label>Status</label><select id="newSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminAddSocial()" style="background:#FF0033;color:#fff;">💾 Save Social</button>
+                        <button class="btn-edit" onclick="document.getElementById('addSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
+                </div>
+                <div id="editSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
+                    <input type="hidden" id="editSocialIndex">
+                    <div class="field-group"><label>Platform Name</label><input type="text" id="editSocialName"></div>
+                    <div class="field-group"><label>URL</label><input type="text" id="editSocialUrl"></div>
+                    <div class="field-group"><label>Icon</label><input type="text" id="editSocialIcon"></div>
+                    <div class="field-group"><label>Status</label><select id="editSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                    <div class="btn-row">
+                        <button class="btn-save show" onclick="adminUpdateSocial()" style="background:#FF0033;color:#fff;">💾 Update Social</button>
+                        <button class="btn-edit" onclick="document.getElementById('editSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
+                    </div>
+                </div>
             </div>
             
             <!-- 8. Admin Access -->
@@ -1422,7 +1443,7 @@ function previewQRImage(event) {
     } 
 }
 
-// ─── BROKER CARD FUNCTIONS ───
+// ─── BROKER CARD FUNCTIONS (with visibility toggle) ───
 let editingBrokerId = null;
 
 function renderBrokerCards() {
@@ -1430,9 +1451,12 @@ function renderBrokerCards() {
     if (!grid) return;
     grid.innerHTML = '';
     appState.brokers.forEach(b => {
+        const visibility = b.visibility || 'visible';
+        const toggleText = visibility === 'visible' ? '🙈' : '👁️';
         grid.innerHTML += `
-            <div class="admin-card">
+            <div class="admin-card" style="opacity:${visibility === 'hidden' ? '0.4' : '1'}">
                 <div class="card-actions">
+                    <button class="toggle-card" onclick="toggleBrokerVisibility('${b.id}')">${toggleText}</button>
                     <button class="edit-card" onclick="editBroker('${b.id}')">✏️</button>
                     <button class="delete-card" onclick="deleteBroker('${b.id}')">✕</button>
                 </div>
@@ -1447,6 +1471,14 @@ function renderBrokerCards() {
         `;
     });
 }
+
+window.toggleBrokerVisibility = function(id) {
+    const broker = appState.brokers.find(b => b.id === id);
+    if (!broker) return;
+    broker.visibility = broker.visibility === 'hidden' ? 'visible' : 'hidden';
+    saveLocalState();
+    renderBrokerCards();
+};
 
 window.openBrokerModal = function() {
     editingBrokerId = null;
@@ -1489,18 +1521,19 @@ window.submitBroker = function() {
     const rules = document.getElementById('modalBrokerRules').value.trim();
     const errorEl = document.getElementById('brokerModalError');
     if (!name || !link) { errorEl.textContent = '❌ Name and link required'; return; }
+    const brokerData = { name, link, minDeposit, rules, visibility: 'visible' };
     if (editingBrokerId) {
         const idx = appState.brokers.findIndex(b => b.id === editingBrokerId);
-        if (idx !== -1) appState.brokers[idx] = { ...appState.brokers[idx], name, link, minDeposit, rules };
+        if (idx !== -1) appState.brokers[idx] = { ...appState.brokers[idx], ...brokerData };
     } else {
-        appState.brokers.push({ id: 'broker_' + Date.now(), name, link, minDeposit, rules });
+        appState.brokers.push({ id: 'broker_' + Date.now(), ...brokerData });
     }
     saveLocalState();
     closeModal('brokerModal');
     renderBrokerCards();
 };
 
-// ─── CREDIT PACK CARD FUNCTIONS ───
+// ─── CREDIT PACK CARD FUNCTIONS (with visibility toggle) ───
 let editingPackId = null;
 
 function renderCreditPackCards() {
@@ -1508,10 +1541,13 @@ function renderCreditPackCards() {
     if (!grid) return;
     grid.innerHTML = '';
     appState.creditPacks.forEach(p => {
+        const visibility = p.visibility || 'visible';
+        const toggleText = visibility === 'visible' ? '🙈' : '👁️';
         const perCredit = (p.price / p.credits).toFixed(2);
         grid.innerHTML += `
-            <div class="admin-card">
+            <div class="admin-card" style="opacity:${visibility === 'hidden' ? '0.4' : '1'}">
                 <div class="card-actions">
+                    <button class="toggle-card" onclick="toggleCreditPackVisibility('${p.id}')">${toggleText}</button>
                     <button class="edit-card" onclick="editCreditPack('${p.id}')">✏️</button>
                     <button class="delete-card" onclick="deleteCreditPack('${p.id}')">✕</button>
                 </div>
@@ -1523,6 +1559,14 @@ function renderCreditPackCards() {
         `;
     });
 }
+
+window.toggleCreditPackVisibility = function(id) {
+    const pack = appState.creditPacks.find(p => p.id === id);
+    if (!pack) return;
+    pack.visibility = pack.visibility === 'hidden' ? 'visible' : 'hidden';
+    saveLocalState();
+    renderCreditPackCards();
+};
 
 window.openCreditPackModal = function() {
     editingPackId = null;
@@ -1559,11 +1603,12 @@ window.submitCreditPack = function() {
     const price = parseInt(document.getElementById('modalPackPrice').value);
     const errorEl = document.getElementById('creditPackModalError');
     if (isNaN(credits) || credits <= 0 || isNaN(price) || price <= 0) { errorEl.textContent = '❌ Enter valid numbers'; return; }
+    const packData = { credits, price, visibility: 'visible' };
     if (editingPackId) {
         const idx = appState.creditPacks.findIndex(p => p.id === editingPackId);
-        if (idx !== -1) appState.creditPacks[idx] = { ...appState.creditPacks[idx], credits, price };
+        if (idx !== -1) appState.creditPacks[idx] = { ...appState.creditPacks[idx], ...packData };
     } else {
-        appState.creditPacks.push({ id: 'pack_' + Date.now(), credits, price });
+        appState.creditPacks.push({ id: 'pack_' + Date.now(), ...packData });
     }
     saveLocalState();
     closeModal('creditPackModal');
@@ -1582,7 +1627,7 @@ function renderToolCards() {
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
         const triggerText = tool.triggers && tool.triggers.length > 0 ? tool.triggers.join(', ') : 'Default (Signal, Get, Generate, BUY, SELL)';
         grid.innerHTML += `
-            <div class="admin-card">
+            <div class="admin-card" style="opacity:${tool.visibility === 'hidden' ? '0.4' : '1'}">
                 <div class="card-actions">
                     <button class="toggle-card" onclick="toggleToolVisibility('${tool.id}')">${tool.visibility === 'visible' ? '🙈' : '👁️'}</button>
                     <button class="edit-card" onclick="editTool('${tool.id}')">✏️</button>
@@ -1661,11 +1706,12 @@ window.submitTool = function() {
     if (!name) { errorEl.textContent = '❌ Tool name required'; return; }
     if (!htmlCode) { errorEl.textContent = '❌ HTML code required'; return; }
     const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
+    const toolData = { name, subName, sticker, htmlCode, visibility, showFire, triggers };
     if (editingToolId) {
         const idx = appState.tools.findIndex(t => t.id === editingToolId);
-        if (idx !== -1) appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
+        if (idx !== -1) appState.tools[idx] = { ...appState.tools[idx], ...toolData };
     } else {
-        appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
+        appState.tools.push({ id: 'tool_' + Date.now(), ...toolData });
     }
     saveLocalState();
     localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
@@ -2484,6 +2530,8 @@ window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
 window.showRevenue = showRevenue;
 window.openRevenueModal = openRevenueModal;
+window.toggleBrokerVisibility = toggleBrokerVisibility;
+window.toggleCreditPackVisibility = toggleCreditPackVisibility;
 
 console.log('⚙️ Admin Panel Loaded - All Features Active');
 </script>
