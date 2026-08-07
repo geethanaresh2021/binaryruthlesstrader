@@ -1,0 +1,390 @@
+<!-- ============================================ -->
+<!-- SECTION: ADMIN BROKER MANAGER                 -->
+<!-- FILE: admin-broker-manager.html               -->
+<!-- Contains: HTML + CSS + JS for Broker Manager  -->
+<!-- ============================================ -->
+
+<style>
+    /* ─── BROKER MANAGER CSS ─── */
+    .admin-section {
+        border: 1px solid rgba(255,0,51,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    .admin-section:hover {
+        border-color: rgba(255, 0, 51, 0.3);
+        box-shadow: 0 0 24px rgba(255,0,51,0.08);
+    }
+    .admin-section h4 {
+        color: #FFD700;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-section .field-group {
+        margin-bottom: 8px;
+    }
+    .admin-section .field-group label {
+        font-size: 0.5rem;
+        color: #aaa;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .admin-section .field-group input {
+        width: 100%;
+        padding: 7px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,0,51,0.1);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .admin-section .field-group input:focus {
+        border-color: #FF0033;
+        box-shadow: 0 0 16px rgba(255,0,51,0.03);
+    }
+    .admin-section .field-group input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .admin-section .item-list {
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 6px;
+        border: 1px solid rgba(255,0,51,0.05);
+        border-radius: 6px;
+        padding: 4px;
+    }
+    .admin-section .item-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    .admin-section .item-list::-webkit-scrollbar-thumb {
+        background: #FF0033;
+        border-radius: 4px;
+    }
+    .admin-section .list-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        font-size: 0.55rem;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .admin-section .list-item:hover {
+        background: rgba(255,0,51,0.04);
+    }
+    .admin-section .list-item .name {
+        color: #FFD700;
+    }
+    .admin-section .list-item .detail {
+        color: #aaa;
+    }
+    .admin-section .list-item .list-actions {
+        display: none;
+        gap: 4px;
+    }
+    .admin-section .list-item .list-actions button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.6rem;
+        padding: 0 4px;
+    }
+    .admin-section .list-item .list-actions .edit-btn {
+        color: #FFD700;
+    }
+    .admin-section .list-item .list-actions .del-btn {
+        color: #FF0033;
+    }
+    .admin-section.editable .list-item .list-actions {
+        display: flex;
+    }
+    .admin-section.editable .list-item {
+        cursor: default;
+    }
+
+    .broker-add-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        margin-top: 6px;
+    }
+    .broker-add-grid .field-group {
+        margin-bottom: 0;
+    }
+
+    .admin-section .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+    }
+    .admin-section .btn-row .btn-edit {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #ffffff;
+        color: #000000;
+    }
+    .admin-section .btn-row .btn-edit:hover {
+        box-shadow: 0 0 24px rgba(255,255,255,0.15);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-edit:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save {
+        flex: 1;
+        padding: 7px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #FF0033;
+        color: #ffffff;
+        display: none;
+    }
+    .admin-section .btn-row .btn-save:hover {
+        box-shadow: 0 0 24px rgba(255,0,51,0.2);
+        transform: scale(1.02);
+    }
+    .admin-section .btn-row .btn-save:active {
+        transform: scale(0.95);
+    }
+    .admin-section .btn-row .btn-save.show {
+        display: block;
+    }
+
+    .no-brokers {
+        color: #666;
+        font-size: 0.45rem;
+        text-align: center;
+        padding: 4px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 480px) {
+        .admin-section {
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        .admin-section h4 {
+            font-size: 0.6rem;
+        }
+        .broker-add-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- ─── BROKER MANAGER HTML ─── -->
+<div class="admin-section" id="brokerSection">
+    <h4>🏢 Broker Manager</h4>
+    <div id="brokerList" class="item-list"></div>
+    <div class="broker-add-grid">
+        <div class="field-group">
+            <label>Name</label>
+            <input type="text" id="adminBrokerName" placeholder="e.g. Quotex" disabled>
+        </div>
+        <div class="field-group">
+            <label>Affiliate Link</label>
+            <input type="text" id="adminBrokerLink" placeholder="https://..." disabled>
+        </div>
+        <div class="field-group">
+            <label>Min Deposit (₹)</label>
+            <input type="number" id="adminBrokerMinDeposit" placeholder="1000" disabled>
+        </div>
+        <div class="field-group">
+            <label>Rules</label>
+            <input type="text" id="adminBrokerRules" placeholder="e.g. Verify email" disabled>
+        </div>
+    </div>
+    <div class="btn-row">
+        <button class="btn-edit" onclick="enableBrokerEdit(this)">✏️ Edit</button>
+        <button class="btn-save" id="brokerSaveBtn" onclick="adminAddBroker()">💾 Add</button>
+    </div>
+</div>
+
+<script>
+    // ─── BROKER MANAGER FUNCTIONS ───
+    let editingBrokerId = null;
+
+    // Enable Edit Mode
+    function enableBrokerEdit(btn) {
+        const section = btn.closest('.admin-section');
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = false);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show'));
+        btn.style.display = 'none';
+        section.classList.add('editable');
+        document.getElementById('brokerSaveBtn').textContent = '💾 Add';
+        document.getElementById('brokerSaveBtn').onclick = adminAddBroker;
+        document.getElementById('adminBrokerName').value = '';
+        document.getElementById('adminBrokerLink').value = '';
+        document.getElementById('adminBrokerMinDeposit').value = '';
+        document.getElementById('adminBrokerRules').value = '';
+        editingBrokerId = null;
+        renderBrokerList();
+    }
+
+    // Disable Edit Mode
+    function disableBrokerEdit(section) {
+        if (!section) return;
+        section.querySelectorAll('input').forEach(i => i.disabled = true);
+        section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show'));
+        section.querySelectorAll('.btn-edit').forEach(b => {
+            b.style.display = 'block';
+            b.textContent = '✏️ Edit';
+        });
+        section.classList.remove('editable');
+        document.getElementById('adminBrokerName').value = '';
+        document.getElementById('adminBrokerLink').value = '';
+        document.getElementById('adminBrokerMinDeposit').value = '';
+        document.getElementById('adminBrokerRules').value = '';
+        editingBrokerId = null;
+        renderBrokerList();
+    }
+
+    // Render Broker List
+    function renderBrokerList() {
+        const list = document.getElementById('brokerList');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const brokers = (typeof appState !== 'undefined' && appState.brokers) ? appState.brokers : [];
+        const section = list.closest('.admin-section');
+        const isEditable = section && section.classList.contains('editable');
+
+        if (brokers.length === 0) {
+            list.innerHTML = '<div class="no-brokers">No brokers added yet</div>';
+            return;
+        }
+
+        brokers.forEach((b) => {
+            let actions = '';
+            if (isEditable) {
+                actions = `
+                    <div class="list-actions" style="display:flex;gap:4px;">
+                        <button class="edit-btn" onclick="adminEditBroker('${b.id}')">✏️</button>
+                        <button class="del-btn" onclick="adminDeleteBroker('${b.id}')">✕</button>
+                    </div>
+                `;
+            }
+            list.innerHTML += `<div class="list-item"><span class="name">${b.name}</span><span class="detail">₹${b.minDeposit || 0} min</span>${actions}</div>`;
+        });
+    }
+
+    // Add Broker
+    function adminAddBroker() {
+        const name = document.getElementById('adminBrokerName').value.trim();
+        const link = document.getElementById('adminBrokerLink').value.trim();
+        const minDeposit = parseInt(document.getElementById('adminBrokerMinDeposit').value) || 0;
+        const rules = document.getElementById('adminBrokerRules').value.trim();
+
+        if (!name || !link) {
+            alert('Enter name and link');
+            return;
+        }
+
+        if (!appState.brokers) appState.brokers = [];
+
+        if (editingBrokerId) {
+            const index = appState.brokers.findIndex(b => b.id === editingBrokerId);
+            if (index !== -1) {
+                appState.brokers[index] = { ...appState.brokers[index], name, link, minDeposit, rules };
+            }
+            editingBrokerId = null;
+            document.getElementById('brokerSaveBtn').textContent = '💾 Add';
+            document.getElementById('brokerSaveBtn').onclick = adminAddBroker;
+        } else {
+            const newBroker = { id: 'broker_' + Date.now(), name, link, minDeposit, rules };
+            appState.brokers.push(newBroker);
+        }
+
+        if (typeof saveLocalState === 'function') saveLocalState();
+        localStorage.setItem('brt_brokers', JSON.stringify(appState.brokers));
+        renderBrokerList();
+
+        document.getElementById('adminBrokerName').value = '';
+        document.getElementById('adminBrokerLink').value = '';
+        document.getElementById('adminBrokerMinDeposit').value = '';
+        document.getElementById('adminBrokerRules').value = '';
+
+        const btn = document.getElementById('brokerSaveBtn');
+        if (btn) {
+            btn.textContent = '✅ Saved';
+            setTimeout(() => { 
+                btn.textContent = '💾 Add'; 
+                btn.onclick = adminAddBroker;
+            }, 2000);
+        }
+    }
+
+    // Edit Broker
+    function adminEditBroker(id) {
+        if (typeof appState === 'undefined') return;
+        const broker = appState.brokers.find(b => b.id === id);
+        if (!broker) return;
+
+        document.getElementById('adminBrokerName').value = broker.name;
+        document.getElementById('adminBrokerLink').value = broker.link;
+        document.getElementById('adminBrokerMinDeposit').value = broker.minDeposit || '';
+        document.getElementById('adminBrokerRules').value = broker.rules || '';
+        editingBrokerId = id;
+        document.getElementById('brokerSaveBtn').textContent = '🔄 Update Broker';
+        document.getElementById('brokerSaveBtn').onclick = adminAddBroker;
+    }
+
+    // Delete Broker
+    function adminDeleteBroker(id) {
+        if (confirm('Delete this broker?')) {
+            if (typeof appState !== 'undefined') {
+                appState.brokers = appState.brokers.filter(b => b.id !== id);
+                if (typeof saveLocalState === 'function') saveLocalState();
+                localStorage.setItem('brt_brokers', JSON.stringify(appState.brokers));
+            }
+            renderBrokerList();
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderBrokerList();
+    });
+
+    // Expose functions globally
+    window.renderBrokerList = renderBrokerList;
+    window.adminAddBroker = adminAddBroker;
+    window.adminEditBroker = adminEditBroker;
+    window.adminDeleteBroker = adminDeleteBroker;
+    window.enableBrokerEdit = enableBrokerEdit;
+</script>
