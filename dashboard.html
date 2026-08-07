@@ -74,7 +74,6 @@
         .admin-nav-bar .nav-buttons button { padding: 1px 8px; border-radius: 12px; border: 1px solid rgba(255,0,51,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); font-size: 0.4rem; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Inter', sans-serif; letter-spacing: 0.3px; white-space: nowrap; }
         .admin-nav-bar .nav-buttons button:hover { border-color: #FF0033; color: #fff; background: rgba(255,0,51,0.08); transform: scale(1.1); }
         .admin-nav-bar .nav-buttons .logout-btn { border-color: rgba(255,0,51,0.2); color: #FF0033; }
-        .admin-nav-bar .nav-buttons .logout-btn:hover { background: rgba(255,0,51,0.12); box-shadow: 0 0 20px rgba(255,0,51,0.08); }
         
         .user-logout-btn { display: none; position: absolute; top: 2px; right: 8px; z-index: 10; background: var(--user-logout-bg); backdrop-filter: blur(10px); border: 1px solid var(--user-logout-border); border-radius: 8px; padding: 2px 8px; align-items: center; gap: 3px; transition: all 0.3s ease; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); font-size: 0.4rem; color: #FF0033; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
         .user-logout-btn.visible { display: flex; }
@@ -101,7 +100,7 @@
         .brand-tagline { color: var(--brand-tagline-color); font-size: 0.45rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; margin-top: 0px; transition: all 0.3s ease; position: relative; z-index: 2; }
         
         .social-icons { display: flex; gap: 10px; justify-content: center; margin-top: 2px; flex-wrap: wrap; position: relative; z-index: 2; }
-        .social-icons a { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--social-icon-bg); border: 1.5px solid var(--social-icon-border); color: var(--text-secondary); font-size: 0.65rem; text-decoration: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; overflow: hidden; }
+        .social-icons a { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--social-icon-bg); border: 1.5px solid var(--social-icon-border); color: var(--text-secondary); font-size: 0.65rem; text-decoration: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .social-icons a:hover { color: #FF0033; border-color: #FF0033; transform: translateY(-2px) scale(1.15); box-shadow: 0 6px 30px rgba(255,0,51,0.25); }
         
         .user-info-container { background: rgba(255,255,255,0.03); border: 2px solid var(--border-color); border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -149,7 +148,6 @@
             .user-info-container { flex-direction: column; align-items: stretch; gap: 4px; }
             .user-info-container .user-actions { justify-content: center; }
             .feature-card { flex: 0 0 72px; padding: 4px 3px; }
-            .feature-card .icon { font-size: 0.9rem; }
             .stats-row { gap: 10px; }
         }
         @media (max-width: 480px) {
@@ -158,7 +156,6 @@
             .user-info-container .user-name { font-size: 0.6rem; }
             .user-info-container .user-actions .btn-sm { font-size: 0.45rem; padding: 2px 8px; }
             .red-container { padding: 2px 6px 1px 6px; border-radius: 12px; margin: 4px 0 3px; }
-            .brand-tagline { font-size: 0.4rem; letter-spacing: 2px; }
         }
     </style>
 </head>
@@ -206,33 +203,125 @@
         <div class="user-info-container" id="userInfoContainer">
             <span class="user-name" id="dashUserName">User</span>
             <div class="user-actions">
-                <button class="btn-sm btn-account" onclick="if(typeof openAccountModal==='function')openAccountModal()">👤 Account</button>
-                <button class="btn-sm btn-gold" onclick="if(typeof openAddCreditsModal==='function')openAddCreditsModal()">💳 Add Credits</button>
+                <button class="btn-sm btn-account" onclick="openAccountModal()">👤 Account</button>
+                <button class="btn-sm btn-gold" onclick="openAddCreditsModal()">💳 Add Credits</button>
                 <div class="btn-chat-wrapper">
-                    <button class="btn-sm btn-chat" onclick="if(typeof openChatModal==='function')openChatModal()">💬 Chat</button>
+                    <button class="btn-sm btn-chat" onclick="openChatModal()">💬 Chat</button>
                     <span class="chat-badge" id="chatBadge"></span>
                 </div>
             </div>
         </div>
         
-        <!-- MODULES WILL BE LOADED HERE -->
-        <!-- dashboard-credits.html -->
-        <!-- dashboard-tools-container.html -->
-        <!-- dashboard-user-tools.html -->
-        <!-- dashboard-account.html -->
-        <!-- dashboard-add-credits.html -->
-        <!-- dashboard-chat.html -->
+        <!-- CREDITS CONTAINER -->
+        <div class="credits-container" id="creditsContainer" style="background: rgba(0,255,102,0.02); border: 2px solid rgba(0,255,102,0.06); border-radius: 12px; padding: 6px 14px; margin: 2px 0 4px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 4px;">
+            <div class="credit-item" style="text-align: center;">
+                <span class="number green" id="dashCredits" style="font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #00FF66;">0</span>
+                <span class="label" style="font-size: 0.55rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block;">Available Credits</span>
+            </div>
+            <div class="credit-item" style="text-align: center;">
+                <span class="number" id="dashTodayUsed" style="font-family: 'Roboto Mono', monospace; font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 700; color: #FFD700;">0</span>
+                <span class="label" style="font-size: 0.55rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block;">Today Used</span>
+            </div>
+        </div>
+        
+        <!-- RECENT TOOLS MINI BUTTON -->
+        <div class="recent-tools-mini" id="recentToolsMini" style="display:none;"></div>
+        
+        <!-- TOOLS CONTAINER -->
+        <div class="tools-container" id="toolsContainer"></div>
+        
+        <!-- TOOL FULLSCREEN OVERLAY -->
+        <div class="tool-fullscreen-overlay" id="toolFullscreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; flex-direction: column;">
+            <div class="tool-fullscreen-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: rgba(0,0,0,0.95); border-bottom: 2px solid rgba(255,0,51,0.15); min-height: 52px;">
+                <div class="header-left" style="display: flex; align-items: center; gap: 16px;">
+                    <span class="user-name-tool" id="toolHeaderUserName" style="color: #FFD700; font-size: clamp(0.85rem, 1.2vw, 1.2rem); font-family: 'Orbitron', sans-serif;">User</span>
+                    <span style="color: #666;">|</span>
+                    <span class="credits-tool" id="toolHeaderCredits" style="color: #00FF66; font-family: 'Roboto Mono', monospace;">💰 0</span>
+                    <span style="color: #666;">|</span>
+                    <span class="today-used-tool" id="toolHeaderTodayUsed" style="color: #FFD700;">📊 Today: 0</span>
+                </div>
+                <div class="header-right" style="display: flex; align-items: center; gap: 6px;">
+                    <div class="tool-switch-container" id="toolSwitchContainer" style="display: flex; gap: 4px; overflow-x: auto;"></div>
+                    <button class="tool-fullscreen-close" id="toolFullscreenClose" style="font-size: 1.8rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                </div>
+            </div>
+            <div class="tool-fullscreen-content" style="flex: 1; overflow: hidden;">
+                <iframe id="toolFullscreenIframe" src="about:blank" style="width: 100%; height: 100%; border: none; background: #0a0a0a;"></iframe>
+            </div>
+        </div>
+        
+        <!-- ACCOUNT MODAL -->
+        <div class="overlay" id="accountModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
+            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
+                <button class="modal-close" onclick="closeAccountModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">👤 ACCOUNT DETAILS</h2>
+                <div id="accountDetailsContent"></div>
+                <button class="btn-submit btn-gold" onclick="openPaymentHistoryModal()" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;">📜 Payment History</button>
+            </div>
+        </div>
+        
+        <!-- ADD CREDITS MODAL -->
+        <div class="overlay" id="addCreditsModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
+            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
+                <button class="modal-close" onclick="closeAddCreditsModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">💳 ADD CREDITS</h2>
+                <div id="creditPacksContainer"><div class="credit-packs" id="creditPacksList" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"></div></div>
+                <button class="btn-submit" id="proceedToPayBtn" style="width: 100%; padding: 10px; margin-top: 8px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700; display: none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
+                <div class="selected-pack-display" id="selectedPackDisplay" style="display: none; margin-top: 6px; padding: 8px; background: rgba(255,215,0,0.05); border-radius: 6px; border: 1px solid rgba(255,215,0,0.15); text-align: center;"></div>
+                <div id="paymentOptionsContainer" style="display:none;margin-top:8px;">
+                    <div class="payment-instructions" style="background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 10px;">
+                        <h4 style="color: #FFD700; font-size: 0.6rem;">📋 Payment Instructions</h4>
+                        <p id="paymentInstructionsText" style="color: #aaa; font-size: 0.5rem;">Please transfer the amount to the UPI ID below.</p>
+                        <p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p>
+                    </div>
+                    <div class="qr-container" id="qrDisplayContainer" style="text-align: center; padding: 8px; background: #fff; border-radius: 10px; margin: 4px 0;"><div id="qrDisplayContent"></div></div>
+                    <label style="display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px;">UTR Number</label>
+                    <input type="text" id="utrInput" placeholder="Enter UTR number" style="width: 100%; padding: 7px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.75rem; outline: none;">
+                    <label style="display: block; font-size: 0.55rem; color: #FFD700; margin: 6px 0 3px;">Transaction ID</label>
+                    <input type="text" id="transactionIdInput" placeholder="Enter Transaction ID" style="width: 100%; padding: 7px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.75rem; outline: none;">
+                    <button class="btn-submit btn-gold" style="width: 100%; padding: 10px; margin-top: 6px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;" onclick="submitManualPayment()">📤 Submit Payment</button>
+                </div>
+                <div class="error-msg" id="addCreditsError" style="color: #FF0033; font-size: 0.65rem; margin-top: 3px; min-height: 18px;"></div>
+                <div class="success-msg" id="addCreditsSuccess" style="color: #00FF66; font-size: 0.65rem; margin-top: 3px;"></div>
+            </div>
+        </div>
+        
+        <!-- PAYMENT HISTORY MODAL -->
+        <div class="overlay" id="paymentHistoryModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
+            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
+                <button class="modal-close" onclick="closePaymentHistoryModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">📜 PAYMENT HISTORY</h2>
+                <div class="history-list" id="paymentHistoryList" style="max-height: 280px; overflow-y: auto;"></div>
+            </div>
+        </div>
+        
+        <!-- CHAT MODAL -->
+        <div class="overlay" id="chatModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
+            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative;">
+                <button class="modal-close" onclick="closeChatModal()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <h2 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">💬 Chat with Admin</h2>
+                <div class="chat-container" id="chatContainer" style="background: #000 !important; max-height: 350px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; min-height: 120px;"></div>
+                <div class="chat-input-area" style="display: flex; gap: 6px; margin-top: 8px;">
+                    <input type="text" id="chatInput" placeholder="Type your message..." style="flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,0,51,0.1); border-radius: 6px; color: #fff; font-size: 0.8rem; outline: none;">
+                    <button onclick="sendChatMessage()" style="padding: 8px 16px; border-radius: 6px; border: none; background: #0088cc; color: #fff; font-weight: 700; cursor: pointer;">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NO CREDITS POPUP -->
+        <div class="overlay" id="noCreditsPopup" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(10px);">
+            <div class="modal" style="background: rgba(20,20,20,0.97); border: 2px solid rgba(255,0,51,0.2); border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 400px; text-align: center; position: relative;">
+                <button class="modal-close" onclick="closeNoCreditsPopup()" style="position: absolute; top: 10px; right: 14px; font-size: 1.5rem; color: #FF0033; cursor: pointer; background: none; border: none;">✕</button>
+                <span style="font-size:2.5rem;display:block;margin-bottom:4px;">⚠️</span>
+                <h2 style="color:#FF0033;">Insufficient Credits!</h2>
+                <p style="color:#aaa;font-size:0.85rem;margin:8px 0 12px;">You don't have enough credits. Please add credits to continue using tools.</p>
+                <button class="btn-submit btn-gold" onclick="closeNoCreditsPopup();openAddCreditsModal();" style="width: 100%; padding: 10px; border-radius: 30px; border: none; cursor: pointer; background: #FFD700; color: #000; font-weight: 700;">💳 Add Credits</button>
+            </div>
+        </div>
         
         <div class="features-section">
             <div class="features-title"><span class="neon">⚡ POWERFUL</span> <span class="gold">FEATURES</span></div>
-            <div class="features-scroll" id="featuresScroll">
-                <div class="feature-card"><span class="icon">🧠</span><h4>AI Signal</h4><p>Real-time predictions</p></div>
-                <div class="feature-card"><span class="icon">📈</span><h4>Chart Analysis</h4><p>Pattern recognition</p></div>
-                <div class="feature-card"><span class="icon">📓</span><h4>Trading Journal</h4><p>Track every trade</p></div>
-                <div class="feature-card"><span class="icon">💰</span><h4>Money Mgmt</h4><p>Risk & position size</p></div>
-                <div class="feature-card"><span class="icon">📊</span><h4>Risk Manager</h4><p>Stop-loss tools</p></div>
-                <div class="feature-card"><span class="icon">☁️</span><h4>Cloud Sync</h4><p>All devices sync</p></div>
-            </div>
+            <div class="features-scroll" id="featuresScroll"></div>
         </div>
         
         <div class="stats-row">
@@ -259,23 +348,13 @@
 <script src="dashboard-chat.html"></script>
 
 <script>
-    // ─── MAIN DASHBOARD JS ───
-
-    // Apply Logo
     function applyLogo(logoBase64) {
         const logoIcon = document.getElementById('logoIcon');
         const logoImg = document.getElementById('logoImage');
-        if (logoBase64) {
-            logoIcon.style.display = 'none';
-            logoImg.src = logoBase64;
-            logoImg.style.display = 'block';
-        } else {
-            logoIcon.style.display = 'block';
-            logoImg.style.display = 'none';
-        }
+        if (logoBase64) { logoIcon.style.display = 'none'; logoImg.src = logoBase64; logoImg.style.display = 'block'; }
+        else { logoIcon.style.display = 'block'; logoImg.style.display = 'none'; }
     }
 
-    // Render Features
     function renderFeatures() {
         const container = document.getElementById('featuresScroll');
         if (!container) return;
@@ -291,43 +370,28 @@
         });
     }
 
-    // Render Social Media
     function renderSocialMedia() {
         const container = document.getElementById('dashSocialIcons');
         if (!container) return;
         let socials = appState.socialMedia || [];
-        if (socials.length === 0) {
-            const localSocial = localStorage.getItem('brt_social');
-            if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} }
-        }
         const visibleSocials = socials.filter(s => s.visibility === 'visible');
-        if (visibleSocials.length === 0) {
-            container.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`;
-            return;
-        }
+        if (visibleSocials.length === 0) { container.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-twitter"></i></a>`; return; }
         container.innerHTML = '';
         visibleSocials.forEach(social => {
             const a = document.createElement('a');
-            a.href = social.url || '#';
-            a.target = '_blank';
-            a.title = social.name || 'Link';
+            a.href = social.url || '#'; a.target = '_blank'; a.title = social.name || 'Link';
             a.innerHTML = `<i class="${social.icon || 'fas fa-link'}"></i>`;
-            a.addEventListener('click', function(e) { if (social.url === '#') { e.preventDefault(); alert('📱 ' + social.name + ' - Configure URL in Admin'); } });
             container.appendChild(a);
         });
     }
 
-    // Update UI
     function updateUI() {
         const user = appState.currentUser;
-        if (user) {
-            document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0];
-        }
+        if (user) { document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; }
         if (typeof updateCreditsDisplay === 'function') updateCreditsDisplay();
         if (typeof updateToolHeader === 'function') updateToolHeader();
     }
 
-    // Get Active Session
     function getActiveSession() {
         const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
         const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
@@ -336,84 +400,54 @@
         return { type: 'none', loggedIn: false };
     }
 
-    // Check User Session
     function checkUserSession() {
         const session = getActiveSession();
         const userLogoutBtn = document.getElementById('userLogoutBtn');
         const adminNavBar = document.getElementById('adminNavBar');
-        if (session.type === 'admin') {
-            adminNavBar.classList.add('visible');
-            userLogoutBtn.classList.remove('visible');
-            return true;
-        } else if (session.type === 'user') {
-            adminNavBar.classList.remove('visible');
-            userLogoutBtn.classList.add('visible');
-            return true;
-        } else {
-            adminNavBar.classList.remove('visible');
-            userLogoutBtn.classList.remove('visible');
-            window.location.href = 'index.html';
-            return false;
-        }
+        if (session.type === 'admin') { adminNavBar.classList.add('visible'); userLogoutBtn.classList.remove('visible'); return true; }
+        else if (session.type === 'user') { adminNavBar.classList.remove('visible'); userLogoutBtn.classList.add('visible'); return true; }
+        else { adminNavBar.classList.remove('visible'); userLogoutBtn.classList.remove('visible'); window.location.href = 'index.html'; return false; }
     }
 
-    // User Logout
     document.getElementById('userLogoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('user_logged_in');
-        appState.currentUser = null;
-        saveLocalState();
-        window.location.href = 'index.html';
+        sessionStorage.removeItem('user_logged_in'); appState.currentUser = null; saveLocalState(); window.location.href = 'index.html';
     });
 
-    // Admin Logout
     document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('admin_logged_in');
-        window.location.href = 'index.html';
+        sessionStorage.removeItem('admin_logged_in'); window.location.href = 'index.html';
     });
 
-    // Logo Click for Admin
     let logoClickCounter = 0;
     document.getElementById('brandSection').addEventListener('click', function(e) {
         if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            if (adminLoggedIn) {
-                logoClickCounter++;
-                const requiredClicks = appState.logoClickCount || 2;
-                if (logoClickCounter >= requiredClicks) { logoClickCounter = 0; window.location.href = 'admin.html'; }
-            }
+            if (adminLoggedIn) { logoClickCounter++; if (logoClickCounter >= (appState.logoClickCount || 2)) { logoClickCounter = 0; window.location.href = 'admin.html'; } }
         }
     });
 
-    // Logo Glow
     const logoGlowDash = document.getElementById('logoGlowDash');
     document.addEventListener('click', function(e) {
         if (e.target.closest('.overlay') || e.target.closest('.modal') || e.target.closest('.admin-nav-bar') || e.target.closest('.user-logout-btn') || e.target.closest('.tool-btn') || e.target.closest('.btn-sm') || e.target.closest('.social-icons a') || e.target.closest('.tool-fullscreen-overlay')) return;
-        logoGlowDash.classList.remove('active');
-        void logoGlowDash.offsetWidth;
-        logoGlowDash.classList.add('active');
+        logoGlowDash.classList.remove('active'); void logoGlowDash.offsetWidth; logoGlowDash.classList.add('active');
         setTimeout(() => { logoGlowDash.classList.remove('active'); }, 800);
     });
 
-    // Cursor Glow
     const glow = document.getElementById('cursorGlow');
     if (window.matchMedia('(hover: hover)').matches) {
         document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; glow.classList.add('active'); });
         document.addEventListener('mouseleave', () => glow.classList.remove('active'));
     }
 
-    // Escape Key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
-            document.getElementById('toolFullscreen').classList.remove('active');
+            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
+            document.getElementById('toolFullscreen').style.display = 'none';
         }
     });
 
-    // Open Modal Helper
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // Init
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof loadLocalState === 'function') loadLocalState();
         checkUserSession();
@@ -425,7 +459,6 @@
         console.log('📊 Dashboard Loaded');
     });
 
-    // Expose Globally
     window.openModal = openModal;
     window.closeModal = closeModal;
     window.applyLogo = applyLogo;
