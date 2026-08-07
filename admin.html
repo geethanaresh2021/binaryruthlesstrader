@@ -370,45 +370,6 @@
         .admin-section .btn-row .btn-save.show { display: block; }
         .admin-section .btn-row .btn-save.btn-success { background: #00FF66; color: #000; }
         
-        .admin-section .item-list { 
-            max-height: 150px; 
-            overflow-y: auto; 
-            margin-top: 6px; 
-            border: 1px solid rgba(255,0,51,0.05); 
-            border-radius: 6px; 
-            padding: 4px; 
-        }
-        .admin-section .item-list::-webkit-scrollbar { width: 4px; }
-        .admin-section .item-list::-webkit-scrollbar-thumb { background: #FF0033; border-radius: 4px; }
-        .admin-section .list-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 4px 8px; 
-            border-bottom: 1px solid rgba(255,255,255,0.03); 
-            font-size: 0.55rem; 
-            align-items: center; 
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .admin-section .list-item:hover {
-            background: rgba(255,0,51,0.04);
-        }
-        .admin-section .list-item .name { color: #FFD700; }
-        .admin-section .list-item .detail { color: var(--text-secondary); }
-        .admin-section .list-item .list-actions { display: none; gap: 4px; }
-        .admin-section .list-item .list-actions button { 
-            background: none; border: none; cursor: pointer; font-size: 0.6rem; padding: 0 4px; 
-        }
-        .admin-section .list-item .list-actions .edit-btn { color: #FFD700; }
-        .admin-section .list-item .list-actions .del-btn { color: #FF0033; }
-        .admin-section.editable .list-item .list-actions { display: flex; }
-        .admin-section.editable .list-item {
-            cursor: default;
-        }
-        
-        .payment-settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .payment-settings-grid .field-group { margin-bottom: 0; }
-        .payment-settings-grid .field-group.full-width { grid-column: 1 / -1; }
         .payment-mode-fields { 
             padding: 10px; 
             border: 1px solid rgba(255,215,0,0.1); 
@@ -418,81 +379,7 @@
         }
         .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
         
-        .tools-list .tool-item { 
-            background: var(--tool-item-bg); 
-            border: 1px solid var(--tool-item-border); 
-            border-radius: 12px; 
-            padding: 12px 14px; 
-            margin-bottom: 8px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: all 0.3s ease; 
-            cursor: pointer;
-        }
-        .tools-list .tool-item:hover { border-color: rgba(255,0,51,0.25); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,0,51,0.08); }
-        .tools-list .tool-item .tool-info { flex: 1; }
-        .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.65rem; font-family: 'Orbitron', sans-serif; }
-        .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.5rem; margin-top: 2px; }
-        .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); margin-top: 2px; }
-        .tools-list .tool-item .tool-actions { display: none; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .tools-list .tool-item .tool-actions button { 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            border: none; 
-            font-size: 0.5rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-        }
-        .tools-list .tool-item .tool-actions button:hover { }
-        .tools-list .tool-item .tool-actions .btn-edit-tool { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
-        .tools-list .tool-item .tool-actions .btn-delete-tool { background: #FF0033; color: #fff; }
-        .tools-list .tool-item .tool-actions .btn-toggle-tool { background: #FFD700; color: #000; }
-        .tools-list .tool-item .tool-actions .btn-fire-toggle { 
-            background: #FF4500; 
-            color: #fff; 
-            font-size: 0.45rem; 
-            padding: 4px 8px;
-        }
-        .tools-list .tool-item .tool-actions .btn-fire-toggle.off { 
-            background: #555; 
-            color: #aaa;
-        }
-        .admin-section.editable .tools-list .tool-item .tool-actions { display: flex; }
-        .admin-section.editable .tools-list .tool-item { cursor: default; }
-        
-        .social-list .social-item { 
-            background: var(--social-item-bg); 
-            border: 1px solid var(--social-item-border); 
-            border-radius: 8px; 
-            padding: 6px 10px; 
-            margin-bottom: 4px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: all 0.3s ease; 
-        }
-        .social-list .social-item:hover { border-color: rgba(255,0,51,0.15); }
-        .social-list .social-item .social-info { flex: 1; }
-        .social-list .social-item .social-name { color: #FFD700; font-size: 0.55rem; }
-        .social-list .social-item .social-url { color: var(--text-secondary); font-size: 0.45rem; }
-        .social-list .social-item .social-actions { display: flex; gap: 4px; }
-        .social-list .social-item .social-actions button { 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            border: none; 
-            font-size: 0.4rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-        }
-        .social-list .social-item .social-actions button:hover { }
-        .social-list .social-item .social-actions .btn-edit-social { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
-        .social-list .social-item .social-actions .btn-delete-social { background: #FF0033; color: #fff; }
-        .social-list .social-item .social-actions .btn-toggle-social { background: #FFD700; color: #000; }
-        
-        /* ===== CARD GRID for Broker & Credit Packs ===== */
+        /* ===== CARD GRID ===== */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -549,6 +436,13 @@
         .card-actions button.delete-card:hover {
             background: #ff1a44;
         }
+        .card-actions button.toggle-card {
+            background: #FFD700;
+            color: #000;
+        }
+        .card-actions button.toggle-card:hover {
+            background: #FFC107;
+        }
         .admin-card .card-icon {
             font-size: 1.8rem;
             margin-bottom: 8px;
@@ -573,12 +467,6 @@
             font-weight: 700;
             color: #00FF66;
             margin-top: 6px;
-        }
-        .admin-card .card-footer {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .section-add-btn {
             width: 100%;
@@ -1125,30 +1013,15 @@
             <!-- 1. Offer Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">🎁 Offer Settings</h4>
-                <div class="field-group">
-                    <label>Offer Name</label>
-                    <input type="text" id="offerName" placeholder="FREE SIGNAL OFFER" disabled>
-                </div>
-                <div class="field-group">
-                    <label>Offer Description</label>
-                    <textarea id="offerDescription" placeholder="Get 10 FREE signals..." disabled></textarea>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminSaveOffer()">💾 Save</button>
-                </div>
+                <div class="field-group"><label>Offer Name</label><input type="text" id="offerName" placeholder="FREE SIGNAL OFFER" disabled></div>
+                <div class="field-group"><label>Offer Description</label><textarea id="offerDescription" placeholder="Get 10 FREE signals..." disabled></textarea></div>
+                <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="adminSaveOffer()">💾 Save</button></div>
             </div>
             
             <!-- 2. Payment Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">💳 Payment Settings</h4>
-                <div class="field-group">
-                    <label>Approval Mode</label>
-                    <select id="paymentApprovalMode" disabled onchange="togglePaymentFields(this.value)">
-                        <option value="manual">Manual</option>
-                        <option value="razorpay">Razorpay</option>
-                    </select>
-                </div>
+                <div class="field-group"><label>Approval Mode</label><select id="paymentApprovalMode" disabled onchange="togglePaymentFields(this.value)"><option value="manual">Manual</option><option value="razorpay">Razorpay</option></select></div>
                 <div id="manualPaymentFields" class="payment-mode-fields">
                     <div class="field-group"><label>UPI ID</label><input type="text" id="upiIdInput" placeholder="binary@ruthless" disabled></div>
                     <div class="field-group"><label>Instructions</label><textarea id="paymentInstructionsInput" disabled></textarea></div>
@@ -1158,13 +1031,10 @@
                     <div class="field-group"><label>Razorpay Key ID</label><input type="text" id="razorpayKeyIdInput" placeholder="rzp_live_xxxx" disabled></div>
                     <div class="field-group"><label>Razorpay Key Secret</label><input type="text" id="razorpayKeySecretInput" placeholder="xxxx" disabled></div>
                 </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="adminSavePaymentSettings()">💾 Save</button>
-                </div>
+                <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="adminSavePaymentSettings()">💾 Save</button></div>
             </div>
             
-            <!-- 3. Credit Packs (New Card UI) -->
+            <!-- 3. Credit Packs (Card UI) -->
             <div class="admin-section">
                 <h4>📦 Credit Packs</h4>
                 <div id="creditPackCardGrid" class="card-grid"></div>
@@ -1179,77 +1049,28 @@
                     <input type="number" id="creditsPerSignalInput" value="1" min="1" max="100" disabled />
                     <button class="save-btn-small" id="saveCreditsPerSignalBtn" style="display:none;" onclick="saveCreditsPerSignal()">💾 Save</button>
                 </div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button>
-                </div>
+                <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="saveCreditsPerSignal()">💾 Save</button></div>
             </div>
             
-            <!-- 5. Broker Manager (New Card UI) -->
+            <!-- 5. Broker Manager (Card UI) -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4>🏢 Broker Manager</h4>
                 <div id="brokerCardGrid" class="card-grid"></div>
                 <button class="section-add-btn" onclick="openBrokerModal()">➕ Add Broker</button>
             </div>
             
-            <!-- 6. Tools Manager -->
+            <!-- 6. Tools Manager (Card UI) -->
             <div class="admin-section">
                 <h4>🛠️ Tools Manager</h4>
-                <div id="toolsList" class="tools-list"></div>
-                <button class="btn-edit" onclick="showAddToolForm()" style="margin-top:4px;background:var(--btn-edit-bg);color:var(--btn-edit-color);padding:6px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.55rem;transition:all 0.3s ease;width:100%;">➕ Add New Tool</button>
-                <div id="addToolForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <div class="field-group"><label>Tool Name</label><input type="text" id="newToolName" placeholder="Enter tool name"></div>
-                    <div class="field-group"><label>Sub Name</label><input type="text" id="newToolSubName" placeholder="Enter sub name"></div>
-                    <div class="field-group"><label>HTML Code</label><textarea id="newToolHtml" placeholder="Paste HTML code..." style="height:100px;"></textarea></div>
-                    <div class="field-group"><label>Status</label><select id="newToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field-group"><label>Show Fire 🔥</label><select id="newToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
-                    <div class="field-group"><label>🎯 Trigger Button Names</label><input type="text" id="newToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL, Trade" /><small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers (Signal, Get, Generate, BUY, SELL)</small></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminAddTool()" style="background:#FF0033;color:#fff;">💾 Save Tool</button>
-                        <button class="btn-edit" onclick="document.getElementById('addToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
-                <div id="editToolForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <input type="hidden" id="editToolIndex">
-                    <div class="field-group"><label>Tool Name</label><input type="text" id="editToolName"></div>
-                    <div class="field-group"><label>Sub Name</label><input type="text" id="editToolSubName"></div>
-                    <div class="field-group"><label>HTML Code</label><textarea id="editToolHtml" style="height:100px;"></textarea></div>
-                    <div class="field-group"><label>Status</label><select id="editToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="field-group"><label>Show Fire 🔥</label><select id="editToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
-                    <div class="field-group"><label>🎯 Trigger Button Names</label><input type="text" id="editToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL" /><small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers.</small></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminUpdateTool()" style="background:#FF0033;color:#fff;">💾 Update Tool</button>
-                        <button class="btn-edit" onclick="document.getElementById('editToolForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
+                <div id="toolCardGrid" class="card-grid"></div>
+                <button class="section-add-btn" onclick="openToolModal()">➕ Add Tool</button>
             </div>
             
             <!-- 7. Social Media -->
             <div class="admin-section">
                 <h4>📱 Social Media</h4>
                 <div id="socialList" class="social-list"></div>
-                <button class="btn-edit" onclick="showAddSocialForm()" style="margin-top:4px;background:var(--btn-edit-bg);color:var(--btn-edit-color);padding:6px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.55rem;transition:all 0.3s ease;width:100%;">➕ Add Social Media</button>
-                <div id="addSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <div class="field-group"><label>Platform Name</label><input type="text" id="newSocialName" placeholder="e.g. Telegram"></div>
-                    <div class="field-group"><label>URL</label><input type="text" id="newSocialUrl" placeholder="https://t.me/yourchannel"></div>
-                    <div class="field-group"><label>Icon (Font Awesome)</label><input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane"></div>
-                    <div class="field-group"><label>Status</label><select id="newSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminAddSocial()" style="background:#FF0033;color:#fff;">💾 Save Social</button>
-                        <button class="btn-edit" onclick="document.getElementById('addSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
-                <div id="editSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <input type="hidden" id="editSocialIndex">
-                    <div class="field-group"><label>Platform Name</label><input type="text" id="editSocialName"></div>
-                    <div class="field-group"><label>URL</label><input type="text" id="editSocialUrl"></div>
-                    <div class="field-group"><label>Icon</label><input type="text" id="editSocialIcon"></div>
-                    <div class="field-group"><label>Status</label><select id="editSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminUpdateSocial()" style="background:#FF0033;color:#fff;">💾 Update Social</button>
-                        <button class="btn-edit" onclick="document.getElementById('editSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
+                <button class="section-add-btn" onclick="showAddSocialForm()">➕ Add Social Media</button>
             </div>
             
             <!-- 8. Admin Access -->
@@ -1257,10 +1078,7 @@
                 <h4>🖱️ Admin Access</h4>
                 <div class="field-group"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
                 <div class="field-group"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="saveAdminSettings()">💾 Save</button>
-                </div>
+                <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="saveAdminSettings()">💾 Save</button></div>
             </div>
             
             <!-- 9. Change Password -->
@@ -1268,14 +1086,10 @@
                 <h4 style="color:#FFD700;">🔐 Change Password</h4>
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
                 <div class="field-group"><label>Confirm New Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm new password" disabled></div>
-                <div class="btn-row">
-                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
-                    <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
-                </div>
+                <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="changeAdminPassword()">💾 Save</button></div>
             </div>
             
         </div>
-        
     </div>
 </div>
 
@@ -1372,22 +1186,10 @@
   <div class="modal" style="max-width:500px;">
     <button class="modal-close" onclick="closeModal('brokerModal')">✕</button>
     <h2 id="brokerModalTitle">🏢 Add Broker</h2>
-    <div class="field-group">
-      <label>Broker Name</label>
-      <input type="text" id="modalBrokerName" placeholder="e.g. Quotex">
-    </div>
-    <div class="field-group">
-      <label>Affiliate Link</label>
-      <input type="text" id="modalBrokerLink" placeholder="https://...">
-    </div>
-    <div class="field-group">
-      <label>Min Deposit (₹)</label>
-      <input type="number" id="modalBrokerMinDeposit" value="1000">
-    </div>
-    <div class="field-group">
-      <label>Rules</label>
-      <input type="text" id="modalBrokerRules" placeholder="e.g. Verify email">
-    </div>
+    <div class="field-group"><label>Broker Name</label><input type="text" id="modalBrokerName" placeholder="e.g. Quotex"></div>
+    <div class="field-group"><label>Affiliate Link</label><input type="text" id="modalBrokerLink" placeholder="https://..."></div>
+    <div class="field-group"><label>Min Deposit (₹)</label><input type="number" id="modalBrokerMinDeposit" value="1000"></div>
+    <div class="field-group"><label>Rules</label><input type="text" id="modalBrokerRules" placeholder="e.g. Verify email"></div>
     <button class="btn-submit btn-primary" id="brokerSubmitBtn" onclick="submitBroker()">💾 Add Broker</button>
     <div class="error-msg" id="brokerModalError"></div>
   </div>
@@ -1398,16 +1200,26 @@
   <div class="modal" style="max-width:420px;">
     <button class="modal-close" onclick="closeModal('creditPackModal')">✕</button>
     <h2 id="creditPackModalTitle">📦 Add Credit Pack</h2>
-    <div class="field-group">
-      <label>Credits</label>
-      <input type="number" id="modalPackCredits" placeholder="100">
-    </div>
-    <div class="field-group">
-      <label>Price (₹)</label>
-      <input type="number" id="modalPackPrice" placeholder="199">
-    </div>
+    <div class="field-group"><label>Credits</label><input type="number" id="modalPackCredits" placeholder="100"></div>
+    <div class="field-group"><label>Price (₹)</label><input type="number" id="modalPackPrice" placeholder="199"></div>
     <button class="btn-submit btn-primary" id="creditPackSubmitBtn" onclick="submitCreditPack()">💾 Add Pack</button>
     <div class="error-msg" id="creditPackModalError"></div>
+  </div>
+</div>
+
+<!-- ===== TOOL MODAL ===== -->
+<div class="overlay" id="toolModal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeModal('toolModal')">✕</button>
+    <h2 id="toolModalTitle">🛠️ Add Tool</h2>
+    <div class="field-group"><label>Tool Name</label><input type="text" id="modalToolName" placeholder="Enter tool name"></div>
+    <div class="field-group"><label>Sub Name</label><input type="text" id="modalToolSubName" placeholder="Enter sub name"></div>
+    <div class="field-group"><label>HTML Code</label><textarea id="modalToolHtml" placeholder="Paste HTML code..." style="height:100px;"></textarea></div>
+    <div class="field-group"><label>Status</label><select id="modalToolStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+    <div class="field-group"><label>Show Fire 🔥</label><select id="modalToolFire"><option value="true">Yes</option><option value="false">No</option></select></div>
+    <div class="field-group"><label>🎯 Trigger Button Names</label><input type="text" id="modalToolTriggers" placeholder="e.g. Get Signal, Generate, BUY, SELL"><small style="color:var(--text-muted);font-size:0.4rem;display:block;margin-top:2px;">Comma separated. Leave empty for default triggers.</small></div>
+    <button class="btn-submit btn-primary" id="toolSubmitBtn" onclick="submitTool()">💾 Save Tool</button>
+    <div class="error-msg" id="toolModalError"></div>
   </div>
 </div>
 
@@ -1416,7 +1228,6 @@
   <div class="modal" style="max-width:750px;">
     <button class="modal-close" onclick="closeModal('revenueModal')">✕</button>
     <h2>📈 Revenue Dashboard</h2>
-    
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
       <button class="btn-submit btn-primary" style="flex:1;min-width:80px;" onclick="showRevenue('today')">Today</button>
       <button class="btn-submit btn-gold" style="flex:1;min-width:80px;" onclick="showRevenue('yesterday')">Yesterday</button>
@@ -1424,19 +1235,16 @@
       <button class="btn-submit btn-gold" style="flex:1;min-width:80px;" onclick="showRevenue('month')">This Month</button>
       <button class="btn-submit btn-primary" style="flex:1;min-width:80px;" onclick="showRevenue('year')">This Year</button>
     </div>
-    
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
       <label style="font-size:0.7rem;color:var(--text-secondary);">📅 Select Date:</label>
       <input type="date" id="revenueDatePicker" style="background:var(--input-bg);border:1px solid rgba(255,0,51,0.2);border-radius:6px;color:#fff;padding:6px 10px;font-size:0.7rem;" onchange="showRevenue('custom')">
       <button class="btn-submit btn-gold" style="padding:6px 16px;font-size:0.65rem;" onclick="showRevenue('custom')">Show</button>
     </div>
-    
     <div id="revenueSummary" style="background:rgba(0,255,102,0.04);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;flex-wrap:wrap;">
       <div><span style="color:var(--text-secondary);font-size:0.65rem;">Total Earnings:</span> <span id="revTotalAmount" style="color:#00FF66;font-weight:700;font-size:1rem;">₹0</span></div>
       <div><span style="color:var(--text-secondary);font-size:0.65rem;">Transactions:</span> <span id="revTotalCount" style="color:#FFD700;font-weight:700;font-size:1rem;">0</span></div>
       <div><span style="color:var(--text-secondary);font-size:0.65rem;">Period:</span> <span id="revPeriodLabel" style="color:#fff;font-weight:600;font-size:0.8rem;">-</span></div>
     </div>
-    
     <div id="revenuePaymentList" style="max-height:350px;overflow-y:auto;">
       <div style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:20px;">Select a period or date</div>
     </div>
@@ -1467,13 +1275,13 @@ let appState = {
     upiId: 'binary@ruthless',
     paymentInstructions: 'Please transfer the amount to the UPI ID.',
     qrCodeBase64: '', 
-    creditPacks: [{ id: 'pack_1', credits: 50, price: 99 }, { id: 'pack_2', credits: 100, price: 199 }, { id: 'pack_3', credits: 250, price: 349 }, { id: 'pack_4', credits: 500, price: 599 }],
-    brokers: [{ id: 'broker_1', name: 'Quotex', link: 'https://quotex.io/ref/xyz', minDeposit: 1000, rules: 'Verify email' }, { id: 'broker_2', name: 'Binomo', link: 'https://binomo.com/ref/xyz', minDeposit: 500, rules: 'Verify phone' }],
+    creditPacks: [],
+    brokers: [],
     users: [], 
     payments: [], 
     verificationRequests: [],
     tools: [],
-    socialMedia: [{ id: 'social_1', name: 'Telegram', url: 'https://t.me/binaryruthless', icon: 'fab fa-telegram-plane', visibility: 'visible' }, { id: 'social_2', name: 'Instagram', url: 'https://instagram.com/binaryruthless', icon: 'fab fa-instagram', visibility: 'visible' }, { id: 'social_3', name: 'YouTube', url: 'https://youtube.com/binaryruthless', icon: 'fab fa-youtube', visibility: 'visible' }, { id: 'social_4', name: 'Twitter', url: 'https://twitter.com/binaryruthless', icon: 'fab fa-twitter', visibility: 'visible' }],
+    socialMedia: [],
     logoBase64: '', 
     chats: {}, 
     logoClickCount: 2, 
@@ -1509,10 +1317,6 @@ function renderAdminSocialMedia() {
     const container = document.getElementById('adminSocialIcons');
     if (!container) return;
     let socials = appState.socialMedia || [];
-    if (socials.length === 0) {
-        const localSocial = localStorage.getItem('brt_social');
-        if (localSocial) { try { socials = JSON.parse(localSocial); } catch (e) {} }
-    }
     const visibleSocials = socials.filter(s => s.visibility === 'visible');
     if (visibleSocials.length === 0) {
         container.innerHTML = `
@@ -1766,89 +1570,110 @@ window.submitCreditPack = function() {
     renderCreditPackCards();
 };
 
-// ─── TOOLS LIST ───
-function renderToolsList() {
-    const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
-    const tools = appState.tools || [];
-    if (tools.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; return; }
-    const section = container.closest('.admin-section');
-    const isEditable = section && section.classList.contains('editable');
-    tools.forEach((tool, idx) => {
-        const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
+// ─── TOOL CARD FUNCTIONS ───
+let editingToolId = null;
+
+function renderToolCards() {
+    const grid = document.getElementById('toolCardGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    appState.tools.forEach(tool => {
+        const visibilityText = tool.visibility === 'visible' ? 'Visible' : 'Hidden';
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
-        const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
-        const fireBtnClass = fireStatus ? '' : 'off';
-        const triggerText = tool.triggers && tool.triggers.length > 0 ? '🎯 ' + tool.triggers.join(', ') : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
-        let actions = '';
-        if (isEditable) {
-            actions = `
-                <div class="tool-actions">
-                    <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
-                    <button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button>
-                    <button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
-                    <button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button>
+        const triggerText = tool.triggers && tool.triggers.length > 0 ? tool.triggers.join(', ') : 'Default (Signal, Get, Generate, BUY, SELL)';
+        grid.innerHTML += `
+            <div class="admin-card">
+                <div class="card-actions">
+                    <button class="toggle-card" onclick="toggleToolVisibility('${tool.id}')">${tool.visibility === 'visible' ? '🙈' : '👁️'}</button>
+                    <button class="edit-card" onclick="editTool('${tool.id}')">✏️</button>
+                    <button class="delete-card" onclick="deleteTool('${tool.id}')">✕</button>
                 </div>
-            `;
-        }
-        container.innerHTML += `
-            <div class="tool-item">
-                <div class="tool-info">
-                    <div class="tool-name"><span style="margin-right:4px;">${tool.sticker || '🎯'}</span> ${tool.name || 'Untitled'}</div>
-                    ${tool.subName ? `<div class="tool-subname">${tool.subName}</div>` : ''}
-                    <div class="tool-status">${statusText} | Fire: ${fireStatus ? '✅' : '❌'}</div>
-                    <div style="font-size:0.4rem;color:var(--text-secondary);">${triggerText}</div>
+                <div class="card-icon">${tool.sticker || '🎯'}</div>
+                <div class="card-title">${tool.name || 'Untitled'}</div>
+                <div class="card-detail">
+                    <strong>Status:</strong> ${visibilityText}<br>
+                    <strong>Fire:</strong> ${fireStatus ? '🔥 ON' : '❌ OFF'}<br>
+                    <strong>Triggers:</strong> ${triggerText}
                 </div>
-                ${actions}
             </div>
         `;
     });
 }
 
-window.toggleToolFire = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.showFire = tool.showFire !== undefined ? !tool.showFire : false; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
-window.editTool = function(idx) { const tool = appState.tools[idx]; if (!tool) return; window.editingToolIndex = idx; document.getElementById('editToolIndex').value = idx; document.getElementById('editToolName').value = tool.name || ''; document.getElementById('editToolSubName').value = tool.subName || ''; document.getElementById('editToolHtml').value = tool.htmlCode || ''; document.getElementById('editToolStatus').value = tool.visibility || 'visible'; document.getElementById('editToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true'; document.getElementById('editToolTriggers').value = (tool.triggers || []).join(', '); document.getElementById('editToolForm').style.display = 'block'; document.getElementById('addToolForm').style.display = 'none'; };
-window.adminUpdateTool = function() {
-    const idx = parseInt(document.getElementById('editToolIndex').value);
-    const name = document.getElementById('editToolName').value.trim();
-    const subName = document.getElementById('editToolSubName').value.trim();
-    const htmlCode = document.getElementById('editToolHtml').value.trim();
-    const visibility = document.getElementById('editToolStatus').value;
-    const showFire = document.getElementById('editToolFire').value === 'true';
-    const triggersInput = document.getElementById('editToolTriggers').value.trim();
-    let triggers = [];
-    if (triggersInput) triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
-    if (!name) { alert('Please enter tool name'); return; }
-    if (!htmlCode) { alert('Please enter HTML code'); return; }
-    const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
-    appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
-    saveLocalState();
-    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
-    renderToolsList();
-    document.getElementById('editToolForm').style.display = 'none';
-};
-window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
-window.deleteTool = function(idx) { if (confirm('Delete this tool?')) { appState.tools.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); } };
-window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; document.getElementById('newToolTriggers').value = ''; };
-window.adminAddTool = function() {
-    const name = document.getElementById('newToolName').value.trim();
-    const subName = document.getElementById('newToolSubName').value.trim();
-    const htmlCode = document.getElementById('newToolHtml').value.trim();
-    const visibility = document.getElementById('newToolStatus').value;
-    const showFire = document.getElementById('newToolFire').value === 'true';
-    const triggersInput = document.getElementById('newToolTriggers').value.trim();
-    let triggers = [];
-    if (triggersInput) triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
-    if (!name) { alert('Please enter tool name'); return; }
-    if (!htmlCode) { alert('Please enter HTML code'); return; }
-    const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
-    if (!appState.tools) appState.tools = [];
-    appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
-    saveLocalState();
-    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
-    renderToolsList();
-    document.getElementById('addToolForm').style.display = 'none';
+window.openToolModal = function() {
+    editingToolId = null;
+    document.getElementById('toolModalTitle').textContent = '🛠️ Add Tool';
+    document.getElementById('modalToolName').value = '';
+    document.getElementById('modalToolSubName').value = '';
+    document.getElementById('modalToolHtml').value = '';
+    document.getElementById('modalToolStatus').value = 'visible';
+    document.getElementById('modalToolFire').value = 'true';
+    document.getElementById('modalToolTriggers').value = '';
+    document.getElementById('toolModalError').textContent = '';
+    document.getElementById('toolSubmitBtn').textContent = '💾 Save Tool';
+    openModal('toolModal');
 };
 
-// ─── SOCIAL LIST (unchanged) ───
+window.editTool = function(id) {
+    const tool = appState.tools.find(t => t.id === id);
+    if (!tool) return;
+    editingToolId = id;
+    document.getElementById('toolModalTitle').textContent = '✏️ Edit Tool';
+    document.getElementById('modalToolName').value = tool.name || '';
+    document.getElementById('modalToolSubName').value = tool.subName || '';
+    document.getElementById('modalToolHtml').value = tool.htmlCode || '';
+    document.getElementById('modalToolStatus').value = tool.visibility || 'visible';
+    document.getElementById('modalToolFire').value = tool.showFire !== undefined ? (tool.showFire ? 'true' : 'false') : 'true';
+    document.getElementById('modalToolTriggers').value = (tool.triggers || []).join(', ');
+    document.getElementById('toolModalError').textContent = '';
+    document.getElementById('toolSubmitBtn').textContent = '💾 Update Tool';
+    openModal('toolModal');
+};
+
+window.deleteTool = function(id) {
+    if (confirm('Delete this tool?')) {
+        appState.tools = appState.tools.filter(t => t.id !== id);
+        saveLocalState();
+        localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+        renderToolCards();
+    }
+};
+
+window.toggleToolVisibility = function(id) {
+    const tool = appState.tools.find(t => t.id === id);
+    if (!tool) return;
+    tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible';
+    saveLocalState();
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+    renderToolCards();
+};
+
+window.submitTool = function() {
+    const name = document.getElementById('modalToolName').value.trim();
+    const subName = document.getElementById('modalToolSubName').value.trim();
+    const htmlCode = document.getElementById('modalToolHtml').value.trim();
+    const visibility = document.getElementById('modalToolStatus').value;
+    const showFire = document.getElementById('modalToolFire').value === 'true';
+    const triggersInput = document.getElementById('modalToolTriggers').value.trim();
+    let triggers = [];
+    if (triggersInput) triggers = triggersInput.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    const errorEl = document.getElementById('toolModalError');
+    if (!name) { errorEl.textContent = '❌ Tool name required'; return; }
+    if (!htmlCode) { errorEl.textContent = '❌ HTML code required'; return; }
+    const sticker = name.match(/^[^\w\s]|^[🚀🎯🔥⭐💎🎮📊💰📈🎁🎯🧠💡⚡📱💻🖥️⌨️🖱️🎮🎯🏆🥇🥈🥉🏅🎖️💎📀💿🖼️🖌️🖍️✏️📝📋📌📎📏📐📊📈📉💹📉📊📈💹💰💵💴💶💷💳💲🪙🧾🧮📊📈📉💹📊📈📉]/) ? name.charAt(0) : '🎯';
+    if (editingToolId) {
+        const idx = appState.tools.findIndex(t => t.id === editingToolId);
+        if (idx !== -1) appState.tools[idx] = { ...appState.tools[idx], name, subName, sticker, htmlCode, visibility, showFire, triggers };
+    } else {
+        appState.tools.push({ id: 'tool_' + Date.now(), name, subName, sticker, htmlCode, visibility, showFire, triggers });
+    }
+    saveLocalState();
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools));
+    closeModal('toolModal');
+    renderToolCards();
+};
+
+// ─── SOCIAL LIST ───
 function renderSocialList() {
     const container = document.getElementById('socialList'); if (!container) return; container.innerHTML = '';
     const socials = appState.socialMedia || [];
@@ -1953,8 +1778,6 @@ function enableEdit(btn) {
     section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
     btn.style.display = 'none';
     section.classList.add('editable');
-    const toolsList = section.querySelector('.tools-list');
-    if (toolsList) renderToolsList();
 }
 
 function disableEditFields(section) { 
@@ -1966,8 +1789,6 @@ function disableEditFields(section) {
         b.textContent = '✏️ Edit'; 
     }); 
     section.classList.remove('editable');
-    const toolsList = section.querySelector('.tools-list');
-    if (toolsList) renderToolsList();
 }
 
 // ─── FIREBASE SYNC ───
@@ -1984,7 +1805,7 @@ onValue(dbRef, (snapshot) => {
         updateUI();
         renderBrokerCards();
         renderCreditPackCards();
-        renderToolsList();
+        renderToolCards();
         renderSocialList();
         renderAdminSocialMedia();
         renderPendingPayments();
@@ -2002,16 +1823,12 @@ function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appS
 function loadLocalState() {
     const local = localStorage.getItem('brt_data');
     if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e){} }
-    const socialData = localStorage.getItem('brt_social');
-    if (socialData) { try { appState.socialMedia = JSON.parse(socialData) || appState.socialMedia; } catch(e){} }
     const toolsData = localStorage.getItem('brt_tools');
-    if (toolsData) { try { appState.tools = JSON.parse(toolsData) || appState.tools; } catch(e){} }
+    if (toolsData) { try { appState.tools = JSON.parse(toolsData) || []; } catch(e){} }
     const logoData = localStorage.getItem('brt_logo');
     if (logoData) { appState.logoBase64 = logoData; applyAdminLogo(logoData); }
-    const brokersData = localStorage.getItem('brt_brokers');
-    if (brokersData) { try { appState.brokers = JSON.parse(brokersData) || appState.brokers; } catch(e){} }
     const creditPacksData = localStorage.getItem('brt_creditPacks');
-    if (creditPacksData) { try { appState.creditPacks = JSON.parse(creditPacksData) || appState.creditPacks; } catch(e){} }
+    if (creditPacksData) { try { appState.creditPacks = JSON.parse(creditPacksData) || []; } catch(e){} }
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
     if (creditsPerSignalData) appState.creditsPerSignal = parseInt(creditsPerSignalData) || 1;
     const razorpayKeyIdData = localStorage.getItem('brt_razorpay_key_id');
@@ -2031,7 +1848,7 @@ function loadLocalState() {
     updateUI();
     renderBrokerCards();
     renderCreditPackCards();
-    renderToolsList();
+    renderToolCards();
     renderSocialList();
     renderAdminSocialMedia();
     loadPaymentSettings();
@@ -2657,21 +2474,14 @@ window.showVerifiedUsers = showVerifiedUsers; window.showAddUserForm = showAddUs
 window.adminSavePaymentSettings = adminSavePaymentSettings; window.adminSaveLogo = adminSaveLogo;
 window.adminSaveOffer = adminSaveOffer; window.saveAdminSettings = saveAdminSettings;
 window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
-window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.toggleToolVisibility = toggleToolVisibility; window.deleteTool = deleteTool; window.showAddToolForm = showAddToolForm; window.adminAddTool = adminAddTool;
-window.toggleToolFire = toggleToolFire;
+window.openBrokerModal = openBrokerModal; window.editBroker = editBroker; window.deleteBroker = deleteBroker; window.submitBroker = submitBroker;
+window.openCreditPackModal = openCreditPackModal; window.editCreditPack = editCreditPack; window.deleteCreditPack = deleteCreditPack; window.submitCreditPack = submitCreditPack;
+window.openToolModal = openToolModal; window.editTool = editTool; window.deleteTool = deleteTool; window.toggleToolVisibility = toggleToolVisibility; window.submitTool = submitTool;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers; window.clearSelectedChatUser = clearSelectedChatUser;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
-window.openBrokerModal = openBrokerModal;
-window.editBroker = editBroker;
-window.deleteBroker = deleteBroker;
-window.submitBroker = submitBroker;
-window.openCreditPackModal = openCreditPackModal;
-window.editCreditPack = editCreditPack;
-window.deleteCreditPack = deleteCreditPack;
-window.submitCreditPack = submitCreditPack;
 window.showRevenue = showRevenue;
 window.openRevenueModal = openRevenueModal;
 
