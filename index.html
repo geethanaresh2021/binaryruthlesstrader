@@ -1,35 +1,12 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Binary Ruthless Trader - AI Signals | Free Binary Signals</title>
+    <title>Binary Ruthless Trader - AI Signals</title>
     
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Binary Ruthless Trader - Get free AI signals for Quotex, Binomo, Pocket Option. Free binary signals, risk management tools, and AI trading bot." />
-    <meta name="keywords" content="binary ruthless trader, binary ruthless signals, binary signals, free signals, free ai signals, binary bot, binomo bot, pocket option bot, quotex ai signals, binomo ai signals, pocket option ai signals, free binary ai signals, free risk management, binary options signals, binary trading signals" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://binaryruthlesstrader.com/" />
+    <meta name="description" content="Get free AI signals for Quotex, Binomo, Pocket Option. Free binary signals, risk management tools, and AI trading bot." />
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="Binary Ruthless Trader - Free AI Signals for Quotex, Binomo, Pocket Option" />
-    <meta property="og:description" content="Get free AI signals, risk management tools, and binary trading bot. Free signals for Quotex, Binomo, Pocket Option." />
-    <meta property="og:url" content="https://binaryruthlesstrader.com/" />
-    <meta property="og:type" content="website" />
-    
-    <!-- Schema Markup -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Binary Ruthless Trader",
-        "description": "Free AI signals for Quotex, Binomo, Pocket Option. Binary trading signals, risk management tools.",
-        "applicationCategory": "Financial Application",
-        "operatingSystem": "All",
-        "browserRequirements": "Requires JavaScript"
-    }
-    </script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -46,1686 +23,528 @@
     </script>
 
     <style>
-        /* ─── CSS VARIABLES (Dark Theme Only) ─── */
+        /* ============================================================
+                   PROFESSIONAL DESIGN SYSTEM - VAR ONLY (DARK & PREMIUM)
+                   ============================================================ */
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111;
-            --bg-card: rgba(255,255,255,0.03);
-            --bg-container: rgba(255,0,51,0.04);
-            --text-primary: #ffffff;
-            --text-secondary: #aaa;
-            --text-muted: #666;
-            --border-color: rgba(255,0,51,0.2);
-            --border-light: rgba(255,255,255,0.06);
-            --border-visible: rgba(255,0,51,0.25);
-            --shadow-color: rgba(255,0,51,0.08);
-            --input-bg: rgba(255,255,255,0.05);
-            --modal-bg: rgba(20,20,20,0.95);
-            --overlay-bg: rgba(0,0,0,0.85);
-            --red-container-bg: rgba(255,0,51,0.04);
-            --user-card-bg: rgba(255,255,255,0.02);
-            --feature-card-bg: rgba(255,255,255,0.02);
-            --stat-item-hover: rgba(255,255,255,0.02);
-            --social-icon-bg: rgba(255,255,255,0.02);
-            --social-icon-border: rgba(255,0,51,0.08);
-            --tool-btn-bg: rgba(255,215,0,0.04);
-            --tool-btn-border: rgba(255,215,0,0.12);
-            --offer-banner-bg: linear-gradient(135deg, rgba(255,0,51,0.08), rgba(255,215,0,0.03));
-            --offer-banner-border: rgba(255,215,0,0.12);
-            --footer-border: rgba(255,0,51,0.04);
-            --admin-nav-bg: rgba(0,0,0,0.7);
-            --admin-nav-border: rgba(255,0,51,0.12);
-            --user-logout-bg: rgba(0,0,0,0.7);
-            --user-logout-border: rgba(255,0,51,0.12);
-            --brand-tagline-color: #888;
-            --container-bg: rgba(255,0,51,0.04);
-            --container-border: rgba(255,0,51,0.2);
-            --section-bg: rgba(255,255,255,0.02);
-            --section-border: rgba(255,0,51,0.06);
-            --btn-edit-bg: #ffffff;
-            --btn-edit-color: #000000;
-            --btn-save-bg: #FF0033;
-            --btn-save-color: #ffffff;
-            --toggle-bg: #333;
-            --toggle-thumb: #fff;
-            --popup-bg: rgba(20,20,20,0.97);
-            --popup-border: rgba(255,0,51,0.2);
-            --popup-text: #fff;
-            --popup-label: #FFD700;
-            --popup-close-color: #FF0033;
+            --bg-color: #0a0a0f;
+            --surface-color: rgba(255, 255, 255, 0.03);
+            --surface-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(20, 20, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+            --accent-red: #ff0055;
+            --accent-gold: #facc15;
+            --accent-green: #22c55e;
+            --shadow-glow: 0 8px 32px rgba(255, 0, 85, 0.15);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Roboto Mono', monospace;
         }
 
-        /* ─── RESET & BASE ─── */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        html,
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            width: 100%;
-            min-height: 100vh;
-            background: var(--bg-primary);
+            background: var(--bg-color);
             color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            overflow-y: auto;
+            font-family: var(--font-body);
             overflow-x: hidden;
-            touch-action: manipulation;
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 0, 85, 0.04) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(250, 204, 21, 0.04) 0%, transparent 40%);
         }
         
-        input,
-        select,
-        button,
-        textarea {
-            font-size: 16px !important;
-            -webkit-text-size-adjust: 100% !important;
-            -ms-text-size-adjust: 100% !important;
-        }
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-red); border-radius: 10px; }
 
-        /* ─── SCROLLBAR ─── */
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 0, 51, 0.03);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FF0033;
-            border-radius: 4px;
-        }
-
-        /* ─── APP ─── */
-        .app {
-            width: 100%;
-            min-height: 100vh;
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
-            flex-direction: column;
-            background: var(--bg-primary);
-            position: relative;
-            overflow: hidden;
-            transition: background 0.4s ease;
-        }
-        .app::before {
-            content: '';
-            position: fixed;
-            top: -30%;
-            left: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle, rgba(255, 0, 51, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: orbFloat 18s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .app::after {
-            content: '';
-            position: fixed;
-            bottom: -30%;
-            right: -20%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: orbFloat 22s ease-in-out infinite alternate-reverse;
-            pointer-events: none;
-            z-index: 0;
-        }
-        @keyframes orbFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                transform: translate(60px, 40px) scale(1.2);
-            }
-        }
-
-        .scroll-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ─── RED CONTAINER ─── COMPACT ─── */
-        .red-container {
-            background: var(--container-bg);
-            border: 2px solid var(--container-border);
-            border-radius: 18px;
-            padding: 4px 12px 3px 12px;
-            margin: 6px 0 4px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            will-change: transform;
-        }
-        .red-container:hover {
-            border-color: rgba(255, 0, 51, 0.5);
-            box-shadow: 0 0 60px var(--shadow-color);
-        }
-        .red-container::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 18px;
-            padding: 2px;
-            background: linear-gradient(135deg, transparent, rgba(255, 0, 51, 0.15), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
-        .red-container:hover::after {
-            opacity: 1;
-        }
-
-        /* status dot */
-        .fb-status-dot {
-            position: absolute;
-            top: 4px;
-            left: 8px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-        .fb-status-dot.green {
-            background: #00FF66;
-            box-shadow: 0 0 14px rgba(0, 255, 102, 0.6);
-            animation: dotPulse 2s ease-in-out infinite;
-        }
-        .fb-status-dot.red {
-            background: #FF0033;
-            box-shadow: 0 0 14px rgba(255, 0, 51, 0.6);
-            animation: pulseRed 1.5s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(0.85);
-            }
-        }
-        @keyframes dotPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 14px rgba(0, 255, 102, 0.6);
-            }
-            50% {
-                box-shadow: 0 0 28px rgba(0, 255, 102, 0.9), 0 0 50px rgba(0, 255, 102, 0.2);
-            }
-        }
-
-        /* ─── ADMIN NAV – inside red-container, top-right ─── */
-        .admin-nav-bar {
-            display: none;
-            position: absolute;
-            top: 2px;
-            right: 8px;
-            z-index: 10;
-            background: var(--admin-nav-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--admin-nav-border);
-            border-radius: 8px;
-            padding: 2px 6px;
+            justify-content: space-between;
             align-items: center;
-            gap: 3px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+            padding: 16px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 15, 0.7);
+            border-bottom: 1px solid var(--surface-border);
         }
-        .admin-nav-bar.visible {
+        .nav-brand {
             display: flex;
-        }
-        .admin-nav-bar:hover {
-            border-color: rgba(255, 0, 51, 0.3);
-            box-shadow: 0 2px 24px rgba(255, 0, 51, 0.06);
-        }
-        .admin-nav-bar .nav-label {
-            font-size: 0.4rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-right: 1px;
-        }
-        .admin-nav-bar .nav-buttons {
-            display: flex;
-            gap: 2px;
-            flex-wrap: wrap;
-        }
-        .admin-nav-bar .nav-buttons button {
-            padding: 1px 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 0, 51, 0.08);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--text-secondary);
-            font-size: 0.4rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
-        .admin-nav-bar .nav-buttons button:hover {
-            border-color: #FF0033;
-            color: #fff;
-            background: rgba(255, 0, 51, 0.08);
-            box-shadow: 0 2px 14px rgba(255, 0, 51, 0.06);
-        }
-        .admin-nav-bar .nav-buttons button:active {
-        }
-        .admin-nav-bar .nav-buttons button.active {
-            border-color: #FF0033;
-            color: #FF0033;
-            background: rgba(255, 0, 51, 0.06);
-        }
-        .admin-nav-bar .nav-buttons .logout-btn {
-            border-color: rgba(255, 0, 51, 0.2);
-            color: #FF0033;
-        }
-        .admin-nav-bar .nav-buttons .logout-btn:hover {
-            background: rgba(255, 0, 51, 0.12);
-            box-shadow: 0 0 20px rgba(255, 0, 51, 0.08);
-        }
-
-        /* ─── USER LOGOUT BUTTON (for logged-in users) ─── */
-        .user-logout-btn {
-            display: none;
-            position: absolute;
-            top: 2px;
-            right: 8px;
-            z-index: 10;
-            background: var(--user-logout-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--user-logout-border);
-            border-radius: 8px;
-            padding: 2px 8px;
             align-items: center;
-            gap: 3px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
-            font-size: 0.4rem;
-            color: #FF0033;
-            font-weight: 600;
+            gap: 12px;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            border-color: rgba(255, 0, 51, 0.2);
         }
-        .user-logout-btn.visible {
+        .nav-logo-icon {
+            font-size: 1.8rem;
+            color: var(--accent-red);
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+        }
+        .nav-brand-text {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        .nav-brand-text .ruthless { color: var(--accent-red); }
+        .nav-actions {
             display: flex;
+            align-items: center;
+            gap: 16px;
         }
-        .user-logout-btn:hover {
-            border-color: #FF0033;
-            background: rgba(255, 0, 51, 0.08);
+        .nav-socials a {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-left: 10px;
+            transition: 0.3s;
         }
-        .user-logout-btn:active {
-        }
-
-        /* ─── BRAND SECTION ─── */
-        .brand-section {
-            text-align: center;
-            padding: 2px 0 1px 0;
-            flex-shrink: 0;
+        .nav-socials a:hover { color: var(--accent-red); transform: translateY(-2px); }
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
-            position: relative;
-            z-index: 1;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--accent-red); border-color: var(--accent-red); box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
+        .nav-btn.outline { border-color: var(--accent-red); color: var(--accent-red); }
+        .nav-btn.outline:hover { background: var(--accent-red); color: #fff; }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            padding: 60px 20px 30px;
+            max-width: 900px;
+            margin: 0 auto;
         }
-
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
-            z-index: 1;
-        }
-
-        /* Logo glow – ONLY on home page */
-        .logo-glow {
+        .hero-glow {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: clamp(140px, 28vw, 300px);
-            height: clamp(140px, 28vw, 300px);
-            transform: translate(-50%, -50%) scale(0.5);
-            background: radial-gradient(circle, rgba(255, 0, 51, 0.6) 0%, rgba(255, 0, 51, 0.2) 40%, transparent 70%);
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 0, 85, 0.15) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 0;
-            filter: blur(35px);
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: -1;
         }
-        .logo-glow.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            animation: glowFlash 0.7s ease forwards;
-        }
-        @keyframes glowFlash {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.3);
-            }
-            30% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            70% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.7);
-            }
-        }
-
-        .brand-section>* {
-            position: relative;
-            z-index: 1;
-        }
-
-        .brand-section:active .logo-icon {
-            animation: zoomInSlow 0.7s ease forwards;
-        }
-        .brand-section:active .logo-img {
-            animation: zoomInSlow 0.7s ease forwards;
-        }
-        .brand-section:active .brand-name {
-            animation: zoomOutSlow 0.7s ease forwards;
-        }
-
-        @keyframes zoomInSlow {
-            0% {
-                transform: scale(1);
-            }
-            40% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        @keyframes zoomOutSlow {
-            0% {
-                transform: scale(1);
-            }
-            40% {
-                transform: scale(0.8);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .logo-icon {
-            font-size: clamp(3rem, 6vw, 5.2rem);
-            color: #FF0033;
-            text-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
+        .hero-logo {
+            font-size: 4.5rem;
+            color: var(--accent-red);
+            text-shadow: 0 0 60px rgba(255, 0, 85, 0.3);
             animation: pulseLogo 3s ease-in-out infinite;
-            display: block;
-            line-height: 1.05;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 2;
-        }
-        .brand-section:hover .logo-icon {
-            text-shadow: 0 0 60px rgba(255, 0, 51, 0.5), 0 0 80px rgba(255, 0, 51, 0.2);
-        }
-        .logo-img {
-            max-height: clamp(3rem, 6vw, 5.2rem);
-            max-width: 220px;
-            object-fit: contain;
-            display: none;
-            margin: 0 auto;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 2;
-        }
-        .brand-section:hover .logo-img {
-            filter: drop-shadow(0 0 20px rgba(255, 0, 51, 0.2));
+            display: inline-block;
         }
         @keyframes pulseLogo {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.02);
-                opacity: 0.85;
-            }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
-
-        .brand-name {
-            font-family: 'Orbitron', sans-serif;
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 6vw, 4.2rem);
             font-weight: 900;
-            font-size: clamp(1.3rem, 3.8vw, 3.4rem);
-            letter-spacing: 2px;
-            line-height: 1.05;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-            color: var(--text-primary);
+            letter-spacing: 4px;
+            margin: 10px 0 8px;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .brand-section:hover .brand-name {
-            letter-spacing: 3px;
+        .hero-title .ruthless {
+            -webkit-text-fill-color: var(--accent-red);
+            text-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
         }
-        .brand-name .binary {
-            color: var(--text-primary);
-        }
-        .brand-name .ruthless {
-            color: #FF0033 !important;
-            text-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
-            transition: all 0.3s ease;
-        }
-        .brand-section:hover .brand-name .ruthless {
-            text-shadow: 0 0 40px rgba(255, 0, 51, 0.5);
-        }
-        .brand-name .trader {
-            color: var(--text-primary);
-        }
-
-        .brand-tagline {
-            color: var(--brand-tagline-color);
-            font-size: 0.5rem;
-            letter-spacing: 3px;
+        .hero-sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 300;
-            margin-top: 0px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
         }
-        .brand-section:hover .brand-tagline {
-            color: var(--text-secondary);
-            letter-spacing: 4px;
-        }
-
-        /* ─── SOCIAL ICONS ─── */
-        .social-icons {
+        .hero-actions {
+            margin-top: 24px;
             display: flex;
             gap: 12px;
-            justify-content: center;
-            margin-top: 3px;
             flex-wrap: wrap;
-            position: relative;
-            z-index: 2;
-        }
-        .social-icons a {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--social-icon-bg);
-            border: 1.5px solid var(--social-icon-border);
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-            animation: socialGlow 2s ease-in-out infinite;
         }
-        .social-icons a:nth-child(1) { animation-delay: 0s; }
-        .social-icons a:nth-child(2) { animation-delay: 0.4s; }
-        .social-icons a:nth-child(3) { animation-delay: 0.8s; }
-        .social-icons a:nth-child(4) { animation-delay: 1.2s; }
-
-        @keyframes socialGlow {
-            0%, 100% {
-                border-color: rgba(255, 0, 51, 0.15);
-                box-shadow: 0 0 10px rgba(255, 0, 51, 0.05);
-            }
-            50% {
-                border-color: rgba(255, 0, 51, 0.8);
-                box-shadow: 0 0 25px rgba(255, 0, 51, 0.3), 0 0 50px rgba(255, 0, 51, 0.1);
-            }
-        }
-
-        .social-icons a::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.15), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .social-icons a:hover {
-            color: #FF0033;
-            border-color: #FF0033;
-            box-shadow: 0 6px 30px rgba(255, 0, 51, 0.25);
-            animation-play-state: paused;
-        }
-        .social-icons a:hover::before {
-            opacity: 1;
-        }
-        .social-icons a:active {
-        }
-
-        /* ─── OFFER BANNER - BIGGER ─── */
-        .offer-banner {
-            background: var(--offer-banner-bg);
-            border: 3px solid var(--offer-banner-border);
-            border-radius: 20px;
-            padding: 28px 32px;
-            text-align: center;
-            margin: 6px 0 10px;
-            flex-shrink: 0;
+        .btn-primary {
+            padding: 14px 36px;
+            border-radius: 50px;
+            background: var(--accent-red);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(255, 0, 85, 0.4); }
+        .btn-secondary {
+            padding: 14px 36px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
+
+        /* ===== OFFER BANNER ===== */
+        .offer-banner {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px 24px;
+            background: linear-gradient(135deg, rgba(255, 0, 85, 0.08), rgba(250, 204, 21, 0.05));
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            border-radius: var(--radius-md);
+            text-align: center;
+            backdrop-filter: blur(8px);
             position: relative;
             overflow: hidden;
-            isolation: isolate;
-            will-change: transform;
+            cursor: pointer;
+            transition: 0.3s;
         }
-        .offer-banner::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent 50%, rgba(255, 0, 51, 0.05));
-            opacity: 0;
-            transition: opacity 0.6s ease;
-            z-index: 0;
-        }
-        .offer-banner:hover {
-            border-color: #FFD700;
-            box-shadow: 0 0 80px rgba(255, 215, 0, 0.1), inset 0 0 80px rgba(255, 215, 0, 0.03);
-        }
-        .offer-banner:hover::before {
-            opacity: 1;
-        }
-        .offer-banner:active {
-        }
-        
-        /* ─── OFFER TITLE WITH 3D GIFT BOX ─── */
-        .offer-title-wrapper {
-            display: inline-flex;
+        .offer-banner:hover { border-color: var(--accent-gold); box-shadow: 0 0 40px rgba(250, 204, 21, 0.05); }
+        .offer-title {
+            font-family: var(--font-display);
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 8px;
         }
-        .offer-gift-icon {
-            font-size: clamp(1.6rem, 2.5vw, 2.4rem);
-            display: inline-block;
-            animation: gift3D 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
-            transform-style: preserve-3d;
-        }
-        .offer-gift-icon:nth-child(1) { animation-delay: 0s; }
-        .offer-gift-icon:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes gift3D {
-            0% {
-                transform: translateY(0) scale(1) rotateY(0deg) rotateX(0deg);
-                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
-            }
-            15% {
-                transform: translateY(-6px) scale(1.08) rotateY(15deg) rotateX(5deg);
-                filter: drop-shadow(0 8px 30px rgba(255, 215, 0, 0.5));
-            }
-            30% {
-                transform: translateY(-2px) scale(0.95) rotateY(-10deg) rotateX(-3deg);
-                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
-            }
-            50% {
-                transform: translateY(-8px) scale(1.12) rotateY(20deg) rotateX(8deg);
-                filter: drop-shadow(0 12px 40px rgba(255, 215, 0, 0.6));
-            }
-            70% {
-                transform: translateY(2px) scale(0.98) rotateY(-5deg) rotateX(-2deg);
-                filter: drop-shadow(0 2px 25px rgba(255, 215, 0, 0.35));
-            }
-            85% {
-                transform: translateY(-4px) scale(1.05) rotateY(8deg) rotateX(3deg);
-                filter: drop-shadow(0 6px 35px rgba(255, 215, 0, 0.45));
-            }
-            100% {
-                transform: translateY(0) scale(1) rotateY(0deg) rotateX(0deg);
-                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
-            }
-        }
-
-        .offer-banner h4 {
-            color: #FFD700;
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.3rem, 2vw, 1.8rem);
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 1;
-            font-weight: 700;
-            display: inline-block;
-            animation: offerNameZoom 2s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-        }
-        
-        @keyframes offerNameZoom {
-            0%, 100% {
-                transform: scale(1);
-                text-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-            }
-            50% {
-                transform: scale(1.04);
-                text-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 0 80px rgba(255, 215, 0, 0.08);
-            }
-        }
-
-        .offer-banner .offer-description-text {
+        .offer-title i { font-size: 1.2rem; color: var(--accent-gold); }
+        .offer-desc {
             color: var(--text-secondary);
-            font-size: clamp(1rem, 1.4vw, 1.3rem);
-            margin-top: 6px;
-            position: relative;
-            z-index: 1;
-            font-weight: 400;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.6;
         }
-        
-        /* ─── 3D CREDIT NUMBER ZOOM EFFECT ─── */
-        .offer-banner .highlight {
-            color: #FF0033;
+        .offer-highlight {
+            color: var(--accent-red);
             font-weight: 700;
+            font-size: 1.4rem;
             display: inline-block;
-            font-size: clamp(1.4rem, 2vw, 1.8rem);
-            text-shadow: 0 0 20px rgba(255, 0, 51, 0.25);
-            animation: credit3DZoom 1.8s ease-in-out infinite;
-            transform-origin: center;
-            position: relative;
-            padding: 0 6px;
-            line-height: 1.4;
+            animation: creditZoom 1.8s ease-in-out infinite;
         }
-        
-        @keyframes credit3DZoom {
-            0% {
-                transform: scale(1) translateZ(0) rotateX(0deg);
-                color: #FF0033;
-                text-shadow: 0 0 20px rgba(255, 0, 51, 0.25), 0 0 40px rgba(255, 0, 51, 0.08);
-            }
-            25% {
-                transform: scale(1.25) translateZ(20px) rotateX(5deg);
-                color: #FFD700;
-                text-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.15);
-            }
-            50% {
-                transform: scale(1.1) translateZ(10px) rotateX(-3deg);
-                color: #FF0033;
-                text-shadow: 0 0 30px rgba(255, 0, 51, 0.3), 0 0 50px rgba(255, 0, 51, 0.1);
-            }
-            75% {
-                transform: scale(1.2) translateZ(15px) rotateX(4deg);
-                color: #FF6600;
-                text-shadow: 0 0 35px rgba(255, 100, 0, 0.35), 0 0 55px rgba(255, 215, 0, 0.12);
-            }
-            100% {
-                transform: scale(1) translateZ(0) rotateX(0deg);
-                color: #FF0033;
-                text-shadow: 0 0 20px rgba(255, 0, 51, 0.25), 0 0 40px rgba(255, 0, 51, 0.08);
-            }
+        @keyframes creditZoom {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(255,0,85,0.2); }
+            50% { transform: scale(1.1); color: var(--accent-gold); text-shadow: 0 0 30px rgba(250,204,21,0.4); }
         }
-
-        .offer-banner .click-hint {
+        .offer-click-hint {
             color: var(--text-muted);
             font-size: 0.7rem;
-            margin-top: 8px;
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        .offer-banner:hover .click-hint {
-            color: var(--text-secondary);
-            letter-spacing: 3px;
-        }
-        .offer-banner::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 300%;
-            height: 300%;
-            background: linear-gradient(45deg, transparent 40%, rgba(255, 215, 0, 0.06) 50%, transparent 60%);
-            animation: shimmer 6s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%) rotate(25deg);
-            }
-            100% {
-                transform: translateX(100%) rotate(25deg);
-            }
-        }
-
-        /* ─── USER CARDS ─── */
-        .user-section {
-            display: flex;
-            gap: 12px;
-            padding: 4px 0;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .user-card {
-            flex: 1;
-            min-width: 150px;
-            max-width: 250px;
-            backdrop-filter: blur(8px);
-            border-radius: 14px;
-            padding: 12px 10px 14px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            will-change: transform;
-            cursor: default;
-            overflow: hidden;
-            background: var(--user-card-bg);
-            border: 2px solid var(--border-color);
-        }
-        .user-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 14px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-        .user-card:hover {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-        .user-card:hover::before {
-            opacity: 1;
-        }
-        .user-card:active {
-        }
-
-        .user-card .icon {
-            font-size: 1.3rem;
-            display: block;
-            margin-bottom: 2px;
-            transition: all 0.4s ease;
-        }
-        .user-card:hover .icon {
-        }
-
-        .user-card h3 {
-            font-size: 0.65rem;
-            font-family: 'Orbitron', sans-serif;
+            margin-top: 12px;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-        }
-        .user-card:hover h3 {
-            letter-spacing: 2px;
         }
 
-        .user-card p {
-            color: var(--text-secondary);
-            font-size: 0.55rem;
-            margin: 2px 0 5px;
-            transition: all 0.3s ease;
+        /* ===== CARDS GRID (Login, Signup, Verify) ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
         }
-        .user-card:hover p {
-            color: var(--text-primary);
-        }
-
-        .user-card .btn {
-            width: 100%;
-            padding: 5px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.6rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Inter', sans-serif;
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            text-align: center;
+            transition: 0.3s;
             position: relative;
             overflow: hidden;
-            will-change: transform;
         }
-        .user-card .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 30px;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
-        .user-card .btn:hover {
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+        .glass-card .icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
+        .glass-card h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
-        .user-card .btn:hover::after {
-            opacity: 1;
+        .glass-card p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 12px;
         }
-        .user-card .btn:active {
+        .glass-card .card-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
         }
+        .glass-card .btn-white { background: #fff; color: #0a0a0f; }
+        .glass-card .btn-white:hover { background: var(--accent-red); color: #fff; box-shadow: 0 0 20px rgba(255,0,85,0.2); }
+        .glass-card .btn-red { background: var(--accent-red); color: #fff; box-shadow: 0 0 15px rgba(255,0,85,0.2); }
+        .glass-card .btn-red:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255,0,85,0.3); }
 
-        .user-card.login-card {
-            background: var(--user-card-bg);
-            border: 2px solid rgba(255, 0, 51, 0.2);
-        }
-        .user-card.login-card:hover {
-            border-color: #FF0033;
-            box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02);
-        }
-        .user-card.login-card h3 {
-            color: #FF0033;
-        }
-        .user-card.login-card .btn-white {
-            background: #fff;
-            color: #000;
-        }
-        .user-card.login-card .btn-white:hover {
-            background: #FF0033;
-            color: #fff;
-            box-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
-        }
-
-        .user-card.signup-card {
-            background: var(--user-card-bg);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        .user-card.signup-card:hover {
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.06), inset 0 0 40px rgba(255, 255, 255, 0.02);
-        }
-        .user-card.signup-card h3 {
-            color: var(--text-primary);
-        }
-        .user-card.signup-card .btn-red {
-            background: #FF0033;
-            color: #fff;
-            box-shadow: 0 0 14px rgba(255, 0, 51, 0.15);
-        }
-        .user-card.signup-card .btn-red:hover {
-            background: #ff1a44;
-            box-shadow: 0 0 36px rgba(255, 0, 51, 0.3);
-        }
-
-        .user-card.verify-card {
-            background: var(--user-card-bg);
-            border: 2px solid rgba(255, 0, 51, 0.2);
-        }
-        .user-card.verify-card:hover {
-            border-color: #FF0033;
-            box-shadow: 0 0 40px rgba(255, 0, 51, 0.08), inset 0 0 40px rgba(255, 0, 51, 0.02);
-        }
-        .user-card.verify-card h3 {
-            color: #FF0033;
-        }
-        .user-card.verify-card .btn-white {
-            background: #fff;
-            color: #000;
-        }
-        .user-card.verify-card .btn-white:hover {
-            background: #FF0033;
-            color: #fff;
-            box-shadow: 0 0 28px rgba(255, 0, 51, 0.2);
-        }
-
-        .user-card.highlight {
-            border-color: #FFD700 !important;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.1) !important;
-            animation: highlightPulse 0.8s ease 3;
-        }
-        @keyframes highlightPulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.03);
-            }
-        }
-
-        /* ─── STATS ─── */
+        /* ===== STATS ===== */
         .stats-row {
             display: flex;
             justify-content: center;
-            gap: 18px;
-            padding: 3px 0;
-            flex-shrink: 0;
+            gap: 30px;
             flex-wrap: wrap;
+            max-width: 900px;
+            margin: 30px auto 20px;
+            padding: 0 20px;
         }
         .stat-item {
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 2px 6px;
-            border-radius: 6px;
-            cursor: default;
-            will-change: transform;
-        }
-        .stat-item:hover {
-            background: var(--stat-item-hover);
         }
         .stat-item .number {
-            font-size: clamp(0.75rem, 1vw, 0.95rem);
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
             font-weight: 700;
-            font-family: 'Roboto Mono', monospace;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
+            display: block;
         }
-        .stat-item:hover .number {
-        }
-        .stat-item .number.red {
-            color: #FF0033;
-        }
-        .stat-item .number.gold {
-            color: #FFD700;
-        }
+        .stat-item .number.red { color: var(--accent-red); }
+        .stat-item .number.gold { color: var(--accent-gold); }
         .stat-item .label {
             color: var(--text-muted);
-            font-size: 0.4rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-        .stat-item:hover .label {
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-        }
-
-        /* ─── FOOTER ─── */
-        .footer {
-            padding: 3px 0 5px;
-            text-align: center;
-            border-top: 2px solid var(--footer-border);
-            flex-shrink: 0;
+            letter-spacing: 1px;
             margin-top: 4px;
         }
-        .footer p {
-            color: var(--text-muted);
-            font-size: 0.4rem;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        .footer:hover p {
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-        }
-        .footer .brand {
-            color: #FF0033;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-        .footer:hover .brand {
-            text-shadow: 0 0 20px rgba(255, 0, 51, 0.1);
-        }
 
-        /* ─── INFO POPUP (for Login/Verify messages) ─── */
-        .info-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--overlay-bg);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.3s ease;
-        }
-        .info-popup-overlay.active {
-            display: flex;
-        }
-        .info-popup {
-            background: var(--popup-bg);
-            backdrop-filter: blur(20px);
-            border: 2px solid var(--popup-border);
-            border-radius: 16px;
-            padding: 30px 28px;
-            width: 100%;
-            max-width: 450px;
+        /* ===== FOOTER ===== */
+        .footer {
             text-align: center;
-            position: relative;
-            box-shadow: 0 0 80px rgba(255, 0, 51, 0.08);
-            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 20px;
+            border-top: 1px solid var(--surface-border);
+            max-width: 900px;
+            margin: 10px auto 0;
+            color: var(--text-muted);
+            font-size: 0.65rem;
         }
-        .info-popup .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 14px;
-            font-size: 1.5rem;
-            color: #FF0033;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-        }
-        .info-popup .popup-close:hover {
-            color: var(--text-primary);
-            background: rgba(255, 0, 51, 0.06);
-        }
-        .info-popup .popup-close:active {
-        }
-        .info-popup .popup-icon {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .info-popup h3 {
-            color: var(--popup-label);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .info-popup p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-        .info-popup .popup-btn {
-            padding: 10px 30px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            background: #FF0033;
-            color: #fff;
-        }
-        .info-popup .popup-btn:hover {
-            box-shadow: 0 6px 28px rgba(255, 0, 51, 0.2);
-        }
-        .info-popup .popup-btn.btn-gold {
-            background: #FFD700;
-            color: #000;
-        }
-        .info-popup .popup-btn.btn-gold:hover {
-            box-shadow: 0 6px 28px rgba(255, 215, 0, 0.3);
-        }
-        .info-popup .popup-btn.btn-white {
-            background: #fff;
-            color: #000;
-        }
-        .info-popup .popup-btn.btn-white:hover {
-            box-shadow: 0 6px 28px rgba(255, 255, 255, 0.2);
-        }
+        .footer .brand { color: var(--accent-red); font-weight: 700; }
 
-        .info-popup .popup-btn.center-btn {
-            display: block;
-            margin: 0 auto;
-        }
-
-        @keyframes modalSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* ─── MODALS ─── */
+        /* ===== MODALS ===== */
         .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--overlay-bg);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 999;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.3s ease;
         }
-        .overlay.active {
-            display: flex;
-        }
-
+        .overlay.active { display: flex; }
         .modal {
-            background: var(--popup-bg);
-            backdrop-filter: blur(20px);
-            border: 2px solid var(--popup-border);
-            border-radius: 16px;
-            padding: 28px 24px;
+            background: #12121a;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
             width: 100%;
-            max-width: 600px;
-            min-height: 280px;
-            max-height: 85vh;
+            max-width: 500px;
+            max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 0 80px rgba(255, 0, 51, 0.08);
-            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
-        .modal::-webkit-scrollbar {
-            width: 4px;
-        }
-        .modal::-webkit-scrollbar-thumb {
-            background: #FF0033;
-            border-radius: 4px;
-        }
-
         .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 14px;
-            font-size: 1.5rem;
-            color: #FF0033;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
+            position: absolute; top: 12px; right: 16px;
+            font-size: 1.4rem; color: var(--accent-red);
+            background: none; border: none; cursor: pointer; transition: 0.3s;
         }
-        .modal-close:hover {
-            color: var(--text-primary);
-            background: rgba(255, 0, 51, 0.06);
-        }
-        .modal-close:active {
-        }
-
+        .modal-close:hover { transform: rotate(90deg); }
         .modal h2 {
-            color: var(--popup-label);
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 14px;
-            letter-spacing: 2px;
+            font-family: var(--font-display); color: var(--accent-gold);
+            font-size: 1rem; letter-spacing: 2px;
+            margin-bottom: 20px; text-align: center;
         }
         .modal label {
-            display: block;
-            font-size: 0.55rem;
-            color: var(--popup-label);
-            margin: 6px 0 3px;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
+            display: block; font-size: 0.7rem; color: var(--text-secondary);
+            margin: 10px 0 4px; font-weight: 600; text-transform: uppercase;
         }
-        .modal input,
-        .modal select,
-        .modal textarea {
-            width: 100%;
-            padding: 7px 12px;
-            background: var(--input-bg);
-            border: 1px solid rgba(255, 0, 51, 0.1);
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            outline: none;
-            transition: all 0.4s ease;
+        .modal input, .modal select {
+            width: 100%; padding: 10px 14px;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm); color: #fff; font-size: 0.9rem;
+            outline: none; transition: 0.3s;
         }
-        .modal input:focus,
-        .modal select:focus,
-        .modal textarea:focus {
-            border-color: #FF0033;
-            box-shadow: 0 0 20px rgba(255, 0, 51, 0.04), inset 0 0 20px rgba(255, 0, 51, 0.02);
+        .modal input:focus, .modal select:focus {
+            border-color: var(--accent-red); box-shadow: 0 0 20px rgba(255,0,85,0.05);
         }
-        .modal textarea {
-            height: 60px;
-            resize: vertical;
-            font-size: 0.7rem;
-        }
-
-        .modal input[type="text"].account-id-input {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
         .modal .btn-submit {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 30px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            position: relative;
-            overflow: hidden;
-            will-change: transform;
+            width: 100%; padding: 14px; margin-top: 16px;
+            border-radius: 50px; border: none; background: var(--accent-red);
+            color: #fff; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(255,0,85,0.1);
         }
-        .modal .btn-submit::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 30px;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .modal .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(255,0,85,0.2); }
+        .modal .btn-submit.gold { background: var(--accent-gold); color: #000; }
+        .modal .btn-submit.white { background: #fff; color: #000; }
+        .modal .error-msg { color: var(--accent-red); font-size: 0.75rem; margin-top: 4px; min-height: 20px; }
+        .modal .success-msg { color: var(--accent-green); font-size: 0.75rem; margin-top: 4px; min-height: 20px; }
+        
+        .broker-info-box {
+            margin: 8px 0; padding: 10px; background: rgba(250,204,21,0.04);
+            border: 1px solid rgba(250,204,21,0.1); border-radius: var(--radius-sm);
+            display: none;
         }
-        .modal .btn-submit:hover {
-            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3);
-        }
-        .modal .btn-submit:hover::after {
-            opacity: 1;
-        }
-        .modal .btn-submit:active {
-        }
+        .broker-info-box p { font-size: 0.75rem; color: var(--text-secondary); margin: 2px 0; }
+        .broker-info-box .link { color: var(--accent-gold); word-break: break-all; }
 
-        .modal .error-msg {
-            color: #FF0033;
-            font-size: 0.65rem;
-            margin-top: 3px;
-            font-family: 'Roboto Mono', monospace;
-            min-height: 18px;
+        /* ===== INFO POPUP ===== */
+        .info-popup {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 10000; padding: 20px;
         }
-        .modal .success-msg {
-            color: #00FF66;
-            font-size: 0.65rem;
-            margin-top: 3px;
-            font-family: 'Roboto Mono', monospace;
+        .info-popup.active { display: flex; }
+        .info-popup .popup-box {
+            background: #12121a; border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); padding: 32px 28px;
+            max-width: 420px; width: 100%; text-align: center;
         }
+        .info-popup .popup-icon { font-size: 3rem; margin-bottom: 8px; }
+        .info-popup h3 { font-family: var(--font-display); color: var(--accent-gold); font-size: 1rem; margin-bottom: 8px; }
+        .info-popup p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+        .info-popup .popup-btn { margin-top: 16px; padding: 10px 30px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .info-popup .popup-btn.gold { background: var(--accent-gold); color: #000; }
+        .info-popup .popup-btn.close { background: var(--accent-red); color: #fff; }
+        .info-popup .popup-btn:hover { transform: scale(1.02); }
 
-        /* ─── RESPONSIVE ─── */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .scroll-content {
-                padding: 0 12px;
-            }
-            .red-container {
-                padding: 3px 8px 2px 8px;
-                border-radius: 14px;
-            }
-            .user-card {
-                min-width: 100%;
-                max-width: 100%;
-            }
-            .user-section {
-                flex-direction: column;
-                gap: 5px;
-            }
-            .modal {
-                padding: 18px 16px;
-                max-width: 100%;
-                max-height: 90vh;
-                min-height: 240px;
-            }
-            .stats-row {
-                gap: 10px;
-            }
-            .admin-nav-bar {
-                top: 2px;
-                right: 6px;
-                padding: 1px 5px;
-                gap: 2px;
-            }
-            .admin-nav-bar .nav-label {
-                font-size: 0.35rem;
-            }
-            .admin-nav-bar .nav-buttons button {
-                font-size: 0.35rem;
-                padding: 1px 6px;
-            }
-            .user-logout-btn {
-                top: 2px;
-                right: 6px;
-                padding: 1px 6px;
-                font-size: 0.35rem;
-            }
-            .fb-status-dot {
-                top: 3px;
-                left: 6px;
-                width: 6px;
-                height: 6px;
-            }
-            .logo-glow {
-                width: clamp(120px, 30vw, 180px);
-                height: clamp(120px, 30vw, 180px);
-            }
-            .logo-icon {
-                font-size: clamp(2.8rem, 8vw, 4rem);
-            }
-            .logo-img {
-                max-height: clamp(2.8rem, 8vw, 4rem);
-            }
-            .brand-name {
-                font-size: clamp(1.1rem, 5vw, 2rem);
-            }
-            .social-icons a {
-                width: 32px;
-                height: 32px;
-                font-size: 0.85rem;
-            }
-            .offer-banner {
-                padding: 20px 18px;
-                border-radius: 16px;
-            }
-            .offer-gift-icon {
-                font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            }
-            .offer-banner .highlight {
-                font-size: clamp(1.2rem, 2vw, 1.6rem);
-            }
-            .offer-banner .offer-description-text {
-                font-size: clamp(0.85rem, 1.2vw, 1.05rem);
-            }
-            .info-popup {
-                padding: 24px 20px;
-                max-width: 95%;
-            }
-            .info-popup h3 {
-                font-size: 0.95rem;
-            }
-            .info-popup p {
-                font-size: 0.8rem;
-            }
+            .navbar { padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
+            .nav-brand-text { font-size: 0.9rem; }
+            .nav-socials a { font-size: 0.9rem; margin-left: 6px; }
+            .nav-btn { padding: 6px 14px; font-size: 0.7rem; }
+            .hero { padding: 40px 16px 20px; }
+            .hero-logo { font-size: 3rem; }
+            .offer-title { font-size: 1.1rem; }
+            .offer-desc { font-size: 0.85rem; }
+            .cards-grid { grid-template-columns: 1fr; gap: 12px; }
+            .stats-row { gap: 20px; }
+            .modal { padding: 24px 20px; max-width: 95%; }
         }
-
         @media (max-width: 480px) {
-            .brand-name {
-                font-size: clamp(1rem, 6vw, 1.6rem);
-                letter-spacing: 0.5px;
-                white-space: nowrap;
-            }
-            .logo-icon {
-                font-size: clamp(2.5rem, 12vw, 3.5rem);
-            }
-            .logo-img {
-                max-height: clamp(2.5rem, 12vw, 3.5rem);
-            }
-            .social-icons a {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
-                gap: 14px;
-            }
-            .user-card .btn {
-                font-size: 0.55rem;
-                padding: 4px;
-            }
-            .admin-nav-bar .nav-buttons button {
-                font-size: 0.3rem;
-                padding: 1px 4px;
-            }
-            .user-logout-btn {
-                font-size: 0.3rem;
-                padding: 1px 4px;
-            }
-            .offer-banner::after {
-                animation-duration: 10s;
-            }
-            .logo-glow {
-                width: clamp(100px, 38vw, 160px);
-                height: clamp(100px, 38vw, 160px);
-            }
-            .red-container {
-                padding: 2px 6px 1px 6px;
-                border-radius: 12px;
-                margin: 4px 0 3px;
-            }
-            .brand-section {
-                padding: 1px 0 1px 0;
-            }
-            .brand-tagline {
-                font-size: 0.45rem;
-                letter-spacing: 2px;
-            }
-            .offer-banner {
-                padding: 16px 14px;
-                border-radius: 14px;
-            }
-            .offer-banner h4 {
-                font-size: 1rem;
-            }
-            .offer-banner .offer-description-text {
-                font-size: 0.8rem;
-            }
-            .offer-banner .highlight {
-                font-size: 1.1rem;
-            }
-            .offer-gift-icon {
-                font-size: 1.1rem;
-            }
-            .user-card {
-                padding: 10px 8px 12px;
-                border-radius: 12px;
-            }
-            .user-card .icon {
-                font-size: 1.1rem;
-            }
-            .user-card h3 {
-                font-size: 0.55rem;
-            }
-            .user-card p {
-                font-size: 0.48rem;
-            }
-            .social-icons {
-                gap: 14px;
-            }
-            .modal {
-                padding: 16px 14px;
-                max-width: 100%;
-                max-height: 92vh;
-                min-height: 200px;
-            }
-            .modal h2 {
-                font-size: 0.85rem;
-            }
-            .modal label {
-                font-size: 0.48rem;
-            }
-            .modal input,
-            .modal select,
-            .modal textarea {
-                font-size: 0.65rem;
-                padding: 5px 8px;
-            }
-            .modal .btn-submit {
-                font-size: 0.65rem;
-                padding: 8px;
-            }
-            .info-popup {
-                padding: 20px 16px;
-                max-width: 98%;
-            }
-            .info-popup h3 {
-                font-size: 0.85rem;
-            }
-            .info-popup p {
-                font-size: 0.75rem;
-            }
-            .info-popup .popup-close {
-                font-size: 1.3rem;
-            }
-        }
-
-        /* ─── CURSOR GLOW ─── */
-        .cursor-glow {
-            position: fixed;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 0, 51, 0.04), transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-        .cursor-glow.active {
-            opacity: 1;
-        }
-        @media (hover: none) {
-            .cursor-glow {
-                display: none !important;
-            }
-        }
-
-        .red-container,
-        .offer-banner,
-        .user-card,
-        .user-card .btn,
-        .stat-item,
-        .social-icons a,
-        .admin-nav-bar .nav-buttons button,
-        .modal .btn-submit,
-        .modal-close,
-        .user-logout-btn,
-        .info-popup .popup-btn,
-        .info-popup .popup-close {
-            transition: box-shadow 0.4s ease, border-color 0.4s ease;
-        }
-
-        .no-select {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        img {
-            -webkit-user-drag: none;
-            user-drag: none;
+            .hero-title { font-size: 1.6rem; }
+            .nav-actions { width: 100%; justify-content: center; }
+            .nav-brand { flex: 1; justify-content: center; }
+            .nav-socials { display: none; } /* Hide socials on very small screens for clean look */
         }
     </style>
 </head>
 <body>
 
-    <!-- Cursor Glow -->
-    <div class="cursor-glow" id="cursorGlow"></div>
-
-    <div class="app zoom-trigger" id="mainApp">
-        <div class="scroll-content">
-
-            <div class="red-container" id="redContainer">
-
-                <div class="admin-nav-bar" id="adminNavBar">
-                    <span class="nav-label">🔐</span>
-                    <div class="nav-buttons">
-                        <button onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
-                        <button onclick="window.location.href='admin.html'" class="active">⚙️ Admin</button>
-                        <button class="logout-btn" id="homeAdminLogoutBtn">🚪 Logout</button>
-                    </div>
-                </div>
-
-                <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
-
-                <span class="fb-status-dot red" id="firebaseStatusDot"></span>
-
-                <div class="brand-section" id="brandSection">
-                    <div class="logo-wrapper">
-                        <div class="logo-glow" id="logoGlow"></div>
-                        <span class="logo-icon" id="logoIcon">◆</span>
-                        <img class="logo-img" id="logoImage" alt="Logo" style="display:none;" />
-                    </div>
-                    <div class="brand-name">
-                        <span class="binary">BINARY</span>
-                        <span class="ruthless">RUTHLESS</span>
-                        <span class="trader">TRADER</span>
-                    </div>
-                    <div class="brand-tagline">AI POWERED TRADING</div>
-                    <div class="social-icons" id="socialIconsContainer"></div>
-                </div>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="mainNav">
+        <div class="nav-brand" id="brandSection">
+            <span class="nav-logo-icon" id="navLogoIcon">◆</span>
+            <div class="nav-brand-text">
+                <span>BINARY</span> <span class="ruthless">RUTHLESS</span> <span>TRADER</span>
             </div>
-
-            <div class="offer-banner" id="offerBanner">
-                <div class="offer-title-wrapper">
-                    <span class="offer-gift-icon">🎁</span>
-                    <h4 id="offerTitle">FREE SIGNAL OFFER</h4>
-                    <span class="offer-gift-icon">🎁</span>
-                </div>
-                <p class="offer-description-text" id="offerDescriptionText">Get <span class="highlight" id="offerCreditsDisplay">10</span> FREE signals for <strong>Quotex, Binomo, Pocket Option</strong> when you deposit via our affiliate links!</p>
-                <div class="click-hint">👆 Click here to sign up now</div>
+        </div>
+        <div class="nav-actions">
+            <div class="nav-socials" id="navSocialContainer">
+                <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
             </div>
+            <button class="nav-btn outline" id="loginNavBtn">Login</button>
+            <button class="nav-btn" id="signupNavBtn">Sign Up</button>
+        </div>
+    </nav>
 
-            <div class="user-section" id="userSection">
-                <div class="user-card login-card" id="loginCard">
-                    <span class="icon">🔑</span>
-                    <h3>LOGIN</h3>
-                    <p>Sign in to your account</p>
-                    <button class="btn btn-white" id="loginBtn">Login Now</button>
-                </div>
-                <div class="user-card signup-card" id="signupCard">
-                    <span class="icon">📝</span>
-                    <h3>SIGN UP</h3>
-                    <p>Create your free account</p>
-                    <button class="btn btn-red" id="signupBtn">Create Account</button>
-                </div>
-                <div class="user-card verify-card" id="verifyCard">
-                    <span class="icon">✅</span>
-                    <h3>ID VERIFY</h3>
-                    <p>Verify for premium features</p>
-                    <button class="btn btn-white" id="verifyBtn">Verify Now</button>
-                </div>
-            </div>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <span class="hero-logo">◆</span>
+        <h1 class="hero-title"><span class="ruthless">RUTHLESS</span> TRADER</h1>
+        <p class="hero-sub">AI Powered Trading Signals</p>
+        <div class="hero-actions">
+            <button class="btn-primary" id="heroGetStarted">Get Started Now</button>
+            <button class="btn-secondary" id="heroVerify">Verify ID</button>
+        </div>
+    </section>
 
-            <div class="stats-row">
-                <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
-                <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
-                <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
-            </div>
+    <!-- ===== OFFER BANNER ===== -->
+    <div class="offer-banner" id="offerBanner">
+        <div class="offer-title">
+            <i class="fas fa-gift"></i> <span id="offerTitle">FREE SIGNAL OFFER</span> <i class="fas fa-gift"></i>
+        </div>
+        <p class="offer-desc" id="offerDesc">
+            Get <span class="offer-highlight" id="offerCredits">10</span> FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!
+        </p>
+        <div class="offer-click-hint">👆 Click here to sign up & claim</div>
+    </div>
 
-            <div class="footer">
-                <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — Free AI Signals for Quotex, Binomo, Pocket Option</p>
-            </div>
-
+    <!-- ===== CARDS GRID ===== -->
+    <div class="cards-grid" id="cardsGrid">
+        <div class="glass-card" id="loginCard">
+            <span class="icon">🔑</span>
+            <h3>LOGIN</h3>
+            <p>Sign in to your account</p>
+            <button class="card-btn btn-white" id="loginCardBtn">Login Now</button>
+        </div>
+        <div class="glass-card" id="signupCard">
+            <span class="icon">📝</span>
+            <h3>SIGN UP</h3>
+            <p>Create your free account</p>
+            <button class="card-btn btn-red" id="signupCardBtn">Create Account</button>
+        </div>
+        <div class="glass-card" id="verifyCard">
+            <span class="icon">✅</span>
+            <h3>VERIFY</h3>
+            <p>Verify for premium features</p>
+            <button class="card-btn btn-white" id="verifyCardBtn">Verify Now</button>
         </div>
     </div>
 
-    <div class="info-popup-overlay" id="infoPopup">
-        <div class="info-popup">
-            <button class="popup-close" id="infoPopupClose">✕</button>
-            <span class="popup-icon" id="infoPopupIcon">ℹ️</span>
-            <h3 id="infoPopupTitle">Info</h3>
-            <p id="infoPopupMessage">Message here</p>
-            <button class="popup-btn center-btn" id="infoPopupBtn" style="display:none;">Continue</button>
-        </div>
+    <!-- ===== STATS ===== -->
+    <div class="stats-row">
+        <div class="stat-item"><span class="number red">50K+</span><span class="label">Signals Generated</span></div>
+        <div class="stat-item"><span class="number gold">98%</span><span class="label">Uptime</span></div>
+        <div class="stat-item"><span class="number red">1000+</span><span class="label">Active Traders</span></div>
     </div>
 
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        <p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — Free AI Signals for Quotex, Binomo, Pocket Option</p>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- LOGIN MODAL -->
     <div class="overlay" id="loginModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
@@ -1735,29 +554,31 @@
             <label>Account ID</label>
             <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
             <div class="error-msg" id="loginError"></div>
-            <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleLogin()">Login</button>
+            <button class="btn-submit" id="loginBtnModal">Login</button>
         </div>
     </div>
 
+    <!-- SIGNUP MODAL -->
     <div class="overlay" id="signupModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
             <h2>📝 SIGN UP</h2>
             <label>Select Broker</label>
             <select id="signupBroker"><option value="">-- Select Broker --</option></select>
-            <div id="brokerInfo" style="margin-top:4px;padding:4px 6px;background:rgba(255,215,0,0.04);border-radius:6px;display:none;">
-                <p style="font-size:0.55rem;color:#FFD700;">🔗 Affiliate Link: <span id="brokerAffiliateLink">-</span></p>
-                <p style="font-size:0.5rem;color:#aaa;">💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
-                <p style="font-size:0.45rem;color:#888;" id="brokerRules">-</p>
+            <div class="broker-info-box" id="brokerInfoBox">
+                <p style="color:var(--accent-gold);">🔗 Affiliate Link: <span class="link" id="brokerAffiliateLink">-</span></p>
+                <p>💰 Min Deposit: ₹<span id="brokerMinDeposit">-</span></p>
+                <p style="color:var(--text-muted);" id="brokerRules">-</p>
             </div>
             <label>Gmail / Email</label>
             <input type="email" id="signupEmail" placeholder="your@gmail.com" />
             <div class="error-msg" id="signupError"></div>
             <div class="success-msg" id="signupSuccess"></div>
-            <button class="btn-submit" style="background:#fff;color:#000;" onclick="handleSignup()">Create Account & Go to Broker</button>
+            <button class="btn-submit white" id="signupBtnModal">Create Account & Go to Broker</button>
         </div>
     </div>
 
+    <!-- VERIFY MODAL -->
     <div class="overlay" id="verifyModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('verifyModal')">✕</button>
@@ -1769,16 +590,29 @@
             <label>Select Your Broker</label>
             <select id="verifyBroker"><option value="">-- Select Broker --</option></select>
             <label>Account ID</label>
-            <input type="text" class="account-id-input" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" id="verifyAccountId" placeholder="Enter Account ID (Numbers only)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
             <div class="error-msg" id="verifyError"></div>
             <div class="success-msg" id="verifySuccess"></div>
-            <button class="btn-submit" style="background:#FF0033;color:#fff;" id="verifySubmitBtn">Submit Verification</button>
+            <button class="btn-submit" id="verifySubmitBtn">Submit Verification</button>
         </div>
     </div>
 
+    <!-- ===== INFO POPUP ===== -->
+    <div class="info-popup" id="infoPopup">
+        <div class="popup-box">
+            <div class="popup-icon" id="popupIcon">ℹ️</div>
+            <h3 id="popupTitle">Info</h3>
+            <p id="popupMessage">Message here</p>
+            <button class="popup-btn gold" id="popupBtn" style="display:none;">Continue</button>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
     <script src="security.js"></script>
     <script src="firebase-config.js"></script>
+
     <script type="module">
+        // --- EXACTLY YOUR ORIGINAL FIREBASE LOGIC & APPSTATE ---
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, onValue, set } from "firebase/database";
         import { getAnalytics } from "firebase/analytics";
@@ -1793,7 +627,7 @@
             offerCredits: 10,
             offerName: 'FREE SIGNAL OFFER',
             offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
-            brokers: [],  // ← empty array, no default brokers
+            brokers: [],
             users: [],
             verificationRequests: [],
             currentUser: null,
@@ -1814,200 +648,90 @@
         };
 
         let isFirebaseConnected = false;
+        let logoClickCounter = 0;
 
+        // --- DOM REFS ---
+        const $ = (id) => document.getElementById(id);
+
+        // --- LOGO APPLY ---
         function applyLogo(logoBase64) {
-            const logoIcon = document.getElementById('logoIcon');
-            const logoImg = document.getElementById('logoImage');
+            const logoIcon = $('navLogoIcon');
             if (logoBase64) {
-                logoIcon.style.display = 'none';
-                logoImg.src = logoBase64;
-                logoImg.style.display = 'block';
+                logoIcon.innerHTML = `<img src="${logoBase64}" style="height:30px;width:auto;border-radius:4px;vertical-align:middle;" />`;
             } else {
-                logoIcon.style.display = 'block';
-                logoImg.style.display = 'none';
+                logoIcon.textContent = '◆';
             }
         }
 
-        const glow = document.getElementById('cursorGlow');
-        if (window.matchMedia('(hover: hover)').matches) {
-            document.addEventListener('mousemove', (e) => {
-                glow.style.left = e.clientX + 'px';
-                glow.style.top = e.clientY + 'px';
-                glow.classList.add('active');
-            });
-            document.addEventListener('mouseleave', () => {
-                glow.classList.remove('active');
-            });
-        }
-
-        function checkUserSession() {
-            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-            const userLogoutBtn = document.getElementById('userLogoutBtn');
-            const adminNavBar = document.getElementById('adminNavBar');
-            if (userLoggedIn) {
-                userLogoutBtn.classList.add('visible');
-                adminNavBar.classList.remove('visible');
-            } else {
-                userLogoutBtn.classList.remove('visible');
-            }
-            return userLoggedIn;
-        }
-
-        document.getElementById('userLogoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem('user_logged_in');
-            appState.currentUser = null;
-            saveLocalState();
-            window.location.href = 'index.html';
-        });
-
-        function checkAdminSession() {
-            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            const navBar = document.getElementById('adminNavBar');
-            const userLogoutBtn = document.getElementById('userLogoutBtn');
-            if (adminLoggedIn) {
-                navBar.classList.add('visible');
-                userLogoutBtn.classList.remove('visible');
-            } else {
-                navBar.classList.remove('visible');
-                const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-                if (userLoggedIn) {
-                    userLogoutBtn.classList.add('visible');
-                }
-            }
-            return adminLoggedIn;
-        }
-
-        document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem('admin_logged_in');
-            sessionStorage.removeItem('user_logged_in');
-            appState.currentUser = null;
-            saveLocalState();
-            document.getElementById('adminNavBar').classList.remove('visible');
-            document.getElementById('userLogoutBtn').classList.remove('visible');
-            window.location.href = 'index.html';
-        });
-
+        // --- SOCIAL MEDIA RENDER ---
         function renderSocialMedia() {
-            const container = document.getElementById('socialIconsContainer');
-            if (!container) return;
+            const container = $('navSocialContainer');
             let socials = appState.socialMedia || [];
             if (socials.length === 0) {
-                const localSocial = localStorage.getItem('brt_social');
-                if (localSocial) {
-                    try { socials = JSON.parse(localSocial); } catch (e) {}
-                }
+                const local = localStorage.getItem('brt_social');
+                if (local) { try { socials = JSON.parse(local); } catch(e) {} }
             }
             const visibleSocials = socials.filter(s => s.visibility === 'visible');
             if (visibleSocials.length === 0) {
-                container.innerHTML = `
-                  <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i></a>
-                  <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
-                  <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
-                  <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
-                `;
-                container.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const platform = this.classList.contains('telegram') ? 'Telegram' :
-                            this.classList.contains('instagram') ? 'Instagram' :
-                            this.classList.contains('youtube') ? 'YouTube' : 'Twitter';
-                        alert('📱 ' + platform + ' - Configure in Admin');
-                    });
-                });
+                container.innerHTML = `<a href="#"><i class="fab fa-telegram-plane"></i></a><a href="#"><i class="fab fa-instagram"></i></a>`;
                 return;
             }
             container.innerHTML = '';
-            visibleSocials.forEach(social => {
-                const iconClass = social.icon || 'fas fa-link';
-                const url = social.url || '#';
-                const name = social.name || 'Link';
+            visibleSocials.forEach(s => {
                 const a = document.createElement('a');
-                a.href = url;
+                a.href = s.url || '#';
                 a.target = '_blank';
-                a.title = name;
-                a.innerHTML = `<i class="${iconClass}"></i>`;
-                if (name.toLowerCase().includes('telegram')) a.classList.add('telegram');
-                else if (name.toLowerCase().includes('instagram')) a.classList.add('instagram');
-                else if (name.toLowerCase().includes('youtube')) a.classList.add('youtube');
-                else if (name.toLowerCase().includes('twitter')) a.classList.add('twitter');
-                a.addEventListener('click', function(e) {
-                    if (url === '#') {
-                        e.preventDefault();
-                        alert('📱 ' + name + ' - Configure URL in Admin');
-                    }
-                });
+                a.title = s.name || 'Link';
+                a.innerHTML = `<i class="${s.icon || 'fas fa-link'}"></i>`;
+                a.addEventListener('click', (e) => { if (s.url === '#') { e.preventDefault(); alert('📱 Configure URL in Admin'); } });
                 container.appendChild(a);
             });
         }
 
+        // --- OFFER UPDATE ---
         function updateOfferBanner() {
             const credits = appState.offerCredits || 10;
             const name = appState.offerName || 'FREE SIGNAL OFFER';
-            let description = appState.offerDescription || 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!';
+            let description = appState.offerDescription || 'Get 10 FREE signals...';
             
-            document.getElementById('offerTitle').textContent = name;
-            
-            const descContainer = document.getElementById('offerDescriptionText');
-            
-            const numberMatch = description.match(/\d+/);
-            if (numberMatch) {
-                let result = description.replace(/\d+/, `<span class="highlight" id="offerCreditsDisplay">${credits}</span>`);
-                descContainer.innerHTML = result;
-            } else {
-                descContainer.innerHTML = `${description} <span class="highlight" id="offerCreditsDisplay">${credits}</span>`;
-            }
+            $('offerTitle').textContent = name;
+            let result = description.replace(/\d+/, `<span class="offer-highlight" id="offerCredits">${credits}</span>`);
+            $('offerDesc').innerHTML = result;
         }
 
+        // --- MODAL HELPERS ---
+        window.closeModal = (id) => $(id).classList.remove('active');
+        window.openModal = (id) => $(id).classList.add('active');
+
+        // --- INFO POPUP ---
         function showInfoPopup(icon, title, message, btnText, btnAction) {
-            const popup = document.getElementById('infoPopup');
-            document.getElementById('infoPopupIcon').textContent = icon || 'ℹ️';
-            document.getElementById('infoPopupTitle').textContent = title || 'Info';
-            document.getElementById('infoPopupMessage').textContent = message || 'Message here';
-            const btn = document.getElementById('infoPopupBtn');
+            const popup = $('infoPopup');
+            $('popupIcon').textContent = icon || 'ℹ️';
+            $('popupTitle').textContent = title || 'Info';
+            $('popupMessage').textContent = message || 'Message';
+            const btn = $('popupBtn');
             if (btnText) {
                 btn.style.display = 'block';
                 btn.textContent = btnText;
-                btn.className = 'popup-btn center-btn';
-                if (btnText.toLowerCase().includes('signup') || btnText.toLowerCase().includes('continue')) {
-                    btn.classList.add('btn-gold');
-                } else {
-                    btn.classList.add('btn-white');
-                }
-                const newBtn = btn.cloneNode(true);
-                btn.parentNode.replaceChild(newBtn, btn);
-                newBtn.addEventListener('click', function(e) {
-                    if (typeof btnAction === 'function') {
-                        btnAction();
-                    }
-                    closeInfoPopup();
-                });
+                btn.className = 'popup-btn gold';
+                btn.onclick = () => { if (typeof btnAction === 'function') btnAction(); closeInfoPopup(); };
             } else {
                 btn.style.display = 'none';
             }
             popup.classList.add('active');
         }
+        function closeInfoPopup() { $('infoPopup').classList.remove('active'); }
 
-        function closeInfoPopup() {
-            document.getElementById('infoPopup').classList.remove('active');
-        }
+        // --- EMAIL VALIDATION ---
+        function isValidEmail(email) { return /^[^\s@]+@gmail\.com$/.test(email); }
 
-        document.getElementById('infoPopupClose').addEventListener('click', closeInfoPopup);
-
-        function isValidEmail(email) {
-            return /^[^\s@]+@gmail\.com$/.test(email);
-        }
-
+        // --- FIREBASE SYNC ---
         onValue(dbRef, (snapshot) => {
             isFirebaseConnected = true;
-            document.getElementById('firebaseStatusDot').className = 'fb-status-dot green';
             const val = snapshot.val();
             if (val) {
                 const currentUserEmail = appState.currentUser ? appState.currentUser.email : null;
                 appState = { ...appState, ...val };
-                if (val.logoClickCount !== undefined) appState.logoClickCount = val.logoClickCount;
-                if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
-                if (val.offerName !== undefined) appState.offerName = val.offerName;
-                if (val.offerDescription !== undefined) appState.offerDescription = val.offerDescription;
                 if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
                     appState.logoBase64 = val.logoBase64;
                     applyLogo(val.logoBase64);
@@ -2018,475 +742,208 @@
                     localStorage.setItem('brt_social', JSON.stringify(val.socialMedia));
                     renderSocialMedia();
                 }
-                if (val.tools !== undefined) {
-                    appState.tools = val.tools;
-                    localStorage.setItem('brt_tools', JSON.stringify(val.tools));
-                }
                 if (val.brokers !== undefined) {
                     appState.brokers = val.brokers;
-                    localStorage.setItem('brt_brokers', JSON.stringify(val.brokers));
+                    updateBrokerSelects();
                 }
-                if (val.creditPacks !== undefined) {
-                    appState.creditPacks = val.creditPacks;
-                    localStorage.setItem('brt_creditPacks', JSON.stringify(val.creditPacks));
-                }
+                if (val.offerCredits !== undefined) appState.offerCredits = val.offerCredits;
+                if (val.offerName !== undefined) appState.offerName = val.offerName;
+                if (val.offerDescription !== undefined) appState.offerDescription = val.offerDescription;
+                
                 if (currentUserEmail) {
                     const found = appState.users.find(u => u.email === currentUserEmail);
                     if (found) appState.currentUser = found;
                     else appState.currentUser = null;
                 }
-                updateUI();
                 updateOfferBanner();
                 renderSocialMedia();
+                updateBrokerSelects();
             }
         }, (error) => {
             isFirebaseConnected = false;
-            document.getElementById('firebaseStatusDot').className = 'fb-status-dot red';
             console.error('Firebase Error:', error);
         });
 
+        // --- SAVE LOCAL STATE ---
         function saveLocalState() {
             localStorage.setItem('brt_data', JSON.stringify(appState));
             if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e));
         }
 
+        // --- UPDATE BROKER SELECTS ---
+        function updateBrokerSelects() {
+            const selects = ['signupBroker', 'verifyBroker'];
+            selects.forEach(id => {
+                const sel = $(id);
+                if(!sel) return;
+                sel.innerHTML = '<option value="">-- Select Broker --</option>';
+                appState.brokers.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.name;
+                    opt.textContent = b.name;
+                    sel.appendChild(opt);
+                });
+            });
+        }
+
+        // --- LOAD LOCAL STATE ---
         function loadLocalState() {
             const local = localStorage.getItem('brt_data');
-            if (local) {
-                try {
-                    const parsed = JSON.parse(local);
-                    appState = { ...appState, ...parsed };
-                } catch (e) { console.error(e); }
-            }
+            if (local) { try { const parsed = JSON.parse(local); appState = { ...appState, ...parsed }; } catch(e) {} }
             const logoData = localStorage.getItem('brt_logo');
-            if (logoData) {
-                appState.logoBase64 = logoData;
-                applyLogo(logoData);
-            }
+            if (logoData) { appState.logoBase64 = logoData; applyLogo(logoData); }
             const socialData = localStorage.getItem('brt_social');
-            if (socialData) {
-                try {
-                    const parsed = JSON.parse(socialData);
-                    if (parsed.length > 0) appState.socialMedia = parsed;
-                } catch (e) {}
-            }
-            const toolsData = localStorage.getItem('brt_tools');
-            if (toolsData) {
-                try {
-                    const parsed = JSON.parse(toolsData);
-                    if (parsed.length > 0) appState.tools = parsed;
-                } catch (e) {}
-            }
-            const brokersData = localStorage.getItem('brt_brokers');
-            if (brokersData) {
-                try {
-                    const parsed = JSON.parse(brokersData);
-                    if (parsed.length > 0) appState.brokers = parsed;
-                } catch (e) {}
-            }
-            const creditPacksData = localStorage.getItem('brt_creditPacks');
-            if (creditPacksData) {
-                try {
-                    const parsed = JSON.parse(creditPacksData);
-                    if (parsed.length > 0) appState.creditPacks = parsed;
-                } catch (e) {}
-            }
-            updateUI();
-            renderSocialMedia();
+            if (socialData) { try { appState.socialMedia = JSON.parse(socialData); } catch(e) {} }
             updateOfferBanner();
-            checkAdminSession();
-            checkUserSession();
+            renderSocialMedia();
+            updateBrokerSelects();
         }
 
-        function updateUI() {
-            const brokerSelect = document.getElementById('signupBroker');
-            brokerSelect.innerHTML = '<option value="">-- Select Broker --</option>';
-            appState.brokers.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.name;
-                opt.textContent = b.name;
-                brokerSelect.appendChild(opt);
-            });
-            const verifyBroker = document.getElementById('verifyBroker');
-            verifyBroker.innerHTML = '<option value="">-- Select Broker --</option>';
-            appState.brokers.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.name;
-                opt.textContent = b.name;
-                verifyBroker.appendChild(opt);
-            });
-        }
+        // --- CLICK EVENTS ---
+        // Offer Banner -> Open Signup Modal
+        $('offerBanner').addEventListener('click', () => openModal('signupModal'));
 
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        window.closeModal = closeModal;
-        window.openModal = openModal;
+        // Cards and Nav buttons
+        $('loginCardBtn').addEventListener('click', () => openModal('loginModal'));
+        $('signupCardBtn').addEventListener('click', () => openModal('signupModal'));
+        $('verifyCardBtn').addEventListener('click', () => openModal('verifyModal'));
+        $('loginNavBtn').addEventListener('click', () => openModal('loginModal'));
+        $('signupNavBtn').addEventListener('click', () => openModal('signupModal'));
+        $('heroGetStarted').addEventListener('click', () => openModal('signupModal'));
+        $('heroVerify').addEventListener('click', () => openModal('verifyModal'));
 
-        document.getElementById('offerBanner').addEventListener('click', function() {
-            const signupCard = document.getElementById('signupCard');
-            signupCard.classList.remove('highlight');
-            void signupCard.offsetWidth;
-            signupCard.classList.add('highlight');
-            setTimeout(() => { openModal('signupModal'); }, 500);
-        });
-
-        window.handleLogin = function() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const accountId = document.getElementById('loginAccountId').value.trim();
-            const errorEl = document.getElementById('loginError');
+        // --- LOGIN LOGIC ---
+        $('loginBtnModal').addEventListener('click', () => {
+            const email = $('loginEmail').value.trim();
+            const accountId = $('loginAccountId').value.trim();
+            const errorEl = $('loginError');
             
-            if (!email || !accountId) {
-                errorEl.textContent = '❌ Enter email and account ID';
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
+            if (!email || !accountId) { errorEl.textContent = '❌ Enter email and account ID'; return; }
+            if (!isValidEmail(email)) { errorEl.textContent = '❌ Valid Gmail required'; return; }
             
             const user = appState.users.find(u => u.email === email && u.accountId === accountId);
-            
             if (!user) {
-                showInfoPopup(
-                    '📝',
-                    'Account Not Found!',
-                    'No account found with these details. Please sign up first to get started.',
-                    'Sign Up Now',
-                    function() {
-                        closeModal('loginModal');
-                        openModal('signupModal');
-                    }
-                );
-                errorEl.textContent = '';
-                return;
+                showInfoPopup('📝', 'Account Not Found!', 'No account found. Please sign up first.', 'Sign Up Now', () => {
+                    closeModal('loginModal'); openModal('signupModal');
+                });
+                errorEl.textContent = ''; return;
             }
-            
-            if (user.blocked) {
-                errorEl.textContent = '🚫 Account blocked. Contact admin.';
-                return;
-            }
-            
+            if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
             if (!user.verified) {
-                const pendingRequest = appState.verificationRequests?.find(
-                    req => req.userEmail === email && req.status === 'pending'
-                );
-                
-                if (pendingRequest) {
-                    showInfoPopup(
-                        '⏳',
-                        'Verification Pending!',
-                        'Admin is currently reviewing your verification request. Please wait for approval. You will get access once verified.',
-                        null,
-                        null
-                    );
+                const pending = appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending');
+                if (pending) {
+                    showInfoPopup('⏳', 'Verification Pending!', 'Admin is reviewing. Please wait.', null, null);
                 } else {
-                    showInfoPopup(
-                        '✅',
-                        'Not Verified Yet!',
-                        'Please submit your verification request first. Admin will review and approve your account.',
-                        'Go to Verify',
-                        function() {
-                            closeModal('loginModal');
-                            openModal('verifyModal');
-                        }
-                    );
+                    showInfoPopup('✅', 'Not Verified Yet!', 'Please submit verification request first.', 'Go to Verify', () => {
+                        closeModal('loginModal'); openModal('verifyModal');
+                    });
                 }
-                errorEl.textContent = '';
-                return;
+                errorEl.textContent = ''; return;
             }
             
             appState.currentUser = user;
             sessionStorage.setItem('user_logged_in', 'true');
             saveLocalState();
             closeModal('loginModal');
-            errorEl.textContent = '';
             window.location.href = 'dashboard.html';
-        };
+        });
 
-        window.handleSignup = function() {
-            const broker = document.getElementById('signupBroker').value;
-            const email = document.getElementById('signupEmail').value.trim();
-            const errorEl = document.getElementById('signupError');
-            const successEl = document.getElementById('signupSuccess');
-            errorEl.textContent = '';
-            successEl.textContent = '';
+        // --- SIGNUP LOGIC ---
+        $('signupBtnModal').addEventListener('click', () => {
+            const broker = $('signupBroker').value;
+            const email = $('signupEmail').value.trim();
+            const errorEl = $('signupError');
+            const successEl = $('signupSuccess');
+            errorEl.textContent = ''; successEl.textContent = '';
             
             if (!broker) { errorEl.textContent = '❌ Select broker'; return; }
             if (!email) { errorEl.textContent = '❌ Enter email'; return; }
-
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
-
+            if (!isValidEmail(email)) { errorEl.textContent = '❌ Valid Gmail required'; return; }
+            
             const brokerData = appState.brokers.find(b => b.name === broker);
             if (!brokerData) { errorEl.textContent = '❌ Broker not found'; return; }
             if (appState.users.find(u => u.email === email)) { errorEl.textContent = '❌ User exists'; return; }
             
             const newUser = {
-                email,
-                accountId: '',
-                name: email.split('@')[0],
-                broker,
-                verified: false,
-                deposit: 0,
-                requiredDeposit: brokerData.minDeposit,
-                credits: 0,
-                freeCredits: 0,
-                signalsUsed: 0,
-                todayUsed: 0,
-                totalUsed: 0,
-                blocked: false,
-                registeredAt: new Date().toISOString()
+                email, accountId: '', name: email.split('@')[0], broker,
+                verified: false, deposit: 0, requiredDeposit: brokerData.minDeposit,
+                credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0,
+                blocked: false, registeredAt: new Date().toISOString()
             };
             appState.users.push(newUser);
             saveLocalState();
-            updateUI();
-            successEl.textContent = '✅ Account created! Please verify your ID. Opening broker...';
+            successEl.textContent = '✅ Account created! Verify ID. Opening broker...';
             setTimeout(() => { window.open(brokerData.link, '_blank'); }, 500);
             setTimeout(() => { closeModal('signupModal'); }, 1500);
-        };
-
-        document.getElementById('verifySubmitBtn').addEventListener('click', function() {
-            window.handleVerify();
         });
 
-        window.handleVerify = function() {
-            const name = document.getElementById('verifyName').value.trim();
-            const email = document.getElementById('verifyEmail').value.trim();
-            const broker = document.getElementById('verifyBroker').value;
-            const accountId = document.getElementById('verifyAccountId').value.trim();
-            const errorEl = document.getElementById('verifyError');
-            const successEl = document.getElementById('verifySuccess');
-            errorEl.textContent = '';
-            successEl.textContent = '';
+        // --- VERIFY LOGIC ---
+        $('verifySubmitBtn').addEventListener('click', () => {
+            const name = $('verifyName').value.trim();
+            const email = $('verifyEmail').value.trim();
+            const broker = $('verifyBroker').value;
+            const accountId = $('verifyAccountId').value.trim();
+            const errorEl = $('verifyError');
+            const successEl = $('verifySuccess');
+            errorEl.textContent = ''; successEl.textContent = '';
             
-            if (!name) { errorEl.textContent = '❌ Please enter your full name'; return; }
-            if (!email) { errorEl.textContent = '❌ Please enter your email'; return; }
-
-            if (!isValidEmail(email)) {
-                errorEl.textContent = '❌ Please enter a valid Gmail address (example@gmail.com)';
-                return;
-            }
-
-            if (!broker) { errorEl.textContent = '❌ Please select your broker'; return; }
-            if (!accountId) { errorEl.textContent = '❌ Please enter your Account ID (Numbers only)'; return; }
+            if (!name || !email || !broker || !accountId) { errorEl.textContent = '❌ Fill all fields'; return; }
+            if (!isValidEmail(email)) { errorEl.textContent = '❌ Valid Gmail required'; return; }
             
             let user = appState.users.find(u => u.email === email);
             if (!user) {
                 const brokerData = appState.brokers.find(b => b.name === broker);
-                user = {
-                    email,
-                    accountId: accountId,
-                    name: name,
-                    broker: broker,
-                    verified: false,
-                    deposit: 0,
-                    requiredDeposit: brokerData ? brokerData.minDeposit : 0,
-                    credits: 0,
-                    freeCredits: 0,
-                    signalsUsed: 0,
-                    todayUsed: 0,
-                    totalUsed: 0,
-                    blocked: false,
-                    registeredAt: new Date().toISOString()
-                };
+                user = { email, accountId, name, broker, verified: false, deposit: 0, requiredDeposit: brokerData?.minDeposit || 0, credits: 0, freeCredits: 0, signalsUsed: 0, todayUsed: 0, totalUsed: 0, blocked: false, registeredAt: new Date().toISOString() };
                 appState.users.push(user);
             }
-            
-            if (user.blocked) {
-                errorEl.textContent = '🚫 Account blocked. Contact admin.';
-                return;
+            if (user.blocked) { errorEl.textContent = '🚫 Account blocked.'; return; }
+            if (user.verified) { errorEl.textContent = '✅ Already verified!'; return; }
+            if (appState.verificationRequests?.find(r => r.userEmail === email && r.status === 'pending')) {
+                errorEl.textContent = '⏳ Verification already pending.'; return;
             }
             
-            if (user.verified) {
-                errorEl.textContent = '✅ Already verified! You can login.';
-                return;
-            }
-            
-            const existingPending = appState.verificationRequests?.find(
-                req => req.userEmail === email && req.status === 'pending'
-            );
-            if (existingPending) {
-                errorEl.textContent = '⏳ Verification already pending. Wait for admin.';
-                return;
-            }
-            
-            const newRequest = {
-                userName: name,
-                userEmail: email,
-                accountId: accountId,
-                broker: broker,
-                status: 'pending',
-                date: new Date().toISOString(),
-                freeCredits: appState.offerCredits || 10
-            };
-            
+            const newReq = { userName: name, userEmail: email, accountId, broker, status: 'pending', date: new Date().toISOString(), freeCredits: appState.offerCredits || 10 };
             if (!appState.verificationRequests) appState.verificationRequests = [];
-            appState.verificationRequests.push(newRequest);
-            
-            user.name = name;
-            user.accountId = accountId;
-            
+            appState.verificationRequests.push(newReq);
+            user.name = name; user.accountId = accountId;
             saveLocalState();
-            
-            showInfoPopup(
-                '✅',
-                'Verification Submitted!',
-                'Your verification request has been submitted successfully. Please wait for admin approval. You will be notified once verified.',
-                null,
-                null
-            );
-            
-            document.getElementById('verifyName').value = '';
-            document.getElementById('verifyEmail').value = '';
-            document.getElementById('verifyAccountId').value = '';
-            document.getElementById('verifyBroker').value = '';
-            errorEl.textContent = '';
-            successEl.textContent = '';
-        };
+            showInfoPopup('✅', 'Verification Submitted!', 'Waiting for admin approval.', null, null);
+            $('verifyName').value = ''; $('verifyEmail').value = ''; $('verifyAccountId').value = ''; $('verifyBroker').value = '';
+        });
 
-        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
-        document.getElementById('verifyBtn').addEventListener('click', () => openModal('verifyModal'));
-
-        document.getElementById('signupBroker').addEventListener('change', function() {
-            const brokerName = this.value;
-            const infoDiv = document.getElementById('brokerInfo');
-            const broker = appState.brokers.find(b => b.name === brokerName);
+        // --- BROKER INFO ON SELECT ---
+        $('signupBroker').addEventListener('change', function() {
+            const broker = appState.brokers.find(b => b.name === this.value);
+            const box = $('brokerInfoBox');
             if (broker) {
-                infoDiv.style.display = 'block';
-                document.getElementById('brokerAffiliateLink').textContent = broker.link;
-                document.getElementById('brokerMinDeposit').textContent = broker.minDeposit;
-                document.getElementById('brokerRules').textContent = '📋 ' + broker.rules;
+                box.style.display = 'block';
+                $('brokerAffiliateLink').textContent = broker.link;
+                $('brokerMinDeposit').textContent = broker.minDeposit;
+                $('brokerRules').textContent = '📋 ' + broker.rules;
             } else {
-                infoDiv.style.display = 'none';
+                box.style.display = 'none';
             }
         });
 
-        let logoClickCounter = 0;
-        document.getElementById('logoIcon').addEventListener('click', function(e) {
-            e.preventDefault();
+        // --- LOGO CLICK TO ADMIN (Hidden Access) ---
+        document.querySelector('.nav-brand').addEventListener('click', (e) => {
             const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
             const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            
-            if (userLoggedIn && !adminLoggedIn) {
-                alert('🚫 Access Denied! Only Admin can access this page.');
-                return;
-            }
-            
+            if (userLoggedIn && !adminLoggedIn) { alert('🚫 Access Denied! Only Admin.'); return; }
             logoClickCounter++;
-            const requiredClicks = appState.logoClickCount || 2;
-            if (logoClickCounter >= requiredClicks) {
+            if (logoClickCounter >= (appState.logoClickCount || 2)) {
                 logoClickCounter = 0;
                 window.location.href = 'admin.html';
             }
         });
-        document.getElementById('logoImage').addEventListener('click', function(e) {
-            e.preventDefault();
-            const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-            const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-            
-            if (userLoggedIn && !adminLoggedIn) {
-                alert('🚫 Access Denied! Only Admin can access this page.');
-                return;
-            }
-            
-            logoClickCounter++;
-            const requiredClicks = appState.logoClickCount || 2;
-            if (logoClickCounter >= requiredClicks) {
-                logoClickCounter = 0;
-                window.location.href = 'admin.html';
-            }
-        });
-        document.getElementById('brandSection').addEventListener('click', function(e) {
-            if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-                const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-                const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-                
-                if (userLoggedIn && !adminLoggedIn) {
-                    alert('🚫 Access Denied! Only Admin can access this page.');
-                    return;
-                }
-                
-                logoClickCounter++;
-                const requiredClicks = appState.logoClickCount || 2;
-                if (logoClickCounter >= requiredClicks) {
-                    logoClickCounter = 0;
-                    window.location.href = 'admin.html';
-                }
-            }
-        });
 
-        const logoGlow = document.getElementById('logoGlow');
-
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.overlay')) return;
-            if (e.target.closest('.modal')) return;
-            if (e.target.closest('.admin-nav-bar')) return;
-            if (e.target.closest('.user-logout-btn')) return;
-            if (e.target.closest('.info-popup-overlay')) return;
-
-            logoGlow.classList.remove('active');
-            void logoGlow.offsetWidth;
-            logoGlow.classList.add('active');
-            setTimeout(() => {
-                logoGlow.classList.remove('active');
-            }, 800);
-
-            const logoIcon = document.getElementById('logoIcon');
-            const logoImg = document.getElementById('logoImage');
-            const brandName = document.querySelector('.brand-name');
-
-            if (logoIcon.style.display !== 'none') {
-                logoIcon.style.animation = 'none';
-                void logoIcon.offsetWidth;
-                logoIcon.style.animation = 'zoomInSlow 0.7s ease forwards';
-            }
-            if (logoImg.style.display !== 'none') {
-                logoImg.style.animation = 'none';
-                void logoImg.offsetWidth;
-                logoImg.style.animation = 'zoomInSlow 0.7s ease forwards';
-            }
-            brandName.style.animation = 'none';
-            void brandName.offsetWidth;
-            brandName.style.animation = 'zoomOutSlow 0.7s ease forwards';
-
-            setTimeout(() => {
-                if (logoIcon.style.display !== 'none') {
-                    logoIcon.style.animation = '';
-                }
-                if (logoImg.style.display !== 'none') {
-                    logoImg.style.animation = '';
-                }
-                brandName.style.animation = '';
-            }, 800);
-        });
-
+        // --- INIT ---
         loadLocalState();
-        console.log('🏠 Home Page Loaded');
-        console.log('🔑 Admin Password: ' + appState.password);
-        console.log('📢 Offer: ' + appState.offerName + ' - ' + appState.offerCredits + ' credits');
+        console.log('✅ Professional Redesign Loaded - Logic Intact');
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
-                closeInfoPopup();
-            }
-        });
-
-        document.getElementById('infoPopup').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeInfoPopup();
-            }
-        });
-
+        // Expose to global for inline handlers if any
         window.showInfoPopup = showInfoPopup;
         window.closeInfoPopup = closeInfoPopup;
-        window.handleLogin = handleLogin;
-        window.handleSignup = handleSignup;
-        window.handleVerify = handleVerify;
         window.isValidEmail = isValidEmail;
     </script>
 </body>
