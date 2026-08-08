@@ -1,4 +1,4 @@
-// Firebase Configuration - Shared across all pages
+//  Firebase Configuration - Shared across all pages
 const firebaseConfig = {
     apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
     authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
