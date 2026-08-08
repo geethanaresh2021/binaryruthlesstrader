@@ -67,6 +67,7 @@
             --popup-border: rgba(255,0,51,0.2);
             --popup-text: #fff;
             --popup-label: #FFD700;
+            --popup-close-color: #FF0033;
             --admin-section-bg: rgba(255,255,255,0.02);
             --admin-section-border: rgba(255,0,51,0.06);
             --nav-link-color: #aaa;
@@ -130,7 +131,7 @@
         .app::after { content: ''; position: fixed; bottom: -30%; right: -20%; width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 215, 0, 0.03) 0%, transparent 70%); border-radius: 50%; animation: orbFloat 22s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
         @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 40px) scale(1.2); } }
         
-        /* ===== SMOOTH CONTAINERS - NO ZOOM/SCALE ===== */
+        /* ===== SMOOTH CONTAINERS ===== */
         .red-container {
             background: var(--container-bg);
             border: 2px solid var(--container-border);
@@ -377,7 +378,15 @@
             margin-top: 6px;
             background: rgba(255,215,0,0.02);
         }
-        .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
+        .qr-preview { 
+            max-width: 120px; 
+            max-height: 120px; 
+            border-radius: 6px; 
+            margin-top: 3px; 
+            border: 1px solid rgba(255,215,0,0.1); 
+            background: #fff; 
+            object-fit: contain;
+        }
         
         /* ===== CARD GRID ===== */
         .card-grid {
@@ -925,30 +934,6 @@
         .admin-card {
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
-        .red-container:hover, .admin-dash-card:hover, .admin-section:hover,
-        .tools-list .tool-item:hover, .social-list .social-item:hover,
-        .modal .btn-submit:hover, .modal-close:hover,
-        .nav-links button:hover, .admin-section .btn-edit:hover,
-        .admin-section .btn-save:hover,
-        .tools-list .tool-item .tool-actions button:hover,
-        .social-list .social-item .social-actions button:hover,
-        .social-icons-header a:hover, #chatUserList .chat-user-item:hover,
-        .admin-card:hover {
-        }
-        .red-container:active, .admin-dash-card:active, .admin-section:active,
-        .tools-list .tool-item:active, .social-list .social-item:active,
-        .modal .btn-submit:active, .modal-close:active,
-        .nav-links button:active, .admin-section .btn-edit:active,
-        .admin-section .btn-save:active,
-        .tools-list .tool-item .tool-actions button:active,
-        .social-list .social-item .social-actions button:active,
-        .social-icons-header a:active, #chatUserList .chat-user-item:active,
-        .admin-card:active {
-        }
-        .admin-section:active {
-            border-color: #FF0033 !important;
-            box-shadow: 0 0 30px rgba(255, 0, 51, 0.15);
-        }
     </style>
 </head>
 <body>
@@ -1022,19 +1007,36 @@
                 <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="adminSaveOffer()">💾 Save</button></div>
             </div>
             
-            <!-- 2. Payment Settings -->
+            <!-- 2. Payment Settings (NEW UI & FIXED SAVE) -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
                 <h4 style="color:#FFD700;">💳 Payment Settings</h4>
-                <div class="field-group"><label>Approval Mode</label><select id="paymentApprovalMode" disabled onchange="togglePaymentFields(this.value)"><option value="manual">Manual</option><option value="razorpay">Razorpay</option></select></div>
+                <div class="field-group">
+                    <label>Approval Mode</label>
+                    <select id="paymentApprovalMode" disabled onchange="togglePaymentFields(this.value)">
+                        <option value="manual">Manual (UPI)</option>
+                        <option value="razorpay">Razorpay</option>
+                    </select>
+                </div>
+                
+                <!-- Manual Payment Fields -->
                 <div id="manualPaymentFields" class="payment-mode-fields">
                     <div class="field-group"><label>UPI ID</label><input type="text" id="upiIdInput" placeholder="binary@ruthless" disabled></div>
-                    <div class="field-group"><label>Instructions</label><textarea id="paymentInstructionsInput" disabled></textarea></div>
-                    <div class="field-group"><label>Upload QR</label><input type="file" id="qrUploadInput" accept="image/*" onchange="previewQRImage(event)" disabled><div id="qrPreviewContainer" style="margin-top:3px;"></div></div>
+                    <div class="field-group"><label>Payment Instructions</label><textarea id="paymentInstructionsInput" placeholder="Please transfer..." disabled></textarea></div>
+                    <div class="field-group">
+                        <label>QR Code Image</label>
+                        <input type="file" id="qrUploadInput" accept="image/*" onchange="previewQRImage(event)" disabled>
+                        <div id="qrPreviewContainer" style="margin-top:5px; display:flex; justify-content:center; background:#fff; border-radius:8px; padding:8px; max-width:140px; margin-left:auto; margin-right:auto;">
+                            <!-- Preview will be injected here -->
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Razorpay Fields -->
                 <div id="razorpayPaymentFields" class="payment-mode-fields" style="display:none;">
                     <div class="field-group"><label>Razorpay Key ID</label><input type="text" id="razorpayKeyIdInput" placeholder="rzp_live_xxxx" disabled></div>
                     <div class="field-group"><label>Razorpay Key Secret</label><input type="text" id="razorpayKeySecretInput" placeholder="xxxx" disabled></div>
                 </div>
+                
                 <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="adminSavePaymentSettings()">💾 Save</button></div>
             </div>
             
@@ -1076,38 +1078,23 @@
                 <button class="section-add-btn" onclick="openToolModal()">➕ Add Tool</button>
             </div>
             
-            <!-- 7. Social Media -->
+            <!-- 7. Social Media (NEW CARD UI) -->
             <div class="admin-section">
                 <h4>📱 Social Media</h4>
-                <div id="socialList" class="social-list"></div>
-                <button class="section-add-btn" onclick="showAddSocialForm()">➕ Add Social Media</button>
-                <div id="addSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <div class="field-group"><label>Platform Name</label><input type="text" id="newSocialName" placeholder="e.g. Telegram"></div>
-                    <div class="field-group"><label>URL</label><input type="text" id="newSocialUrl" placeholder="https://t.me/yourchannel"></div>
-                    <div class="field-group"><label>Icon (Font Awesome)</label><input type="text" id="newSocialIcon" placeholder="fab fa-telegram-plane"></div>
-                    <div class="field-group"><label>Status</label><select id="newSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminAddSocial()" style="background:#FF0033;color:#fff;">💾 Save Social</button>
-                        <button class="btn-edit" onclick="document.getElementById('addSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
-                <div id="editSocialForm" style="display:none;margin-top:8px;border-top:1px solid rgba(255,0,51,0.1);padding-top:8px;">
-                    <input type="hidden" id="editSocialIndex">
-                    <div class="field-group"><label>Platform Name</label><input type="text" id="editSocialName"></div>
-                    <div class="field-group"><label>URL</label><input type="text" id="editSocialUrl"></div>
-                    <div class="field-group"><label>Icon</label><input type="text" id="editSocialIcon"></div>
-                    <div class="field-group"><label>Status</label><select id="editSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
-                    <div class="btn-row">
-                        <button class="btn-save show" onclick="adminUpdateSocial()" style="background:#FF0033;color:#fff;">💾 Update Social</button>
-                        <button class="btn-edit" onclick="document.getElementById('editSocialForm').style.display='none'" style="background:#333;color:#fff;">Cancel</button>
-                    </div>
-                </div>
+                <div id="socialCardGrid" class="card-grid"></div>
+                <button class="section-add-btn" onclick="openSocialModal()">➕ Add Social</button>
             </div>
             
-            <!-- 8. Admin Access -->
+            <!-- 8. Admin Access (Logo Preview & Fix) -->
             <div class="admin-section">
                 <h4>🖱️ Admin Access</h4>
-                <div class="field-group"><label>Upload Logo (PNG/JPG)</label><input type="file" id="logoUpload" accept="image/png, image/jpeg" disabled></div>
+                <div class="field-group">
+                    <label>Upload Logo (All Formats Supported)</label>
+                    <input type="file" id="logoUpload" accept="image/*" disabled>
+                    <div id="adminLogoPreview" style="margin-top:5px; display:flex; justify-content:center; padding:8px; border:1px dashed rgba(255,0,51,0.2); border-radius:8px; max-width:160px; margin-left:auto; margin-right:auto;">
+                        <!-- Preview will be injected here -->
+                    </div>
+                </div>
                 <div class="field-group"><label>Clicks on Logo</label><input type="number" id="logoClickCount" value="2" min="1" max="20" disabled></div>
                 <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="saveAdminSettings()">💾 Save</button></div>
             </div>
@@ -1118,6 +1105,18 @@
                 <div class="field-group"><label>New Password</label><input type="password" id="adminNewPassword" placeholder="Enter new password" disabled></div>
                 <div class="field-group"><label>Confirm New Password</label><input type="password" id="adminConfirmPassword" placeholder="Confirm new password" disabled></div>
                 <div class="btn-row"><button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button><button class="btn-save" onclick="changeAdminPassword()">💾 Save</button></div>
+            </div>
+
+            <!-- 10. DANGER ZONE: CLEAR FIREBASE STORAGE -->
+            <div class="admin-section" style="border-color:#FF0033; background: rgba(255,0,51,0.05);">
+                <h4 style="color:#FF0033;">⚠️ DANGER ZONE</h4>
+                <p style="font-size:0.6rem; color:var(--text-secondary); margin-bottom:8px;">
+                    This will permanently delete <strong>ALL</strong> data from Firebase (Users, Tools, Brokers, Payments, Chats, Settings, etc.) and reset the app to a fresh state. <br>
+                    You will need to enter the current Admin Password to confirm.
+                </p>
+                <button class="btn-edit" style="background:#FF0033; color:#fff; border:none; padding:10px 20px; width:100%; border-radius:8px; font-weight:700; cursor:pointer;" onclick="openClearDataModal()">
+                    🗑️ Clear Firebase Storage (100% Wipe)
+                </button>
             </div>
             
         </div>
@@ -1133,6 +1132,22 @@
         <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
         <button class="btn-enter" id="adminLoginBtn" onclick="adminLogin()">Enter</button>
         <div class="error-text" id="adminPassError"></div>
+    </div>
+</div>
+
+<!-- ===== CLEAR DATA CONFIRMATION MODAL ===== -->
+<div class="overlay" id="clearDataModal">
+    <div class="modal" style="max-width:400px; text-align:center;">
+        <button class="modal-close" onclick="closeModal('clearDataModal')">✕</button>
+        <span style="font-size:2.5rem; display:block; margin-bottom:8px;">⚠️</span>
+        <h2 style="color:#FF0033;">ARE YOU SURE?</h2>
+        <p style="color:var(--text-secondary); font-size:0.8rem; margin:8px 0 12px;">
+            This will permanently delete ALL data from the Firebase database. <br><br>
+            <strong>Enter your current Admin Password to confirm:</strong>
+        </p>
+        <input type="password" id="clearDataPasswordInput" placeholder="Enter admin password" style="width:100%; padding:10px; background:var(--input-bg); border:1px solid rgba(255,0,51,0.2); border-radius:6px; color:#fff; font-size:0.8rem; text-align:center; outline:none;">
+        <div class="error-msg" id="clearDataError" style="margin-top:4px;"></div>
+        <button class="btn-submit btn-danger" onclick="confirmClearData()" style="margin-top:10px; background:#FF0033; color:#fff;">🗑️ YES, CLEAR EVERYTHING</button>
     </div>
 </div>
 
@@ -1282,6 +1297,20 @@
   </div>
 </div>
 
+<!-- ===== SOCIAL MODAL (NEW) ===== -->
+<div class="overlay" id="socialModal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('socialModal')">✕</button>
+    <h2 id="socialModalTitle">📱 Add Social Media</h2>
+    <div class="field-group"><label>Platform Name</label><input type="text" id="modalSocialName" placeholder="e.g. Telegram"></div>
+    <div class="field-group"><label>URL</label><input type="text" id="modalSocialUrl" placeholder="https://t.me/yourchannel"></div>
+    <div class="field-group"><label>Icon (Font Awesome Class)</label><input type="text" id="modalSocialIcon" placeholder="fab fa-telegram-plane"></div>
+    <div class="field-group"><label>Status</label><select id="modalSocialStatus"><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+    <button class="btn-submit btn-primary" id="socialSubmitBtn" onclick="submitSocial()">💾 Save Social</button>
+    <div class="error-msg" id="socialModalError"></div>
+  </div>
+</div>
+
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- External Scripts -->
@@ -1323,7 +1352,7 @@ let appState = {
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
-let currentRevenuePeriod = 'today';
+let currentRevenuePeriod = 'today', editingSocialId = null;
 let initialSyncDone = false;
 
 function applyAdminLogo(logoBase64) {
@@ -1336,6 +1365,16 @@ function applyAdminLogo(logoBase64) {
     } else {
         icon.style.display = 'block';
         img.style.display = 'none';
+    }
+}
+
+function applyAdminLogoPreview(logoBase64) {
+    const container = document.getElementById('adminLogoPreview');
+    if (!container) return;
+    if (logoBase64) {
+        container.innerHTML = `<img src="${logoBase64}" style="max-width:120px; max-height:120px; border-radius:8px; object-fit:contain;" alt="Logo Preview" />`;
+    } else {
+        container.innerHTML = `<span style="font-size:0.5rem; color:var(--text-muted);">No logo uploaded</span>`;
     }
 }
 
@@ -1404,44 +1443,10 @@ function loadPaymentSettings() {
     loadQRPreview();
 }
 
-window.adminSavePaymentSettings = function() {
-    const mode = document.getElementById('paymentApprovalMode').value;
-    appState.paymentApprovalMode = mode;
-    const section = document.getElementById('paymentApprovalMode').closest('.admin-section');
-    const done = () => {
-        saveLocalState();
-        loadQRPreview();
-        disableEditFields(section);
-        const btn = section.querySelector('.btn-save');
-        btn.textContent = '✅ Saved';
-        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
-    };
-    if (mode === 'manual') {
-        appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless';
-        appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
-        const fileInput = document.getElementById('qrUploadInput');
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                appState.qrCodeBase64 = e.target.result;
-                localStorage.setItem('brt_qr', e.target.result);
-                done();
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        } else {
-            done();
-        }
-    } else {
-        appState.razorpayKeyId = document.getElementById('razorpayKeyIdInput').value.trim();
-        appState.razorpayKeySecret = document.getElementById('razorpayKeySecretInput').value.trim();
-        done();
-    }
-};
-
 function loadQRPreview() { 
     const container = document.getElementById('qrPreviewContainer'); 
     if (!container) return; 
-    container.innerHTML = appState.qrCodeBase64 ? `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />` : ''; 
+    container.innerHTML = appState.qrCodeBase64 ? `<img src="${appState.qrCodeBase64}" class="qr-preview" alt="QR" />` : '<span style="font-size:0.5rem;color:var(--text-muted);">No QR</span>'; 
 }
 
 function previewQRImage(event) { 
@@ -1453,7 +1458,43 @@ function previewQRImage(event) {
     } 
 }
 
-// ─── BROKER CARD FUNCTIONS (with visibility toggle) ───
+// ─── PAYMENT SAVE FIX (QR + FIELDS) ───
+window.adminSavePaymentSettings = function() {
+    const mode = document.getElementById('paymentApprovalMode').value;
+    appState.paymentApprovalMode = mode;
+    
+    if (mode === 'manual') {
+        appState.upiId = document.getElementById('upiIdInput').value.trim() || 'binary@ruthless';
+        appState.paymentInstructions = document.getElementById('paymentInstructionsInput').value.trim();
+        const fileInput = document.getElementById('qrUploadInput');
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                appState.qrCodeBase64 = e.target.result;
+                localStorage.setItem('brt_qr', e.target.result);
+                finishSave();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            finishSave();
+        }
+    } else {
+        appState.razorpayKeyId = document.getElementById('razorpayKeyIdInput').value.trim();
+        appState.razorpayKeySecret = document.getElementById('razorpayKeySecretInput').value.trim();
+        finishSave();
+    }
+    
+    function finishSave() {
+        saveLocalState();
+        loadQRPreview();
+        disableEditFields(document.querySelector('.admin-section'));
+        const btn = document.getElementById('paymentApprovalMode').closest('.admin-section').querySelector('.btn-save');
+        btn.textContent = '✅ Saved';
+        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    }
+};
+
+// ─── BROKER CARD FUNCTIONS ───
 let editingBrokerId = null;
 
 function renderBrokerCards() {
@@ -1551,7 +1592,7 @@ window.clearAllBrokers = function() {
     }
 };
 
-// ─── CREDIT PACK CARD FUNCTIONS (with visibility toggle) ───
+// ─── CREDIT PACK CARD FUNCTIONS ───
 let editingPackId = null;
 
 function renderCreditPackCards() {
@@ -1651,7 +1692,7 @@ function renderToolCards() {
     appState.tools.forEach(tool => {
         const visibilityText = tool.visibility === 'visible' ? 'Visible' : 'Hidden';
         const fireStatus = tool.showFire !== undefined ? tool.showFire : true;
-        const triggerText = tool.triggers && tool.triggers.length > 0 ? tool.triggers.join(', ') : 'Default (Signal, Get, Generate, BUY, SELL)';
+        const triggerText = tool.triggers && tool.triggers.length > 0 ? tool.triggers.join(', ') : 'Default';
         grid.innerHTML += `
             <div class="admin-card" style="opacity:${tool.visibility === 'hidden' ? '0.4' : '1'}">
                 <div class="card-actions">
@@ -1745,33 +1786,96 @@ window.submitTool = function() {
     renderToolCards();
 };
 
-// ─── SOCIAL LIST ───
-function renderSocialList() {
-    const container = document.getElementById('socialList'); if (!container) return; container.innerHTML = '';
-    const socials = appState.socialMedia || [];
-    if (socials.length === 0) { container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No social media added yet</div>'; return; }
-    socials.forEach((s, idx) => {
-        const statusText = s.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
-        container.innerHTML += `<div class="social-item"><div class="social-info"><div class="social-name"><i class="${s.icon || 'fas fa-link'}"></i> ${s.name}</div><div class="social-url">${s.url}</div><div style="font-size:0.4rem;color:var(--text-secondary);">${statusText}</div></div><div class="social-actions"><button class="btn-edit-social" onclick="editSocial(${idx})">✏️ Edit</button><button class="btn-toggle-social" onclick="toggleSocialVisibility(${idx})">${s.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button><button class="btn-delete-social" onclick="deleteSocial(${idx})">🗑️ Delete</button></div></div>`;
+// ─── SOCIAL MEDIA (NEW CARD UI + MODAL) ───
+let editingSocialId = null;
+
+function renderSocialCards() {
+    const grid = document.getElementById('socialCardGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    appState.socialMedia.forEach(s => {
+        const visibility = s.visibility || 'visible';
+        const toggleText = visibility === 'visible' ? '🙈' : '👁️';
+        grid.innerHTML += `
+            <div class="admin-card" style="opacity:${visibility === 'hidden' ? '0.4' : '1'}">
+                <div class="card-actions">
+                    <button class="toggle-card" onclick="toggleSocialVisibility('${s.id}')">${toggleText}</button>
+                    <button class="edit-card" onclick="editSocial('${s.id}')">✏️</button>
+                    <button class="delete-card" onclick="deleteSocial('${s.id}')">✕</button>
+                </div>
+                <div class="card-icon"><i class="${s.icon || 'fas fa-link'}"></i></div>
+                <div class="card-title">${s.name}</div>
+                <div class="card-detail">${s.url}</div>
+            </div>
+        `;
     });
 }
-window.editSocial = function(idx) {
-    const social = appState.socialMedia[idx]; if (!social) return; window.editingSocialIndex = idx;
-    document.getElementById('editSocialIndex').value = idx; document.getElementById('editSocialName').value = social.name || ''; document.getElementById('editSocialUrl').value = social.url || ''; document.getElementById('editSocialIcon').value = social.icon || ''; document.getElementById('editSocialStatus').value = social.visibility || 'visible';
-    document.getElementById('editSocialForm').style.display = 'block'; document.getElementById('addSocialForm').style.display = 'none';
+
+window.toggleSocialVisibility = function(id) {
+    const social = appState.socialMedia.find(s => s.id === id);
+    if (!social) return;
+    social.visibility = social.visibility === 'hidden' ? 'visible' : 'hidden';
+    saveLocalState();
+    localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+    renderSocialCards();
+    renderAdminSocialMedia();
 };
-window.adminUpdateSocial = function() {
-    const idx = parseInt(document.getElementById('editSocialIndex').value); const name = document.getElementById('editSocialName').value.trim(); const url = document.getElementById('editSocialUrl').value.trim(); const icon = document.getElementById('editSocialIcon').value.trim(); const visibility = document.getElementById('editSocialStatus').value;
-    if (!name || !url) { alert('Please enter name and URL'); return; }
-    appState.socialMedia[idx] = { ...appState.socialMedia[idx], name, url, icon, visibility }; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('editSocialForm').style.display = 'none';
+
+window.openSocialModal = function() {
+    editingSocialId = null;
+    document.getElementById('socialModalTitle').textContent = '📱 Add Social Media';
+    document.getElementById('modalSocialName').value = '';
+    document.getElementById('modalSocialUrl').value = '';
+    document.getElementById('modalSocialIcon').value = '';
+    document.getElementById('modalSocialStatus').value = 'visible';
+    document.getElementById('socialModalError').textContent = '';
+    document.getElementById('socialSubmitBtn').textContent = '💾 Save Social';
+    openModal('socialModal');
 };
-window.toggleSocialVisibility = function(idx) { const social = appState.socialMedia[idx]; if (!social) return; social.visibility = social.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); };
-window.deleteSocial = function(idx) { if (confirm('Delete this social media?')) { appState.socialMedia.splice(idx, 1); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); } };
-window.showAddSocialForm = function() { document.getElementById('addSocialForm').style.display = 'block'; document.getElementById('editSocialForm').style.display = 'none'; document.getElementById('newSocialName').value = ''; document.getElementById('newSocialUrl').value = ''; document.getElementById('newSocialIcon').value = ''; document.getElementById('newSocialStatus').value = 'visible'; };
-window.adminAddSocial = function() {
-    const name = document.getElementById('newSocialName').value.trim(); const url = document.getElementById('newSocialUrl').value.trim(); const icon = document.getElementById('newSocialIcon').value.trim() || 'fas fa-link'; const visibility = document.getElementById('newSocialStatus').value;
-    if (!name || !url) { alert('Please enter name and URL'); return; }
-    if (!appState.socialMedia) appState.socialMedia = []; appState.socialMedia.push({ id: 'social_' + Date.now(), name, url, icon, visibility }); saveLocalState(); localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia)); renderSocialList(); renderAdminSocialMedia(); document.getElementById('addSocialForm').style.display = 'none';
+
+window.editSocial = function(id) {
+    const social = appState.socialMedia.find(s => s.id === id);
+    if (!social) return;
+    editingSocialId = id;
+    document.getElementById('socialModalTitle').textContent = '✏️ Edit Social';
+    document.getElementById('modalSocialName').value = social.name || '';
+    document.getElementById('modalSocialUrl').value = social.url || '';
+    document.getElementById('modalSocialIcon').value = social.icon || '';
+    document.getElementById('modalSocialStatus').value = social.visibility || 'visible';
+    document.getElementById('socialModalError').textContent = '';
+    document.getElementById('socialSubmitBtn').textContent = '💾 Update Social';
+    openModal('socialModal');
+};
+
+window.deleteSocial = function(id) {
+    if (confirm('Delete this social media?')) {
+        appState.socialMedia = appState.socialMedia.filter(s => s.id !== id);
+        saveLocalState();
+        localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+        renderSocialCards();
+        renderAdminSocialMedia();
+    }
+};
+
+window.submitSocial = function() {
+    const name = document.getElementById('modalSocialName').value.trim();
+    const url = document.getElementById('modalSocialUrl').value.trim();
+    const icon = document.getElementById('modalSocialIcon').value.trim() || 'fas fa-link';
+    const visibility = document.getElementById('modalSocialStatus').value;
+    const errorEl = document.getElementById('socialModalError');
+    if (!name || !url) { errorEl.textContent = '❌ Name and URL required'; return; }
+    const socialData = { name, url, icon, visibility };
+    if (editingSocialId) {
+        const idx = appState.socialMedia.findIndex(s => s.id === editingSocialId);
+        if (idx !== -1) appState.socialMedia[idx] = { ...appState.socialMedia[idx], ...socialData };
+    } else {
+        appState.socialMedia.push({ id: 'social_' + Date.now(), ...socialData });
+    }
+    saveLocalState();
+    localStorage.setItem('brt_social', JSON.stringify(appState.socialMedia));
+    closeModal('socialModal');
+    renderSocialCards();
+    renderAdminSocialMedia();
 };
 
 // ─── OFFER SAVE ───
@@ -1797,31 +1901,31 @@ window.adminSaveOffer = function() {
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
 };
 
-// ─── LOGO SAVE ───
-window.adminSaveLogo = function() {
-    const file = document.getElementById('logoUpload').files[0];
-    if (file) { const reader = new FileReader(); reader.onload = (e) => { 
-        const logoData = e.target.result;
-        appState.logoBase64 = logoData; 
-        localStorage.setItem('brt_logo', logoData);
-        applyAdminLogo(logoData);
-        saveLocalState(); 
-        disableEditFields(document.querySelector('.admin-section')); 
-        const btn = document.getElementById('logoUpload').closest('.admin-section').querySelector('.btn-save'); 
-        btn.textContent = '✅ Saved'; 
-        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000); 
-    }; reader.readAsDataURL(file); } else { alert('Select an image!'); }
-};
-
-// ─── ADMIN SETTINGS SAVE ───
+// ─── ADMIN SETTINGS SAVE (LOGO FIX) ───
 window.saveAdminSettings = function() {
-    appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
-    saveLocalState(); 
-    localStorage.setItem('brt_logo_click_count', appState.logoClickCount); 
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    const fileInput = document.getElementById('logoUpload');
+    const saveLogic = () => {
+        appState.logoClickCount = parseInt(document.getElementById('logoClickCount').value) || 2;
+        saveLocalState(); 
+        localStorage.setItem('brt_logo_click_count', appState.logoClickCount); 
+        applyAdminLogoPreview(appState.logoBase64);
+        disableEditFields(document.querySelector('.admin-section'));
+        const btn = document.getElementById('logoClickCount').closest('.admin-section').querySelector('.btn-save');
+        btn.textContent = '✅ Saved';
+        setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    };
+    
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            appState.logoBase64 = e.target.result;
+            localStorage.setItem('brt_logo', e.target.result);
+            saveLogic();
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        saveLogic();
+    }
 };
 
 // ─── CREDITS PER SIGNAL SAVE ───
@@ -1840,6 +1944,72 @@ window.saveCreditsPerSignal = function() {
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
     alert('✅ Credits Per Signal saved: ' + value);
+};
+
+// ─── CHANGE PASSWORD (FIX) ───
+window.changeAdminPassword = function() {
+    const newPass = document.getElementById('adminNewPassword').value;
+    const confirmPass = document.getElementById('adminConfirmPassword').value;
+    if (newPass.length < 4) { alert('Password must be at least 4 characters!'); return; }
+    if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
+    appState.password = newPass;
+    saveLocalState();
+    document.getElementById('adminNewPassword').value = '';
+    document.getElementById('adminConfirmPassword').value = '';
+    disableEditFields(document.querySelector('.admin-section'));
+    const btn = document.getElementById('adminNewPassword').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    alert('🔐 Password updated successfully! Please use the new password next time.');
+};
+
+// ─── CLEAR FIREBASE STORAGE (DANGER ZONE) ───
+window.openClearDataModal = function() {
+    document.getElementById('clearDataPasswordInput').value = '';
+    document.getElementById('clearDataError').textContent = '';
+    openModal('clearDataModal');
+};
+
+window.confirmClearData = function() {
+    const enteredPass = document.getElementById('clearDataPasswordInput').value;
+    if (enteredPass !== appState.password) {
+        document.getElementById('clearDataError').textContent = '❌ Incorrect password!';
+        return;
+    }
+    if (!confirm('⚠️ FINAL WARNING: This will permanently delete ALL data (Users, Tools, Brokers, Payments, Chats, etc.). Continue?')) return;
+    
+    // Reset appState to a fresh empty state, but KEEP the current password and Firebase keys
+    const freshState = {
+        password: appState.password,
+        offerCredits: 10,
+        offerName: 'FREE SIGNAL OFFER',
+        offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
+        upiId: 'binary@ruthless',
+        paymentInstructions: 'Please transfer the amount to the UPI ID.',
+        qrCodeBase64: '',
+        creditPacks: [],
+        brokers: [],
+        users: [],
+        payments: [],
+        verificationRequests: [],
+        tools: [],
+        socialMedia: [],
+        logoBase64: '',
+        chats: {},
+        logoClickCount: 2,
+        paymentApprovalMode: 'manual',
+        razorpayKeyId: '',
+        razorpayKeySecret: '',
+        creditsPerSignal: 1
+    };
+    
+    appState = freshState;
+    localStorage.clear(); // Clear all local cached data
+    saveLocalState(); // Push fresh state to Firebase
+    
+    closeModal('clearDataModal');
+    alert('✅ Firebase storage has been 100% cleared. The page will now reload.');
+    window.location.reload();
 };
 
 // ─── EDIT/SAVE FUNCTIONS ───
@@ -1878,7 +2048,7 @@ onValue(dbRef, (snapshot) => {
         renderBrokerCards();
         renderCreditPackCards();
         renderToolCards();
-        renderSocialList();
+        renderSocialCards();
         renderAdminSocialMedia();
         renderPendingPayments();
         renderPendingVerifications();
@@ -1886,7 +2056,10 @@ onValue(dbRef, (snapshot) => {
         updateChatNotification();
         updatePendingCounts();
         updateRevenueCount();
-        if (val.logoBase64) applyAdminLogo(val.logoBase64);
+        if (val.logoBase64) {
+            applyAdminLogo(val.logoBase64);
+            applyAdminLogoPreview(val.logoBase64);
+        }
     }
 }, (err) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; });
 
@@ -1901,9 +2074,11 @@ function loadLocalState() {
     const toolsData = localStorage.getItem('brt_tools');
     if (toolsData) { try { appState.tools = JSON.parse(toolsData) || []; } catch(e){} }
     const logoData = localStorage.getItem('brt_logo');
-    if (logoData) { appState.logoBase64 = logoData; applyAdminLogo(logoData); }
-    // Reset credit packs and brokers to fresh empty if needed (admin can clear manually)
-    // No need to force empty here, we want to keep saved data.
+    if (logoData) { 
+        appState.logoBase64 = logoData; 
+        applyAdminLogo(logoData);
+        applyAdminLogoPreview(logoData);
+    }
     const creditsPerSignalData = localStorage.getItem('brt_credits_per_signal');
     if (creditsPerSignalData) appState.creditsPerSignal = parseInt(creditsPerSignalData) || 1;
     const razorpayKeyIdData = localStorage.getItem('brt_razorpay_key_id');
@@ -1924,7 +2099,7 @@ function loadLocalState() {
     renderBrokerCards();
     renderCreditPackCards();
     renderToolCards();
-    renderSocialList();
+    renderSocialCards();
     renderAdminSocialMedia();
     loadPaymentSettings();
     renderPendingPayments();
@@ -2470,17 +2645,6 @@ document.getElementById('adminLogoutBtn').addEventListener('click', function() {
     window.location.href = 'index.html';
 });
 
-window.changeAdminPassword = function() {
-    const newPass = document.getElementById('adminNewPassword').value; const confirmPass = document.getElementById('adminConfirmPassword').value;
-    if (newPass.length < 4) { alert('Password must be at least 4 characters!'); return; }
-    if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
-    appState.password = newPass; saveLocalState(); sessionStorage.setItem('admin_logged_in', 'true');
-    const btn = document.getElementById('adminNewPassword').closest('.admin-section').querySelector('.btn-save');
-    btn.textContent = '✅ Saved';
-    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
-    document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
-};
-
 // ─── REVENUE FUNCTIONS ───
 function getPaymentsInRange(startDate, endDate) {
     return (appState.payments || []).filter(p => p.status === 'success' && new Date(p.date) >= startDate && new Date(p.date) <= endDate);
@@ -2546,7 +2710,7 @@ window.adminApproveVerification = adminApproveVerification; window.adminRejectVe
 window.openUserDetailPopup = openUserDetailPopup; window.giveFreeCredits = giveFreeCredits; window.blockUser = blockUser; window.removeUser = removeUser; window.chatWithUser = chatWithUser;
 window.openPendingPaymentsPopup = openPendingPaymentsPopup; window.openPendingVerificationsPopup = openPendingVerificationsPopup; window.openUsersPopup = openUsersPopup; window.openChatPopup = openChatPopup;
 window.showVerifiedUsers = showVerifiedUsers; window.showAddUserForm = showAddUserForm; window.adminAddUserFromPopup = adminAddUserFromPopup; window.searchUsersInPopup = searchUsersInPopup;
-window.adminSavePaymentSettings = adminSavePaymentSettings; window.adminSaveLogo = adminSaveLogo;
+window.adminSavePaymentSettings = adminSavePaymentSettings;
 window.adminSaveOffer = adminSaveOffer; window.saveAdminSettings = saveAdminSettings;
 window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
 window.openBrokerModal = openBrokerModal; window.editBroker = editBroker; window.deleteBroker = deleteBroker; window.submitBroker = submitBroker;
@@ -2554,7 +2718,6 @@ window.openCreditPackModal = openCreditPackModal; window.editCreditPack = editCr
 window.openToolModal = openToolModal; window.editTool = editTool; window.deleteTool = deleteTool; window.toggleToolVisibility = toggleToolVisibility; window.submitTool = submitTool;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers; window.clearSelectedChatUser = clearSelectedChatUser;
 window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
-window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
 window.showRevenue = showRevenue;
@@ -2563,6 +2726,13 @@ window.toggleBrokerVisibility = toggleBrokerVisibility;
 window.toggleCreditPackVisibility = toggleCreditPackVisibility;
 window.clearAllCreditPacks = clearAllCreditPacks;
 window.clearAllBrokers = clearAllBrokers;
+window.openClearDataModal = openClearDataModal;
+window.confirmClearData = confirmClearData;
+window.openSocialModal = openSocialModal;
+window.editSocial = editSocial;
+window.deleteSocial = deleteSocial;
+window.toggleSocialVisibility = toggleSocialVisibility;
+window.submitSocial = submitSocial;
 
 console.log('⚙️ Admin Panel Loaded - All Features Active');
 </script>
