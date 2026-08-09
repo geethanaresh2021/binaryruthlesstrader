@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
-// Firebase config is loaded from external firebase-config.js
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
@@ -11,7 +10,7 @@ const dbRef = ref(database, 'brt_data');
 
 /* ===== APP STATE ===== */
 let appState = {
-    password: 'admin123', 
+    password: '9700224305', 
     offerCredits: 10,
     offerName: 'FREE SIGNAL OFFER',
     offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
@@ -49,12 +48,6 @@ function applyAdminLogo(logoBase64) {
         img.style.display = 'none';
     }
 }
-
-/* ===== PASSWORD POPUP ===== */
-window.hidePasswordPopup = function() {
-    document.getElementById('passwordOverlay').classList.remove('active');
-    window.location.href = 'index.html';
-};
 
 /* ===== SOCIAL MEDIA (HEADER) ===== */
 function renderAdminSocialMedia() {
@@ -118,6 +111,12 @@ function updatePendingCounts() {
     const verifiedUsers = appState.users.filter(u => u.verified === true);
     document.getElementById('verifiedUsersCount').textContent = verifiedUsers.length;
     document.getElementById('verifiedUsersCount').className = 'count gold';
+
+    // Total Revenue
+    const successfulPayments = payments.filter(p => p.status === 'success');
+    const totalRevenue = successfulPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    document.getElementById('totalRevenueCount').textContent = '₹' + totalRevenue;
+    document.getElementById('totalRevenueCount').className = 'count gold';
 }
 
 /* ===== CHAT KEY HELPER ===== */
@@ -880,7 +879,11 @@ window.adminApproveVerification = function(idx) {
     const request = appState.verificationRequests[idx];
     if (!request || request.status !== 'pending') return;
     const inputField = document.getElementById('verifyFreeCredits_' + idx);
-    const freeCredits = inputField ? parseInt(inputField.value) || appState.offerCredits || 10 : appState.offerCredits || 10;
+    let freeCredits = appState.offerCredits || 10;
+    if (inputField) {
+        const val = parseInt(inputField.value);
+        if (!isNaN(val)) freeCredits = val;
+    }
     if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
         request.status = 'approved';
         const user = appState.users.find(u => u.email === request.userEmail);
@@ -912,7 +915,7 @@ window.adminRejectVerification = function(idx) {
 
 /* ===== USERS LIST ===== */
 function renderUsersList() {
-    // Called internally but no direct DOM manipulation needed, serves as placeholder
+    // placeholder
 }
 
 function showVerifiedUsers() { 
@@ -1236,6 +1239,80 @@ function updateChatNotification() {
     document.getElementById('chatNotificationCount').className = 'count ' + (totalUnread > 0 ? 'red' : 'green');
 }
 
+/* ===== REVENUE FUNCTIONS ===== */
+window.openRevenuePopup = function() {
+    openModal('revenuePopup');
+    showRevenueBreakdown('total');
+};
+
+window.showRevenueBreakdown = function(period) {
+    const payments = (appState.payments || []).filter(p => p.status === 'success');
+    const now = new Date();
+    let filtered = [];
+    let title = '';
+
+    if (period === 'today') {
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        filtered = payments.filter(p => new Date(p.date) >= start);
+        title = 'Today';
+    } else if (period === 'yesterday') {
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        filtered = payments.filter(p => {
+            const d = new Date(p.date);
+            return d >= start && d < end;
+        });
+        title = 'Yesterday';
+    } else if (period === 'weekly') {
+        const day = now.getDay();
+        const diff = day === 0 ? 6 : day - 1;
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diff);
+        filtered = payments.filter(p => new Date(p.date) >= start);
+        title = 'This Week';
+    } else if (period === 'monthly') {
+        const start = new Date(now.getFullYear(), now.getMonth(), 1);
+        filtered = payments.filter(p => new Date(p.date) >= start);
+        title = 'This Month';
+    } else if (period === 'yearly') {
+        const start = new Date(now.getFullYear(), 0, 1);
+        filtered = payments.filter(p => new Date(p.date) >= start);
+        title = 'This Year';
+    } else if (period === 'custom') {
+        const dateStr = document.getElementById('revenueCustomDate').value;
+        if (!dateStr) { alert('Select a date'); return; }
+        const customDate = new Date(dateStr);
+        const start = new Date(customDate.getFullYear(), customDate.getMonth(), customDate.getDate());
+        const end = new Date(start.getTime() + 24*60*60*1000);
+        filtered = payments.filter(p => {
+            const d = new Date(p.date);
+            return d >= start && d < end;
+        });
+        title = 'Custom Date';
+    } else { // total
+        filtered = payments;
+        title = 'Total Revenue';
+    }
+
+    const totalAmount = filtered.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const container = document.getElementById('revenueBreakdownContent');
+    const noData = document.getElementById('noRevenueData');
+
+    if (filtered.length === 0) {
+        container.innerHTML = '';
+        noData.style.display = 'block';
+        return;
+    }
+    noData.style.display = 'none';
+    let html = `<div style="font-size:0.7rem;color:var(--popup-label);margin-bottom:4px;font-family:'Orbitron',sans-serif;">${title}</div>`;
+    filtered.forEach(p => {
+        const user = appState.users.find(u => u.email === p.userEmail);
+        const name = user ? user.name || user.email : p.userEmail;
+        html += `<div class="revenue-item"><span>${name}</span><span class="revenue-amount">₹${p.amount}</span></div>`;
+    });
+    html += `<div class="revenue-total">Total: ₹${totalAmount}</div>`;
+    container.innerHTML = html;
+};
+
 /* ===== POPUP OPENERS ===== */
 window.openPendingPaymentsPopup = function() { renderPendingPayments(); openModal('pendingPaymentsPopup'); };
 window.openPendingVerificationsPopup = function() { renderPendingVerifications(); openModal('pendingVerificationsPopup'); };
@@ -1249,35 +1326,38 @@ window.openModal = openModal; window.closeModal = closeModal;
 
 /* ===== ADMIN AUTH ===== */
 let adminSession = sessionStorage.getItem('admin_logged_in');
-if (adminSession === 'true') { adminLoggedIn = true; document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('passwordOverlay').classList.remove('active'); loadLocalState(); } else { showPasswordPopup(); }
+if (adminSession === 'true') {
+    adminLoggedIn = true;
+    document.getElementById('adminDashboard').style.display = 'block';
+    document.getElementById('adminArea').style.display = 'block';
+    loadLocalState();
+} else {
+    window.location.href = 'index.html';
+}
 
-function showPasswordPopup() { document.getElementById('passwordOverlay').classList.add('active'); document.getElementById('adminPassInput').value = ''; document.getElementById('adminLoginBtn').disabled = true; document.getElementById('adminLoginBtn').classList.remove('enabled'); document.getElementById('adminPassInput').classList.remove('correct', 'wrong'); document.getElementById('adminPassError').textContent = ''; setTimeout(() => document.getElementById('adminPassInput').focus(), 100); }
-
-window.checkAdminPassword = function() {
-    const pass = document.getElementById('adminPassInput').value; const loginBtn = document.getElementById('adminLoginBtn'); const errorEl = document.getElementById('adminPassError');
-    if (pass === appState.password) { loginBtn.disabled = false; loginBtn.classList.add('enabled'); document.getElementById('adminPassInput').classList.add('correct'); document.getElementById('adminPassInput').classList.remove('wrong'); errorEl.textContent = ''; }
-    else { loginBtn.disabled = true; loginBtn.classList.remove('enabled'); document.getElementById('adminPassInput').classList.remove('correct'); if (pass.length > 0) { document.getElementById('adminPassInput').classList.add('wrong'); errorEl.textContent = '❌ Incorrect password'; } else { document.getElementById('adminPassInput').classList.remove('wrong'); errorEl.textContent = ''; } }
-};
-window.adminLogin = function() { if (document.getElementById('adminPassInput').value === appState.password) { adminLoggedIn = true; sessionStorage.setItem('admin_logged_in', 'true'); hidePasswordPopup(); document.getElementById('adminDashboard').style.display = 'block'; document.getElementById('adminArea').style.display = 'block'; document.getElementById('adminPassInput').value = ''; loadLocalState(); } };
-document.getElementById('adminPassInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !document.getElementById('adminLoginBtn').disabled) { adminLogin(); } });
-
+/* ===== LOGOUT ===== */
 document.getElementById('adminLogoutBtn').addEventListener('click', function() {
-    adminLoggedIn = false; sessionStorage.removeItem('admin_logged_in');
+    adminLoggedIn = false;
+    sessionStorage.removeItem('admin_logged_in');
     sessionStorage.removeItem('user_logged_in');
-    document.getElementById('adminDashboard').style.display = 'none'; document.getElementById('adminArea').style.display = 'none';
     window.location.href = 'index.html';
 });
 
 /* ===== CHANGE PASSWORD ===== */
 window.changeAdminPassword = function() {
-    const newPass = document.getElementById('adminNewPassword').value; const confirmPass = document.getElementById('adminConfirmPassword').value;
+    const newPass = document.getElementById('adminNewPassword').value;
+    const confirmPass = document.getElementById('adminConfirmPassword').value;
     if (newPass.length < 4) { alert('Password must be at least 4 characters!'); return; }
     if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
-    appState.password = newPass; saveLocalState(); sessionStorage.setItem('admin_logged_in', 'true');
+    appState.password = newPass;
+    saveLocalState();
+    sessionStorage.setItem('admin_logged_in', 'true');
     const btn = document.getElementById('adminNewPassword').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
-    document.getElementById('adminNewPassword').value = ''; document.getElementById('adminConfirmPassword').value = ''; disableEditFields(document.querySelector('.admin-section'));
+    document.getElementById('adminNewPassword').value = '';
+    document.getElementById('adminConfirmPassword').value = '';
+    disableEditFields(document.querySelector('.admin-section'));
 };
 
 /* ===== EXPORT GLOBAL FUNCTIONS ===== */
@@ -1294,10 +1374,12 @@ window.enableEdit = enableEdit; window.previewQRImage = previewQRImage;
 window.editTool = editTool; window.adminUpdateTool = adminUpdateTool; window.toggleToolVisibility = toggleToolVisibility; window.deleteTool = deleteTool; window.showAddToolForm = showAddToolForm; window.adminAddTool = adminAddTool;
 window.toggleToolFire = toggleToolFire;
 window.selectChatUser = selectChatUser; window.sendChatMessage = sendChatMessage; window.filterChatUsers = filterChatUsers; window.clearSelectedChatUser = clearSelectedChatUser;
-window.hidePasswordPopup = hidePasswordPopup; window.adminLogin = adminLogin; window.changeAdminPassword = changeAdminPassword;
+window.changeAdminPassword = changeAdminPassword;
 window.editSocial = editSocial; window.adminUpdateSocial = adminUpdateSocial; window.toggleSocialVisibility = toggleSocialVisibility; window.deleteSocial = deleteSocial; window.showAddSocialForm = showAddSocialForm; window.adminAddSocial = adminAddSocial;
 window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
+window.openRevenuePopup = openRevenuePopup;
+window.showRevenueBreakdown = showRevenueBreakdown;
 
 /* ===== CURSOR GLOW ===== */
 const glow = document.getElementById('cursorGlow');
