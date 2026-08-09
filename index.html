@@ -191,6 +191,18 @@
         </div>
     </div>
 
+    <!-- ===== ADMIN PASSWORD POPUP (moved from admin.html) ===== -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-modal">
+            <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
+            <div class="lock-icon">🔐</div>
+            <h2>ENTER ADMIN PASSWORD</h2>
+            <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
+            <button class="btn-enter" id="adminLoginBtn" onclick="adminLogin()">Enter</button>
+            <div class="error-text" id="adminPassError"></div>
+        </div>
+    </div>
+
     <script src="security.js"></script>
     <script src="firebase-config.js"></script>
     <!-- External JavaScript -->
