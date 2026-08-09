@@ -112,7 +112,6 @@ function updatePendingCounts() {
     document.getElementById('verifiedUsersCount').textContent = verifiedUsers.length;
     document.getElementById('verifiedUsersCount').className = 'count gold';
 
-    // Total Revenue
     const successfulPayments = payments.filter(p => p.status === 'success');
     const totalRevenue = successfulPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
     document.getElementById('totalRevenueCount').textContent = '₹' + totalRevenue;
@@ -367,7 +366,7 @@ window.adminUpdateBroker = function(id) {
     setTimeout(() => { saveBtn.textContent = '💾 Add'; saveBtn.onclick = adminAddBroker; }, 2000);
 };
 
-/* ===== TOOLS MANAGER ===== */
+/* ===== TOOLS MANAGER (UI ALWAYS SHOWS ACTIONS) ===== */
 function renderToolsList() {
     const container = document.getElementById('toolsList'); if (!container) return; container.innerHTML = '';
     const tools = appState.tools || [];
@@ -375,8 +374,6 @@ function renderToolsList() {
         container.innerHTML = '<div style="color:var(--text-muted);font-size:0.45rem;text-align:center;padding:8px;">No tools added yet</div>'; 
         return; 
     }
-    const section = container.closest('.admin-section');
-    const isEditable = section && section.classList.contains('editable');
     
     tools.forEach((tool, idx) => {
         const statusText = tool.visibility === 'visible' ? '🟢 Visible' : '🔴 Hidden';
@@ -384,17 +381,17 @@ function renderToolsList() {
         const fireBtnText = fireStatus ? '🔥 ON' : '🔥 OFF';
         const fireBtnClass = fireStatus ? '' : 'off';
         const triggerText = tool.triggers && tool.triggers.length > 0 ? '🎯 ' + tool.triggers.join(', ') : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
-        let actions = '';
-        if (isEditable) {
-            actions = `
-                <div class="tool-actions">
-                    <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
-                    <button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button>
-                    <button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
-                    <button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button>
-                </div>
-            `;
-        }
+        
+        // Actions ALWAYS visible now
+        const actions = `
+            <div class="tool-actions" style="display:flex;">
+                <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
+                <button class="btn-edit-tool" onclick="editTool(${idx})">✏️ Edit</button>
+                <button class="btn-toggle-tool" onclick="toggleToolVisibility(${idx})">${tool.visibility === 'visible' ? '🙈 Hide' : '👁️ Show'}</button>
+                <button class="btn-delete-tool" onclick="deleteTool(${idx})">🗑️ Delete</button>
+            </div>
+        `;
+        
         container.innerHTML += `
             <div class="tool-item">
                 <div class="tool-info">
@@ -456,7 +453,15 @@ window.adminUpdateTool = function() {
     setTimeout(() => { btn.textContent = '💾 Update Tool'; }, 2000);
 };
 
-window.toggleToolVisibility = function(idx) { const tool = appState.tools[idx]; if (!tool) return; tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; saveLocalState(); localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); renderToolsList(); };
+window.toggleToolVisibility = function(idx) { 
+    const tool = appState.tools[idx]; 
+    if (!tool) return; 
+    tool.visibility = tool.visibility === 'visible' ? 'hidden' : 'visible'; 
+    saveLocalState(); 
+    localStorage.setItem('brt_tools', JSON.stringify(appState.tools)); 
+    renderToolsList(); 
+};
+
 window.deleteTool = function(idx) { 
     if (confirm('Delete this tool?')) { 
         appState.tools.splice(idx, 1); 
@@ -465,7 +470,17 @@ window.deleteTool = function(idx) {
         renderToolsList(); 
     } 
 };
-window.showAddToolForm = function() { document.getElementById('addToolForm').style.display = 'block'; document.getElementById('editToolForm').style.display = 'none'; document.getElementById('newToolName').value = ''; document.getElementById('newToolSubName').value = ''; document.getElementById('newToolHtml').value = ''; document.getElementById('newToolStatus').value = 'visible'; document.getElementById('newToolFire').value = 'true'; document.getElementById('newToolTriggers').value = ''; };
+
+window.showAddToolForm = function() { 
+    document.getElementById('addToolForm').style.display = 'block'; 
+    document.getElementById('editToolForm').style.display = 'none'; 
+    document.getElementById('newToolName').value = ''; 
+    document.getElementById('newToolSubName').value = ''; 
+    document.getElementById('newToolHtml').value = ''; 
+    document.getElementById('newToolStatus').value = 'visible'; 
+    document.getElementById('newToolFire').value = 'true'; 
+    document.getElementById('newToolTriggers').value = ''; 
+};
 
 window.adminAddTool = function() {
     const name = document.getElementById('newToolName').value.trim();
@@ -608,8 +623,7 @@ function enableEdit(btn) {
         if (list.id === 'creditPackList') renderCreditPackList();
         else if (list.id === 'brokerList') renderBrokerList();
     });
-    const toolsList = section.querySelector('.tools-list');
-    if (toolsList) renderToolsList();
+    // Don't re-render tools list here since actions are always visible
 }
 
 function disableEditFields(section) { 
@@ -626,8 +640,7 @@ function disableEditFields(section) {
         if (list.id === 'creditPackList') renderCreditPackList();
         else if (list.id === 'brokerList') renderBrokerList();
     });
-    const toolsList = section.querySelector('.tools-list');
-    if (toolsList) renderToolsList();
+    // Don't re-render tools list here since actions are always visible
 }
 
 /* ===== FIREBASE SYNC ===== */
@@ -748,7 +761,7 @@ function renderPendingPayments() {
         return; 
     }
     document.getElementById('noPendingPayments').style.display = 'none';
-    pending.forEach((p, idx) => {
+    pending.forEach((p, loopIdx) => {
         const actualIdx = appState.payments.indexOf(p);
         const user = appState.users.find(u => u.email === p.userEmail);
         const userName = user ? user.name || user.email : p.userEmail;
@@ -823,7 +836,7 @@ window.adminRejectPayment = function(idx) {
     } 
 };
 
-/* ===== PENDING VERIFICATIONS ===== */
+/* ===== PENDING VERIFICATIONS (FIXED CREDIT INPUT) ===== */
 function renderPendingVerifications() {
     const container = document.getElementById('pendingVerificationsList'); 
     if (!container) return; 
@@ -835,8 +848,9 @@ function renderPendingVerifications() {
         return; 
     }
     document.getElementById('noPendingVerifications').style.display = 'none';
-    pending.forEach((req, idx) => {
+    pending.forEach((req) => {
         const actualIdx = appState.verificationRequests.indexOf(req);
+        // Use actualIdx as unique ID so input field correctly maps to the request
         container.innerHTML += `
             <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
                 <div style="display:flex;flex-direction:column;gap:4px;">
@@ -859,7 +873,7 @@ function renderPendingVerifications() {
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;">
                     <span style="font-size:0.55rem;color:var(--text-muted);font-weight:600;">Free Credits:</span>
-                    <input type="number" id="verifyFreeCredits_${idx}" value="${req.freeCredits || appState.offerCredits || 10}" 
+                    <input type="number" id="verifyFreeCredits_${actualIdx}" value="${req.freeCredits || appState.offerCredits || 10}" 
                         style="width:100px;padding:5px 8px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.6rem;text-align:center;font-weight:600;">
                     <button onclick="window.adminApproveVerification(${actualIdx})" 
                         style="flex:1;padding:8px 14px;border-radius:6px;border:none;font-weight:700;cursor:pointer;font-size:0.6rem;text-transform:uppercase;background:#00FF66;color:#000;letter-spacing:1px;min-width:100px;">
@@ -878,11 +892,12 @@ function renderPendingVerifications() {
 window.adminApproveVerification = function(idx) {
     const request = appState.verificationRequests[idx];
     if (!request || request.status !== 'pending') return;
+    // Use the actual index (idx) to find the correct input field
     const inputField = document.getElementById('verifyFreeCredits_' + idx);
     let freeCredits = appState.offerCredits || 10;
     if (inputField) {
         const val = parseInt(inputField.value);
-        if (!isNaN(val)) freeCredits = val;
+        if (!isNaN(val)) freeCredits = val; // Now correctly reads the edited value
     }
     if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
         request.status = 'approved';
@@ -1288,7 +1303,7 @@ window.showRevenueBreakdown = function(period) {
             return d >= start && d < end;
         });
         title = 'Custom Date';
-    } else { // total
+    } else {
         filtered = payments;
         title = 'Total Revenue';
     }
