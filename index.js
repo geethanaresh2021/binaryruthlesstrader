@@ -10,7 +10,7 @@ const dbRef = ref(database, 'brt_data');
 
 /* ===== APP STATE ===== */
 let appState = {
-    password: 'admin123',
+    password: '9700224305',  // updated default password
     offerCredits: 10,
     offerName: 'FREE SIGNAL OFFER',
     offerDescription: 'Get 10 FREE signals for Quotex, Binomo, Pocket Option when you deposit via our affiliate links!',
@@ -599,58 +599,88 @@ document.getElementById('signupBroker').addEventListener('change', function() {
     }
 });
 
-/* ===== LOGO CLICK ADMIN ACCESS ===== */
+/* ===== LOGO CLICK ADMIN ACCESS (now shows password popup) ===== */
 let logoClickCounter = 0;
-document.getElementById('logoIcon').addEventListener('click', function(e) {
-    e.preventDefault();
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    
-    if (userLoggedIn && !adminLoggedIn) {
-        alert('🚫 Access Denied! Only Admin can access this page.');
+
+function handleLogoClick() {
+    // If admin already logged in, go directly
+    if (sessionStorage.getItem('admin_logged_in') === 'true') {
+        window.location.href = 'admin.html';
         return;
     }
-    
+    // Otherwise, increment counter and show password popup after threshold
     logoClickCounter++;
     const requiredClicks = appState.logoClickCount || 2;
     if (logoClickCounter >= requiredClicks) {
         logoClickCounter = 0;
-        window.location.href = 'admin.html';
+        showPasswordPopup();
     }
+}
+
+document.getElementById('logoIcon').addEventListener('click', function(e) {
+    e.preventDefault();
+    handleLogoClick();
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
     e.preventDefault();
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    
-    if (userLoggedIn && !adminLoggedIn) {
-        alert('🚫 Access Denied! Only Admin can access this page.');
-        return;
-    }
-    
-    logoClickCounter++;
-    const requiredClicks = appState.logoClickCount || 2;
-    if (logoClickCounter >= requiredClicks) {
-        logoClickCounter = 0;
-        window.location.href = 'admin.html';
-    }
+    handleLogoClick();
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
     if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-        
-        if (userLoggedIn && !adminLoggedIn) {
-            alert('🚫 Access Denied! Only Admin can access this page.');
-            return;
+        handleLogoClick();
+    }
+});
+
+/* ===== PASSWORD POPUP FUNCTIONS (moved from admin) ===== */
+function showPasswordPopup() {
+    document.getElementById('passwordOverlay').classList.add('active');
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('adminLoginBtn').disabled = true;
+    document.getElementById('adminLoginBtn').classList.remove('enabled');
+    document.getElementById('adminPassInput').classList.remove('correct', 'wrong');
+    document.getElementById('adminPassError').textContent = '';
+    setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+}
+
+window.hidePasswordPopup = function() {
+    document.getElementById('passwordOverlay').classList.remove('active');
+};
+
+window.checkAdminPassword = function() {
+    const pass = document.getElementById('adminPassInput').value;
+    const loginBtn = document.getElementById('adminLoginBtn');
+    const errorEl = document.getElementById('adminPassError');
+    if (pass === appState.password) {
+        loginBtn.disabled = false;
+        loginBtn.classList.add('enabled');
+        document.getElementById('adminPassInput').classList.add('correct');
+        document.getElementById('adminPassInput').classList.remove('wrong');
+        errorEl.textContent = '';
+    } else {
+        loginBtn.disabled = true;
+        loginBtn.classList.remove('enabled');
+        document.getElementById('adminPassInput').classList.remove('correct');
+        if (pass.length > 0) {
+            document.getElementById('adminPassInput').classList.add('wrong');
+            errorEl.textContent = '❌ Incorrect password';
+        } else {
+            document.getElementById('adminPassInput').classList.remove('wrong');
+            errorEl.textContent = '';
         }
-        
-        logoClickCounter++;
-        const requiredClicks = appState.logoClickCount || 2;
-        if (logoClickCounter >= requiredClicks) {
-            logoClickCounter = 0;
-            window.location.href = 'admin.html';
-        }
+    }
+};
+
+window.adminLogin = function() {
+    if (document.getElementById('adminPassInput').value === appState.password) {
+        sessionStorage.setItem('admin_logged_in', 'true');
+        hidePasswordPopup();
+        window.location.href = 'admin.html';
+    }
+};
+
+document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !document.getElementById('adminLoginBtn').disabled) {
+        adminLogin();
     }
 });
 
@@ -663,6 +693,7 @@ document.addEventListener('click', function(e) {
     if (e.target.closest('.admin-nav-bar')) return;
     if (e.target.closest('.user-logout-btn')) return;
     if (e.target.closest('.info-popup-overlay')) return;
+    if (e.target.closest('.password-overlay')) return;  // don't trigger glow on password popup click
 
     logoGlow.classList.remove('active');
     void logoGlow.offsetWidth;
@@ -711,6 +742,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         document.querySelectorAll('.overlay.active').forEach(el => el.classList.remove('active'));
         closeInfoPopup();
+        hidePasswordPopup();
     }
 });
 
@@ -727,3 +759,7 @@ window.handleLogin = handleLogin;
 window.handleSignup = handleSignup;
 window.handleVerify = handleVerify;
 window.isValidEmail = isValidEmail;
+window.showPasswordPopup = showPasswordPopup;
+window.hidePasswordPopup = hidePasswordPopup;
+window.checkAdminPassword = checkAdminPassword;
+window.adminLogin = adminLogin;
