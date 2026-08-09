@@ -22,23 +22,18 @@
         }
     </script>
     
-    <!-- External CSS -->
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
-<!-- Cursor Glow -->
 <div class="cursor-glow" id="cursorGlow"></div>
 
-<!-- Main App Container -->
 <div class="app zoom-trigger" id="mainApp">
     <div class="scroll-content">
         
-        <!-- Red Container (Brand + Admin/User Nav) -->
         <div class="red-container">
             <span class="fb-status-dot red" id="firebaseStatusDot"></span>
             
-            <!-- Admin Navigation Bar -->
             <div class="admin-nav-bar" id="adminNavBar">
                 <span class="nav-label">🔐</span>
                 <div class="nav-buttons">
@@ -48,10 +43,8 @@
                 </div>
             </div>
             
-            <!-- User Logout Button -->
             <button class="user-logout-btn" id="userLogoutBtn">Logout</button>
             
-            <!-- Brand Section -->
             <div class="brand-section" id="brandSection">
                 <div class="logo-wrapper">
                     <div class="logo-glow-dash" id="logoGlowDash"></div>
@@ -64,7 +57,6 @@
                     <span class="trader">TRADER</span>
                 </div>
                 <div class="brand-tagline">AI POWERED TRADING</div>
-                <!-- Social Icons -->
                 <div class="social-icons" id="dashSocialIcons">
                     <a href="#"><i class="fab fa-telegram-plane"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
@@ -74,7 +66,6 @@
             </div>
         </div>
         
-        <!-- User Info Container -->
         <div class="user-info-container" id="userInfoContainer">
             <span class="user-name" id="dashUserName">User</span>
             <div class="user-actions">
@@ -87,46 +78,34 @@
             </div>
         </div>
         
-        <!-- Credits Container -->
+        <!-- Credits Container – only Available Credits now -->
         <div class="credits-container" id="creditsContainer">
             <div class="credit-item"><span class="number green" id="dashCredits">0</span><span class="label">Available Credits</span></div>
-            <div class="credit-item"><span class="number" id="dashTodayUsed">0</span><span class="label">Today Used</span></div>
         </div>
         
-        <!-- Recent Tools Mini Button -->
-        <div class="recent-tools-mini" id="recentToolsMini" style="display:none;">
-            <div class="mini-title">📌 Recent Tools</div>
-            <div class="mini-sub" id="recentToolsMiniSub">Click to open</div>
-        </div>
-        
-        <!-- Tools Container -->
         <div class="tools-container" id="toolsContainer"></div>
         
-        <!-- Stats Row -->
         <div class="stats-row">
             <div class="stat-item"><div class="number red">50K+</div><div class="label">Signals Generated</div></div>
             <div class="stat-item"><div class="number gold">98%</div><div class="label">Uptime</div></div>
             <div class="stat-item"><div class="number red">1000+</div><div class="label">Active Traders</div></div>
         </div>
         
-        <!-- Footer -->
         <div class="footer"><p>© 2026 <span class="brand">BINARY RUTHLESS TRADER</span> — All Rights Reserved</p></div>
         
     </div>
 </div>
 
-<!-- Tool Fullscreen Overlay -->
+<!-- Tool Fullscreen Overlay (header redesign) -->
 <div class="tool-fullscreen-overlay" id="toolFullscreen">
     <div class="tool-fullscreen-header">
         <div class="header-left">
             <span class="user-name-tool" id="toolHeaderUserName">User</span>
-            <span class="divider">|</span>
+        </div>
+        <div class="header-center">
             <span class="credits-tool" id="toolHeaderCredits">💰 0</span>
-            <span class="divider">|</span>
-            <span class="today-used-tool" id="toolHeaderTodayUsed">📊 Today: 0</span>
         </div>
         <div class="header-right">
-            <div class="tool-switch-container" id="toolSwitchContainer"></div>
             <button class="tool-fullscreen-close" id="toolFullscreenClose">✕</button>
         </div>
     </div>
@@ -156,7 +135,6 @@
         <button class="btn-submit" id="proceedToPayBtn" style="background:#FFD700;color:#000;margin-top:8px;display:none;" onclick="showPaymentOptions()">💳 Proceed to Payment</button>
         <div class="selected-pack-display" id="selectedPackDisplay"><div class="pack-title">📦 Selected Pack</div><div class="pack-details"><span id="selectedPackCredits">0</span> Credits - ₹<span id="selectedPackPrice">0</span></div></div>
         
-        <!-- Manual Payment Section -->
         <div id="manualPaymentSection" style="display:none;margin-top:8px;">
             <div class="payment-instructions"><h4>📋 Payment Instructions</h4><p id="paymentInstructionsText">Please transfer the amount to the UPI ID below.</p><p style="margin-top:2px;color:#FFD700;font-size:0.6rem;">UPI: <span id="paymentUpiDisplay">binary@ruthless</span></p></div>
             <div class="qr-container" id="qrDisplayContainer"><div id="qrDisplayContent"><div class="qr-placeholder">No QR Code uploaded</div></div></div>
@@ -168,7 +146,6 @@
             <button class="btn-submit btn-gold" style="margin-top:6px;" onclick="submitManualPayment()">📤 Submit Payment</button>
         </div>
         
-        <!-- Razorpay Payment Section -->
         <div id="razorpayPaymentSection" style="display:none;margin-top:8px;text-align:center;">
             <p style="color:var(--text-secondary);font-size:0.8rem;margin:10px 0;">💳 Pay securely via Razorpay</p>
             <button class="btn-submit btn-primary" onclick="initRazorpayPayment()">💳 Pay Now</button>
@@ -207,7 +184,6 @@
     </div>
 </div>
 
-<!-- External Scripts -->
 <script src="security.js"></script>
 <script src="firebase-config.js"></script>
 <script type="module" src="dashboard.js"></script>
