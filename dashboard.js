@@ -34,8 +34,6 @@ let isFirebaseConnected = false, selectedCreditPack = null;
 let chatUnreadCount = 0;
 let currentToolIndex = -1;
 let openTools = [];
-let recentTools = [];
-let isToolMinimized = false;
 let toolDataCache = {};
 let isDeducting = false;
 
@@ -193,7 +191,7 @@ onValue(dbRef, (snapshot) => {
         
         resetTodayUsed();
         updateUI(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
-        if (document.getElementById('toolFullscreen').classList.contains('active')) { updateToolHeader(); updateSwitchButtons(); }
+        if (document.getElementById('toolFullscreen').classList.contains('active')) { updateToolHeader(); }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('firebaseStatusDot').className = 'fb-status-dot red'; console.error(error); });
 
@@ -220,8 +218,6 @@ function loadLocalState() {
     
     const savedCache = localStorage.getItem('brt_tool_cache');
     if (savedCache) { try { toolDataCache = JSON.parse(savedCache); } catch(e) {} }
-    const savedRecent = localStorage.getItem('brt_recent_tools');
-    if (savedRecent) { try { recentTools = JSON.parse(savedRecent); } catch(e) {} }
     const savedOpenTools = localStorage.getItem('brt_open_tools');
     if (savedOpenTools) { try { openTools = JSON.parse(savedOpenTools); } catch(e) {} }
     const savedCurrent = localStorage.getItem('brt_current_tool');
@@ -251,13 +247,6 @@ function loadLocalState() {
     updateUI(); renderTools(); renderPaymentHistory(); renderCreditPacks(); loadQRPreview(); updateChatBadge(); checkUserSession();
     renderSocialMedia();
     
-    const toolMinimized = sessionStorage.getItem('brt_tool_minimized') === 'true';
-    if (toolMinimized && recentTools.length > 0) {
-        document.getElementById('recentToolsMini').style.display = 'block';
-        updateRecentToolsMini();
-        isToolMinimized = true;
-    }
-    
     const wasToolOpen = sessionStorage.getItem('brt_tool_open') === 'true';
     if (wasToolOpen && openTools.length > 0 && currentToolIndex >= 0) {
         const tool = appState.tools[currentToolIndex];
@@ -271,9 +260,6 @@ function loadLocalState() {
             htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
             iframe.srcdoc = htmlContent;
             updateToolHeader();
-            updateSwitchButtons();
-            document.getElementById('recentToolsMini').style.display = 'none';
-            isToolMinimized = false;
         }
     } else { sessionStorage.removeItem('brt_tool_open'); }
 }
@@ -415,57 +401,20 @@ function updateToolHeader() {
     if (!user) return;
     document.getElementById('toolHeaderUserName').textContent = user.name || user.email.split('@')[0];
     document.getElementById('toolHeaderCredits').textContent = '💰 ' + user.credits;
-    document.getElementById('toolHeaderTodayUsed').textContent = '📊 Today: ' + (user.todayUsed || 0);
-}
-
-function updateSwitchButtons() {
-    const container = document.getElementById('toolSwitchContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    const tools = appState.tools || [];
-    const displayTools = openTools.slice(0, 2);
-    if (displayTools.length === 0) { return; }
-    displayTools.forEach((toolIdx, slot) => {
-        if (tools[toolIdx]) {
-            const btn = document.createElement('button');
-            btn.className = 'tool-switch-btn';
-            btn.textContent = tools[toolIdx].name || 'Tool ' + (slot + 1);
-            if (currentToolIndex === toolIdx) { btn.classList.add('active-tool'); }
-            btn.addEventListener('click', function() { if (currentToolIndex !== toolIdx) { switchTool(toolIdx); } });
-            container.appendChild(btn);
-        }
-    });
-}
-
-function switchTool(index) {
-    if (!appState.tools[index]) return;
-    if (index === currentToolIndex) return;
-    saveCurrentToolData();
-    currentToolIndex = index;
-    localStorage.setItem('brt_current_tool', currentToolIndex);
-    const tool = appState.tools[currentToolIndex];
-    const iframe = document.getElementById('toolFullscreenIframe');
-    const cacheKey = 'tool_' + currentToolIndex;
-    let htmlContent = tool.htmlCode || '<div style="text-align:center;padding:40px;color:#FF0033;font-family:Orbitron;"><h2>🎯 Tool</h2><p style="color:#888;font-size:0.8rem;">No HTML code provided.</p></div>';
-    if (toolDataCache[cacheKey]) { htmlContent = toolDataCache[cacheKey]; }
-    htmlContent = prepareToolHTML(currentToolIndex, htmlContent);
-    iframe.srcdoc = htmlContent;
-    updateSwitchButtons();
-    updateToolHeader();
 }
 
 function openToolFullscreen(index) {
     const user = appState.currentUser;
     if (!user) { alert('Please login first!'); return; }
     if (user.blocked) { alert('🚫 Account blocked'); return; }
-    if (user.credits < 1) { openModal('noCreditsPopup'); return; }
+    if (user.credits < (appState.creditsPerSignal || 1)) { 
+        openModal('noCreditsPopup'); 
+        return; 
+    }
     const tools = appState.tools || [];
     const tool = tools[index];
     if (!tool) return;
     sessionStorage.setItem('brt_tool_open', 'true');
-    isToolMinimized = false;
-    sessionStorage.setItem('brt_tool_minimized', 'false');
-    document.getElementById('recentToolsMini').style.display = 'none';
     if (!openTools.includes(index)) {
         if (openTools.length >= 2) { openTools.shift(); }
         openTools.push(index);
@@ -482,13 +431,6 @@ function openToolFullscreen(index) {
     if (toolDataCache[cacheKey]) { htmlContent = toolDataCache[cacheKey]; }
     htmlContent = prepareToolHTML(index, htmlContent);
     iframe.srcdoc = htmlContent;
-    if (!recentTools.includes(index)) {
-        recentTools.unshift(index);
-        if (recentTools.length > 5) recentTools.pop();
-        localStorage.setItem('brt_recent_tools', JSON.stringify(recentTools));
-    }
-    updateRecentToolsMini();
-    updateSwitchButtons();
 }
 
 function saveCurrentToolData() {
@@ -499,14 +441,22 @@ function saveCurrentToolData() {
     } catch(e) {}
 }
 
-/* ===== SIGNAL RESULT HANDLER (Credit Deduction) ===== */
+/* ===== SIGNAL RESULT HANDLER (Credit Deduction & Auto-close) ===== */
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'signalResult') {
         if (isDeducting) { console.log('⚠️ Deduction already in progress'); return; }
         if (event.data.success === true) {
             const success = deductCredit();
             if (success) {
+                if (appState.currentUser && appState.currentUser.credits < (appState.creditsPerSignal || 1)) {
+                    document.getElementById('toolFullscreen').classList.remove('active');
+                    sessionStorage.removeItem('brt_tool_open');
+                }
                 document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: true, credits: appState.currentUser.credits }, '*');
+            } else {
+                document.getElementById('toolFullscreen').classList.remove('active');
+                sessionStorage.removeItem('brt_tool_open');
+                document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, error: 'Insufficient credits' }, '*');
             }
         } else {
             document.getElementById('toolFullscreenIframe').contentWindow.postMessage({ type: 'signalResult', success: false, error: event.data.error || 'Signal generation failed' }, '*');
@@ -520,39 +470,12 @@ window.addEventListener('message', function(event) {
     }
 });
 
-/* ===== RECENT TOOLS MINI ===== */
-function updateRecentToolsMini() {
-    const mini = document.getElementById('recentToolsMini');
-    const sub = document.getElementById('recentToolsMiniSub');
-    if (recentTools.length === 0) { mini.style.display = 'none'; return; }
-    const tools = appState.tools || [];
-    const names = recentTools.filter(i => tools[i]).map(i => tools[i].name).join(' • ');
-    sub.textContent = names || 'Click to open';
-}
-
-document.getElementById('recentToolsMini').addEventListener('click', function() {
-    if (recentTools.length === 0) return;
-    const lastTool = recentTools[0];
-    if (appState.tools && appState.tools[lastTool]) {
-        const user = appState.currentUser;
-        if (!user) { alert('Please login first!'); return; }
-        if (user.blocked) { alert('🚫 Account blocked'); return; }
-        if (user.credits < 1) { openModal('noCreditsPopup'); return; }
-        openToolFullscreen(lastTool);
-    }
-});
-
+/* ===== CLOSE TOOL FULLSCREEN (Manual) ===== */
 document.getElementById('toolFullscreenClose').addEventListener('click', function() {
     saveCurrentToolData();
     document.getElementById('toolFullscreen').classList.remove('active');
     window._currentTool = null;
-    isToolMinimized = true;
-    sessionStorage.setItem('brt_tool_minimized', 'true');
     sessionStorage.removeItem('brt_tool_open');
-    if (recentTools.length > 0) {
-        document.getElementById('recentToolsMini').style.display = 'block';
-        updateRecentToolsMini();
-    }
 });
 
 /* ===== ACCOUNT DETAILS ===== */
@@ -600,7 +523,6 @@ function updateUI() {
     if (user) { 
         document.getElementById('dashUserName').textContent = user.name || user.email.split('@')[0]; 
         document.getElementById('dashCredits').textContent = user.credits || 0; 
-        document.getElementById('dashTodayUsed').textContent = user.todayUsed || 0;
     }
     updateToolHeader();
 }
