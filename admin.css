@@ -383,7 +383,7 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
 }
 .qr-preview { max-width: 120px; max-height: 120px; border-radius: 6px; margin-top: 3px; border: 1px solid rgba(255,215,0,0.1); }
 
-/* ===== TOOLS LIST ===== */
+/* ===== TOOLS LIST (Actions Always Visible) ===== */
 .tools-list .tool-item { 
     background: var(--tool-item-bg); 
     border: 1px solid var(--tool-item-border); 
@@ -401,7 +401,12 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
 .tools-list .tool-item .tool-name { color: #FFD700; font-size: 0.6rem; font-family: 'Orbitron', sans-serif; }
 .tools-list .tool-item .tool-subname { color: var(--text-secondary); font-size: 0.45rem; margin-top: 1px; }
 .tools-list .tool-item .tool-status { font-size: 0.45rem; color: var(--text-secondary); }
-.tools-list .tool-item .tool-actions { display: none; gap: 4px; flex-wrap: wrap; align-items: center; }
+.tools-list .tool-item .tool-actions { 
+    display: flex !important; /* Always visible */
+    gap: 4px; 
+    flex-wrap: wrap; 
+    align-items: center; 
+}
 .tools-list .tool-item .tool-actions button { 
     padding: 2px 8px; 
     border-radius: 4px; 
@@ -425,8 +430,6 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
     background: #555; 
     color: #aaa;
 }
-.admin-section.editable .tools-list .tool-item .tool-actions { display: flex; }
-.admin-section.editable .tools-list .tool-item { cursor: default; }
 
 /* ===== SOCIAL LIST ===== */
 .social-list .social-item { 
