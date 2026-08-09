@@ -84,6 +84,12 @@
                     <span class="count green" id="chatNotificationCount">0</span>
                     <span class="label">Chat Messages</span>
                 </div>
+                <!-- NEW REVENUE CARD -->
+                <div class="admin-dash-card" onclick="openRevenuePopup()">
+                    <span class="icon">💰</span>
+                    <span class="count gold" id="totalRevenueCount">0</span>
+                    <span class="label">Total Revenue</span>
+                </div>
             </div>
         </div>
         
@@ -268,18 +274,6 @@
 
 <!-- ===== POPUPS ===== -->
 
-<!-- Password Overlay -->
-<div class="password-overlay" id="passwordOverlay">
-    <div class="password-modal">
-        <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
-        <div class="lock-icon">🔐</div>
-        <h2>ENTER ADMIN PASSWORD</h2>
-        <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
-        <button class="btn-enter" id="adminLoginBtn" onclick="adminLogin()">Enter</button>
-        <div class="error-text" id="adminPassError"></div>
-    </div>
-</div>
-
 <!-- Pending Payments Popup -->
 <div class="overlay" id="pendingPaymentsPopup">
     <div class="modal" style="max-width:820px;">
@@ -353,6 +347,28 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Revenue Popup -->
+<div class="overlay" id="revenuePopup">
+    <div class="modal" style="max-width:700px;">
+        <button class="modal-close" onclick="closeModal('revenuePopup')">✕</button>
+        <h2>💰 Revenue Breakdown</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn-submit btn-primary" style="flex:1;" onclick="showRevenueBreakdown('today')">Today</button>
+            <button class="btn-submit btn-gold" style="flex:1;" onclick="showRevenueBreakdown('yesterday')">Yesterday</button>
+            <button class="btn-submit btn-success" style="flex:1;" onclick="showRevenueBreakdown('weekly')">Weekly</button>
+            <button class="btn-submit btn-primary" style="flex:1;" onclick="showRevenueBreakdown('monthly')">Monthly</button>
+            <button class="btn-submit btn-gold" style="flex:1;" onclick="showRevenueBreakdown('yearly')">Yearly</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <label style="font-size:0.6rem;color:var(--popup-label);">Custom Date:</label>
+            <input type="date" id="revenueCustomDate" style="flex:1;padding:6px 10px;background:var(--input-bg);border:1px solid rgba(255,0,51,0.1);border-radius:4px;color:var(--text-primary);font-size:0.65rem;">
+            <button class="btn-submit btn-primary" style="flex:1;max-width:100px;" onclick="showRevenueBreakdown('custom')">Show</button>
+        </div>
+        <div id="revenueBreakdownContent" style="max-height:300px;overflow-y:auto;"></div>
+        <div id="noRevenueData" style="color:var(--text-muted);font-size:0.6rem;text-align:center;padding:16px;display:none;">No revenue data for this period</div>
     </div>
 </div>
 
