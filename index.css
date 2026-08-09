@@ -45,6 +45,12 @@
     --popup-text: #fff;
     --popup-label: #FFD700;
     --popup-close-color: #FF0033;
+    /* password popup variables */
+    --password-modal-bg: rgba(20,20,20,0.97);
+    --password-modal-border: #FF0033;
+    --password-input-bg: rgba(255,255,255,0.05);
+    --password-input-color: #fff;
+    --modal-error-color: #FF0033;
 }
 
 /* ─── RESET & BASE ─── */
@@ -1534,6 +1540,136 @@ textarea {
     .info-popup .popup-close {
         font-size: 1.3rem;
     }
+}
+
+/* ===== PASSWORD OVERLAY (moved from admin) ===== */
+.password-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10001;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+}
+.password-overlay.active {
+    display: flex;
+}
+.password-modal {
+    background: var(--password-modal-bg);
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--password-modal-border);
+    border-radius: 16px;
+    padding: 28px 22px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255, 0, 51, 0.08);
+    position: relative;
+}
+.password-modal .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 1.2rem;
+    color: #FF0033;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: all 0.3s ease;
+}
+.password-modal .close-btn:hover {
+}
+.password-modal .close-btn:active {
+}
+.password-modal .lock-icon {
+    font-size: 2.4rem;
+    color: #FF0033;
+    margin-bottom: 8px;
+}
+.password-modal h2 {
+    color: #FFD700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+}
+.password-modal input {
+    width: 100%;
+    padding: 10px;
+    background: var(--password-input-bg);
+    border: 1px solid rgba(255, 0, 51, 0.15);
+    border-radius: 6px;
+    color: var(--password-input-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+}
+.password-modal input:focus {
+    border-color: #FF0033;
+    box-shadow: 0 0 24px rgba(255, 0, 51, 0.05);
+}
+.password-modal input.correct {
+    border-color: #00FF66;
+    box-shadow: 0 0 24px rgba(0, 255, 102, 0.2);
+}
+.password-modal input.wrong {
+    border-color: #ff0033;
+    animation: shake 0.5s;
+}
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+.password-modal .btn-enter {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 30px;
+    font-weight: 700;
+    border: none;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgba(255, 0, 51, 0.05);
+    border: 1px solid rgba(255, 0, 51, 0.1);
+    color: #666;
+}
+.password-modal .btn-enter.enabled {
+    background: #FF0033;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 24px rgba(255, 0, 51, 0.2);
+    border-color: #FF0033;
+}
+.password-modal .btn-enter.enabled:hover {
+    box-shadow: 0 0 40px rgba(255, 0, 51, 0.3);
+}
+.password-modal .btn-enter.enabled:active {
+}
+.password-modal .error-text {
+    color: var(--modal-error-color);
+    font-size: 0.6rem;
+    margin-top: 8px;
+    font-family: 'Roboto Mono', monospace;
+    min-height: 18px;
 }
 
 /* ─── CURSOR GLOW ─── */
