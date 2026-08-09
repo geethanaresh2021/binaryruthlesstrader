@@ -1,11 +1,11 @@
 //  Firebase Configuration - Shared across all pages
 const firebaseConfig = {
-    apiKey: "AIzaSyA2ILDlxtYs2CT-2mJItRV1NApSIaH4t3g",
-    authDomain: "binary-ruthless-trader-26654.firebaseapp.com",
-    databaseURL: "https://binary-ruthless-trader-26654-default-rtdb.firebaseio.com",
-    projectId: "binary-ruthless-trader-26654",
-    storageBucket: "binary-ruthless-trader-26654.firebasestorage.app",
-    messagingSenderId: "533209261799",
-    appId: "1:533209261799:web:a398ab21b0f913683ea442",
-    measurementId: "G-WQCXCMV5PR"
+    apiKey: "AIzaSyCnhkZ2OlebZK6vnh5wlZkANfeMdh9d6CM",
+    authDomain: "serious-curve-473219-p6.firebaseapp.com",
+    databaseURL: "https://serious-curve-473219-p6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "serious-curve-473219-p6",
+    storageBucket: "serious-curve-473219-p6.firebasestorage.app",
+    messagingSenderId: "813088316539",
+    appId: "1:813088316539:web:fedd4c9e76a213309b96de",
+    measurementId: "G-QFJPHK9KX4"
 };
