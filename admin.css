@@ -871,6 +871,57 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
     color: #00FF66;
 }
 
+/* ===== JOURNAL FULLSCREEN OVERLAY ===== */
+.journal-fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+.journal-fullscreen-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: #FF0033;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 24px rgba(255,0,51,0.4);
+    line-height: 1;
+}
+.journal-fullscreen-close:hover {
+    background: #cc0029;
+    box-shadow: 0 6px 32px rgba(255,0,51,0.6);
+    transform: scale(1.05);
+}
+.journal-fullscreen-content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.journal-fullscreen-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 /* ===== CURSOR GLOW ===== */
 .cursor-glow { position: fixed; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,0,51,0.04), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; }
 .cursor-glow.active { opacity: 1; }
