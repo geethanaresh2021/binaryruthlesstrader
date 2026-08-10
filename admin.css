@@ -84,6 +84,13 @@ html, body {
 input, select, button, textarea { font-size: 16px !important; -webkit-text-size-adjust: 100% !important; -ms-text-size-adjust: 100% !important; }
 * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
 
+/* Allow text selection for journal textarea */
+#journalHtmlInput {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    touch-action: manipulation !important;
+}
+
 /* ===== APP ===== */
 .app { 
     width: 100%; 
@@ -284,6 +291,23 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
 .admin-section .field-group textarea { height: 50px; resize: vertical; }
 .admin-section .field-group input:disabled, 
 .admin-section .field-group textarea:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Journal textarea overrides */
+.admin-section .field-group textarea#journalHtmlInput {
+    height: 120px;
+    min-height: 120px;
+    max-height: none;
+    overflow-y: auto;
+    resize: vertical;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    touch-action: manipulation !important;
+    cursor: text !important;
+}
+.admin-section .field-group textarea#journalHtmlInput:disabled {
+    opacity: 0.7;
+    cursor: text !important;
+}
 
 .admin-section .btn-row {
     display: flex;
