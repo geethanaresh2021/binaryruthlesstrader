@@ -99,8 +99,8 @@
                 <!-- JOURNAL BUTTON -->
                 <div class="admin-dash-card" id="journalCard">
                     <span class="icon">📓</span>
-                    <span class="count gold" id="journalStatusText">Open</span>
-                    <span class="label">Journal</span>
+                    <span class="count red">Journal</span>
+                    <span class="label">Trading Log</span>
                 </div>
             </div>
             <!-- SETTINGS TOGGLE BUTTON -->
@@ -292,7 +292,7 @@
                 </div>
                 <div class="field-group">
                     <label>HTML Code</label>
-                    <textarea id="journalHtmlInput" placeholder="Paste your journal HTML code here..." style="height:120px;" disabled></textarea>
+                    <textarea id="journalHtmlInput" placeholder="Paste your journal HTML code here..." style="height:120px;min-height:120px;max-height:none;overflow-y:auto;resize:vertical;-webkit-user-select:text;user-select:text;touch-action:manipulation;" disabled></textarea>
                 </div>
                 <div class="btn-row">
                     <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
