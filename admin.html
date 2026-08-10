@@ -28,6 +28,12 @@
 <!-- Cursor Glow -->
 <div class="cursor-glow" id="cursorGlow"></div>
 
+<!-- Full Screen Journal Container -->
+<div class="journal-fullscreen-overlay" id="journalFullscreenOverlay">
+    <button class="journal-fullscreen-close" id="journalFullscreenClose">✕</button>
+    <div class="journal-fullscreen-content" id="journalFullscreenContent"></div>
+</div>
+
 <!-- Main App Container -->
 <div class="app">
     <div class="scroll-content">
@@ -90,11 +96,21 @@
                     <span class="count gold" id="totalRevenueCount">0</span>
                     <span class="label">Total Revenue</span>
                 </div>
+                <!-- JOURNAL BUTTON -->
+                <div class="admin-dash-card" id="journalCard">
+                    <span class="icon">📓</span>
+                    <span class="count gold" id="journalStatusText">Open</span>
+                    <span class="label">Journal</span>
+                </div>
+            </div>
+            <!-- SETTINGS TOGGLE BUTTON -->
+            <div style="text-align:center;margin-bottom:10px;">
+                <button id="settingsToggleBtn" style="padding:8px 24px;border-radius:8px;border:1px solid rgba(255,0,51,0.2);background:rgba(255,0,51,0.04);color:#FFD700;font-size:0.6rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s ease;" onclick="toggleSettings()">⚙️ Settings</button>
             </div>
         </div>
         
         <!-- Admin Settings Area -->
-        <div id="adminArea">
+        <div id="adminArea" style="display:none;">
             
             <!-- 1. Offer Settings -->
             <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
@@ -264,6 +280,23 @@
                 <div class="btn-row">
                     <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
                     <button class="btn-save" onclick="changeAdminPassword()">💾 Save</button>
+                </div>
+            </div>
+            
+            <!-- 10. Journal Section -->
+            <div class="admin-section" style="border-color:rgba(255,215,0,0.15);">
+                <h4 style="color:#FFD700;">📓 Journal Settings</h4>
+                <div class="field-group">
+                    <label>Journal Name</label>
+                    <input type="text" id="journalNameInput" placeholder="My Trading Journal" disabled>
+                </div>
+                <div class="field-group">
+                    <label>HTML Code</label>
+                    <textarea id="journalHtmlInput" placeholder="Paste your journal HTML code here..." style="height:120px;" disabled></textarea>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-edit" onclick="enableEdit(this)">✏️ Edit</button>
+                    <button class="btn-save" onclick="saveJournal()">💾 Save</button>
                 </div>
             </div>
             
