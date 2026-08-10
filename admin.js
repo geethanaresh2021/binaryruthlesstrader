@@ -30,10 +30,70 @@ let appState = {
     paymentApprovalMode: 'manual', 
     razorpayKeyId: '',
     razorpayKeySecret: '',
-    creditsPerSignal: 1
+    creditsPerSignal: 1,
+    journalName: '',
+    journalHtmlCode: ''
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
+
+/* ===== SETTINGS TOGGLE ===== */
+window.toggleSettings = function() {
+    const adminArea = document.getElementById('adminArea');
+    const btn = document.getElementById('settingsToggleBtn');
+    if (adminArea.style.display === 'none' || adminArea.style.display === '') {
+        adminArea.style.display = 'block';
+        btn.textContent = '⚙️ Hide Settings';
+    } else {
+        adminArea.style.display = 'none';
+        btn.textContent = '⚙️ Settings';
+    }
+};
+
+/* ===== JOURNAL FULLSCREEN ===== */
+document.getElementById('journalCard').addEventListener('click', function() {
+    document.getElementById('journalFullscreenOverlay').style.display = 'flex';
+    const journalCode = appState.journalHtmlCode || '';
+    const journalName = appState.journalName || 'Trading Journal';
+    if (journalCode) {
+        document.getElementById('journalFullscreenContent').innerHTML = journalCode;
+    } else {
+        document.getElementById('journalFullscreenContent').innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);font-family:'Orbitron',sans-serif;">
+                <span style="font-size:3rem;margin-bottom:20px;">📓</span>
+                <span style="font-size:1.2rem;color:#FFD700;">${journalName}</span>
+                <span style="font-size:0.7rem;margin-top:10px;">No journal content added yet.</span>
+                <span style="font-size:0.5rem;color:var(--text-muted);">Go to Settings → Journal to add content</span>
+            </div>
+        `;
+    }
+});
+
+document.getElementById('journalFullscreenClose').addEventListener('click', function() {
+    document.getElementById('journalFullscreenOverlay').style.display = 'none';
+});
+
+document.getElementById('journalFullscreenOverlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.style.display = 'none';
+    }
+});
+
+/* ===== SAVE JOURNAL ===== */
+window.saveJournal = function() {
+    const name = document.getElementById('journalNameInput').value.trim();
+    const htmlCode = document.getElementById('journalHtmlInput').value.trim();
+    appState.journalName = name || 'Trading Journal';
+    appState.journalHtmlCode = htmlCode;
+    saveLocalState();
+    localStorage.setItem('brt_journal_name', appState.journalName);
+    localStorage.setItem('brt_journal_html', appState.journalHtmlCode);
+    disableEditFields(document.querySelector('.admin-section'));
+    const btn = document.getElementById('journalNameInput').closest('.admin-section').querySelector('.btn-save');
+    btn.textContent = '✅ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
+    alert('✅ Journal saved successfully!');
+};
 
 /* ===== ADMIN LOGO ===== */
 function applyAdminLogo(logoBase64) {
@@ -662,6 +722,7 @@ onValue(dbRef, (snapshot) => {
         renderAdminSocialMedia();
         updateChatNotification();
         updatePendingCounts();
+        loadJournalData();
         if (val.logoBase64 !== undefined && val.logoBase64 !== '') {
             applyAdminLogo(val.logoBase64);
             localStorage.setItem('brt_logo', val.logoBase64);
@@ -679,8 +740,30 @@ onValue(dbRef, (snapshot) => {
         }
         if (val.razorpayKeyId !== undefined) document.getElementById('razorpayKeyIdInput').value = val.razorpayKeyId || '';
         if (val.razorpayKeySecret !== undefined) document.getElementById('razorpayKeySecretInput').value = val.razorpayKeySecret || '';
+        if (val.journalName !== undefined) {
+            appState.journalName = val.journalName;
+            document.getElementById('journalNameInput').value = val.journalName;
+        }
+        if (val.journalHtmlCode !== undefined) {
+            appState.journalHtmlCode = val.journalHtmlCode;
+            document.getElementById('journalHtmlInput').value = val.journalHtmlCode;
+        }
     }
 }, (error) => { isFirebaseConnected = false; document.getElementById('adminStatusDot').className = 'fb-status-dot-sm red'; console.error(error); });
+
+/* ===== LOAD JOURNAL DATA ===== */
+function loadJournalData() {
+    const journalName = localStorage.getItem('brt_journal_name');
+    const journalHtml = localStorage.getItem('brt_journal_html');
+    if (journalName) {
+        appState.journalName = journalName;
+        document.getElementById('journalNameInput').value = journalName;
+    }
+    if (journalHtml) {
+        appState.journalHtmlCode = journalHtml;
+        document.getElementById('journalHtmlInput').value = journalHtml;
+    }
+}
 
 /* ===== LOCAL STORAGE SYNC ===== */
 function saveLocalState() { localStorage.setItem('brt_data', JSON.stringify(appState)); if (isFirebaseConnected) set(dbRef, appState).catch(e => console.error(e)); }
@@ -718,6 +801,16 @@ function loadLocalState() {
     if (paymentInstructionsData) appState.paymentInstructions = paymentInstructionsData;
     const paymentApprovalModeData = localStorage.getItem('brt_payment_approval_mode');
     if (paymentApprovalModeData) appState.paymentApprovalMode = paymentApprovalModeData;
+    const journalNameData = localStorage.getItem('brt_journal_name');
+    if (journalNameData) {
+        appState.journalName = journalNameData;
+        document.getElementById('journalNameInput').value = journalNameData;
+    }
+    const journalHtmlData = localStorage.getItem('brt_journal_html');
+    if (journalHtmlData) {
+        appState.journalHtmlCode = journalHtmlData;
+        document.getElementById('journalHtmlInput').value = journalHtmlData;
+    }
     
     if (appState.offerName) document.getElementById('offerName').value = appState.offerName;
     if (appState.offerDescription) document.getElementById('offerDescription').value = appState.offerDescription;
@@ -747,6 +840,8 @@ function updateUI() {
     if (appState.creditsPerSignal) {
         document.getElementById('creditsPerSignalInput').value = appState.creditsPerSignal;
     }
+    if (appState.journalName) document.getElementById('journalNameInput').value = appState.journalName;
+    if (appState.journalHtmlCode) document.getElementById('journalHtmlInput').value = appState.journalHtmlCode;
 }
 
 /* ===== PENDING PAYMENTS ===== */
@@ -1344,7 +1439,7 @@ let adminSession = sessionStorage.getItem('admin_logged_in');
 if (adminSession === 'true') {
     adminLoggedIn = true;
     document.getElementById('adminDashboard').style.display = 'block';
-    document.getElementById('adminArea').style.display = 'block';
+    document.getElementById('adminArea').style.display = 'none';
     loadLocalState();
 } else {
     window.location.href = 'index.html';
@@ -1395,6 +1490,8 @@ window.saveCreditsPerSignal = saveCreditsPerSignal;
 window.togglePaymentFields = togglePaymentFields;
 window.openRevenuePopup = openRevenuePopup;
 window.showRevenueBreakdown = showRevenueBreakdown;
+window.toggleSettings = toggleSettings;
+window.saveJournal = saveJournal;
 
 /* ===== CURSOR GLOW ===== */
 const glow = document.getElementById('cursorGlow');
