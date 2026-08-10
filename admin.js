@@ -56,7 +56,18 @@ document.getElementById('journalCard').addEventListener('click', function() {
     const journalCode = appState.journalHtmlCode || '';
     const journalName = appState.journalName || 'Trading Journal';
     if (journalCode) {
-        document.getElementById('journalFullscreenContent').innerHTML = journalCode;
+        const contentDiv = document.getElementById('journalFullscreenContent');
+        contentDiv.innerHTML = journalCode;
+        // Execute any scripts in the journal code
+        const scripts = contentDiv.querySelectorAll('script');
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+            newScript.textContent = oldScript.textContent;
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
     } else {
         document.getElementById('journalFullscreenContent').innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);font-family:'Orbitron',sans-serif;">
@@ -83,13 +94,18 @@ document.getElementById('journalFullscreenOverlay').addEventListener('click', fu
 window.saveJournal = function() {
     const name = document.getElementById('journalNameInput').value.trim();
     const htmlCode = document.getElementById('journalHtmlInput').value.trim();
+    if (!name && !htmlCode) {
+        alert('Please enter a journal name or HTML code.');
+        return;
+    }
     appState.journalName = name || 'Trading Journal';
     appState.journalHtmlCode = htmlCode;
     saveLocalState();
     localStorage.setItem('brt_journal_name', appState.journalName);
     localStorage.setItem('brt_journal_html', appState.journalHtmlCode);
-    disableEditFields(document.querySelector('.admin-section'));
-    const btn = document.getElementById('journalNameInput').closest('.admin-section').querySelector('.btn-save');
+    disableEditFields(document.getElementById('journalNameInput').closest('.admin-section'));
+    const section = document.getElementById('journalNameInput').closest('.admin-section');
+    const btn = section.querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
     alert('✅ Journal saved successfully!');
@@ -674,7 +690,14 @@ window.saveCreditsPerSignal = function() {
 function enableEdit(btn) { 
     const section = btn.closest('.admin-section'); 
     if (!section) return; 
-    section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = false); 
+    section.querySelectorAll('input, select, textarea').forEach(i => {
+        i.disabled = false;
+        // Enable text selection for journal textarea
+        if (i.id === 'journalHtmlInput') {
+            i.style.userSelect = 'text';
+            i.style.webkitUserSelect = 'text';
+        }
+    }); 
     section.querySelectorAll('.btn-save').forEach(b => b.classList.add('show')); 
     btn.style.display = 'none';
     section.classList.add('editable');
@@ -688,7 +711,14 @@ function enableEdit(btn) {
 
 function disableEditFields(section) { 
     if (!section) return; 
-    section.querySelectorAll('input, select, textarea').forEach(i => i.disabled = true); 
+    section.querySelectorAll('input, select, textarea').forEach(i => {
+        i.disabled = true;
+        // Keep text selection enabled for journal textarea even when disabled
+        if (i.id === 'journalHtmlInput') {
+            i.style.userSelect = 'text';
+            i.style.webkitUserSelect = 'text';
+        }
+    }); 
     section.querySelectorAll('.btn-save').forEach(b => b.classList.remove('show')); 
     section.querySelectorAll('.btn-edit').forEach(b => { 
         b.style.display = 'block'; 
@@ -830,6 +860,12 @@ function loadLocalState() {
     renderAdminSocialMedia();
     updateChatNotification();
     updatePendingCounts();
+    // Enable text selection on journal textarea after load
+    const journalTextarea = document.getElementById('journalHtmlInput');
+    if (journalTextarea) {
+        journalTextarea.style.userSelect = 'text';
+        journalTextarea.style.webkitUserSelect = 'text';
+    }
 }
 
 /* ===== UI UPDATES ===== */
