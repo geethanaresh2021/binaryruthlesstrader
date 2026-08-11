@@ -50,43 +50,108 @@ window.toggleSettings = function() {
     }
 };
 
-/* ===== JOURNAL FULLSCREEN ===== */
+/* ===== JOURNAL FULLSCREEN WITH IFRAME ===== */
 document.getElementById('journalCard').addEventListener('click', function() {
     document.getElementById('journalFullscreenOverlay').style.display = 'flex';
     const journalCode = appState.journalHtmlCode || '';
     const journalName = appState.journalName || 'Trading Journal';
+    const iframe = document.getElementById('journalFullscreenIframe');
+    
     if (journalCode) {
-        const contentDiv = document.getElementById('journalFullscreenContent');
-        contentDiv.innerHTML = journalCode;
-        // Execute any scripts in the journal code
-        const scripts = contentDiv.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            Array.from(oldScript.attributes).forEach(attr => {
-                newScript.setAttribute(attr.name, attr.value);
-            });
-            newScript.textContent = oldScript.textContent;
-            oldScript.parentNode.replaceChild(newScript, oldScript);
-        });
+        // Build a complete HTML document for the iframe
+        const fullDoc = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>${journalName}</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+            "firebase/database": "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js",
+            "firebase/analytics": "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js"
+        }
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { 
+            width: 100%; 
+            height: 100%; 
+            background: #000000; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif; 
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    ${journalCode}
+</body>
+</html>`;
+        
+        iframe.srcdoc = fullDoc;
     } else {
-        document.getElementById('journalFullscreenContent').innerHTML = `
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-secondary);font-family:'Orbitron',sans-serif;">
-                <span style="font-size:3rem;margin-bottom:20px;">📓</span>
-                <span style="font-size:1.2rem;color:#FFD700;">${journalName}</span>
-                <span style="font-size:0.7rem;margin-top:10px;">No journal content added yet.</span>
-                <span style="font-size:0.5rem;color:var(--text-muted);">Go to Settings → Journal to add content</span>
-            </div>
-        `;
+        iframe.srcdoc = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${journalName}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { 
+            width: 100%; 
+            height: 100%; 
+            background: #000000; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #aaa;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="placeholder">
+        <span style="font-size:3rem;margin-bottom:20px;">📓</span>
+        <span style="font-size:1.2rem;color:#FFD700;">${journalName}</span>
+        <span style="font-size:0.7rem;margin-top:10px;">No journal content added yet.</span>
+        <span style="font-size:0.5rem;color:#666;">Go to Settings → Journal to add content</span>
+    </div>
+</body>
+</html>`;
     }
 });
 
 document.getElementById('journalFullscreenClose').addEventListener('click', function() {
     document.getElementById('journalFullscreenOverlay').style.display = 'none';
+    // Clear iframe to stop any running processes
+    document.getElementById('journalFullscreenIframe').srcdoc = '';
 });
 
 document.getElementById('journalFullscreenOverlay').addEventListener('click', function(e) {
     if (e.target === this) {
         this.style.display = 'none';
+        document.getElementById('journalFullscreenIframe').srcdoc = '';
     }
 });
 
