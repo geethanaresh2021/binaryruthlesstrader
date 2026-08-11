@@ -934,16 +934,12 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
     box-shadow: 0 6px 32px rgba(255,0,51,0.6);
     transform: scale(1.05);
 }
-.journal-fullscreen-content {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-.journal-fullscreen-content iframe {
+.journal-fullscreen-iframe {
     width: 100%;
     height: 100%;
     border: none;
+    display: block;
+    background: #000000;
 }
 
 /* ===== CURSOR GLOW ===== */
