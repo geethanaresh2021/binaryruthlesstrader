@@ -88,8 +88,8 @@ function renderSocialMedia() {
 
 /* ===== SESSION MANAGEMENT ===== */
 function getActiveSession() {
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const adminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+    const userLoggedIn = localStorage.getItem('user_logged_in') === 'true';
     if (adminLoggedIn) return { type: 'admin', loggedIn: true };
     if (userLoggedIn) return { type: 'user', loggedIn: true };
     return { type: 'none', loggedIn: false };
@@ -136,15 +136,15 @@ function checkUserSession() {
 }
 
 document.getElementById('userLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('user_logged_in');
+    localStorage.removeItem('user_logged_in');
     appState.currentUser = null;
     saveLocalState();
     window.location.href = 'index.html';
 });
 
 document.getElementById('dashAdminLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('admin_logged_in');
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    localStorage.removeItem('admin_logged_in');
+    const userLoggedIn = localStorage.getItem('user_logged_in') === 'true';
     if (userLoggedIn) { window.location.reload(); } else { window.location.href = 'index.html'; }
 });
 
@@ -183,7 +183,7 @@ onValue(dbRef, (snapshot) => {
         if (session.type === 'user' && currentUserEmail) {
             const found = appState.users.find(u => u.email === currentUserEmail);
             if (found) appState.currentUser = found;
-            else { appState.currentUser = null; sessionStorage.removeItem('user_logged_in'); }
+            else { appState.currentUser = null; localStorage.removeItem('user_logged_in'); }
         } else if (session.type === 'admin') {
             const adminUser = appState.users.find(u => u.email && u.email.toLowerCase().includes('admin'));
             if (adminUser) appState.currentUser = adminUser;
@@ -663,7 +663,7 @@ window.openModal = openModal; window.closeModal = closeModal;
 let logoClickCounter = 0;
 document.getElementById('logoIcon').addEventListener('click', function(e) {
     e.preventDefault();
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const adminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
     if (adminLoggedIn) {
         logoClickCounter++;
         const requiredClicks = appState.logoClickCount || 2;
@@ -672,7 +672,7 @@ document.getElementById('logoIcon').addEventListener('click', function(e) {
 });
 document.getElementById('logoImage').addEventListener('click', function(e) {
     e.preventDefault();
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const adminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
     if (adminLoggedIn) {
         logoClickCounter++;
         const requiredClicks = appState.logoClickCount || 2;
@@ -681,7 +681,7 @@ document.getElementById('logoImage').addEventListener('click', function(e) {
 });
 document.getElementById('brandSection').addEventListener('click', function(e) {
     if (e.target.closest('.logo-icon') || e.target.closest('.logo-img') || e.target.closest('.brand-name')) {
-        const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+        const adminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
         if (adminLoggedIn) {
             logoClickCounter++;
             const requiredClicks = appState.logoClickCount || 2;
