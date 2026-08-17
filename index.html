@@ -30,6 +30,9 @@
     }
     </script>
 
+    <!-- Favicon -->
+    <link rel="icon" id="dynamicFavicon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -148,7 +151,12 @@
             <label>Gmail / Email</label>
             <input type="email" id="loginEmail" placeholder="your@gmail.com" />
             <label>Account ID</label>
-            <input type="text" id="loginAccountId" placeholder="Enter Account ID" />
+            <div class="password-input-wrapper">
+                <input type="password" id="loginAccountId" placeholder="Enter Account ID" />
+                <button class="password-toggle-btn" onclick="toggleLoginAccountId()" type="button">
+                    <i id="loginAccountEyeIcon" class="fas fa-eye"></i>
+                </button>
+            </div>
             <div class="error-msg" id="loginError"></div>
             <button class="btn-submit" style="background:#FF0033;color:#fff;" onclick="handleLogin()">Login</button>
         </div>
@@ -197,7 +205,12 @@
             <button class="close-btn" onclick="hidePasswordPopup()">✕</button>
             <div class="lock-icon">🔐</div>
             <h2>ENTER ADMIN PASSWORD</h2>
-            <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
+            <div class="password-input-wrapper">
+                <input type="password" id="adminPassInput" placeholder="Enter password..." oninput="checkAdminPassword()">
+                <button class="password-toggle-btn" onclick="toggleAdminPassword()" type="button">
+                    <i id="adminEyeIcon" class="fas fa-eye"></i>
+                </button>
+            </div>
             <button class="btn-enter" id="adminLoginBtn" onclick="adminLogin()">Enter</button>
             <div class="error-text" id="adminPassError"></div>
         </div>
