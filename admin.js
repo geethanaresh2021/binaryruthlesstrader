@@ -36,6 +36,7 @@ let appState = {
 };
 
 let isFirebaseConnected = false, adminLoggedIn = false, selectedUserDetail = null, chatSelectedUser = null;
+let isRevenueVisible = false;
 
 /* ===== SETTINGS TOGGLE ===== */
 window.toggleSettings = function() {
@@ -184,9 +185,22 @@ function applyAdminLogo(logoBase64) {
         icon.style.display = 'none';
         img.src = logoBase64;
         img.style.display = 'block';
+        updateFavicon(logoBase64);
     } else {
         icon.style.display = 'block';
         img.style.display = 'none';
+        updateFavicon(null);
+    }
+}
+
+/* ===== FAVICON HANDLING ===== */
+function updateFavicon(logoBase64) {
+    const favicon = document.getElementById('dynamicFavicon');
+    if (!favicon) return;
+    if (logoBase64) {
+        favicon.href = logoBase64;
+    } else {
+        favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>";
     }
 }
 
@@ -253,11 +267,32 @@ function updatePendingCounts() {
     document.getElementById('verifiedUsersCount').textContent = verifiedUsers.length;
     document.getElementById('verifiedUsersCount').className = 'count gold';
 
-    const successfulPayments = payments.filter(p => p.status === 'success');
-    const totalRevenue = successfulPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
-    document.getElementById('totalRevenueCount').textContent = '₹' + totalRevenue;
-    document.getElementById('totalRevenueCount').className = 'count gold';
+    updateRevenueDisplay();
 }
+
+/* ===== REVENUE DISPLAY ===== */
+function updateRevenueDisplay() {
+    const revenueElement = document.getElementById('totalRevenueCount');
+    const eyeIcon = document.getElementById('revenueEyeIcon');
+    if (!revenueElement) return;
+    
+    if (isRevenueVisible) {
+        const payments = appState.payments || [];
+        const successfulPayments = payments.filter(p => p.status === 'success');
+        const totalRevenue = successfulPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+        revenueElement.textContent = '₹' + totalRevenue;
+        if (eyeIcon) eyeIcon.className = 'fas fa-eye';
+    } else {
+        revenueElement.textContent = '₹•••••';
+        if (eyeIcon) eyeIcon.className = 'fas fa-eye-slash';
+    }
+    revenueElement.className = 'count gold';
+}
+
+window.toggleRevenueVisibility = function() {
+    isRevenueVisible = !isRevenueVisible;
+    updateRevenueDisplay();
+};
 
 /* ===== CHAT KEY HELPER ===== */
 function getChatKey(userEmail) { 
@@ -523,7 +558,6 @@ function renderToolsList() {
         const fireBtnClass = fireStatus ? '' : 'off';
         const triggerText = tool.triggers && tool.triggers.length > 0 ? '🎯 ' + tool.triggers.join(', ') : '🎯 Default (Signal, Get, Generate, BUY, SELL)';
         
-        // Actions ALWAYS visible now
         const actions = `
             <div class="tool-actions" style="display:flex;">
                 <button class="btn-fire-toggle ${fireBtnClass}" onclick="toggleToolFire(${idx})">${fireBtnText}</button>
@@ -1046,7 +1080,6 @@ function renderPendingVerifications() {
     document.getElementById('noPendingVerifications').style.display = 'none';
     pending.forEach((req) => {
         const actualIdx = appState.verificationRequests.indexOf(req);
-        // Use actualIdx as unique ID so input field correctly maps to the request
         container.innerHTML += `
             <div style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.08);border-radius:8px;padding:14px 16px;margin-bottom:10px;">
                 <div style="display:flex;flex-direction:column;gap:4px;">
@@ -1088,12 +1121,11 @@ function renderPendingVerifications() {
 window.adminApproveVerification = function(idx) {
     const request = appState.verificationRequests[idx];
     if (!request || request.status !== 'pending') return;
-    // Use the actual index (idx) to find the correct input field
     const inputField = document.getElementById('verifyFreeCredits_' + idx);
     let freeCredits = appState.offerCredits || 10;
     if (inputField) {
         const val = parseInt(inputField.value);
-        if (!isNaN(val)) freeCredits = val; // Now correctly reads the edited value
+        if (!isNaN(val)) freeCredits = val;
     }
     if (confirm('Approve verification for ' + request.userEmail + ' with ' + freeCredits + ' free credits?')) {
         request.status = 'approved';
@@ -1536,7 +1568,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 window.openModal = openModal; window.closeModal = closeModal;
 
 /* ===== ADMIN AUTH ===== */
-let adminSession = sessionStorage.getItem('admin_logged_in');
+let adminSession = localStorage.getItem('admin_logged_in');
 if (adminSession === 'true') {
     adminLoggedIn = true;
     document.getElementById('adminDashboard').style.display = 'block';
@@ -1549,8 +1581,8 @@ if (adminSession === 'true') {
 /* ===== LOGOUT ===== */
 document.getElementById('adminLogoutBtn').addEventListener('click', function() {
     adminLoggedIn = false;
-    sessionStorage.removeItem('admin_logged_in');
-    sessionStorage.removeItem('user_logged_in');
+    localStorage.removeItem('admin_logged_in');
+    localStorage.removeItem('user_logged_in');
     window.location.href = 'index.html';
 });
 
@@ -1562,7 +1594,7 @@ window.changeAdminPassword = function() {
     if (newPass !== confirmPass) { alert('Passwords do not match!'); return; }
     appState.password = newPass;
     saveLocalState();
-    sessionStorage.setItem('admin_logged_in', 'true');
+    localStorage.setItem('admin_logged_in', 'true');
     const btn = document.getElementById('adminNewPassword').closest('.admin-section').querySelector('.btn-save');
     btn.textContent = '✅ Saved';
     setTimeout(() => { btn.textContent = '💾 Save'; }, 2000);
@@ -1593,6 +1625,7 @@ window.openRevenuePopup = openRevenuePopup;
 window.showRevenueBreakdown = showRevenueBreakdown;
 window.toggleSettings = toggleSettings;
 window.saveJournal = saveJournal;
+window.toggleRevenueVisibility = toggleRevenueVisibility;
 
 /* ===== CURSOR GLOW ===== */
 const glow = document.getElementById('cursorGlow');
