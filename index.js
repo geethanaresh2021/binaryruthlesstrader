@@ -44,11 +44,52 @@ function applyLogo(logoBase64) {
         logoIcon.style.display = 'none';
         logoImg.src = logoBase64;
         logoImg.style.display = 'block';
+        updateFavicon(logoBase64);
     } else {
         logoIcon.style.display = 'block';
         logoImg.style.display = 'none';
+        updateFavicon(null);
     }
 }
+
+/* ===== FAVICON HANDLING ===== */
+function updateFavicon(logoBase64) {
+    const favicon = document.getElementById('dynamicFavicon');
+    if (!favicon) return;
+    
+    if (logoBase64) {
+        favicon.href = logoBase64;
+    } else {
+        favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>";
+    }
+}
+
+/* ===== PASSWORD TOGGLE FUNCTIONS ===== */
+window.toggleLoginAccountId = function() {
+    const accountIdInput = document.getElementById('loginAccountId');
+    const eyeIcon = document.getElementById('loginAccountEyeIcon');
+    
+    if (accountIdInput.type === 'password') {
+        accountIdInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash';
+    } else {
+        accountIdInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye';
+    }
+};
+
+window.toggleAdminPassword = function() {
+    const passwordInput = document.getElementById('adminPassInput');
+    const eyeIcon = document.getElementById('adminEyeIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye';
+    }
+};
 
 /* ===== CURSOR GLOW ===== */
 const glow = document.getElementById('cursorGlow');
@@ -65,7 +106,7 @@ if (window.matchMedia('(hover: hover)').matches) {
 
 /* ===== SESSION CHECKS ===== */
 function checkUserSession() {
-    const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+    const userLoggedIn = localStorage.getItem('user_logged_in') === 'true';
     const userLogoutBtn = document.getElementById('userLogoutBtn');
     const adminNavBar = document.getElementById('adminNavBar');
     if (userLoggedIn) {
@@ -78,14 +119,14 @@ function checkUserSession() {
 }
 
 document.getElementById('userLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('user_logged_in');
+    localStorage.removeItem('user_logged_in');
     appState.currentUser = null;
     saveLocalState();
     window.location.href = 'index.html';
 });
 
 function checkAdminSession() {
-    const adminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    const adminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
     const navBar = document.getElementById('adminNavBar');
     const userLogoutBtn = document.getElementById('userLogoutBtn');
     if (adminLoggedIn) {
@@ -93,7 +134,7 @@ function checkAdminSession() {
         userLogoutBtn.classList.remove('visible');
     } else {
         navBar.classList.remove('visible');
-        const userLoggedIn = sessionStorage.getItem('user_logged_in') === 'true';
+        const userLoggedIn = localStorage.getItem('user_logged_in') === 'true';
         if (userLoggedIn) {
             userLogoutBtn.classList.add('visible');
         }
@@ -102,8 +143,8 @@ function checkAdminSession() {
 }
 
 document.getElementById('homeAdminLogoutBtn').addEventListener('click', function() {
-    sessionStorage.removeItem('admin_logged_in');
-    sessionStorage.removeItem('user_logged_in');
+    localStorage.removeItem('admin_logged_in');
+    localStorage.removeItem('user_logged_in');
     appState.currentUser = null;
     saveLocalState();
     document.getElementById('adminNavBar').classList.remove('visible');
@@ -431,7 +472,7 @@ window.handleLogin = function() {
     }
     
     appState.currentUser = user;
-    sessionStorage.setItem('user_logged_in', 'true');
+    localStorage.setItem('user_logged_in', 'true');
     saveLocalState();
     closeModal('loginModal');
     errorEl.textContent = '';
@@ -604,7 +645,7 @@ let logoClickCounter = 0;
 
 function handleLogoClick() {
     // If admin already logged in, go directly
-    if (sessionStorage.getItem('admin_logged_in') === 'true') {
+    if (localStorage.getItem('admin_logged_in') === 'true') {
         window.location.href = 'admin.html';
         return;
     }
@@ -639,6 +680,8 @@ function showPasswordPopup() {
     document.getElementById('adminLoginBtn').classList.remove('enabled');
     document.getElementById('adminPassInput').classList.remove('correct', 'wrong');
     document.getElementById('adminPassError').textContent = '';
+    const adminEyeIcon = document.getElementById('adminEyeIcon');
+    if (adminEyeIcon) adminEyeIcon.className = 'fas fa-eye';
     setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
 }
 
@@ -672,7 +715,7 @@ window.checkAdminPassword = function() {
 
 window.adminLogin = function() {
     if (document.getElementById('adminPassInput').value === appState.password) {
-        sessionStorage.setItem('admin_logged_in', 'true');
+        localStorage.setItem('admin_logged_in', 'true');
         hidePasswordPopup();
         window.location.href = 'admin.html';
     }
@@ -763,3 +806,5 @@ window.showPasswordPopup = showPasswordPopup;
 window.hidePasswordPopup = hidePasswordPopup;
 window.checkAdminPassword = checkAdminPassword;
 window.adminLogin = adminLogin;
+window.toggleLoginAccountId = toggleLoginAccountId;
+window.toggleAdminPassword = toggleAdminPassword;
