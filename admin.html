@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Binary Ruthless Trader - Admin</title>
     
+    <!-- Favicon -->
+    <link rel="icon" id="dynamicFavicon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:opsz,wght@14..32,300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -90,11 +93,14 @@
                     <span class="count green" id="chatNotificationCount">0</span>
                     <span class="label">Chat Messages</span>
                 </div>
-                <!-- NEW REVENUE CARD -->
+                <!-- REVENUE CARD WITH EYE ICON -->
                 <div class="admin-dash-card" onclick="openRevenuePopup()">
                     <span class="icon">💰</span>
-                    <span class="count gold" id="totalRevenueCount">0</span>
+                    <span class="count gold" id="totalRevenueCount">₹•••••</span>
                     <span class="label">Total Revenue</span>
+                    <button class="revenue-eye-btn" onclick="event.stopPropagation(); toggleRevenueVisibility()" type="button" title="Show/Hide Revenue">
+                        <i id="revenueEyeIcon" class="fas fa-eye-slash"></i>
+                    </button>
                 </div>
                 <!-- JOURNAL BUTTON -->
                 <div class="admin-dash-card" id="journalCard">
