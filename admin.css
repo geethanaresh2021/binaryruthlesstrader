@@ -991,3 +991,33 @@ input, select, button, textarea { font-size: 16px !important; -webkit-text-size-
     border-color: #FF0033 !important;
     box-shadow: 0 0 30px rgba(255, 0, 51, 0.15);
 }
+/* ===== REVENUE EYE BUTTON ===== */
+.revenue-eye-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 0, 51, 0.1);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 0.65rem;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.revenue-eye-btn:hover {
+    color: #FF0033;
+    border-color: #FF0033;
+    box-shadow: 0 0 12px rgba(255, 0, 51, 0.15);
+    background: rgba(255, 0, 51, 0.05);
+}
+
+.revenue-eye-btn i {
+    pointer-events: none;
+}
